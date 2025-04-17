@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:japfa_internship/components/navbar.dart';
+import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/timeline_interview.dart';
 import 'package:japfa_internship/function_variable/variable.dart';

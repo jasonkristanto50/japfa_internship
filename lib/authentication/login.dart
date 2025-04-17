@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:japfa_internship/admin_page/pendaftar_magang_dashboard.dart';
-import 'package:japfa_internship/components/navbar.dart';
+import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/home_page.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/authentication/sign_up.dart';

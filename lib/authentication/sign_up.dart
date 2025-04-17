@@ -1,6 +1,6 @@
 // First Registration Page
 import 'package:flutter/material.dart';
-import 'package:japfa_internship/components/navbar.dart';
+import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/authentication/sign_up_password.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
@@ -119,11 +119,7 @@ class _SignUpState extends State<SignUp> {
         const SizedBox(height: 15),
         buildTextField('Phone Number', phoneNumberController),
         const SizedBox(height: 15),
-        buildTextField('Last Education', lastEducationController),
-        const SizedBox(height: 15),
         buildTextField('School/University', schoolController),
-        const SizedBox(height: 15),
-        buildTextField('Score/GPA', scoreGPAController),
         const SizedBox(height: 20),
         RoundedRectangleButton(
           title: "Next",

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart'; // PDF Viewer package
-import 'package:japfa_internship/components/navbar.dart';
+import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/timeline_interview.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
@@ -15,6 +15,7 @@ class SubmissionIntern extends StatefulWidget {
 }
 
 class _SubmissionInternState extends State<SubmissionIntern> {
+  int pageNumber = 1;
   bool _visible = false;
 
   // To hold the file details (name and path)
@@ -26,7 +27,12 @@ class _SubmissionInternState extends State<SubmissionIntern> {
   String? transcriptFilePath;
 
   final TextEditingController nameController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
+  final TextEditingController phoneNumberController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController universityController = TextEditingController();
+  final TextEditingController generationController = TextEditingController();
+  final TextEditingController majorController = TextEditingController();
   final TextEditingController scoreController = TextEditingController();
 
   @override
@@ -81,7 +87,17 @@ class _SubmissionInternState extends State<SubmissionIntern> {
                       children: [
                         IconButton(
                           icon: const Icon(Icons.arrow_back),
-                          onPressed: () => Navigator.pop(context),
+                          onPressed: () {
+                            // If pageNumber is 2, revert it to 1
+                            if (pageNumber == 2) {
+                              setState(() {
+                                pageNumber = 1; // Revert pageNumber to 1
+                              });
+                            } else {
+                              Navigator.pop(
+                                  context); // Otherwise, go back to previous screen
+                            }
+                          },
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
                         ),
@@ -95,39 +111,10 @@ class _SubmissionInternState extends State<SubmissionIntern> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      'Fill in your details and upload the required documents.',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    buildTextField('Name', nameController),
-                    const SizedBox(height: 15),
-                    buildTextField('University/School', universityController),
-                    const SizedBox(height: 15),
-                    buildTextField('Score', scoreController),
-                    const SizedBox(height: 15),
-                    buildFileField('CV', cvFileName, 'CV'),
-                    const SizedBox(height: 15),
-                    buildFileField('Campus Approval', campusApprovalFileName,
-                        'Campus Approval'),
-                    const SizedBox(height: 15),
-                    buildFileField('Score Transcript', transcriptFileName,
-                        'Score Transcript'),
-                    const SizedBox(height: 20),
-                    RoundedRectangleButton(
-                      title: "Submit",
-                      backgroundColor: japfaOrange,
-                      fontColor: Colors.white,
-                      onPressed: () {
-                        // Handle submission logic here
-                        fadeNavigation(context,
-                            targetNavigation: const TimelineInterview());
-                      },
-                    ),
+                    if (pageNumber == 1) ...[
+                      _buildSubmissionTextField(),
+                    ] else if (pageNumber == 2)
+                      _buildSubmissionFileField(),
                   ],
                 ),
               ),
@@ -135,6 +122,66 @@ class _SubmissionInternState extends State<SubmissionIntern> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildSubmissionTextField() {
+    return Column(
+      children: [
+        const SizedBox(height: 20),
+        buildTextField('Name', nameController),
+        const SizedBox(height: 20),
+        buildTextField('Address', addressController),
+        const SizedBox(height: 20),
+        buildTextField('Phone Number', phoneNumberController),
+        const SizedBox(height: 20),
+        buildTextField('Email', emailController),
+        const SizedBox(height: 15),
+        buildTextField('University/School', universityController),
+        const SizedBox(height: 15),
+        buildTextField('Angkatan / Kelas', generationController),
+        const SizedBox(height: 15),
+        buildTextField('Score', scoreController),
+        const SizedBox(height: 15),
+        buildTextField('Jurusan', majorController),
+        const SizedBox(height: 20),
+        RoundedRectangleButton(
+          title: "Next",
+          backgroundColor: japfaOrange,
+          fontColor: Colors.white,
+          onPressed: () {
+            setState(() {
+              pageNumber = 2;
+            });
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSubmissionFileField() {
+    return Column(
+      children: [
+        const SizedBox(height: 15),
+        buildFileField('CV', cvFileName, 'CV'),
+        const SizedBox(height: 15),
+        buildFileField(
+            'Campus Approval', campusApprovalFileName, 'Campus Approval'),
+        const SizedBox(height: 15),
+        buildFileField(
+            'Score Transcript', transcriptFileName, 'Score Transcript'),
+        const SizedBox(height: 20),
+        RoundedRectangleButton(
+          title: "Submit",
+          backgroundColor: japfaOrange,
+          fontColor: Colors.white,
+          onPressed: () {
+            // Handle submission logic here
+            fadeNavigation(context,
+                targetNavigation: const TimelineInterview());
+          },
+        ),
+      ],
     );
   }
 

@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/components/department_card.dart';
 import 'package:japfa_internship/authentication/login.dart';
-import 'package:japfa_internship/components/navbar.dart';
+import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/function_variable/data.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
@@ -24,6 +24,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final loginState = ref.watch(loginProvider);
     return Scaffold(
       appBar: Navbar(
         context: context,
@@ -39,8 +40,12 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             children: [
               Column(
                 children: [
-                  _buildBackgroundBlurImage(),
-                  const SizedBox(height: 50),
+                  if (loginState.role == "admin") ...[
+                    _blurBackground(),
+                  ] else ...[
+                    _buildBackgroundBlurImage(),
+                    const SizedBox(height: 50),
+                  ]
                 ],
               ),
               // DEPARTMENT CARD SECTION
@@ -166,6 +171,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
   }
 
   Widget buildCardDepartment() {
+    final loginState = ref.watch(loginProvider);
     // List deskripsi card ada di file variable
 
     return GridView.builder(
@@ -179,15 +185,15 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
       itemCount: cards.length,
       itemBuilder: (context, index) {
         return DepartmentCard(
-          title: cards[index]['title']!,
-          description: cards[index]['description']!,
-          image: cards[index]['image']!,
-          requirements: const [
-            'nanti buat di list atas untuk requirement masing',
-            'Additional requirement 1', // Example requirement
-            'Additional requirement 2',
-          ],
-        );
+            title: cards[index]['title']!,
+            description: cards[index]['description']!,
+            image: cards[index]['image']!,
+            requirements: const [
+              'nanti buat di list atas untuk requirement masing',
+              'Additional requirement 1', // Example requirement
+              'Additional requirement 2',
+            ],
+            isAdmin: loginState.role == "admin");
       },
     );
   }

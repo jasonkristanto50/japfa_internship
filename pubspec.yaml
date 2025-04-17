@@ -1,0 +1,52 @@
+name: japfa_internship
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.5.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  file_picker: ^5.2.2
+  flutter_pdfview: ^1.0.0
+  flutter_riverpod: ^2.0.0
+  flutter_screenutil: ^5.9.3
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets: 
+    - assets/japfa_buduran_landscape.jpg
+    - assets/japfa_logo_only.png
+    - assets/japfa_logo_background.png
+    - assets/timeline_1.png
+    - assets/timeline_2.png
+    - assets/timeline_3.png
+    - assets/timeline_4.png
+    - assets/default_profile.png
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat-Regular.ttf
+        - asset: assets/fonts/Montserrat-Italic.ttf
+          style: italic
+        - asset: assets/fonts/Montserrat-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Montserrat-MediumItalic.ttf
+          weight: 500
+          style: italic
+        - asset: assets/fonts/Montserrat-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Montserrat-SemiBoldItalic.ttf
+          weight: 600
+          style: italic
+        - asset: assets/fonts/Montserrat-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Montserrat-BoldItalic.ttf
+          weight: 700
+          style: italic

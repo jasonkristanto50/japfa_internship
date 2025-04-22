@@ -3,9 +3,9 @@ import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/navbar.dart';
 
 class DetailPengajuanMagang extends StatelessWidget {
-  final String jobTitle;
+  final String departmentName;
 
-  const DetailPengajuanMagang({super.key, required this.jobTitle});
+  const DetailPengajuanMagang({super.key, required this.departmentName});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class DetailPengajuanMagang extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Details for Applications of $jobTitle',
+                'Details for Applications of $departmentName',
                 style:
                     const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),

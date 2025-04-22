@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:japfa_internship/components/widget_component.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 
-class EditJobModal extends StatefulWidget {
-  final Map<String, dynamic> job;
+class EditDepartmentModal extends StatefulWidget {
+  final Map<String, dynamic> department;
 
-  const EditJobModal({super.key, required this.job});
+  const EditDepartmentModal({super.key, required this.department});
 
   @override
-  _EditJobModalState createState() => _EditJobModalState();
+  _EditDepartmentModalState createState() => _EditDepartmentModalState();
 }
 
-class _EditJobModalState extends State<EditJobModal> {
+class _EditDepartmentModalState extends State<EditDepartmentModal> {
   late TextEditingController maxQuotaController;
   late TextEditingController totalApplicationsController;
   late TextEditingController approvedController;
@@ -22,15 +22,15 @@ class _EditJobModalState extends State<EditJobModal> {
   void initState() {
     super.initState();
     maxQuotaController =
-        TextEditingController(text: widget.job['maxQuota'].toString());
-    totalApplicationsController =
-        TextEditingController(text: widget.job['totalApplications'].toString());
+        TextEditingController(text: widget.department['maxQuota'].toString());
+    totalApplicationsController = TextEditingController(
+        text: widget.department['totalApplications'].toString());
     approvedController =
-        TextEditingController(text: widget.job['approved'].toString());
+        TextEditingController(text: widget.department['approved'].toString());
     onboardingController =
-        TextEditingController(text: widget.job['onboarding'].toString());
-    remainingQuotaController =
-        TextEditingController(text: widget.job['remainingQuota'].toString());
+        TextEditingController(text: widget.department['onboarding'].toString());
+    remainingQuotaController = TextEditingController(
+        text: widget.department['remainingQuota'].toString());
   }
 
   @override
@@ -52,18 +52,18 @@ class _EditJobModalState extends State<EditJobModal> {
               BorderRadius.circular(16)), // Rounded corners for the modal
       title: Center(
         // Center the title
-        child: Text('EDIT JOB', style: bold14),
+        child: Text('EDIT department', style: bold14),
       ),
       content: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Display the selected job under the title
+            // Display the selected department under the title
             Center(
               child: Text(
-                  widget.job['job']
+                  widget.department['department']
                       .toString()
-                      .toUpperCase(), // Display the job name here
+                      .toUpperCase(), // Display the department name here
                   style: bold16.copyWith(color: japfaOrange)),
             ),
             const SizedBox(height: 16),
@@ -88,18 +88,19 @@ class _EditJobModalState extends State<EditJobModal> {
   // Function to save changes and close the modal
   void _saveChanges() {
     setState(() {
-      widget.job['maxQuota'] =
-          int.tryParse(maxQuotaController.text) ?? widget.job['maxQuota'];
-      widget.job['totalApplications'] =
+      widget.department['maxQuota'] = int.tryParse(maxQuotaController.text) ??
+          widget.department['maxQuota'];
+      widget.department['totalApplications'] =
           int.tryParse(totalApplicationsController.text) ??
-              widget.job['totalApplications'];
-      widget.job['approved'] =
-          int.tryParse(approvedController.text) ?? widget.job['approved'];
-      widget.job['onboarding'] =
-          int.tryParse(onboardingController.text) ?? widget.job['onboarding'];
-      widget.job['remainingQuota'] =
+              widget.department['totalApplications'];
+      widget.department['approved'] = int.tryParse(approvedController.text) ??
+          widget.department['approved'];
+      widget.department['onboarding'] =
+          int.tryParse(onboardingController.text) ??
+              widget.department['onboarding'];
+      widget.department['remainingQuota'] =
           int.tryParse(remainingQuotaController.text) ??
-              widget.job['remainingQuota'];
+              widget.department['remainingQuota'];
     });
 
     Navigator.pop(context); // Close the modal after saving

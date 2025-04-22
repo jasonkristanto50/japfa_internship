@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:japfa_internship/admin_page/detail_pengajuan_magang.dart';
-import 'package:japfa_internship/admin_page/edit_job_page.dart';
+import 'package:japfa_internship/admin_page/edit_department_page.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/components/widget_component.dart';
 import 'package:japfa_internship/function_variable/data.dart';
@@ -17,33 +17,16 @@ class PendaftarMagangDashboard extends StatefulWidget {
 class _PendaftarMagangDashboardState extends State<PendaftarMagangDashboard> {
   String selectedDepartment = 'Semua Departemen';
 
-  // Function to handle Edit Button click
-  void _onEditButtonClick(String jobName) {
-    print('Edit button clicked for $jobName');
-  }
-
-  // Function to handle View Applications Button click
-  void _onViewApplications(String jobName) {
-    // Navigate to the applications view for the specific job
-    print('View applications button clicked for $jobName');
-    // Here you can navigate to another page where applications are listed
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => DetailPengajuanMagang(jobTitle: jobName)));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
       appBar: Navbar(
         context: context,
         title: appName,
       ),
-      body: SafeArea(
-        child: Container(
-          decoration: buildJapfaLogoBackground(),
+      body: Container(
+        decoration: buildJapfaLogoBackground(), // Background decoration
+        child: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(24.0),
             child: Column(
@@ -96,7 +79,7 @@ class _PendaftarMagangDashboardState extends State<PendaftarMagangDashboard> {
                           width: 1,
                         ),
                         columns: const [
-                          DataColumn(label: Text('Job')),
+                          DataColumn(label: Text('Departemen')),
                           DataColumn(label: Text('Max Kuota')),
                           DataColumn(label: Text('Jumlah Pengajuan')),
                           DataColumn(label: Text('Jumlah Approved')),
@@ -104,42 +87,42 @@ class _PendaftarMagangDashboardState extends State<PendaftarMagangDashboard> {
                           DataColumn(label: Text('Sisa Kuota')),
                           DataColumn(label: Text('Action')),
                         ],
-                        rows: jobData.map((job) {
+                        rows: pengajuanDepartemen.map((department) {
                           return DataRow(
                             cells: [
                               DataCell(
                                 Text(
-                                  job['job'].toString(),
+                                  department['department'].toString(),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
                               DataCell(
                                 Text(
-                                  job['maxQuota'].toString(),
+                                  department['maxQuota'].toString(),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
                               DataCell(
                                 Text(
-                                  job['totalApplications'].toString(),
+                                  department['totalApplications'].toString(),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
                               DataCell(
                                 Text(
-                                  job['approved'].toString(),
+                                  department['approved'].toString(),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
                               DataCell(
                                 Text(
-                                  job['onboarding'].toString(),
+                                  department['onboarding'].toString(),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
                               DataCell(
                                 Text(
-                                  job['remainingQuota'].toString(),
+                                  department['remainingQuota'].toString(),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -154,7 +137,7 @@ class _PendaftarMagangDashboardState extends State<PendaftarMagangDashboard> {
                                       height: 30,
                                       width: 85,
                                       rounded: 5,
-                                      onPressed: () => _editTable(job),
+                                      onPressed: () => _editTable(department),
                                     ),
                                     const SizedBox(
                                         width: 8), // Space between buttons
@@ -165,8 +148,8 @@ class _PendaftarMagangDashboardState extends State<PendaftarMagangDashboard> {
                                       height: 30,
                                       width: 85,
                                       rounded: 5,
-                                      onPressed: () =>
-                                          _onViewApplications(job['job']),
+                                      onPressed: () => _onViewApplications(
+                                          department['department']),
                                     ),
                                   ],
                                 ),
@@ -187,13 +170,23 @@ class _PendaftarMagangDashboardState extends State<PendaftarMagangDashboard> {
     );
   }
 
-  // Function to handle Edit Button click and navigate to the Edit page
-  void _editTable(Map<String, dynamic> job) {
+  // Function to handle Edit Button click
+  void _editTable(Map<String, dynamic> department) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return EditJobModal(job: job);
+        return EditDepartmentModal(department: department);
       },
     );
+  }
+
+  // Function to handle View Applications Button click
+  void _onViewApplications(String departmentName) {
+    // Navigate to the applications view for the specific job
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                DetailPengajuanMagang(departmentName: departmentName)));
   }
 }

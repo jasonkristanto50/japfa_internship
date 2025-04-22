@@ -7,6 +7,7 @@ import 'package:japfa_internship/admin_page/pendaftar_magang_dashboard.dart';
 import 'package:japfa_internship/admin_page/kunjungan_studi_dashboard.dart';
 import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/home_page.dart';
+import 'package:japfa_internship/logbook/logbook_peserta.dart';
 import 'package:japfa_internship/profile_page.dart';
 
 // ignore: must_be_immutable
@@ -87,17 +88,24 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
                   ),
                 ] else ...[
                   // Logged in => Check role
-                  if (loginState.role == "user") ...[
+                  if (loginState.role == "pendaftar") ...[
                     buildNavBarTab("Submission", onSubmissionPressed),
                     buildNavBarTab("Timeline", onTimelinePressed)
                   ] else if (loginState.role == "admin") ...[
                     // Admin Navbar
-                    buildNavBarTab('Data Pendaftar Magang',
-                        _navigateToDataPendaftaranMagangPage),
                     buildNavBarTab(
                         'Home Page Magang', _navigateToHomePageMagang),
+                    buildNavBarTab('Data Pendaftar Magang',
+                        _navigateToDataPendaftaranMagangPage),
+
                     buildNavBarTab(
                         'Kunjungan Studi', _navigateToAdminKunjunganStudiPage),
+                  ] else if (loginState.role == "peserta magang") ...[
+                    // Participant Intern Navbar
+                    buildNavBarTab("Detail", _navigateToDetailPage),
+                    buildNavBarTab("Pembimbing", _navigateToPembimbingPage),
+                    buildNavBarTab("Logbook", _navigateToLogbookPage),
+                    buildNavBarTab("Laporan", _navigateToLaporanPage),
                   ],
                   const SizedBox(width: 16),
 
@@ -189,7 +197,7 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
   void _titleNavigateToHomePage(WidgetRef ref) {
     final loginState = ref.watch(loginProvider);
     switch (loginState.role) {
-      case "user":
+      case "pendaftar":
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => const MyHomePage()),
           (route) => false,
@@ -232,6 +240,24 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
     );
   }
 
+  // PESERTA MAGANG TAB
+  void _navigateToDetailPage() {
+    // Navigate to Detail Page
+  }
+
+  void _navigateToPembimbingPage() {
+    // Navigate to Pembimbing Page
+  }
+
+  void _navigateToLogbookPage() {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => const LogBookPesertaDashboard()),
+    );
+  }
+
+  void _navigateToLaporanPage() {
+    // Navigate to Laporan Page
+  }
   void _logOutFunction(BuildContext context, WidgetRef ref) {
     ref.read(loginProvider.notifier).logout();
     Navigator.pushAndRemoveUntil(

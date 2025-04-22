@@ -33,9 +33,9 @@ List<Map<String, String>> cards = [
   },
 ];
 
-final List<Map<String, dynamic>> jobData = [
+final List<Map<String, dynamic>> pengajuanDepartemen = [
   {
-    'job': 'Admin Sales',
+    'department': 'HR&GA',
     'maxQuota': 10,
     'totalApplications': 36,
     'approved': 4,
@@ -43,7 +43,7 @@ final List<Map<String, dynamic>> jobData = [
     'remainingQuota': 6,
   },
   {
-    'job': 'CCU',
+    'department': 'IT',
     'maxQuota': 10,
     'totalApplications': 36,
     'approved': 4,
@@ -51,7 +51,7 @@ final List<Map<String, dynamic>> jobData = [
     'remainingQuota': 6,
   },
   {
-    'job': 'Produksi',
+    'department': 'Koperasi Karyawan',
     'maxQuota': 10,
     'totalApplications': 36,
     'approved': 4,
@@ -59,15 +59,7 @@ final List<Map<String, dynamic>> jobData = [
     'remainingQuota': 6,
   },
   {
-    'job': 'PPIC',
-    'maxQuota': 10,
-    'totalApplications': 36,
-    'approved': 4,
-    'onboarding': 2,
-    'remainingQuota': 6,
-  },
-  {
-    'job': 'Marketing',
+    'department': 'Pet Food - PIB',
     'maxQuota': 12,
     'totalApplications': 40,
     'approved': 6,
@@ -75,7 +67,7 @@ final List<Map<String, dynamic>> jobData = [
     'remainingQuota': 6,
   },
   {
-    'job': 'IT Support',
+    'department': 'Produksi',
     'maxQuota': 8,
     'totalApplications': 25,
     'approved': 3,
@@ -83,7 +75,7 @@ final List<Map<String, dynamic>> jobData = [
     'remainingQuota': 4,
   },
   {
-    'job': 'Finance',
+    'department': 'QC & Lab',
     'maxQuota': 15,
     'totalApplications': 50,
     'approved': 8,
@@ -91,7 +83,7 @@ final List<Map<String, dynamic>> jobData = [
     'remainingQuota': 7,
   },
   {
-    'job': 'Human Resources',
+    'department': 'Sales & Marketing',
     'maxQuota': 9,
     'totalApplications': 30,
     'approved': 5,
@@ -99,7 +91,7 @@ final List<Map<String, dynamic>> jobData = [
     'remainingQuota': 4,
   },
   {
-    'job': 'Logistics',
+    'department': 'Silo & Dryer',
     'maxQuota': 7,
     'totalApplications': 22,
     'approved': 4,
@@ -107,7 +99,7 @@ final List<Map<String, dynamic>> jobData = [
     'remainingQuota': 3,
   },
   {
-    'job': 'Product Development',
+    'department': 'Teknik',
     'maxQuota': 12,
     'totalApplications': 28,
     'approved': 7,
@@ -115,57 +107,16 @@ final List<Map<String, dynamic>> jobData = [
     'remainingQuota': 5,
   },
   {
-    'job': 'Customer Support',
+    'department': 'Warehouse',
     'maxQuota': 14,
     'totalApplications': 45,
     'approved': 6,
     'onboarding': 3,
     'remainingQuota': 8,
   },
-  {
-    'job': 'Data Analyst',
-    'maxQuota': 6,
-    'totalApplications': 20,
-    'approved': 4,
-    'onboarding': 2,
-    'remainingQuota': 2,
-  },
-  {
-    'job': 'Quality Assurance',
-    'maxQuota': 10,
-    'totalApplications': 32,
-    'approved': 6,
-    'onboarding': 3,
-    'remainingQuota': 4,
-  },
-  {
-    'job': 'Warehouse Manager',
-    'maxQuota': 8,
-    'totalApplications': 25,
-    'approved': 3,
-    'onboarding': 1,
-    'remainingQuota': 4,
-  },
-  {
-    'job': 'Sales Coordinator',
-    'maxQuota': 11,
-    'totalApplications': 38,
-    'approved': 5,
-    'onboarding': 2,
-    'remainingQuota': 6,
-  },
-  {
-    'job': 'Business Analyst',
-    'maxQuota': 9,
-    'totalApplications': 29,
-    'approved': 4,
-    'onboarding': 3,
-    'remainingQuota': 5,
-  },
 ];
 
 final List<String> departments = [
-  'Semua Departemen',
   'HR&GA',
   'IT',
   'Koperasi Karyawan',
@@ -267,4 +218,47 @@ final List<Map<String, dynamic>> detailPengajuanData = [
     'alamat': 'Jl. Kamboja No. 20, Semarang',
   },
   // Add more entries as needed.
+];
+
+final List<Map<String, dynamic>> logbookData = [
+  {
+    'no': 1,
+    'aktivitas': 'Presentasi dan Knowledge Sharing',
+    'tanggal_kegiatan': '29-11-2024',
+    'url': 'http://example.com/url1',
+    'status': 'Selesai', // Instead of validasi
+    'catatan_pembimbing': 'Catatan 1',
+  },
+  {
+    'no': 2,
+    'aktivitas': 'Bug fixing Aplikasi Messaging',
+    'tanggal_kegiatan': '28-11-2024',
+    'url': 'http://example.com/url2',
+    'status': 'Selesai',
+    'catatan_pembimbing': 'Catatan 2',
+  },
+  {
+    'no': 3,
+    'aktivitas': 'Demo aplikasi pada Mitra',
+    'tanggal_kegiatan': '25-11-2024',
+    'url': 'http://example.com/url3',
+    'status': 'Mengunggu', // Different status
+    'catatan_pembimbing': 'Catatan 3',
+  },
+  {
+    'no': 4,
+    'aktivitas': 'Pengujian Aplikasi',
+    'tanggal_kegiatan': '26-11-2024',
+    'url': 'http://example.com/url4',
+    'status': 'Belum Selesai',
+    'catatan_pembimbing': 'Catatan 4',
+  },
+  {
+    'no': 5,
+    'aktivitas': 'Pengembangan Fitur Baru',
+    'tanggal_kegiatan': '30-11-2024',
+    'url': 'http://example.com/url5',
+    'status': 'Selesai',
+    'catatan_pembimbing': 'Catatan 5',
+  },
 ];

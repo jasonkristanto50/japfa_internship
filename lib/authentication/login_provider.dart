@@ -47,7 +47,21 @@ class LoginNotifier extends StateNotifier<LoginState> {
       state = LoginState(
         isLoading: false,
         isLoggedIn: true,
-        role: "user",
+        role: "pendaftar",
+      );
+    } else if (email == "peserta.com" && password == "123") {
+      // Intern participant login
+      state = state.copyWith(
+        isLoading: false,
+        isLoggedIn: true,
+        role: "peserta magang",
+      );
+    } else if (email == "kepala.com" && password == "123") {
+      // Department head login
+      state = state.copyWith(
+        isLoading: false,
+        isLoggedIn: true,
+        role: "kepala departemen",
       );
     } else {
       // Invalid credentials

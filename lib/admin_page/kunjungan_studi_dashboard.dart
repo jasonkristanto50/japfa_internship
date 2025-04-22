@@ -16,113 +16,109 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
       appBar: Navbar(
         context: context,
         title: appName,
       ),
-      body: SafeArea(
-        child: Container(
-          decoration: buildJapfaLogoBackground(),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Table Section
-                Center(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.1),
-                          spreadRadius: 1,
-                          blurRadius: 4,
-                          offset: const Offset(0, 1),
-                        ),
-                      ],
-                    ),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: DataTable(
-                        headingRowColor:
-                            WidgetStateProperty.all(Colors.orange[500]),
-                        headingTextStyle: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        border: TableBorder.all(
-                          color: Colors.grey,
-                          width: 1,
-                        ),
-                        columns: const [
-                          DataColumn(label: Text('Nama Kunjungan')),
-                          DataColumn(label: Text('Asal Universitas')),
-                          DataColumn(label: Text('Jumlah Anak')),
-                          DataColumn(label: Text('Tanggal')),
-                          DataColumn(label: Text('Status')),
-                          DataColumn(label: Text('Aksi')), // Action column
-                        ],
-                        rows: kunjunganData.map((kunjungan) {
-                          return DataRow(
-                            cells: [
-                              DataCell(
-                                Text(
-                                  kunjungan['nama'].toString(),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              DataCell(
-                                Text(
-                                  kunjungan['asal universitas'].toString(),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              DataCell(
-                                Text(
-                                  kunjungan['jumlah anak'].toString(),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              DataCell(
-                                Text(
-                                  kunjungan['tanggal kegiatan'].toString(),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              DataCell(
-                                Text(
-                                  kunjungan['status'].toString(),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              DataCell(
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: RoundedRectangleButton(
-                                    title: "RESPOND",
-                                    backgroundColor: const Color.fromARGB(
-                                        255, 247, 211, 159),
-                                    height: 30,
-                                    width: 150,
-                                    rounded: 5,
-                                    onPressed: () => _respond(kunjungan),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        }).toList(),
+      body: Container(
+        decoration: buildJapfaLogoBackground(),
+        child: Column(
+          children: [
+            // Add padding to the top
+            Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 1,
+                        blurRadius: 4,
+                        offset: const Offset(0, 1),
                       ),
+                    ],
+                  ),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: DataTable(
+                      headingRowColor:
+                          WidgetStateProperty.all(Colors.orange[500]),
+                      headingTextStyle: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      border: TableBorder.all(
+                        color: Colors.grey,
+                        width: 1,
+                      ),
+                      columns: const [
+                        DataColumn(label: Text('Nama Kunjungan')),
+                        DataColumn(label: Text('Asal Universitas')),
+                        DataColumn(label: Text('Jumlah Anak')),
+                        DataColumn(label: Text('Tanggal')),
+                        DataColumn(label: Text('Status')),
+                        DataColumn(label: Text('Aksi')), // Action column
+                      ],
+                      rows: kunjunganData.map((kunjungan) {
+                        return DataRow(
+                          cells: [
+                            DataCell(
+                              Text(
+                                kunjungan['nama'].toString(),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            DataCell(
+                              Text(
+                                kunjungan['asal universitas'].toString(),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            DataCell(
+                              Text(
+                                kunjungan['jumlah anak'].toString(),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            DataCell(
+                              Text(
+                                kunjungan['tanggal kegiatan'].toString(),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            DataCell(
+                              Text(
+                                kunjungan['status'].toString(),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            DataCell(
+                              Align(
+                                alignment: Alignment.center,
+                                child: RoundedRectangleButton(
+                                  title: "RESPOND",
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 247, 211, 159),
+                                  height: 30,
+                                  width: 150,
+                                  rounded: 5,
+                                  onPressed: () => _respond(kunjungan),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }).toList(),
                     ),
                   ),
                 ),
-                const SizedBox(height: 24), // Extra space
-              ],
+              ),
             ),
-          ),
+            const SizedBox(height: 24), // Extra space
+          ],
         ),
       ),
     );
@@ -166,7 +162,7 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
       }
     });
 
-    // Optional: Add a print statement to verify the response
+    // Optional: Add print for debugging
     print(
         'Kunjungan for ${kunjungan['nama']} status updated to: ${kunjungan['status']}');
   }

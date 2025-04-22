@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:japfa_internship/admin_page/detail_pengajuan_magang.dart';
 import 'package:japfa_internship/admin_page/edit_job_page.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/components/widget_component.dart';
@@ -18,9 +19,18 @@ class _PendaftarMagangDashboardState extends State<PendaftarMagangDashboard> {
 
   // Function to handle Edit Button click
   void _onEditButtonClick(String jobName) {
-    // Here you can implement the logic when the edit button is clicked
-    // For example, show a dialog or navigate to another screen for editing
     print('Edit button clicked for $jobName');
+  }
+
+  // Function to handle View Applications Button click
+  void _onViewApplications(String jobName) {
+    // Navigate to the applications view for the specific job
+    print('View applications button clicked for $jobName');
+    // Here you can navigate to another page where applications are listed
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => DetailPengajuanMagang(jobTitle: jobName)));
   }
 
   @override
@@ -32,7 +42,6 @@ class _PendaftarMagangDashboardState extends State<PendaftarMagangDashboard> {
         title: appName,
       ),
       body: SafeArea(
-        // Ensures content is not cut off by system UI
         child: Container(
           decoration: buildJapfaLogoBackground(),
           child: SingleChildScrollView(
@@ -93,9 +102,7 @@ class _PendaftarMagangDashboardState extends State<PendaftarMagangDashboard> {
                           DataColumn(label: Text('Jumlah Approved')),
                           DataColumn(label: Text('Jumlah On Boarding')),
                           DataColumn(label: Text('Sisa Kuota')),
-                          DataColumn(
-                              label: Text(
-                                  'Action')), // New column for Action (EDIT button)
+                          DataColumn(label: Text('Action')),
                         ],
                         rows: jobData.map((job) {
                           return DataRow(
@@ -137,16 +144,32 @@ class _PendaftarMagangDashboardState extends State<PendaftarMagangDashboard> {
                                 ),
                               ),
                               DataCell(
-                                Align(
-                                    alignment: Alignment.center,
-                                    child: RoundedRectangleButton(
-                                        title: "EDIT",
-                                        backgroundColor: const Color.fromARGB(
-                                            255, 247, 211, 159),
-                                        height: 30,
-                                        width: 80,
-                                        rounded: 5,
-                                        onPressed: () => _editTable(job))),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    RoundedRectangleButton(
+                                      title: "EDIT",
+                                      backgroundColor: const Color.fromARGB(
+                                          255, 247, 211, 159),
+                                      height: 30,
+                                      width: 85,
+                                      rounded: 5,
+                                      onPressed: () => _editTable(job),
+                                    ),
+                                    const SizedBox(
+                                        width: 8), // Space between buttons
+                                    RoundedRectangleButton(
+                                      title: "VIEW",
+                                      backgroundColor: const Color.fromARGB(
+                                          255, 152, 209, 255),
+                                      height: 30,
+                                      width: 85,
+                                      rounded: 5,
+                                      onPressed: () =>
+                                          _onViewApplications(job['job']),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           );

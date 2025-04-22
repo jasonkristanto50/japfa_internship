@@ -21,6 +21,7 @@ class RoundedRectangleButton extends StatelessWidget {
   final double? height;
   final double? rounded;
   final TextStyle? style;
+  final EdgeInsetsGeometry margin;
 
   const RoundedRectangleButton({
     required this.title,
@@ -32,31 +33,36 @@ class RoundedRectangleButton extends StatelessWidget {
     this.height,
     this.rounded = 10,
     this.style,
+    this.margin = const EdgeInsets.all(8.0),
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: width ?? double.infinity,
-      height: height ?? 50,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          minimumSize: const Size(double.infinity, 50),
-          foregroundColor: fontColor,
-          backgroundColor: backgroundColor,
-          // Ensure no outline if the color is intended as transparent
-          side: BorderSide(
-              color: outlineColor.withOpacity(outlineColor.alpha == 0 ? 0 : 1),
-              width: 1),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(rounded ?? 10),
+    return Container(
+      margin: margin,
+      child: SizedBox(
+        width: width ?? double.infinity,
+        height: height ?? 50,
+        child: ElevatedButton(
+          onPressed: onPressed,
+          style: ElevatedButton.styleFrom(
+            minimumSize: const Size(double.infinity, 50),
+            foregroundColor: fontColor,
+            backgroundColor: backgroundColor,
+            // Ensure no outline if the color is intended as transparent
+            side: BorderSide(
+                color:
+                    outlineColor.withOpacity(outlineColor.alpha == 0 ? 0 : 1),
+                width: 1),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(rounded ?? 10),
+            ),
           ),
-        ),
-        child: Text(
-          title,
-          style: style,
+          child: Text(
+            title,
+            style: style,
+          ),
         ),
       ),
     );

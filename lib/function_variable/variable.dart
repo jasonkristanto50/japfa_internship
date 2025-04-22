@@ -24,6 +24,18 @@ TextStyle regular20 = const TextStyle(
   fontSize: 20,
 );
 
+TextStyle bold12 = const TextStyle(
+  fontFamily: montserratFontFamily,
+  fontWeight: FontWeight.bold,
+  fontSize: 12,
+);
+
+TextStyle bold13 = const TextStyle(
+  fontFamily: montserratFontFamily,
+  fontWeight: FontWeight.bold,
+  fontSize: 13,
+);
+
 TextStyle bold14 = const TextStyle(
   fontFamily: montserratFontFamily,
   fontWeight: FontWeight.bold,

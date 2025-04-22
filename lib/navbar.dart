@@ -7,6 +7,7 @@ import 'package:japfa_internship/admin_page/pendaftar_magang_dashboard.dart';
 import 'package:japfa_internship/admin_page/kunjungan_studi_dashboard.dart';
 import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/home_page.dart';
+import 'package:japfa_internship/profile_page.dart';
 
 // ignore: must_be_immutable
 class Navbar extends ConsumerWidget implements PreferredSizeWidget {
@@ -51,7 +52,7 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
             title: Row(
               children: [
                 TextButton(
-                  onPressed: titleOnPressed,
+                  onPressed: () => _titleNavigateToHomePage(ref),
                   child: Text(
                     title,
                     style: const TextStyle(
@@ -99,11 +100,14 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
                         'Kunjungan Studi', _navigateToAdminKunjunganStudiPage),
                   ],
                   const SizedBox(width: 16),
-                  // Common Logout Menu
+
+                  // PROFILE Pop Up
                   PopupMenuButton<String>(
                     onSelected: (value) {
                       if (value == 'logout') {
                         _logOutFunction(context, ref);
+                      } else if (value == 'profile') {
+                        _navigateToProfilePage();
                       }
                     },
                     icon: Container(
@@ -124,16 +128,33 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
                         ),
                       ),
                     ),
+                    offset: const Offset(-30, 50),
                     itemBuilder: (BuildContext context) {
                       return [
                         const PopupMenuItem<String>(
+                          value: 'profile',
+                          child: SizedBox(
+                            width: 100,
+                            child: Row(
+                              children: [
+                                Icon(Icons.person, color: Colors.black),
+                                SizedBox(width: 10),
+                                Text('Profile')
+                              ],
+                            ),
+                          ),
+                        ),
+                        const PopupMenuItem<String>(
                           value: 'logout',
-                          child: Row(
-                            children: [
-                              Icon(Icons.logout, color: Colors.black),
-                              SizedBox(width: 10),
-                              Text('Logout'),
-                            ],
+                          child: SizedBox(
+                            width: 100,
+                            child: Row(
+                              children: [
+                                Icon(Icons.logout, color: Colors.black),
+                                SizedBox(width: 10),
+                                Text('Log Out')
+                              ],
+                            ),
                           ),
                         ),
                       ];
@@ -165,6 +186,28 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
     );
   }
 
+  void _titleNavigateToHomePage(WidgetRef ref) {
+    final loginState = ref.watch(loginProvider);
+    switch (loginState.role) {
+      case "user":
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const MyHomePage()),
+          (route) => false,
+        );
+        break;
+      case "admin":
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+              builder: (context) => const PendaftarMagangDashboard()),
+          (route) => false,
+        );
+        break;
+      default:
+        // Handle any other roles or errors as necessary
+        break;
+    }
+  }
+
   void _navigateToDataPendaftaranMagangPage() {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) => const PendaftarMagangDashboard()),
@@ -180,6 +223,12 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
   void _navigateToAdminKunjunganStudiPage() {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) => const KunjunganStudiDashboard()),
+    );
+  }
+
+  void _navigateToProfilePage() {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => const ProfilePage()),
     );
   }
 

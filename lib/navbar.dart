@@ -6,8 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:japfa_internship/admin_page/pendaftar_magang_dashboard.dart';
 import 'package:japfa_internship/admin_page/kunjungan_studi_dashboard.dart';
 import 'package:japfa_internship/authentication/login_provider.dart';
+import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/home_page.dart';
-import 'package:japfa_internship/logbook/logbook_peserta.dart';
+import 'package:japfa_internship/peserta_magang_page/logbook_peserta.dart';
 import 'package:japfa_internship/profile_page.dart';
 
 // ignore: must_be_immutable
@@ -88,20 +89,20 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
                   ),
                 ] else ...[
                   // Logged in => Check role
+                  // PENDAFTAR Navbar
                   if (loginState.role == "pendaftar") ...[
                     buildNavBarTab("Submission", onSubmissionPressed),
                     buildNavBarTab("Timeline", onTimelinePressed)
                   ] else if (loginState.role == "admin") ...[
-                    // Admin Navbar
+                    // ADMIN Navbar
                     buildNavBarTab(
                         'Home Page Magang', _navigateToHomePageMagang),
                     buildNavBarTab('Data Pendaftar Magang',
                         _navigateToDataPendaftaranMagangPage),
-
                     buildNavBarTab(
                         'Kunjungan Studi', _navigateToAdminKunjunganStudiPage),
                   ] else if (loginState.role == "peserta magang") ...[
-                    // Participant Intern Navbar
+                    // PESERTA MAGANG Navbar
                     buildNavBarTab("Detail", _navigateToDetailPage),
                     buildNavBarTab("Pembimbing", _navigateToPembimbingPage),
                     buildNavBarTab("Logbook", _navigateToLogbookPage),
@@ -216,28 +217,23 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
     }
   }
 
-  void _navigateToDataPendaftaranMagangPage() {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => const PendaftarMagangDashboard()),
-    );
-  }
-
-  void _navigateToHomePageMagang() {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => const MyHomePage()),
-    );
-  }
-
-  void _navigateToAdminKunjunganStudiPage() {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => const KunjunganStudiDashboard()),
-    );
-  }
-
   void _navigateToProfilePage() {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) => const ProfilePage()),
     );
+  }
+
+  // ADMIN HR/GA TAB
+  void _navigateToDataPendaftaranMagangPage() {
+    fadeNavigation(context, targetNavigation: const PendaftarMagangDashboard());
+  }
+
+  void _navigateToHomePageMagang() {
+    fadeNavigation(context, targetNavigation: const MyHomePage());
+  }
+
+  void _navigateToAdminKunjunganStudiPage() {
+    fadeNavigation(context, targetNavigation: const KunjunganStudiDashboard());
   }
 
   // PESERTA MAGANG TAB

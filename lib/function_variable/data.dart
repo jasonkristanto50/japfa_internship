@@ -1,38 +1,53 @@
-// List department dengan deskripsi
 List<Map<String, String>> cards = [
   {
-    'title': 'Department 1',
-    'description': 'Ini adalah isi dari departemen 1',
-    'image': 'assets/japfa_buduran_landscape.jpg',
-  },
-  {
-    'title': 'Department 2',
-    'description': 'Apakah ini no 2',
-    'image': 'assets/japfa_buduran_landscape.jpg',
-  },
-  {
-    'title': 'Department 3',
+    'title': 'HR & GA',
     'description':
-        'Ppppppppppppppppppppoiuytredfeofwefhufwioefhuwefjwefiowefpojei',
-    'image': 'assets/japfa_buduran_landscape.jpg',
+        'Departemen ini bertanggung jawab atas manajemen sumber daya manusia dan administrasi umum.',
+    'image': 'assets/department_card/human_resource&general_affair_crop.png',
   },
   {
-    'title': 'Card 4',
-    'description': 'For card 4, consider adding some exciting information.',
-    'image': 'assets/japfa_buduran_landscape.jpg',
+    'title': 'Information Technology (IT)',
+    'description':
+        'Departemen ini menangani infrastruktur teknologi informasi dan pengembangan perangkat lunak.',
+    'image': 'assets/department_card/information_technology.png',
   },
   {
-    'title': 'Card 5',
-    'description': 'The description for card 5 could include a special note.',
-    'image': 'assets/japfa_buduran_landscape.jpg',
+    'title': 'Koperasi Karyawan',
+    'description':
+        'Departemen ini menyediakan layanan koperasi untuk kesejahteraan karyawan dan fasilitas pinjaman.',
+    'image': 'assets/department_card/koperasi_karyawan.png',
   },
   {
-    'title': 'Card 6',
-    'description': 'Lastly, card 6 can have its own unique content as well.',
-    'image': 'assets/japfa_buduran_landscape.jpg',
+    'title': 'Pet Food - PIB',
+    'description':
+        'Departemen ini fokus pada produksi dan distribusi makanan hewan berkualitas.',
+    'image': 'assets/department_card/pet_food.png',
+  },
+  {
+    'title': 'Sales & Marketing',
+    'description':
+        'Departemen ini bertugas untuk memasarkan produk dan meningkatkan penjualan.',
+    'image': 'assets/department_card/sales_marketing.png',
+  },
+  {
+    'title': 'Silo & Dryer',
+    'description':
+        'Departemen ini bertanggung jawab atas penyimpanan dan pengeringan bahan baku.',
+    'image': 'assets/department_card/silo_dryer.png',
+  },
+  {
+    'title': 'Teknik',
+    'description':
+        'Departemen ini mengelola aspek teknik dan pemeliharaan mesin serta infrastruktur.',
+    'image': 'assets/department_card/teknisi.png',
+  },
+  {
+    'title': 'Warehouse',
+    'description':
+        'Departemen ini bertugas untuk pengelolaan gudang dan logistik bahan baku dan produk jadi.',
+    'image': 'assets/department_card/warehouse.png',
   },
 ];
-
 final List<Map<String, dynamic>> pengajuanDepartemen = [
   {
     'department': 'HR&GA',

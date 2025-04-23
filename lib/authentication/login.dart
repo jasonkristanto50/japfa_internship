@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:japfa_internship/admin_page/pendaftar_magang_dashboard.dart';
+import 'package:japfa_internship/peserta_magang_page/logbook_peserta.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/home_page.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
@@ -161,17 +162,47 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     // Now check if logged in after the state is updated
     if (currentState.isLoggedIn) {
       // Check role to decide which page to navigate to
-      if (currentState.role == 'admin') {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const PendaftarMagangDashboard()),
-        );
-      } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const MyHomePage()),
-        );
+      switch (currentState.role) {
+        case 'admin':
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const PendaftarMagangDashboard(),
+            ),
+          );
+          break;
+        case 'pendaftar':
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const MyHomePage(),
+            ),
+          );
+          break;
+        case 'peserta magang':
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const LogBookPesertaDashboard(),
+            ),
+          );
+          break;
+        case 'kepala departemen':
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const LogBookPesertaDashboard(),
+            ),
+          );
+          break;
+        default:
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const MyHomePage(),
+            ),
+          );
+          break;
       }
     }
   }

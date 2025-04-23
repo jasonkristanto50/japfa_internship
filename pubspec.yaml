@@ -22,6 +22,9 @@ flutter:
   uses-material-design: true
   assets: 
     - assets/japfa_buduran_landscape.jpg
+    # Department card
+    - assets/department_card/
+    - assets/department_card/human_resource&general_affair.png
     - assets/japfa_logo_only.png
     - assets/japfa_logo_background.png
     - assets/timeline_1.png

@@ -48,6 +48,21 @@ List<Map<String, String>> cards = [
     'image': 'assets/department_card/warehouse.png',
   },
 ];
+
+final List<String> departments = [
+  'HR&GA',
+  'IT',
+  'Koperasi Karyawan',
+  'Pet Food - PIB',
+  'Produksi',
+  'QC & Lab',
+  'Sales & Marketing',
+  'Silo & Dryer',
+  'Teknik',
+  'Warehouse',
+];
+
+// ADMIN role data
 final List<Map<String, dynamic>> pengajuanDepartemen = [
   {
     'department': 'HR&GA',
@@ -129,19 +144,6 @@ final List<Map<String, dynamic>> pengajuanDepartemen = [
     'onboarding': 3,
     'remainingQuota': 8,
   },
-];
-
-final List<String> departments = [
-  'HR&GA',
-  'IT',
-  'Koperasi Karyawan',
-  'Pet Food - PIB',
-  'Produksi',
-  'QC & Lab',
-  'Sales & Marketing',
-  'Silo & Dryer',
-  'Teknik',
-  'Warehouse',
 ];
 
 final List<Map<String, dynamic>> kunjunganData = [
@@ -235,6 +237,7 @@ final List<Map<String, dynamic>> detailPengajuanData = [
   // Add more entries as needed.
 ];
 
+// PESERTA MAGANG role data
 final List<Map<String, dynamic>> logbookData = [
   {
     'no': 1,
@@ -275,5 +278,13 @@ final List<Map<String, dynamic>> logbookData = [
     'url': 'http://example.com/url5',
     'status': 'Selesai',
     'catatan_pembimbing': 'Catatan 5',
+  },
+];
+
+final List<Map<String, dynamic>> pembimbingPesertaData = [
+  {
+    'nama_pembimbing': 'Agus Bambang',
+    'departemen': 'HR & GA',
+    'status': 'diterima'
   },
 ];

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 void fadeNavigation(BuildContext context,
-    {Duration? transitionDuration, required Widget targetNavigation}) {
-  transitionDuration ??= const Duration(milliseconds: 500);
+    {required Widget targetNavigation, int? time}) {
+  final fadeDuration = time != null
+      ? Duration(milliseconds: time)
+      : const Duration(milliseconds: 500);
 
   Navigator.of(context).push(
     PageRouteBuilder(
@@ -13,7 +15,7 @@ void fadeNavigation(BuildContext context,
           child: child,
         );
       },
-      transitionDuration: transitionDuration,
+      transitionDuration: fadeDuration,
     ),
   );
 }

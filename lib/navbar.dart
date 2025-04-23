@@ -9,6 +9,7 @@ import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/home_page.dart';
 import 'package:japfa_internship/peserta_magang_page/logbook_peserta.dart';
+import 'package:japfa_internship/peserta_magang_page/pembimbing_peserta.dart';
 import 'package:japfa_internship/profile_page.dart';
 
 // ignore: must_be_immutable
@@ -242,7 +243,8 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
   }
 
   void _navigateToPembimbingPage() {
-    // Navigate to Pembimbing Page
+    fadeNavigation(context,
+        targetNavigation: const PembimbingPesertaDashboard(), time: 200);
   }
 
   void _navigateToLogbookPage() {

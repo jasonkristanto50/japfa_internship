@@ -1,3 +1,4 @@
+import 'dart:ui'; // Import for BackdropFilter
 import 'package:flutter/material.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/components/widget_component.dart';
@@ -13,8 +14,17 @@ class KunjunganStudiDashboard extends StatefulWidget {
 }
 
 class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
+  String searchQuery = ""; // To hold the search input
+
   @override
   Widget build(BuildContext context) {
+    // Filter kunjunganData based on search query
+    List<Map<String, dynamic>> filteredKunjunganData = kunjunganData
+        .where((kunjungan) => kunjungan['asal universitas']
+            .toLowerCase()
+            .contains(searchQuery.toLowerCase()))
+        .toList();
+
     return Scaffold(
       appBar: Navbar(
         context: context,
@@ -24,7 +34,76 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
         decoration: buildJapfaLogoBackground(),
         child: Column(
           children: [
-            // Add padding to the top
+            Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.5), // Optional opacity
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          // Search field width
+                          width: 1000,
+                          child: TextField(
+                            onChanged: (value) {
+                              setState(() {
+                                searchQuery = value; // Update search query
+                              });
+                            },
+                            decoration: InputDecoration(
+                              labelText: 'Ketikkan pencarian',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: const BorderSide(
+                                  color: Colors.orange, // Border color
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: const BorderSide(
+                                  color: Colors
+                                      .orange, // Border color when enabled
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: const BorderSide(
+                                  color: Colors
+                                      .orange, // Border color when focused
+                                  width: 2,
+                                ),
+                              ),
+                              prefixIcon: const Icon(Icons.search),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        RoundedRectangleButton(
+                          title: "Search",
+                          fontColor: Colors.white,
+                          backgroundColor: Colors.orange,
+                          height: 45,
+                          width: 100,
+                          rounded: 5,
+                          onPressed: () {
+                            // Optionally, add any search logic here if needed
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            // Table Section - Centered
             Padding(
               padding: const EdgeInsets.all(24.0),
               child: Center(
@@ -55,22 +134,17 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
                         width: 1,
                       ),
                       columns: const [
-                        DataColumn(label: Text('Nama Kunjungan')),
                         DataColumn(label: Text('Asal Universitas')),
+                        DataColumn(label: Text('Nama Perwakilan')),
+                        DataColumn(label: Text('No Telp')),
                         DataColumn(label: Text('Jumlah Anak')),
                         DataColumn(label: Text('Tanggal')),
                         DataColumn(label: Text('Status')),
-                        DataColumn(label: Text('Aksi')), // Action column
+                        DataColumn(label: Text('Aksi')),
                       ],
-                      rows: kunjunganData.map((kunjungan) {
+                      rows: filteredKunjunganData.map((kunjungan) {
                         return DataRow(
                           cells: [
-                            DataCell(
-                              Text(
-                                kunjungan['nama'].toString(),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
                             DataCell(
                               Text(
                                 kunjungan['asal universitas'].toString(),
@@ -79,7 +153,19 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
                             ),
                             DataCell(
                               Text(
-                                kunjungan['jumlah anak'].toString(),
+                                kunjungan['nama'].toString(),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            DataCell(
+                              Text(
+                                kunjungan['no telp'].toString(),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            DataCell(
+                              Text(
+                                kunjungan['jumlah'].toString(),
                                 textAlign: TextAlign.center,
                               ),
                             ),

@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,6 +23,7 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
   final VoidCallback? onAdminHomePageMagang;
   final VoidCallback? onAdminKunjunganStudi;
   final VoidCallback? onLogoutPressed;
+  final bool showBackButton;
 
   Navbar({
     required this.context,
@@ -36,6 +36,7 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
     this.onAdminHomePageMagang,
     this.onAdminKunjunganStudi,
     this.onLogoutPressed,
+    this.showBackButton = false, // Default to false
     super.key,
   });
 
@@ -54,8 +55,17 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
             automaticallyImplyLeading: false,
             title: Row(
               children: [
+                // Conditionally show back button
+                if (showBackButton)
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () {
+                      Navigator.pop(context); // Go back to the previous page
+                    },
+                  ),
                 TextButton(
-                  onPressed: () => _titleNavigateToHomePage(ref),
+                  onPressed: () =>
+                      titleOnPressed ?? _titleNavigateToHomePage(ref),
                   child: Text(
                     title,
                     style: const TextStyle(
@@ -256,6 +266,7 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
   void _navigateToLaporanPage() {
     // Navigate to Laporan Page
   }
+
   void _logOutFunction(BuildContext context, WidgetRef ref) {
     ref.read(loginProvider.notifier).logout();
     Navigator.pushAndRemoveUntil(

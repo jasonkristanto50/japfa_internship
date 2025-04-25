@@ -15,10 +15,18 @@ class PendaftarMagangDashboard extends StatefulWidget {
 }
 
 class _PendaftarMagangDashboardState extends State<PendaftarMagangDashboard> {
-  String selectedDepartment = 'Semua Departemen';
+  String selectedDepartment = '';
+  String searchQuery = "";
 
   @override
   Widget build(BuildContext context) {
+    // Search filter for departments
+    List<Map<String, dynamic>> filteredData = pengajuanDepartemen
+        .where((department) => department['department']
+            .toLowerCase()
+            .contains(searchQuery.toLowerCase())) // Search filter
+        .toList();
+
     return Scaffold(
       appBar: Navbar(
         context: context,
@@ -26,14 +34,22 @@ class _PendaftarMagangDashboardState extends State<PendaftarMagangDashboard> {
       ),
       body: Container(
         decoration: buildJapfaLogoBackground(),
-        child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Button to add a new department
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 200.0, right: 16.0, top: 30.0, bottom: 0),
+        child: Column(
+          children: [
+            // Add Custom Search Bar
+            CustomSearchBar(
+              onChanged: (value) {
+                setState(() {
+                  searchQuery = value; // Update search query
+                });
+              },
+              widthValue: 175,
+            ),
+            // Button to add a new department - left aligned
+            Padding(
+              padding: const EdgeInsets.only(left: 175.0, top: 0.0, bottom: 10),
+              child: Align(
+                alignment: Alignment.centerLeft, // Align to the left
                 child: RoundedRectangleButton(
                   title: "Tambah Departemen",
                   backgroundColor: Colors.white,
@@ -46,25 +62,22 @@ class _PendaftarMagangDashboardState extends State<PendaftarMagangDashboard> {
                   },
                 ),
               ),
+            ),
+            const SizedBox(height: 10), // Space between button and table
 
-              // Table Section - Centered
-              Expanded(
-                child: Center(
-                  child: _buildPengajuanTable(),
-                ),
-              ),
-              const SizedBox(height: 24), // Extra space if needed
-            ],
-          ),
+            // Table Section
+
+            _buildPengajuanTable(filteredData),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildPengajuanTable() {
+  Widget _buildPengajuanTable(List<dynamic> filteredData) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.white, // Set the desired background color
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
@@ -96,7 +109,7 @@ class _PendaftarMagangDashboardState extends State<PendaftarMagangDashboard> {
             DataColumn(label: Text('Sisa Kuota')),
             DataColumn(label: Text('Action')),
           ],
-          rows: pengajuanDepartemen.map((department) {
+          rows: filteredData.map((department) {
             return DataRow(
               cells: [
                 DataCell(Text(department['department'].toString(),
@@ -146,9 +159,7 @@ class _PendaftarMagangDashboardState extends State<PendaftarMagangDashboard> {
     );
   }
 
-  // Function to handle adding a new department
   void _addNewDepartment() {
-    // Show a dialog for adding a new department
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -176,7 +187,6 @@ class _PendaftarMagangDashboardState extends State<PendaftarMagangDashboard> {
     );
   }
 
-  // Function to handle Edit Button click
   void _editTable(Map<String, dynamic> department) {
     showDialog(
       context: context,
@@ -186,9 +196,7 @@ class _PendaftarMagangDashboardState extends State<PendaftarMagangDashboard> {
     );
   }
 
-  // Function to handle View Applications Button click
   void _onViewApplications(String departmentName) {
-    // Navigate to the applications view for the specific job
     Navigator.push(
       context,
       MaterialPageRoute(

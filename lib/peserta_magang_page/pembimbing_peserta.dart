@@ -25,31 +25,19 @@ class _PembimbingPesertaDashboardState
         decoration: buildJapfaLogoBackground(),
         child: Column(
           children: [
-            // Search Section
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
-                    spreadRadius: 1,
-                    blurRadius: 4,
-                    offset: const Offset(0, 1),
+            const Padding(
+              padding: EdgeInsets.all(24.0),
+              child: Align(
+                alignment: Alignment.centerLeft, // Align to the left
+                child: Text(
+                  'Nama Peserta: JASON KRISTANTO', // Dummy Name
+                  style: TextStyle(
+                    fontSize: 20, // Adjust font size as needed
+                    fontWeight: FontWeight.bold, // Make it bold for emphasis
                   ),
-                ],
-              ),
-              child: const TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search...',
-                  border: OutlineInputBorder(),
-                  suffixIcon: Icon(Icons.search),
                 ),
               ),
             ),
-            const SizedBox(height: 24),
-
             Expanded(
               // Ensures that this section takes up the remaining space
               child: SingleChildScrollView(

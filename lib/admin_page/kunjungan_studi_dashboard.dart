@@ -1,8 +1,8 @@
-import 'dart:ui'; // Import for BackdropFilter
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/components/widget_component.dart';
-import 'package:japfa_internship/function_variable/data.dart'; // Ensure this imports kunjunganData
+import 'package:japfa_internship/function_variable/data.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 
 class KunjunganStudiDashboard extends StatefulWidget {
@@ -14,7 +14,7 @@ class KunjunganStudiDashboard extends StatefulWidget {
 }
 
 class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
-  String searchQuery = ""; // To hold the search input
+  String searchQuery = "";
 
   @override
   Widget build(BuildContext context) {
@@ -34,75 +34,14 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
         decoration: buildJapfaLogoBackground(),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.5), // Optional opacity
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          // Search field width
-                          width: 1000,
-                          child: TextField(
-                            onChanged: (value) {
-                              setState(() {
-                                searchQuery = value; // Update search query
-                              });
-                            },
-                            decoration: InputDecoration(
-                              labelText: 'Ketikkan pencarian',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: const BorderSide(
-                                  color: Colors.orange, // Border color
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: const BorderSide(
-                                  color: Colors
-                                      .orange, // Border color when enabled
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: const BorderSide(
-                                  color: Colors
-                                      .orange, // Border color when focused
-                                  width: 2,
-                                ),
-                              ),
-                              prefixIcon: const Icon(Icons.search),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        RoundedRectangleButton(
-                          title: "Search",
-                          fontColor: Colors.white,
-                          backgroundColor: Colors.orange,
-                          height: 45,
-                          width: 100,
-                          rounded: 5,
-                          onPressed: () {
-                            // Optionally, add any search logic here if needed
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+            // Search bar
+            CustomSearchBar(
+              onChanged: (value) {
+                setState(() {
+                  searchQuery = value; // Update search query
+                });
+              },
             ),
-
             // Table Section - Centered
             Padding(
               padding: const EdgeInsets.all(24.0),

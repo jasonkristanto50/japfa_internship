@@ -13,6 +13,8 @@ class LogBookPesertaDashboard extends StatefulWidget {
 }
 
 class _LogBookPesertaDashboardState extends State<LogBookPesertaDashboard> {
+  String searchQuery = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,27 +27,12 @@ class _LogBookPesertaDashboardState extends State<LogBookPesertaDashboard> {
         child: Column(
           children: [
             // Search Section
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
-                    spreadRadius: 1,
-                    blurRadius: 4,
-                    offset: const Offset(0, 1),
-                  ),
-                ],
-              ),
-              child: const TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search...',
-                  border: OutlineInputBorder(),
-                  suffixIcon: Icon(Icons.search),
-                ),
-              ),
+            CustomSearchBar(
+              onChanged: (value) {
+                setState(() {
+                  searchQuery = value; // Update search query
+                });
+              },
             ),
             const SizedBox(height: 24),
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/components/widget_component.dart';
-import 'package:japfa_internship/function_variable/data.dart'; // Ensure this imports kunjunganData
+import 'package:japfa_internship/function_variable/data.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 
 class DetailPengajuanMagang extends StatefulWidget {
@@ -13,12 +13,17 @@ class DetailPengajuanMagang extends StatefulWidget {
 }
 
 class _DetailPengajuanMagangState extends State<DetailPengajuanMagang> {
+  String searchQuery = "";
+
   @override
   Widget build(BuildContext context) {
-    // Filter data based on departmentName
+    // Filter data based on departmentName and search query
     final filteredData = detailPengajuanData
         .where((detailPengajuan) =>
-            detailPengajuan['departemen'] == widget.departmentName)
+            detailPengajuan['departemen'] == widget.departmentName &&
+            detailPengajuan['nama']
+                .toLowerCase()
+                .contains(searchQuery.toLowerCase())) // Search filter
         .toList();
 
     return Scaffold(
@@ -32,6 +37,14 @@ class _DetailPengajuanMagangState extends State<DetailPengajuanMagang> {
         decoration: buildJapfaLogoBackground(),
         child: Column(
           children: [
+            // Add Search Bar
+            CustomSearchBar(
+              onChanged: (value) {
+                setState(() {
+                  searchQuery = value; // Update search query
+                });
+              },
+            ),
             // Add padding to the top
             Padding(
               padding: const EdgeInsets.all(24.0),
@@ -118,7 +131,7 @@ class _DetailPengajuanMagangState extends State<DetailPengajuanMagang> {
                                   backgroundColor:
                                       const Color.fromARGB(255, 152, 209, 255),
                                   height: 30,
-                                  width: 100,
+                                  width: 150,
                                   rounded: 5,
                                   onPressed: () {
                                     // Handle the view details button action

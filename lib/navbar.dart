@@ -7,6 +7,7 @@ import 'package:japfa_internship/admin_page/kunjungan_studi_dashboard.dart';
 import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/home_page.dart';
+import 'package:japfa_internship/peserta_magang_page/laporan_peserta_magang.dart';
 import 'package:japfa_internship/peserta_magang_page/logbook_peserta.dart';
 import 'package:japfa_internship/peserta_magang_page/pembimbing_peserta.dart';
 import 'package:japfa_internship/profile_page.dart';
@@ -258,13 +259,14 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
   }
 
   void _navigateToLogbookPage() {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => const LogBookPesertaDashboard()),
-    );
+    fadeNavigation(context,
+        targetNavigation: const LogBookPesertaDashboard(), time: 200);
   }
 
   void _navigateToLaporanPage() {
     // Navigate to Laporan Page
+    fadeNavigation(context,
+        targetNavigation: const LaporanPesertaMagang(), time: 200);
   }
 
   void _logOutFunction(BuildContext context, WidgetRef ref) {

@@ -1,6 +1,9 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 
+// Build the Japfa Logo Background
 BoxDecoration buildJapfaLogoBackground() {
   return BoxDecoration(
     color: Colors.white, // Fallback background color
@@ -11,6 +14,7 @@ BoxDecoration buildJapfaLogoBackground() {
   );
 }
 
+// Rounded Rectangle Button
 class RoundedRectangleButton extends StatelessWidget {
   final String title;
   final Color fontColor;
@@ -63,7 +67,7 @@ class RoundedRectangleButton extends StatelessWidget {
   }
 }
 
-// CustomDialog Widget
+// Custom Dialog Widget
 class CustomDialog extends StatelessWidget {
   final VoidCallback onLoginPressed;
 
@@ -97,6 +101,79 @@ class CustomDialog extends StatelessWidget {
             },
           ),
         ],
+      ),
+    );
+  }
+}
+
+// Custom Search Bar Field
+class CustomSearchBar extends StatelessWidget {
+  final Function(String) onChanged; // Callback for search query change
+  final double? widthValue;
+
+  const CustomSearchBar({super.key, required this.onChanged, this.widthValue});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.5), // Optional opacity
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 1000, // Search field width
+                  child: TextField(
+                    onChanged: onChanged, // Use the passed in callback
+                    decoration: InputDecoration(
+                      labelText: 'Ketikkan pencarian',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(
+                          color: Colors.orange, // Border color
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(
+                          color: Colors.orange, // Border color when enabled
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(
+                          color: Colors.orange, // Border color when focused
+                          width: 2,
+                        ),
+                      ),
+                      prefixIcon: const Icon(Icons.search),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                RoundedRectangleButton(
+                  title: "Search",
+                  fontColor: Colors.white,
+                  backgroundColor: Colors.orange,
+                  height: 45,
+                  width: widthValue ?? 100,
+                  rounded: 5,
+                  onPressed: () {
+                    // Optionally, add any search logic here if needed
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

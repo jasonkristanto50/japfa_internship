@@ -1,10 +1,14 @@
+// To start : cd jpf_internship-api 
+// npm start
+
 const express = require('express');  
 const { Pool } = require('pg');  
 const cors = require('cors');  
 const bodyParser = require('body-parser');  
+require('dotenv').config(); // For environment variables  
 
 const app = express();  
-const port = 3000;  
+const port = process.env.PORT || 3000;  
 
 // Middleware  
 app.use(cors());  
@@ -12,11 +16,11 @@ app.use(bodyParser.json());
 
 // PostgreSQL connection pool  
 const pool = new Pool({  
-    user: 'postgres',          // Replace with your PostgreSQL username  
-    host: 'localhost',  
-    database: 'jpf_internship_DB', // Replace with your database name  
-    password: 'admin',       // Replace with your password  
-    port: 5432,  
+    user: process.env.DB_USER,          // Using environment variables  
+    host: process.env.DB_HOST || 'localhost',  
+    database: process.env.DB_DATABASE,   // Set the database name in your .env file  
+    password: process.env.DB_PASSWORD,   // Your database password  
+    port: process.env.DB_PORT || 5432,    // Default PostgreSQL port  
 });  
 
 // Start the server  
@@ -24,4 +28,6 @@ app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);  
 });  
 
-
+// Routes  
+const pendaftarRouter = require('./routes/pendaftar');  
+app.use('/api/pendaftar', pendaftarRouter);  

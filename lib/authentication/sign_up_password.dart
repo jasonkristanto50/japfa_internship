@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:japfa_internship/home_page.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
-import 'package:japfa_internship/submission_page/submission_intern.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/components/widget_component.dart';
 

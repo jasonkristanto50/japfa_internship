@@ -92,7 +92,7 @@ class _SignUpState extends State<SignUp> {
 
       // Prepare data for sign up
       final response = await dio.post(
-        'http://localhost:3000/api/pendaftar',
+        'http://localhost:3000/api/pendaftar/add',
         data: {
           'id_pelamar': newIdPelamar,
           'nama': fullNameController.text,
@@ -100,6 +100,7 @@ class _SignUpState extends State<SignUp> {
           'email': emailController.text,
           'asal_universitas': schoolController.text,
           'password': passwordController.text,
+          'role': 'pendaftar'
         },
       );
 

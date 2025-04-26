@@ -3,7 +3,7 @@ import 'package:japfa_internship/admin_page/detail_pengajuan_magang.dart';
 import 'package:japfa_internship/admin_page/edit_department_page.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/components/widget_component.dart';
-import 'package:japfa_internship/function_variable/data.dart';
+import 'package:japfa_internship/data.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 
 class PendaftarMagangDashboard extends StatefulWidget {

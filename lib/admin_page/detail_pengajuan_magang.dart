@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/components/widget_component.dart';
-import 'package:japfa_internship/function_variable/data.dart';
+import 'package:japfa_internship/data.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 
 class DetailPengajuanMagang extends StatefulWidget {

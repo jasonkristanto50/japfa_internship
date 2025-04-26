@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:japfa_internship/home_page.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/submission_page/submission_intern.dart';
@@ -105,7 +106,7 @@ class _SignUpPasswordState extends State<SignUpPassword> {
           fontColor: Colors.white,
           onPressed: () {
             // Handle account creation
-            fadeNavigation(context, targetNavigation: const SubmissionIntern());
+            fadeNavigation(context, targetNavigation: const MyHomePage());
           },
         ),
       ],

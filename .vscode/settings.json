@@ -1,3 +1,16 @@
 {
-    "dart.flutterSdkPath": "D:\\1Kuliah\\Semester 7\\GitLab\\japfa-messaging\\.fvm\\versions\\3.24.0"
+    "dart.flutterSdkPath": "D:\\1Kuliah\\Semester 7\\GitLab\\japfa-messaging\\.fvm\\versions\\3.24.0",
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "jpf_internship",
+            "database": "jpf_internship_DB",
+            "username": "postgres",
+            "password": "admin",
+            "connectionTimeout": 30
+        }
+    ]
 }

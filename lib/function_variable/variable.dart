@@ -1,6 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 String appName = "Japfa Internship";
+Dio dio = Dio();
 Color japfaOrange = const Color.fromARGB(255, 252, 146, 48);
 Color darkGrey = const Color.fromARGB(255, 50, 50, 50);
 

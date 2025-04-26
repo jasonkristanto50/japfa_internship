@@ -323,6 +323,7 @@ final List<Map<String, dynamic>> detailPengajuanData = [
     'alamat': 'Jl. Durian No. 20, Jakarta',
   },
 ];
+
 // PESERTA MAGANG role data
 final List<Map<String, dynamic>> logbookData = [
   {

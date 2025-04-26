@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:japfa_internship/components/widget_component.dart';
-import 'package:japfa_internship/function_variable/data.dart';
 import 'package:japfa_internship/navbar.dart';
 
 class LaporanPesertaMagang extends StatefulWidget {
@@ -69,53 +68,46 @@ class _LaporanPesertaMagangState extends State<LaporanPesertaMagang> {
   }
 
   Widget _buildLaporanTable() {
-    // Use MediaQuery to get the screen width
-    double screenWidth = MediaQuery.of(context).size.width;
-
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-      child: Container(
-        width: screenWidth, // Set width to screen width
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
-              spreadRadius: 1,
-              blurRadius: 4,
-              offset: const Offset(0, 1),
-            ),
-          ],
-        ),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            headingRowColor: WidgetStateProperty.all(Colors.orange[500]),
-            headingTextStyle: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-            border: TableBorder.all(color: Colors.grey, width: 1),
-            columns: const [
-              DataColumn(label: Text('Nama Laporan')),
-              DataColumn(label: Text('File / URL')),
-              DataColumn(label: Text('Validasi Pembimbing')),
-              DataColumn(label: Text('Action')),
-            ],
-            rows: laporanList.map<DataRow>((laporan) {
-              return DataRow(cells: [
-                DataCell(Text(laporan['nama'] ?? '')),
-                DataCell(Text(laporan['url'] ?? '')),
-                DataCell(Text(laporan['validasi'] ?? '')),
-                DataCell(
-                  IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.red),
-                    onPressed: () => _deleteLaporan(laporan),
+      padding: const EdgeInsets.all(12.0), // Padding around the table
+      child: Center(
+        child: SizedBox(
+          // Set width to 90% of screen width
+          width: MediaQuery.of(context).size.width * 0.9,
+          child: Center(
+            child: Container(
+              color: Colors.white, // Background color behind the DataTable
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: DataTable(
+                  headingRowColor: WidgetStateProperty.all(Colors.orange[500]),
+                  headingTextStyle: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
+                  border: TableBorder.all(color: Colors.grey, width: 1),
+                  columns: const [
+                    DataColumn(label: Text('Nama Laporan')),
+                    DataColumn(label: Text('File / URL')),
+                    DataColumn(label: Text('Validasi Pembimbing')),
+                    DataColumn(label: Text('Action')),
+                  ],
+                  rows: laporanList.map<DataRow>((laporan) {
+                    return DataRow(cells: [
+                      DataCell(Text(laporan['nama'] ?? '')),
+                      DataCell(Text(laporan['url'] ?? '')),
+                      DataCell(Text(laporan['validasi'] ?? '')),
+                      DataCell(
+                        IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                          onPressed: () => _deleteLaporan(laporan),
+                        ),
+                      ),
+                    ]);
+                  }).toList(),
                 ),
-              ]);
-            }).toList(),
+              ),
+            ),
           ),
         ),
       ),

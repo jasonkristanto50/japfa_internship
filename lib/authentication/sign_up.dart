@@ -83,65 +83,6 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  // FETCH DATA
-  Future<void> signUp() async {
-    try {
-      // Fetch current count to generate ID
-      final currentCount = await fetchCount();
-      final String newIdPelamar = 'PDFT_0${currentCount + 1}';
-
-      // Prepare data for sign up
-      final response = await dio.post(
-        'http://localhost:3000/api/pendaftar/add',
-        data: {
-          'id_pelamar': newIdPelamar,
-          'nama': fullNameController.text,
-          'no_telp': phoneNumberController.text,
-          'email': emailController.text,
-          'asal_universitas': schoolController.text,
-          'password': passwordController.text,
-          'role': 'pendaftar'
-        },
-      );
-
-      if (response.statusCode == 201) {
-        // User created successfully, navigate to home page
-        fadeNavigation(context, targetNavigation: const MyHomePage());
-      } else {
-        // Handle error response
-        final errorMessage = response.data['details'] ?? 'Unknown error';
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Error: $errorMessage'),
-          backgroundColor: Colors.red,
-        ));
-      }
-    } catch (e) {
-      // Handle any errors
-      print('Sign up error: $e');
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Failed to sign up'),
-        backgroundColor: Colors.red,
-      ));
-    }
-  }
-
-  Future<int> fetchCount() async {
-    try {
-      Response response =
-          await dio.get('http://localhost:3000/api/pendaftar/count');
-
-      if (response.statusCode == 200) {
-        // Ensure the count is an int
-        return int.parse(response.data['count'].toString());
-      } else {
-        throw Exception('Failed to fetch count: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error fetching count: $e');
-      rethrow; // Re-throw the exception for further handling
-    }
-  }
-
   // WIDGET
   Widget _buildForm() {
     return AnimatedSwitcher(
@@ -150,6 +91,7 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
+  // Form Page 1
   Widget _buildSignUpForm() {
     return Column(
       key: const ValueKey(1), // Unique key for Each Widget
@@ -205,6 +147,7 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
+  // Form Page 2
   Widget _buildPasswordSetupForm() {
     return Column(
       key: const ValueKey(2), // Unique key for Each Widget
@@ -253,7 +196,6 @@ class _SignUpState extends State<SignUp> {
           onPressed: () {
             // Handle account creation logic here
             signUp();
-            fadeNavigation(context, targetNavigation: const MyHomePage());
           },
         ),
       ],
@@ -270,5 +212,131 @@ class _SignUpState extends State<SignUp> {
       ),
       cursorColor: const Color.fromARGB(255, 48, 48, 48),
     );
+  }
+
+  // validate all form field
+  bool validateFields() {
+    if (fullNameController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Nama tidak boleh kosong'),
+        backgroundColor: Colors.red,
+      ));
+      return false;
+    }
+
+    if (emailController.text.isEmpty ||
+        !emailController.text.contains('@') ||
+        !emailController.text.endsWith('.com')) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Tolong isi email dengan benar'),
+        backgroundColor: Colors.red,
+      ));
+      return false;
+    }
+
+    if (phoneNumberController.text.isEmpty ||
+        !RegExp(r'^\d+$').hasMatch(phoneNumberController.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('No Telp harus diisi dan harus angka'),
+        backgroundColor: Colors.red,
+      ));
+      return false;
+    }
+
+    if (schoolController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Sekolah / Universitas tidak boleh kosong'),
+        backgroundColor: Colors.red,
+      ));
+      return false;
+    }
+
+    if (passwordController.text.isEmpty || passwordController.text.length < 8) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Password harus diisi dan minimal 8 digit'),
+        backgroundColor: Colors.red,
+      ));
+      return false;
+    }
+
+    if (confirmPasswordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Password tidak sama'),
+        backgroundColor: Colors.red,
+      ));
+      return false;
+    }
+
+    if (passwordController.text != confirmPasswordController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Passwords do not match'),
+        backgroundColor: Colors.red,
+      ));
+      return false;
+    }
+
+    return true; // All fields are valid
+  }
+
+  // Sign Up and send to database
+  Future<void> signUp() async {
+    // Validate fields before proceeding
+    if (!validateFields()) return; // If validation fails, exit the function
+
+    try {
+      // Fetch current count to generate ID
+      final currentCount = await fetchCount();
+      final String newIdPelamar = 'PDFT_0${currentCount + 1}';
+
+      // Prepare data for sign up
+      final response = await dio.post(
+        'http://localhost:3000/api/pendaftar/add',
+        data: {
+          'id_pelamar': newIdPelamar,
+          'nama': fullNameController.text,
+          'no_telp': phoneNumberController.text,
+          'email': emailController.text,
+          'asal_universitas': schoolController.text,
+          'password': passwordController.text,
+          'role': 'pendaftar'
+        },
+      );
+
+      if (response.statusCode == 201) {
+        // User created successfully, navigate to home page
+        fadeNavigation(context, targetNavigation: const MyHomePage());
+      } else {
+        // Handle error response
+        final errorMessage = response.data['details'] ?? 'Unknown error';
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Error: $errorMessage'),
+          backgroundColor: Colors.red,
+        ));
+      }
+    } catch (e) {
+      // Handle any errors
+      print('Sign up error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Failed to sign up'),
+        backgroundColor: Colors.red,
+      ));
+    }
+  }
+
+  Future<int> fetchCount() async {
+    try {
+      Response response =
+          await dio.get('http://localhost:3000/api/pendaftar/count');
+
+      if (response.statusCode == 200) {
+        // Ensure the count is an int
+        return int.parse(response.data['count'].toString());
+      } else {
+        throw Exception('Failed to fetch count: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching count: $e');
+      rethrow; // Re-throw the exception for further handling
+    }
   }
 }

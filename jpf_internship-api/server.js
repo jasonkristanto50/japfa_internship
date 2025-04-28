@@ -31,3 +31,9 @@ app.listen(port, () => {
 // Routes  
 const pendaftarRouter = require('./routes/pendaftar');  
 app.use('/api/pendaftar', pendaftarRouter);  
+
+const adminRouter = require('./routes/admin');  
+app.use('/api/admin', adminRouter);  
+
+const loginRouter = require('./routes/login');  
+app.use('/api/login', loginRouter);

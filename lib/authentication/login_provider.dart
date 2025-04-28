@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LoginState {
@@ -6,13 +8,13 @@ class LoginState {
   final bool isLoggedIn;
   final String? role;
 
-  LoginState(
-      {this.isLoading = false,
-      this.errorMessage,
-      this.isLoggedIn = false,
-      this.role});
+  LoginState({
+    this.isLoading = false,
+    this.errorMessage,
+    this.isLoggedIn = false,
+    this.role,
+  });
 
-  // Convenience method for copying state
   LoginState copyWith({
     bool? isLoading,
     String? errorMessage,
@@ -29,45 +31,49 @@ class LoginState {
 }
 
 class LoginNotifier extends StateNotifier<LoginState> {
+  final Dio _dio = Dio(); // Create a new Dio instance
+
   LoginNotifier() : super(LoginState());
 
   Future<void> login(String email, String password) async {
     state = state.copyWith(isLoading: true, errorMessage: null);
-    await Future.delayed(const Duration(seconds: 2)); // Simulate network delay
 
-    if (email == "admin.com" && password == "123") {
-      // Admin login
-      state = LoginState(
-        isLoading: false,
-        isLoggedIn: true,
-        role: "admin",
+    String url =
+        'http://localhost:3000/api/login'; // Update to your login endpoint
+
+    try {
+      final response = await _dio.post(
+        url,
+        data: jsonEncode({'email': email, 'password': password}),
+        options: Options(contentType: 'application/json'),
       );
-    } else if (email == "user.com" && password == "123") {
-      // Normal user login
-      state = LoginState(
-        isLoading: false,
-        isLoggedIn: true,
-        role: "pendaftar",
-      );
-    } else if (email == "peserta.com" && password == "123") {
-      // Intern participant login
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+
+        // Role ada 4 jenis : admin, pendaftar, peserta magang, kepala departemen
+        if (data['role'] != null) {
+          state = LoginState(
+            isLoading: false,
+            isLoggedIn: true,
+            role: data['role'],
+          );
+        } else {
+          state = state.copyWith(
+            isLoading: false,
+            errorMessage: "Invalid credentials",
+          );
+        }
+      } else {
+        state = state.copyWith(
+          isLoading: false,
+          errorMessage: "Login failed. Please try again.",
+        );
+      }
+    } catch (e) {
       state = state.copyWith(
         isLoading: false,
-        isLoggedIn: true,
-        role: "peserta magang",
-      );
-    } else if (email == "kepala.com" && password == "123") {
-      // Department head login
-      state = state.copyWith(
-        isLoading: false,
-        isLoggedIn: true,
-        role: "kepala departemen",
-      );
-    } else {
-      // Invalid credentials
-      state = LoginState(
-        isLoading: false,
-        errorMessage: "Invalid credentials",
+        errorMessage: "An error occurred. Please try again.",
       );
     }
   }

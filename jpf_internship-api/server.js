@@ -37,3 +37,6 @@ app.use('/api/admin', adminRouter);
 
 const loginRouter = require('./routes/login');  
 app.use('/api/login', loginRouter);
+
+const kunjunganStudiRouter = require('./routes/kunjungan_studi');  
+app.use('/api/kunjungan_studi', kunjunganStudiRouter);

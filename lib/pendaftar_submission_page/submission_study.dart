@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:japfa_internship/navbar.dart';
+import 'package:dio/dio.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/timeline_interview.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
-import 'package:japfa_internship/components/widget_component.dart'; // Assuming custom widget components
+import 'package:japfa_internship/components/widget_component.dart';
 
 class SubmissionStudy extends StatefulWidget {
   const SubmissionStudy({super.key});
@@ -15,21 +16,13 @@ class SubmissionStudy extends StatefulWidget {
 class _SubmissionStudyState extends State<SubmissionStudy> {
   bool _visible = false;
 
-  // To hold the file details (name and path)
-  String? cvFileName;
-  String? campusApprovalFileName;
-  String? transcriptFileName;
-  String? cvFilePath;
-  String? campusApprovalFilePath;
-  String? transcriptFilePath;
-
   final TextEditingController nameController = TextEditingController();
   final TextEditingController universityController = TextEditingController();
   final TextEditingController studentCountController = TextEditingController();
-  final TextEditingController dateController =
-      TextEditingController(); // New controller for date
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController dateController = TextEditingController();
 
-  // Add a new variable to store the selected date
   DateTime? selectedDate;
 
   @override
@@ -50,84 +43,89 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
         title: appName,
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          image: DecorationImage(
-            image: AssetImage('assets/japfa_logo_background.png'),
-            fit: BoxFit.cover,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            image: DecorationImage(
+              image: AssetImage('assets/japfa_logo_background.png'),
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        child: Center(
-          child: AnimatedOpacity(
-            opacity: _visible ? 1.0 : 0.0,
-            duration: const Duration(milliseconds: 500),
-            child: SingleChildScrollView(
-              child: Container(
-                width: 400,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 10,
-                      offset: Offset(0, 5),
-                    ),
-                  ],
+          child: _buildKunjunganStudiForm()),
+    );
+  }
+
+  Widget _buildKunjunganStudiForm() {
+    return Center(
+      child: AnimatedOpacity(
+        opacity: _visible ? 1.0 : 0.0,
+        duration: const Duration(milliseconds: 500),
+        child: SingleChildScrollView(
+          child: Container(
+            width: 400,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 10,
+                  offset: Offset(0, 5),
                 ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.arrow_back),
-                          onPressed: () => Navigator.pop(context),
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                        ),
-                        const SizedBox(width: 65),
-                        const Text(
-                          'Kunjungan Studi',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: () => Navigator.pop(context),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(width: 65),
                     const Text(
-                      'Fill in your details and upload the required documents.',
+                      'Kunjungan Studi',
                       style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    buildTextField('Name', nameController),
-                    const SizedBox(height: 15),
-                    buildTextField('University/School', universityController),
-                    const SizedBox(height: 15),
-                    buildTextField('Jumlah Anak', studentCountController),
-                    const SizedBox(height: 15),
-                    buildDateField(),
-                    const SizedBox(height: 20),
-                    RoundedRectangleButton(
-                      title: "Submit",
-                      backgroundColor: japfaOrange,
-                      fontColor: Colors.white,
-                      onPressed: () {
-                        // Handle submission logic here
-                        fadeNavigation(context,
-                            targetNavigation: const TimelineInterview());
-                      },
-                    ),
                   ],
                 ),
-              ),
+                const SizedBox(height: 10),
+                const Text(
+                  'Fill in your details and submit the required information.',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                buildTextField('Nama Perwakilan', nameController),
+                const SizedBox(height: 15),
+                buildTextField('Asal Universitas', universityController),
+                const SizedBox(height: 15),
+                buildTextField('Jumlah Anak', studentCountController),
+                const SizedBox(height: 15),
+                buildTextField('No Telepon', phoneController),
+                const SizedBox(height: 15),
+                buildTextField('Email', emailController),
+                const SizedBox(height: 15),
+                buildDateField(),
+                const SizedBox(height: 20),
+                RoundedRectangleButton(
+                  title: "Submit",
+                  backgroundColor: japfaOrange,
+                  fontColor: Colors.white,
+                  onPressed: () async {
+                    await _submitStudyDetails(); // Call the submit method
+                  },
+                ),
+              ],
             ),
           ),
         ),
@@ -141,7 +139,7 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
       controller: dateController,
       readOnly: true, // Make it read-only to prevent manual input
       decoration: InputDecoration(
-        labelText: "Select Date",
+        labelText: "Tanggal Kegiatan",
         suffixIcon: IconButton(
           icon: const Icon(Icons.calendar_today),
           onPressed: () => _selectDate(context),
@@ -165,6 +163,50 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
         dateController.text = "${picked.toLocal()}"
             .split(' ')[0]; // Set the selected date in the TextField
       });
+    }
+  }
+
+  // Method to submit the details
+  Future<void> _submitStudyDetails() async {
+    final String nama = nameController.text;
+    final String asalUniversitas = universityController.text;
+    final String jumlahAnak = studentCountController.text;
+    final String noTelepon = phoneController.text;
+    final String email = emailController.text;
+    final String tanggalKegiatan = dateController.text;
+
+    const String url =
+        'http://localhost:3000/api/kunjungan_studi/submit-kunjungan-studi'; // Update to your new endpoint
+
+    try {
+      final response = await Dio().post(
+        url,
+        data: {
+          'nama_perwakilan': nama,
+          'no_telp': noTelepon,
+          'email': email,
+          'asal_universitas': asalUniversitas,
+          'jumlah_anak': jumlahAnak,
+          'tanggal_kegiatan': tanggalKegiatan,
+        },
+        options: Options(contentType: 'application/json'),
+      );
+
+      if (response.statusCode == 201) {
+        // Handle successful submission
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Submission successful!')),
+        );
+        // Optionally navigate to the TimelineInterview page
+        fadeNavigation(context, targetNavigation: const TimelineInterview());
+      } else {
+        throw Exception('Failed to submit details');
+      }
+    } catch (e) {
+      // Handle error
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Submission failed: $e')),
+      );
     }
   }
 }

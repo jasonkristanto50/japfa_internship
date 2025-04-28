@@ -10,7 +10,7 @@ import 'package:japfa_internship/data.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/components/widget_component.dart';
-import 'package:japfa_internship/submission_page/submission_study.dart';
+import 'package:japfa_internship/pendaftar_submission_page/submission_study.dart';
 
 class MyHomePage extends ConsumerStatefulWidget {
   const MyHomePage({super.key});

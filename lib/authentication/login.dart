@@ -5,7 +5,7 @@ import 'package:japfa_internship/peserta_magang_page/logbook_peserta.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/home_page.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
-import 'package:japfa_internship/authentication/sign_up.dart';
+import 'package:japfa_internship/authentication/sign_up_pendaftar.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/components/widget_component.dart';
 import 'login_provider.dart';
@@ -134,7 +134,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         const SizedBox(height: 10),
         TextButton(
           onPressed: () {
-            fadeNavigation(context, targetNavigation: const SignUp());
+            fadeNavigation(context, targetNavigation: const SignUpPendaftar());
           },
           child: Text(
             "Don't have an account? Sign up",

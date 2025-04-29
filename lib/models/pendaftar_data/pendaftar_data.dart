@@ -6,7 +6,7 @@ part 'pendaftar_data.g.dart';
 @freezed
 sealed class PendaftarData with _$PendaftarData {
   const factory PendaftarData({
-    required String idPelamar,
+    required String idPendaftar,
     required String nama,
     required String noTelp,
     required String email,

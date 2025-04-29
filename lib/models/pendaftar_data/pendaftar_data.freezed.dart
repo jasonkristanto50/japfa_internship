@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$PendaftarData {
-  String get idPelamar;
+  String get idPendaftar;
   String get nama;
   String get noTelp;
   String get email;
@@ -39,8 +39,8 @@ mixin _$PendaftarData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is PendaftarData &&
-            (identical(other.idPelamar, idPelamar) ||
-                other.idPelamar == idPelamar) &&
+            (identical(other.idPendaftar, idPendaftar) ||
+                other.idPendaftar == idPendaftar) &&
             (identical(other.nama, nama) || other.nama == nama) &&
             (identical(other.noTelp, noTelp) || other.noTelp == noTelp) &&
             (identical(other.email, email) || other.email == email) &&
@@ -53,12 +53,12 @@ mixin _$PendaftarData {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, idPelamar, nama, noTelp, email,
+  int get hashCode => Object.hash(runtimeType, idPendaftar, nama, noTelp, email,
       asalUniversitas, password, role);
 
   @override
   String toString() {
-    return 'PendaftarData(idPelamar: $idPelamar, nama: $nama, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, password: $password, role: $role)';
+    return 'PendaftarData(idPendaftar: $idPendaftar, nama: $nama, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, password: $password, role: $role)';
   }
 }
 
@@ -69,7 +69,7 @@ abstract mixin class $PendaftarDataCopyWith<$Res> {
       _$PendaftarDataCopyWithImpl;
   @useResult
   $Res call(
-      {String idPelamar,
+      {String idPendaftar,
       String nama,
       String noTelp,
       String email,
@@ -91,7 +91,7 @@ class _$PendaftarDataCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? idPelamar = null,
+    Object? idPendaftar = null,
     Object? nama = null,
     Object? noTelp = null,
     Object? email = null,
@@ -100,9 +100,9 @@ class _$PendaftarDataCopyWithImpl<$Res>
     Object? role = null,
   }) {
     return _then(_self.copyWith(
-      idPelamar: null == idPelamar
-          ? _self.idPelamar
-          : idPelamar // ignore: cast_nullable_to_non_nullable
+      idPendaftar: null == idPendaftar
+          ? _self.idPendaftar
+          : idPendaftar // ignore: cast_nullable_to_non_nullable
               as String,
       nama: null == nama
           ? _self.nama
@@ -136,7 +136,7 @@ class _$PendaftarDataCopyWithImpl<$Res>
 @JsonSerializable()
 class _PendaftarData implements PendaftarData {
   const _PendaftarData(
-      {required this.idPelamar,
+      {required this.idPendaftar,
       required this.nama,
       required this.noTelp,
       required this.email,
@@ -147,7 +147,7 @@ class _PendaftarData implements PendaftarData {
       _$PendaftarDataFromJson(json);
 
   @override
-  final String idPelamar;
+  final String idPendaftar;
   @override
   final String nama;
   @override
@@ -181,8 +181,8 @@ class _PendaftarData implements PendaftarData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _PendaftarData &&
-            (identical(other.idPelamar, idPelamar) ||
-                other.idPelamar == idPelamar) &&
+            (identical(other.idPendaftar, idPendaftar) ||
+                other.idPendaftar == idPendaftar) &&
             (identical(other.nama, nama) || other.nama == nama) &&
             (identical(other.noTelp, noTelp) || other.noTelp == noTelp) &&
             (identical(other.email, email) || other.email == email) &&
@@ -195,12 +195,12 @@ class _PendaftarData implements PendaftarData {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, idPelamar, nama, noTelp, email,
+  int get hashCode => Object.hash(runtimeType, idPendaftar, nama, noTelp, email,
       asalUniversitas, password, role);
 
   @override
   String toString() {
-    return 'PendaftarData(idPelamar: $idPelamar, nama: $nama, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, password: $password, role: $role)';
+    return 'PendaftarData(idPendaftar: $idPendaftar, nama: $nama, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, password: $password, role: $role)';
   }
 }
 
@@ -213,7 +213,7 @@ abstract mixin class _$PendaftarDataCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String idPelamar,
+      {String idPendaftar,
       String nama,
       String noTelp,
       String email,
@@ -235,7 +235,7 @@ class __$PendaftarDataCopyWithImpl<$Res>
   @override
   @pragma('vm:prefer-inline')
   $Res call({
-    Object? idPelamar = null,
+    Object? idPendaftar = null,
     Object? nama = null,
     Object? noTelp = null,
     Object? email = null,
@@ -244,9 +244,9 @@ class __$PendaftarDataCopyWithImpl<$Res>
     Object? role = null,
   }) {
     return _then(_PendaftarData(
-      idPelamar: null == idPelamar
-          ? _self.idPelamar
-          : idPelamar // ignore: cast_nullable_to_non_nullable
+      idPendaftar: null == idPendaftar
+          ? _self.idPendaftar
+          : idPendaftar // ignore: cast_nullable_to_non_nullable
               as String,
       nama: null == nama
           ? _self.nama

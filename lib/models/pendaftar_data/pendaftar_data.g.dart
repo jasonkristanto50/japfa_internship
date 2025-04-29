@@ -8,7 +8,7 @@ part of 'pendaftar_data.dart';
 
 _PendaftarData _$PendaftarDataFromJson(Map<String, dynamic> json) =>
     _PendaftarData(
-      idPelamar: json['idPelamar'] as String,
+      idPendaftar: json['idPendaftar'] as String,
       nama: json['nama'] as String,
       noTelp: json['noTelp'] as String,
       email: json['email'] as String,
@@ -19,7 +19,7 @@ _PendaftarData _$PendaftarDataFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$PendaftarDataToJson(_PendaftarData instance) =>
     <String, dynamic>{
-      'idPelamar': instance.idPelamar,
+      'idPendaftar': instance.idPendaftar,
       'nama': instance.nama,
       'noTelp': instance.noTelp,
       'email': instance.email,

@@ -14,13 +14,13 @@ const pool = new Pool({
 
 // Endpoint: Create a new user in the pendaftar table  
 router.post('/add', async (req, res) => {  
-    const { id_pelamar, nama, no_telp, email, asal_universitas, password, role} = req.body;  
+    const { id_pendaftar, nama, no_telp, email, asal_universitas, password, role} = req.body;  
 
     try {  
         console.log('Received data:', req.body);  
         await pool.query(  
-            'INSERT INTO pendaftar (id_pelamar, nama, no_telp, email, asal_universitas, password, role) VALUES ($1, $2, $3, $4, $5, $6, $7)',  
-            [id_pelamar, nama, no_telp, email, asal_universitas, password, role]  
+            'INSERT INTO pendaftar (id_pendaftar, nama, no_telp, email, asal_universitas, password, role) VALUES ($1, $2, $3, $4, $5, $6, $7)',  
+            [id_pendaftar, nama, no_telp, email, asal_universitas, password, role]  
         );  
         res.status(201).json({ message: 'User created successfully!' });  
     } catch (err) {  

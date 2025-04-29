@@ -1,19 +1,20 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:japfa_internship/home_page.dart';
+import 'package:japfa_internship/models/pendaftar_data/pendaftar_data.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/components/widget_component.dart';
 
-class SignUp extends StatefulWidget {
-  const SignUp({super.key});
+class SignUpPendaftar extends StatefulWidget {
+  const SignUpPendaftar({super.key});
 
   @override
-  _SignUpState createState() => _SignUpState();
+  _SignUpPendaftarState createState() => _SignUpPendaftarState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _SignUpPendaftarState extends State<SignUpPendaftar> {
   bool _visible = false;
   bool _isPasswordSetup = false;
 
@@ -286,20 +287,23 @@ class _SignUpState extends State<SignUp> {
     try {
       // Fetch current count to generate ID
       final currentCount = await fetchCount();
-      final String newIdPelamar = 'PDFT_0${currentCount + 1}';
+      final String newIdPendaftar = 'PDFT_0${currentCount + 1}';
 
-      // Prepare data for sign up
+      // Create a new Pendaftar object using the freezed model
+      final pendaftar = PendaftarData(
+        idPendaftar: newIdPendaftar,
+        nama: fullNameController.text,
+        noTelp: phoneNumberController.text,
+        email: emailController.text,
+        asalUniversitas: schoolController.text,
+        password: passwordController.text,
+        role: 'pendaftar',
+      );
+
+      // Send data to API using Dio
       final response = await dio.post(
         'http://localhost:3000/api/pendaftar/add',
-        data: {
-          'id_pelamar': newIdPelamar,
-          'nama': fullNameController.text,
-          'no_telp': phoneNumberController.text,
-          'email': emailController.text,
-          'asal_universitas': schoolController.text,
-          'password': passwordController.text,
-          'role': 'pendaftar'
-        },
+        data: pendaftar.toJson(),
       );
 
       if (response.statusCode == 201) {

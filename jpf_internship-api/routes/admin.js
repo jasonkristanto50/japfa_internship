@@ -14,13 +14,13 @@ const pool = new Pool({
 
 // Endpoint: Create a new admin  
 router.post('/add-new-admin', async (req, res) => {  
-    const { id_admin, nama, no_telp, email, departemen, password, role } = req.body;  
+    const { id_admin, nama, no_telp, email, departemen, password, role, status } = req.body;  
 
     try {  
         console.log('Received data:', req.body);  
         await pool.query(  
-            'INSERT INTO ADMIN (id_admin, nama, no_telp, email, departemen, password, role) VALUES ($1, $2, $3, $4, $5, $6, $7)',  
-            [id_admin, nama, no_telp, email, departemen, password, role]  
+            'INSERT INTO ADMIN (id_admin, nama, no_telp, email, departemen, password, role, status) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',  
+            [id_admin, nama, no_telp, email, departemen, password, role, status]  
         );  
         res.status(201).json({ message: 'Admin created successfully!' });  
     } catch (err) {  

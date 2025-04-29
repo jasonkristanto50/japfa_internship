@@ -13,11 +13,9 @@ const pool = new Pool({
 
 // Add a new Kunjungan Studi  
 router.post('/submit-kunjungan-studi', async (req, res) => {  
-    const { nama_perwakilan, no_telp, email, asal_universitas, jumlah_anak, tanggal_kegiatan } = req.body;  
+    const { id_kunjungan_studi, nama_perwakilan, no_telp, email, asal_universitas, jumlah_anak, tanggal_kegiatan } = req.body;  
 
-    try {  
-        const id_kunjungan_studi = `KJ_${Date.now()}`; // Simple unique ID based on timestamp  
-
+    try {   
         await pool.query(  
             'INSERT INTO KUNJUNGAN_STUDI (id_kunjungan_studi, nama_perwakilan, no_telp, email, asal_universitas, jumlah_anak, tanggal_kegiatan) VALUES ($1, $2, $3, $4, $5, $6, $7)',  
             [id_kunjungan_studi, nama_perwakilan, no_telp, email, asal_universitas, jumlah_anak, tanggal_kegiatan]  
@@ -51,12 +49,26 @@ router.get('/count', async (req, res) => {
     }  
 });  
 
+// Delete all Kunjungan Studi records
+router.delete('/delete-all-kunjungan-data', async (req, res) => {
+    try {
+      const result = await pool.query('DELETE FROM KUNJUNGAN_STUDI');
+      res.status(200).json({
+        message: `Successfully deleted ${result.rowCount} records from KUNJUNGAN_STUDI.`,
+      });
+    } catch (error) {
+      console.error('Error deleting all Kunjungan Studi records:', error);
+      res.status(500).json({ error: 'Server error' });
+    }
+  });
+  
+
 // Delete a Kunjungan Studi by ID  
-router.delete('/:id', async (req, res) => {  
-    const { id } = req.params;  
+router.delete('/delete-kunjungan-by-id', async (req, res) => {  
+    const { id_kunjungan_studi } = req.params;  
 
     try {  
-        const result = await pool.query('DELETE FROM KUNJUNGAN_STUDI WHERE id_kunjungan_studi = $1', [id]);  
+        const result = await pool.query('DELETE FROM KUNJUNGAN_STUDI WHERE id_kunjungan_studi = $1', [id_kunjungan_studi]);  
         if (result.rowCount === 0) {  
             return res.status(404).json({ error: 'Kunjungan Studi not found' });  
         }  

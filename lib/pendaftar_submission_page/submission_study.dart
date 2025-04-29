@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:japfa_internship/models/kunjungan_studi_data/kunjungan_studi_data.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:dio/dio.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
@@ -175,35 +176,42 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
     final String email = emailController.text;
     final String tanggalKegiatan = dateController.text;
 
+    // Fetch the current count to generate the new ID
+    final countResponse =
+        await Dio().get('http://localhost:3000/api/kunjungan_studi/count');
+    final currentCount = int.parse(countResponse.data['count']);
+
+    final String idKunjunganStudi = 'KJS_0${currentCount + 1}';
+
+    final kunjunganStudi = KunjunganStudiData(
+      id_kunjungan_studi: idKunjunganStudi,
+      nama_perwakilan: nama,
+      no_telp: noTelepon,
+      email: email,
+      asal_universitas: asalUniversitas,
+      jumlah_anak: int.parse(jumlahAnak), // Convert to int if necessary
+      tanggal_kegiatan: tanggalKegiatan,
+    );
+
     const String url =
-        'http://localhost:3000/api/kunjungan_studi/submit-kunjungan-studi'; // Update to your new endpoint
+        'http://localhost:3000/api/kunjungan_studi/submit-kunjungan-studi';
 
     try {
       final response = await Dio().post(
         url,
-        data: {
-          'nama_perwakilan': nama,
-          'no_telp': noTelepon,
-          'email': email,
-          'asal_universitas': asalUniversitas,
-          'jumlah_anak': jumlahAnak,
-          'tanggal_kegiatan': tanggalKegiatan,
-        },
+        data: kunjunganStudi.toJson(),
         options: Options(contentType: 'application/json'),
       );
 
       if (response.statusCode == 201) {
-        // Handle successful submission
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Submission successful!')),
         );
-        // Optionally navigate to the TimelineInterview page
         fadeNavigation(context, targetNavigation: const TimelineInterview());
       } else {
         throw Exception('Failed to submit details');
       }
     } catch (e) {
-      // Handle error
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Submission failed: $e')),
       );

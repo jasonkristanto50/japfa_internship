@@ -1,5 +1,5 @@
 name: japfa_internship
-description: "A new Flutter project."
+description: "Proyek Tugas Akhir"
 publish_to: 'none'
 version: 0.1.0
 
@@ -16,14 +16,14 @@ dependencies:
   http: ^1.3.0
   dio: ^5.0.0
   freezed_annotation: ^3.0.0
-  json_annotation:  ^4.6.0
+  json_annotation:  ^4.9.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
   build_runner: ^2.4.15
-  freezed: ^3.0.6
+  freezed: ^3.0.0
   json_serializable: ^6.3.1
 
 flutter:

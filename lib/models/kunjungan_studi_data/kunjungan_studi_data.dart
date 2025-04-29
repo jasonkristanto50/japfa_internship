@@ -4,7 +4,7 @@ part 'kunjungan_studi_data.freezed.dart';
 part 'kunjungan_studi_data.g.dart';
 
 @freezed
-class KunjunganStudiData with _$KunjunganStudiData {
+sealed class KunjunganStudiData with _$KunjunganStudiData {
   const factory KunjunganStudiData({
     required String id_kunjungan_studi,
     required String nama_perwakilan,

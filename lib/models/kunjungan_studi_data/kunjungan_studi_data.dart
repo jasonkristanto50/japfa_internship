@@ -4,15 +4,15 @@ part 'kunjungan_studi_data.freezed.dart';
 part 'kunjungan_studi_data.g.dart';
 
 @freezed
-sealed class KunjunganStudiData with _$KunjunganStudiData {
+abstract class KunjunganStudiData with _$KunjunganStudiData {
   const factory KunjunganStudiData({
-    required String id_kunjungan_studi,
-    required String nama_perwakilan,
-    required String no_telp,
-    required String email,
-    required String asal_universitas,
-    required int jumlah_anak,
-    required String tanggal_kegiatan,
+    @JsonKey(name: 'id_kunjungan_studi') required String idKunjunganStudi,
+    @JsonKey(name: 'nama_perwakilan') required String namaPerwakilan,
+    @JsonKey(name: 'no_telp') required String noTelp,
+    @JsonKey(name: 'email') required String email,
+    @JsonKey(name: 'asal_universitas') required String asalUniversitas,
+    @JsonKey(name: 'jumlah_anak') required int jumlahAnak,
+    @JsonKey(name: 'tanggal_kegiatan') required String tanggalKegiatan,
   }) = _KunjunganStudiData;
 
   factory KunjunganStudiData.fromJson(Map<String, dynamic> json) =>

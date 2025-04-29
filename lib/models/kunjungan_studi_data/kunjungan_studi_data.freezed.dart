@@ -15,13 +15,20 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$KunjunganStudiData {
-  String get id_kunjungan_studi;
-  String get nama_perwakilan;
-  String get no_telp;
+  @JsonKey(name: 'id_kunjungan_studi')
+  String get idKunjunganStudi;
+  @JsonKey(name: 'nama_perwakilan')
+  String get namaPerwakilan;
+  @JsonKey(name: 'no_telp')
+  String get noTelp;
+  @JsonKey(name: 'email')
   String get email;
-  String get asal_universitas;
-  int get jumlah_anak;
-  String get tanggal_kegiatan;
+  @JsonKey(name: 'asal_universitas')
+  String get asalUniversitas;
+  @JsonKey(name: 'jumlah_anak')
+  int get jumlahAnak;
+  @JsonKey(name: 'tanggal_kegiatan')
+  String get tanggalKegiatan;
 
   /// Create a copy of KunjunganStudiData
   /// with the given fields replaced by the non-null parameter values.
@@ -39,35 +46,28 @@ mixin _$KunjunganStudiData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is KunjunganStudiData &&
-            (identical(other.id_kunjungan_studi, id_kunjungan_studi) ||
-                other.id_kunjungan_studi == id_kunjungan_studi) &&
-            (identical(other.nama_perwakilan, nama_perwakilan) ||
-                other.nama_perwakilan == nama_perwakilan) &&
-            (identical(other.no_telp, no_telp) || other.no_telp == no_telp) &&
+            (identical(other.idKunjunganStudi, idKunjunganStudi) ||
+                other.idKunjunganStudi == idKunjunganStudi) &&
+            (identical(other.namaPerwakilan, namaPerwakilan) ||
+                other.namaPerwakilan == namaPerwakilan) &&
+            (identical(other.noTelp, noTelp) || other.noTelp == noTelp) &&
             (identical(other.email, email) || other.email == email) &&
-            (identical(other.asal_universitas, asal_universitas) ||
-                other.asal_universitas == asal_universitas) &&
-            (identical(other.jumlah_anak, jumlah_anak) ||
-                other.jumlah_anak == jumlah_anak) &&
-            (identical(other.tanggal_kegiatan, tanggal_kegiatan) ||
-                other.tanggal_kegiatan == tanggal_kegiatan));
+            (identical(other.asalUniversitas, asalUniversitas) ||
+                other.asalUniversitas == asalUniversitas) &&
+            (identical(other.jumlahAnak, jumlahAnak) ||
+                other.jumlahAnak == jumlahAnak) &&
+            (identical(other.tanggalKegiatan, tanggalKegiatan) ||
+                other.tanggalKegiatan == tanggalKegiatan));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id_kunjungan_studi,
-      nama_perwakilan,
-      no_telp,
-      email,
-      asal_universitas,
-      jumlah_anak,
-      tanggal_kegiatan);
+  int get hashCode => Object.hash(runtimeType, idKunjunganStudi, namaPerwakilan,
+      noTelp, email, asalUniversitas, jumlahAnak, tanggalKegiatan);
 
   @override
   String toString() {
-    return 'KunjunganStudiData(id_kunjungan_studi: $id_kunjungan_studi, nama_perwakilan: $nama_perwakilan, no_telp: $no_telp, email: $email, asal_universitas: $asal_universitas, jumlah_anak: $jumlah_anak, tanggal_kegiatan: $tanggal_kegiatan)';
+    return 'KunjunganStudiData(idKunjunganStudi: $idKunjunganStudi, namaPerwakilan: $namaPerwakilan, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, jumlahAnak: $jumlahAnak, tanggalKegiatan: $tanggalKegiatan)';
   }
 }
 
@@ -78,13 +78,13 @@ abstract mixin class $KunjunganStudiDataCopyWith<$Res> {
       _$KunjunganStudiDataCopyWithImpl;
   @useResult
   $Res call(
-      {String id_kunjungan_studi,
-      String nama_perwakilan,
-      String no_telp,
-      String email,
-      String asal_universitas,
-      int jumlah_anak,
-      String tanggal_kegiatan});
+      {@JsonKey(name: 'id_kunjungan_studi') String idKunjunganStudi,
+      @JsonKey(name: 'nama_perwakilan') String namaPerwakilan,
+      @JsonKey(name: 'no_telp') String noTelp,
+      @JsonKey(name: 'email') String email,
+      @JsonKey(name: 'asal_universitas') String asalUniversitas,
+      @JsonKey(name: 'jumlah_anak') int jumlahAnak,
+      @JsonKey(name: 'tanggal_kegiatan') String tanggalKegiatan});
 }
 
 /// @nodoc
@@ -100,42 +100,42 @@ class _$KunjunganStudiDataCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id_kunjungan_studi = null,
-    Object? nama_perwakilan = null,
-    Object? no_telp = null,
+    Object? idKunjunganStudi = null,
+    Object? namaPerwakilan = null,
+    Object? noTelp = null,
     Object? email = null,
-    Object? asal_universitas = null,
-    Object? jumlah_anak = null,
-    Object? tanggal_kegiatan = null,
+    Object? asalUniversitas = null,
+    Object? jumlahAnak = null,
+    Object? tanggalKegiatan = null,
   }) {
     return _then(_self.copyWith(
-      id_kunjungan_studi: null == id_kunjungan_studi
-          ? _self.id_kunjungan_studi
-          : id_kunjungan_studi // ignore: cast_nullable_to_non_nullable
+      idKunjunganStudi: null == idKunjunganStudi
+          ? _self.idKunjunganStudi
+          : idKunjunganStudi // ignore: cast_nullable_to_non_nullable
               as String,
-      nama_perwakilan: null == nama_perwakilan
-          ? _self.nama_perwakilan
-          : nama_perwakilan // ignore: cast_nullable_to_non_nullable
+      namaPerwakilan: null == namaPerwakilan
+          ? _self.namaPerwakilan
+          : namaPerwakilan // ignore: cast_nullable_to_non_nullable
               as String,
-      no_telp: null == no_telp
-          ? _self.no_telp
-          : no_telp // ignore: cast_nullable_to_non_nullable
+      noTelp: null == noTelp
+          ? _self.noTelp
+          : noTelp // ignore: cast_nullable_to_non_nullable
               as String,
       email: null == email
           ? _self.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      asal_universitas: null == asal_universitas
-          ? _self.asal_universitas
-          : asal_universitas // ignore: cast_nullable_to_non_nullable
+      asalUniversitas: null == asalUniversitas
+          ? _self.asalUniversitas
+          : asalUniversitas // ignore: cast_nullable_to_non_nullable
               as String,
-      jumlah_anak: null == jumlah_anak
-          ? _self.jumlah_anak
-          : jumlah_anak // ignore: cast_nullable_to_non_nullable
+      jumlahAnak: null == jumlahAnak
+          ? _self.jumlahAnak
+          : jumlahAnak // ignore: cast_nullable_to_non_nullable
               as int,
-      tanggal_kegiatan: null == tanggal_kegiatan
-          ? _self.tanggal_kegiatan
-          : tanggal_kegiatan // ignore: cast_nullable_to_non_nullable
+      tanggalKegiatan: null == tanggalKegiatan
+          ? _self.tanggalKegiatan
+          : tanggalKegiatan // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -145,30 +145,37 @@ class _$KunjunganStudiDataCopyWithImpl<$Res>
 @JsonSerializable()
 class _KunjunganStudiData implements KunjunganStudiData {
   const _KunjunganStudiData(
-      {required this.id_kunjungan_studi,
-      required this.nama_perwakilan,
-      required this.no_telp,
-      required this.email,
-      required this.asal_universitas,
-      required this.jumlah_anak,
-      required this.tanggal_kegiatan});
+      {@JsonKey(name: 'id_kunjungan_studi') required this.idKunjunganStudi,
+      @JsonKey(name: 'nama_perwakilan') required this.namaPerwakilan,
+      @JsonKey(name: 'no_telp') required this.noTelp,
+      @JsonKey(name: 'email') required this.email,
+      @JsonKey(name: 'asal_universitas') required this.asalUniversitas,
+      @JsonKey(name: 'jumlah_anak') required this.jumlahAnak,
+      @JsonKey(name: 'tanggal_kegiatan') required this.tanggalKegiatan});
   factory _KunjunganStudiData.fromJson(Map<String, dynamic> json) =>
       _$KunjunganStudiDataFromJson(json);
 
   @override
-  final String id_kunjungan_studi;
+  @JsonKey(name: 'id_kunjungan_studi')
+  final String idKunjunganStudi;
   @override
-  final String nama_perwakilan;
+  @JsonKey(name: 'nama_perwakilan')
+  final String namaPerwakilan;
   @override
-  final String no_telp;
+  @JsonKey(name: 'no_telp')
+  final String noTelp;
   @override
+  @JsonKey(name: 'email')
   final String email;
   @override
-  final String asal_universitas;
+  @JsonKey(name: 'asal_universitas')
+  final String asalUniversitas;
   @override
-  final int jumlah_anak;
+  @JsonKey(name: 'jumlah_anak')
+  final int jumlahAnak;
   @override
-  final String tanggal_kegiatan;
+  @JsonKey(name: 'tanggal_kegiatan')
+  final String tanggalKegiatan;
 
   /// Create a copy of KunjunganStudiData
   /// with the given fields replaced by the non-null parameter values.
@@ -190,35 +197,28 @@ class _KunjunganStudiData implements KunjunganStudiData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _KunjunganStudiData &&
-            (identical(other.id_kunjungan_studi, id_kunjungan_studi) ||
-                other.id_kunjungan_studi == id_kunjungan_studi) &&
-            (identical(other.nama_perwakilan, nama_perwakilan) ||
-                other.nama_perwakilan == nama_perwakilan) &&
-            (identical(other.no_telp, no_telp) || other.no_telp == no_telp) &&
+            (identical(other.idKunjunganStudi, idKunjunganStudi) ||
+                other.idKunjunganStudi == idKunjunganStudi) &&
+            (identical(other.namaPerwakilan, namaPerwakilan) ||
+                other.namaPerwakilan == namaPerwakilan) &&
+            (identical(other.noTelp, noTelp) || other.noTelp == noTelp) &&
             (identical(other.email, email) || other.email == email) &&
-            (identical(other.asal_universitas, asal_universitas) ||
-                other.asal_universitas == asal_universitas) &&
-            (identical(other.jumlah_anak, jumlah_anak) ||
-                other.jumlah_anak == jumlah_anak) &&
-            (identical(other.tanggal_kegiatan, tanggal_kegiatan) ||
-                other.tanggal_kegiatan == tanggal_kegiatan));
+            (identical(other.asalUniversitas, asalUniversitas) ||
+                other.asalUniversitas == asalUniversitas) &&
+            (identical(other.jumlahAnak, jumlahAnak) ||
+                other.jumlahAnak == jumlahAnak) &&
+            (identical(other.tanggalKegiatan, tanggalKegiatan) ||
+                other.tanggalKegiatan == tanggalKegiatan));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id_kunjungan_studi,
-      nama_perwakilan,
-      no_telp,
-      email,
-      asal_universitas,
-      jumlah_anak,
-      tanggal_kegiatan);
+  int get hashCode => Object.hash(runtimeType, idKunjunganStudi, namaPerwakilan,
+      noTelp, email, asalUniversitas, jumlahAnak, tanggalKegiatan);
 
   @override
   String toString() {
-    return 'KunjunganStudiData(id_kunjungan_studi: $id_kunjungan_studi, nama_perwakilan: $nama_perwakilan, no_telp: $no_telp, email: $email, asal_universitas: $asal_universitas, jumlah_anak: $jumlah_anak, tanggal_kegiatan: $tanggal_kegiatan)';
+    return 'KunjunganStudiData(idKunjunganStudi: $idKunjunganStudi, namaPerwakilan: $namaPerwakilan, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, jumlahAnak: $jumlahAnak, tanggalKegiatan: $tanggalKegiatan)';
   }
 }
 
@@ -231,13 +231,13 @@ abstract mixin class _$KunjunganStudiDataCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String id_kunjungan_studi,
-      String nama_perwakilan,
-      String no_telp,
-      String email,
-      String asal_universitas,
-      int jumlah_anak,
-      String tanggal_kegiatan});
+      {@JsonKey(name: 'id_kunjungan_studi') String idKunjunganStudi,
+      @JsonKey(name: 'nama_perwakilan') String namaPerwakilan,
+      @JsonKey(name: 'no_telp') String noTelp,
+      @JsonKey(name: 'email') String email,
+      @JsonKey(name: 'asal_universitas') String asalUniversitas,
+      @JsonKey(name: 'jumlah_anak') int jumlahAnak,
+      @JsonKey(name: 'tanggal_kegiatan') String tanggalKegiatan});
 }
 
 /// @nodoc
@@ -253,42 +253,42 @@ class __$KunjunganStudiDataCopyWithImpl<$Res>
   @override
   @pragma('vm:prefer-inline')
   $Res call({
-    Object? id_kunjungan_studi = null,
-    Object? nama_perwakilan = null,
-    Object? no_telp = null,
+    Object? idKunjunganStudi = null,
+    Object? namaPerwakilan = null,
+    Object? noTelp = null,
     Object? email = null,
-    Object? asal_universitas = null,
-    Object? jumlah_anak = null,
-    Object? tanggal_kegiatan = null,
+    Object? asalUniversitas = null,
+    Object? jumlahAnak = null,
+    Object? tanggalKegiatan = null,
   }) {
     return _then(_KunjunganStudiData(
-      id_kunjungan_studi: null == id_kunjungan_studi
-          ? _self.id_kunjungan_studi
-          : id_kunjungan_studi // ignore: cast_nullable_to_non_nullable
+      idKunjunganStudi: null == idKunjunganStudi
+          ? _self.idKunjunganStudi
+          : idKunjunganStudi // ignore: cast_nullable_to_non_nullable
               as String,
-      nama_perwakilan: null == nama_perwakilan
-          ? _self.nama_perwakilan
-          : nama_perwakilan // ignore: cast_nullable_to_non_nullable
+      namaPerwakilan: null == namaPerwakilan
+          ? _self.namaPerwakilan
+          : namaPerwakilan // ignore: cast_nullable_to_non_nullable
               as String,
-      no_telp: null == no_telp
-          ? _self.no_telp
-          : no_telp // ignore: cast_nullable_to_non_nullable
+      noTelp: null == noTelp
+          ? _self.noTelp
+          : noTelp // ignore: cast_nullable_to_non_nullable
               as String,
       email: null == email
           ? _self.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      asal_universitas: null == asal_universitas
-          ? _self.asal_universitas
-          : asal_universitas // ignore: cast_nullable_to_non_nullable
+      asalUniversitas: null == asalUniversitas
+          ? _self.asalUniversitas
+          : asalUniversitas // ignore: cast_nullable_to_non_nullable
               as String,
-      jumlah_anak: null == jumlah_anak
-          ? _self.jumlah_anak
-          : jumlah_anak // ignore: cast_nullable_to_non_nullable
+      jumlahAnak: null == jumlahAnak
+          ? _self.jumlahAnak
+          : jumlahAnak // ignore: cast_nullable_to_non_nullable
               as int,
-      tanggal_kegiatan: null == tanggal_kegiatan
-          ? _self.tanggal_kegiatan
-          : tanggal_kegiatan // ignore: cast_nullable_to_non_nullable
+      tanggalKegiatan: null == tanggalKegiatan
+          ? _self.tanggalKegiatan
+          : tanggalKegiatan // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }

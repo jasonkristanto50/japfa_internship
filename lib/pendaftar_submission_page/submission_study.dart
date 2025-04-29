@@ -184,13 +184,13 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
     final String idKunjunganStudi = 'KJS_0${currentCount + 1}';
 
     final kunjunganStudi = KunjunganStudiData(
-      id_kunjungan_studi: idKunjunganStudi,
-      nama_perwakilan: nama,
-      no_telp: noTelepon,
+      idKunjunganStudi: idKunjunganStudi,
+      namaPerwakilan: nama,
+      noTelp: noTelepon,
       email: email,
-      asal_universitas: asalUniversitas,
-      jumlah_anak: int.parse(jumlahAnak), // Convert to int if necessary
-      tanggal_kegiatan: tanggalKegiatan,
+      asalUniversitas: asalUniversitas,
+      jumlahAnak: int.parse(jumlahAnak), // Convert to int if necessary
+      tanggalKegiatan: tanggalKegiatan,
     );
 
     const String url =

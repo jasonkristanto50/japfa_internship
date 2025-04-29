@@ -7,9 +7,9 @@ part of 'admin_data.dart';
 // **************************************************************************
 
 _AdminData _$AdminDataFromJson(Map<String, dynamic> json) => _AdminData(
-      idAdmin: json['idAdmin'] as String,
+      idAdmin: json['id_admin'] as String,
       nama: json['nama'] as String,
-      noTelp: json['noTelp'] as String,
+      noTelp: json['no_telp'] as String,
       email: json['email'] as String,
       departemen: json['departemen'] as String,
       password: json['password'] as String,
@@ -19,9 +19,9 @@ _AdminData _$AdminDataFromJson(Map<String, dynamic> json) => _AdminData(
 
 Map<String, dynamic> _$AdminDataToJson(_AdminData instance) =>
     <String, dynamic>{
-      'idAdmin': instance.idAdmin,
+      'id_admin': instance.idAdmin,
       'nama': instance.nama,
-      'noTelp': instance.noTelp,
+      'no_telp': instance.noTelp,
       'email': instance.email,
       'departemen': instance.departemen,
       'password': instance.password,

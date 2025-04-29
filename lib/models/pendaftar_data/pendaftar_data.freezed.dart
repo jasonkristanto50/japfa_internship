@@ -15,12 +15,19 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$PendaftarData {
+  @JsonKey(name: 'id_pendaftar')
   String get idPendaftar;
+  @JsonKey(name: 'nama')
   String get nama;
+  @JsonKey(name: 'no_telp')
   String get noTelp;
+  @JsonKey(name: 'email')
   String get email;
+  @JsonKey(name: 'asal_universitas')
   String get asalUniversitas;
+  @JsonKey(name: 'password')
   String get password;
+  @JsonKey(name: 'role')
   String get role;
 
   /// Create a copy of PendaftarData
@@ -69,13 +76,13 @@ abstract mixin class $PendaftarDataCopyWith<$Res> {
       _$PendaftarDataCopyWithImpl;
   @useResult
   $Res call(
-      {String idPendaftar,
-      String nama,
-      String noTelp,
-      String email,
-      String asalUniversitas,
-      String password,
-      String role});
+      {@JsonKey(name: 'id_pendaftar') String idPendaftar,
+      @JsonKey(name: 'nama') String nama,
+      @JsonKey(name: 'no_telp') String noTelp,
+      @JsonKey(name: 'email') String email,
+      @JsonKey(name: 'asal_universitas') String asalUniversitas,
+      @JsonKey(name: 'password') String password,
+      @JsonKey(name: 'role') String role});
 }
 
 /// @nodoc
@@ -136,29 +143,36 @@ class _$PendaftarDataCopyWithImpl<$Res>
 @JsonSerializable()
 class _PendaftarData implements PendaftarData {
   const _PendaftarData(
-      {required this.idPendaftar,
-      required this.nama,
-      required this.noTelp,
-      required this.email,
-      required this.asalUniversitas,
-      required this.password,
-      required this.role});
+      {@JsonKey(name: 'id_pendaftar') required this.idPendaftar,
+      @JsonKey(name: 'nama') required this.nama,
+      @JsonKey(name: 'no_telp') required this.noTelp,
+      @JsonKey(name: 'email') required this.email,
+      @JsonKey(name: 'asal_universitas') required this.asalUniversitas,
+      @JsonKey(name: 'password') required this.password,
+      @JsonKey(name: 'role') required this.role});
   factory _PendaftarData.fromJson(Map<String, dynamic> json) =>
       _$PendaftarDataFromJson(json);
 
   @override
+  @JsonKey(name: 'id_pendaftar')
   final String idPendaftar;
   @override
+  @JsonKey(name: 'nama')
   final String nama;
   @override
+  @JsonKey(name: 'no_telp')
   final String noTelp;
   @override
+  @JsonKey(name: 'email')
   final String email;
   @override
+  @JsonKey(name: 'asal_universitas')
   final String asalUniversitas;
   @override
+  @JsonKey(name: 'password')
   final String password;
   @override
+  @JsonKey(name: 'role')
   final String role;
 
   /// Create a copy of PendaftarData
@@ -213,13 +227,13 @@ abstract mixin class _$PendaftarDataCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String idPendaftar,
-      String nama,
-      String noTelp,
-      String email,
-      String asalUniversitas,
-      String password,
-      String role});
+      {@JsonKey(name: 'id_pendaftar') String idPendaftar,
+      @JsonKey(name: 'nama') String nama,
+      @JsonKey(name: 'no_telp') String noTelp,
+      @JsonKey(name: 'email') String email,
+      @JsonKey(name: 'asal_universitas') String asalUniversitas,
+      @JsonKey(name: 'password') String password,
+      @JsonKey(name: 'role') String role});
 }
 
 /// @nodoc

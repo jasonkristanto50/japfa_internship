@@ -6,13 +6,13 @@ part 'pendaftar_data.g.dart';
 @freezed
 sealed class PendaftarData with _$PendaftarData {
   const factory PendaftarData({
-    required String idPendaftar,
-    required String nama,
-    required String noTelp,
-    required String email,
-    required String asalUniversitas,
-    required String password,
-    required String role,
+    @JsonKey(name: 'id_pendaftar') required String idPendaftar,
+    @JsonKey(name: 'nama') required String nama,
+    @JsonKey(name: 'no_telp') required String noTelp,
+    @JsonKey(name: 'email') required String email,
+    @JsonKey(name: 'asal_universitas') required String asalUniversitas,
+    @JsonKey(name: 'password') required String password,
+    @JsonKey(name: 'role') required String role,
   }) = _PendaftarData;
 
   factory PendaftarData.fromJson(Map<String, dynamic> json) =>

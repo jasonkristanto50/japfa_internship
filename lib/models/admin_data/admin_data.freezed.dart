@@ -15,13 +15,21 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$AdminData {
+  @JsonKey(name: 'id_admin')
   String get idAdmin;
+  @JsonKey(name: 'nama')
   String get nama;
+  @JsonKey(name: 'no_telp')
   String get noTelp;
+  @JsonKey(name: 'email')
   String get email;
+  @JsonKey(name: 'departemen')
   String get departemen;
+  @JsonKey(name: 'password')
   String get password;
+  @JsonKey(name: 'role')
   String get role;
+  @JsonKey(name: 'status')
   String get status;
 
   /// Create a copy of AdminData
@@ -68,14 +76,14 @@ abstract mixin class $AdminDataCopyWith<$Res> {
       _$AdminDataCopyWithImpl;
   @useResult
   $Res call(
-      {String idAdmin,
-      String nama,
-      String noTelp,
-      String email,
-      String departemen,
-      String password,
-      String role,
-      String status});
+      {@JsonKey(name: 'id_admin') String idAdmin,
+      @JsonKey(name: 'nama') String nama,
+      @JsonKey(name: 'no_telp') String noTelp,
+      @JsonKey(name: 'email') String email,
+      @JsonKey(name: 'departemen') String departemen,
+      @JsonKey(name: 'password') String password,
+      @JsonKey(name: 'role') String role,
+      @JsonKey(name: 'status') String status});
 }
 
 /// @nodoc
@@ -140,32 +148,40 @@ class _$AdminDataCopyWithImpl<$Res> implements $AdminDataCopyWith<$Res> {
 @JsonSerializable()
 class _AdminData implements AdminData {
   const _AdminData(
-      {required this.idAdmin,
-      required this.nama,
-      required this.noTelp,
-      required this.email,
-      required this.departemen,
-      required this.password,
-      required this.role,
-      required this.status});
+      {@JsonKey(name: 'id_admin') required this.idAdmin,
+      @JsonKey(name: 'nama') required this.nama,
+      @JsonKey(name: 'no_telp') required this.noTelp,
+      @JsonKey(name: 'email') required this.email,
+      @JsonKey(name: 'departemen') required this.departemen,
+      @JsonKey(name: 'password') required this.password,
+      @JsonKey(name: 'role') required this.role,
+      @JsonKey(name: 'status') required this.status});
   factory _AdminData.fromJson(Map<String, dynamic> json) =>
       _$AdminDataFromJson(json);
 
   @override
+  @JsonKey(name: 'id_admin')
   final String idAdmin;
   @override
+  @JsonKey(name: 'nama')
   final String nama;
   @override
+  @JsonKey(name: 'no_telp')
   final String noTelp;
   @override
+  @JsonKey(name: 'email')
   final String email;
   @override
+  @JsonKey(name: 'departemen')
   final String departemen;
   @override
+  @JsonKey(name: 'password')
   final String password;
   @override
+  @JsonKey(name: 'role')
   final String role;
   @override
+  @JsonKey(name: 'status')
   final String status;
 
   /// Create a copy of AdminData
@@ -220,14 +236,14 @@ abstract mixin class _$AdminDataCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String idAdmin,
-      String nama,
-      String noTelp,
-      String email,
-      String departemen,
-      String password,
-      String role,
-      String status});
+      {@JsonKey(name: 'id_admin') String idAdmin,
+      @JsonKey(name: 'nama') String nama,
+      @JsonKey(name: 'no_telp') String noTelp,
+      @JsonKey(name: 'email') String email,
+      @JsonKey(name: 'departemen') String departemen,
+      @JsonKey(name: 'password') String password,
+      @JsonKey(name: 'role') String role,
+      @JsonKey(name: 'status') String status});
 }
 
 /// @nodoc

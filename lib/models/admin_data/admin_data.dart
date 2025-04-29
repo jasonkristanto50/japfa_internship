@@ -1,11 +1,11 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'admin.freezed.dart';
-part 'admin.g.dart';
+part 'admin_data.freezed.dart';
+part 'admin_data.g.dart';
 
 @freezed
-sealed class Admin with _$Admin {
-  const factory Admin({
+sealed class AdminData with _$AdminData {
+  const factory AdminData({
     required String idAdmin,
     required String nama,
     required String noTelp,
@@ -14,7 +14,8 @@ sealed class Admin with _$Admin {
     required String password,
     required String role,
     required String status,
-  }) = _Admin;
+  }) = _AdminData;
 
-  factory Admin.fromJson(Map<String, dynamic> json) => _$AdminFromJson(json);
+  factory AdminData.fromJson(Map<String, dynamic> json) =>
+      _$AdminDataFromJson(json);
 }

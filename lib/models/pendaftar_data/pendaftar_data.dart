@@ -1,11 +1,11 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'pendaftar.freezed.dart';
-part 'pendaftar.g.dart';
+part 'pendaftar_data.freezed.dart';
+part 'pendaftar_data.g.dart';
 
 @freezed
-sealed class Pendaftar with _$Pendaftar {
-  const factory Pendaftar({
+sealed class PendaftarData with _$PendaftarData {
+  const factory PendaftarData({
     required String idPelamar,
     required String nama,
     required String noTelp,
@@ -13,8 +13,8 @@ sealed class Pendaftar with _$Pendaftar {
     required String asalUniversitas,
     required String password,
     required String role,
-  }) = _Pendaftar;
+  }) = _PendaftarData;
 
-  factory Pendaftar.fromJson(Map<String, dynamic> json) =>
-      _$PendaftarFromJson(json);
+  factory PendaftarData.fromJson(Map<String, dynamic> json) =>
+      _$PendaftarDataFromJson(json);
 }

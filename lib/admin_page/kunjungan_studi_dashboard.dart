@@ -1,8 +1,10 @@
-import 'dart:ui';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+import 'package:japfa_internship/models/kunjungan_studi_data/kunjungan_studi_data.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/components/widget_component.dart';
-import 'package:japfa_internship/data.dart';
+import 'package:japfa_internship/data.dart'; // Your data file
 import 'package:japfa_internship/function_variable/variable.dart';
 
 class KunjunganStudiDashboard extends StatefulWidget {
@@ -15,12 +17,19 @@ class KunjunganStudiDashboard extends StatefulWidget {
 
 class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
   String searchQuery = "";
+  List<KunjunganStudiData> kunjunganList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchKunjunganData();
+  }
 
   @override
   Widget build(BuildContext context) {
     // Filter kunjunganData based on search query
-    List<Map<String, dynamic>> filteredKunjunganData = kunjunganData
-        .where((kunjungan) => kunjungan['asal universitas']
+    List<KunjunganStudiData> filteredKunjunganData = kunjunganList
+        .where((kunjungan) => kunjungan.asalUniversitas
             .toLowerCase()
             .contains(searchQuery.toLowerCase()))
         .toList();
@@ -73,11 +82,12 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
                         width: 1,
                       ),
                       columns: const [
+                        DataColumn(label: Text('Tanggal')),
                         DataColumn(label: Text('Asal Universitas')),
                         DataColumn(label: Text('Nama Perwakilan')),
                         DataColumn(label: Text('No Telp')),
+                        DataColumn(label: Text('Email')),
                         DataColumn(label: Text('Jumlah Anak')),
-                        DataColumn(label: Text('Tanggal')),
                         DataColumn(label: Text('Status')),
                         DataColumn(label: Text('Aksi')),
                       ],
@@ -86,37 +96,43 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
                           cells: [
                             DataCell(
                               Text(
-                                kunjungan['asal universitas'].toString(),
+                                kunjungan.tanggalKegiatan,
                                 textAlign: TextAlign.center,
                               ),
                             ),
                             DataCell(
                               Text(
-                                kunjungan['nama'].toString(),
+                                kunjungan.asalUniversitas,
                                 textAlign: TextAlign.center,
                               ),
                             ),
                             DataCell(
                               Text(
-                                kunjungan['no telp'].toString(),
+                                kunjungan.namaPerwakilan,
                                 textAlign: TextAlign.center,
                               ),
                             ),
                             DataCell(
                               Text(
-                                kunjungan['jumlah'].toString(),
+                                kunjungan.noTelp,
                                 textAlign: TextAlign.center,
                               ),
                             ),
                             DataCell(
                               Text(
-                                kunjungan['tanggal kegiatan'].toString(),
+                                kunjungan.email,
                                 textAlign: TextAlign.center,
                               ),
                             ),
                             DataCell(
                               Text(
-                                kunjungan['status'].toString(),
+                                kunjungan.jumlahAnak.toString(),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            DataCell(
+                              Text(
+                                kunjungan.status,
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -149,46 +165,84 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
     );
   }
 
-  void _respond(Map<String, dynamic> kunjungan) {
+  // Fetch Kunjungan Studi data from API or Local source
+  Future<void> _fetchKunjunganData() async {
+    try {
+      final response = await Dio().get(
+          'http://localhost:3000/api/kunjungan_studi/fetch-all-kunjungan-data');
+      final List<dynamic> data = response.data;
+
+      setState(() {
+        kunjunganList = data
+            .map((item) => KunjunganStudiData.fromJson(
+                item)) // Deserialize into KunjunganStudiData
+            .toList();
+
+        // Sort by date (tanggalKegiatan) in descending order (latest first)
+        kunjunganList.sort((a, b) {
+          // Assuming 'tanggalKegiatan' is a string in the format 'YYYY-MM-DD'
+          final dateA = DateTime.parse(a.tanggalKegiatan);
+          final dateB = DateTime.parse(b.tanggalKegiatan);
+          return dateB.compareTo(dateA); // To sort in descending order
+        });
+      });
+    } catch (e) {
+      print('Error fetching kunjungan studi data: $e');
+    }
+  }
+
+  void _respond(KunjunganStudiData kunjungan) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Respond to Kunjungan'),
-          content: const Text(
-              'Do you want to accept (Diterima) or reject (Ditolak) this request?'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Diterima'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                _handleResponse(kunjungan, true);
-              },
-            ),
-            TextButton(
-              child: const Text('Ditolak'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                _handleResponse(kunjungan, false);
-              },
-            ),
-          ],
+        return CustomRespondDialog(
+          title: "Berikan Respon",
+          message: "Mau menerima / menolak kunjungan ?",
+          onAccept: () {
+            Navigator.of(context).pop();
+            _handleResponse(kunjungan, true); // Accept
+          },
+          onReject: () {
+            Navigator.of(context).pop();
+            _handleResponse(kunjungan, false); // Reject
+          },
         );
       },
     );
+    setState(() {});
   }
 
-  void _handleResponse(Map<String, dynamic> kunjungan, bool isAccepted) {
+  void _handleResponse(KunjunganStudiData kunjungan, bool isAccepted) async {
+    // Update status locally first
     setState(() {
-      if (isAccepted) {
-        kunjungan['status'] = 'Diterima';
-      } else {
-        kunjungan['status'] = 'Ditolak';
-      }
+      kunjungan =
+          kunjungan.copyWith(status: isAccepted ? 'Diterima' : 'Ditolak');
     });
 
-    // Optional: Add print for debugging
-    print(
-        'Kunjungan for ${kunjungan['nama']} status updated to: ${kunjungan['status']}');
+    // Call the API to update the status in the backend
+    try {
+      final response = await Dio().put(
+        'http://localhost:3000/api/kunjungan_studi/${kunjungan.idKunjunganStudi}', // Replace with your actual endpoint
+        data: {
+          'status': kunjungan.status, // Send the updated status
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // Optionally, show a success message or handle UI updates
+        print('Status updated to: ${kunjungan.status}');
+        // Refresh data by calling the function that fetches the latest data from the backend
+        _fetchKunjunganData();
+      } else {
+        // If the backend response isn't successful, revert the local change or show an error message
+        print('Failed to update status');
+      }
+    } catch (e) {
+      print('Error updating status: $e');
+      // Optionally revert status if error occurs
+      setState(() {
+        kunjungan = kunjungan.copyWith(status: 'Pending');
+      });
+    }
   }
 }

@@ -123,7 +123,9 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
                   backgroundColor: japfaOrange,
                   fontColor: Colors.white,
                   onPressed: () async {
-                    await _submitStudyDetails(); // Call the submit method
+                    if (validateFields(context)) {
+                      await _submitStudyDetails();
+                    }
                   },
                 ),
               ],
@@ -150,14 +152,30 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
     );
   }
 
-  // Method to show date picker
   Future<void> _selectDate(BuildContext context) async {
+    final DateTime now = DateTime.now();
+
+    // Disable today's date and past dates, and disable Mondays
+    final DateTime firstAvailableDate =
+        now.add(const Duration(days: 1)); // No today
+
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: selectedDate ?? DateTime.now(),
-      firstDate: DateTime(2000),
+      initialDate: selectedDate ?? firstAvailableDate, // Default to tomorrow
+      firstDate: firstAvailableDate, // Cannot pick today or any past dates
       lastDate: DateTime(2101),
+      selectableDayPredicate: (DateTime date) {
+        // Disable Mondays (weekday == 1)
+        if (date.isBefore(now)) {
+          return false; // Disable past dates
+        }
+        if (date.weekday == DateTime.monday) {
+          return false; // Disable Mondays
+        }
+        return true; // Enable other dates
+      },
     );
+
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
@@ -165,6 +183,59 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
             .split(' ')[0]; // Set the selected date in the TextField
       });
     }
+  }
+
+  // validate all form fields
+  bool validateFields(BuildContext context) {
+    if (!validateField(
+        controller: nameController,
+        fieldName: "Nama",
+        fieldType: FieldType.name,
+        context: context)) {
+      return false;
+    }
+
+    if (!validateField(
+        controller: universityController,
+        fieldName: "Asal Universitas",
+        fieldType: FieldType.name,
+        context: context)) {
+      return false;
+    }
+
+    if (!validateField(
+        controller: studentCountController,
+        fieldName: "Jumlah Anak",
+        fieldType: FieldType.jumlahAnakKunjungan,
+        context: context)) {
+      return false;
+    }
+
+    if (!validateField(
+        controller: phoneController,
+        fieldName: "No Telepon",
+        fieldType: FieldType.phone,
+        context: context)) {
+      return false;
+    }
+
+    if (!validateField(
+        controller: emailController,
+        fieldName: "Email",
+        fieldType: FieldType.email,
+        context: context)) {
+      return false;
+    }
+
+    if (!validateField(
+        controller: dateController,
+        fieldName: "Tanggal Kegiatan",
+        fieldType: FieldType.elseMustFill,
+        context: context)) {
+      return false;
+    }
+
+    return true;
   }
 
   // Method to submit the details

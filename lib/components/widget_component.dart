@@ -67,11 +67,11 @@ class RoundedRectangleButton extends StatelessWidget {
   }
 }
 
-// Custom Dialog Widget
-class CustomDialog extends StatelessWidget {
+// Custom Dialog Widget for Login
+class CustomLoginDialog extends StatelessWidget {
   final VoidCallback onLoginPressed;
 
-  const CustomDialog({required this.onLoginPressed, super.key});
+  const CustomLoginDialog({required this.onLoginPressed, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -101,6 +101,95 @@ class CustomDialog extends StatelessWidget {
             },
           ),
         ],
+      ),
+    );
+  }
+}
+
+// Custom Dialog for Respond
+class CustomRespondDialog extends StatelessWidget {
+  final String title;
+  final String message;
+  final VoidCallback onAccept;
+  final VoidCallback onReject;
+
+  const CustomRespondDialog({
+    super.key,
+    required this.title,
+    required this.message,
+    required this.onAccept,
+    required this.onReject,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      elevation: 5.0,
+      child: Container(
+        width: 350,
+        height: 200,
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Title
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: japfaOrange,
+              ),
+            ),
+            const SizedBox(height: 16),
+            // Message
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: regular16,
+            ),
+            const Spacer(),
+            // Buttons
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Reject Button
+                ElevatedButton(
+                  onPressed: onReject,
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.red,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: const Text('Ditolak'),
+                ),
+                const SizedBox(width: 16),
+                // Accept Button
+                ElevatedButton(
+                  onPressed: onAccept,
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: japfaOrange,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: const Text('Diterima'),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

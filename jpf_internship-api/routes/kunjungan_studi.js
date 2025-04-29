@@ -47,7 +47,31 @@ router.get('/count', async (req, res) => {
         console.error('Error fetching count:', error);  
         res.status(500).json({ error: 'Server error' });  
     }  
-});  
+}); 
+
+
+// Update status of Kunjungan Studi
+router.put('/:id', async (req, res) => {
+    const { id } = req.params;  // ID of the Kunjungan Studi to update
+    const { status } = req.body;  // New status ("Diterima" or "Ditolak")
+  
+    try {
+      const result = await pool.query(
+        'UPDATE KUNJUNGAN_STUDI SET status = $1 WHERE id_kunjungan_studi = $2 RETURNING *',
+        [status, id]
+      );
+  
+      if (result.rowCount === 0) {
+        return res.status(404).json({ error: 'Kunjungan Studi not found' });
+      }
+  
+      res.status(200).json({ message: 'Status updated successfully!', data: result.rows[0] });
+    } catch (error) {
+      console.error('Error updating Kunjungan Studi status:', error);
+      res.status(500).json({ error: 'Server error' });
+    }
+  });
+  
 
 // Delete all Kunjungan Studi records
 router.delete('/delete-all-kunjungan-data', async (req, res) => {

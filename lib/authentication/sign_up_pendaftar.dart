@@ -215,56 +215,54 @@ class _SignUpPendaftarState extends State<SignUpPendaftar> {
     );
   }
 
-  // validate all form field
-  bool validateFields() {
-    if (fullNameController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Nama tidak boleh kosong'),
-        backgroundColor: Colors.red,
-      ));
+  // validate all form fields
+  bool validateFields(BuildContext context) {
+    // Validate each field and return false if validation fails
+    if (!validateField(
+        controller: fullNameController,
+        fieldName: "Nama",
+        fieldType: FieldType.name,
+        context: context)) {
       return false;
     }
 
-    if (emailController.text.isEmpty ||
-        !emailController.text.contains('@') ||
-        !emailController.text.endsWith('.com')) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Tolong isi email dengan benar'),
-        backgroundColor: Colors.red,
-      ));
+    if (!validateField(
+        controller: emailController,
+        fieldName: "Email",
+        fieldType: FieldType.email,
+        context: context)) {
       return false;
     }
 
-    if (phoneNumberController.text.isEmpty ||
-        !RegExp(r'^\d+$').hasMatch(phoneNumberController.text)) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('No Telp harus diisi dan harus angka'),
-        backgroundColor: Colors.red,
-      ));
+    if (!validateField(
+        controller: phoneNumberController,
+        fieldName: "No Telp",
+        fieldType: FieldType.phone,
+        context: context)) {
       return false;
     }
 
-    if (schoolController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Sekolah / Universitas tidak boleh kosong'),
-        backgroundColor: Colors.red,
-      ));
+    if (!validateField(
+        controller: schoolController,
+        fieldName: "Sekolah / Universitas",
+        fieldType: FieldType.school,
+        context: context)) {
       return false;
     }
 
-    if (passwordController.text.isEmpty || passwordController.text.length < 8) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Password harus diisi dan minimal 8 digit'),
-        backgroundColor: Colors.red,
-      ));
+    if (!validateField(
+        controller: passwordController,
+        fieldName: "Password",
+        fieldType: FieldType.password,
+        context: context)) {
       return false;
     }
 
-    if (confirmPasswordController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Password tidak sama'),
-        backgroundColor: Colors.red,
-      ));
+    if (!validateField(
+        controller: confirmPasswordController,
+        fieldName: "Confirm Password",
+        fieldType: FieldType.confirmPassword,
+        context: context)) {
       return false;
     }
 
@@ -281,8 +279,7 @@ class _SignUpPendaftarState extends State<SignUpPendaftar> {
 
   // Sign Up and send to database
   Future<void> signUp() async {
-    // Validate fields before proceeding
-    if (!validateFields()) return; // If validation fails, exit the function
+    if (!validateFields(context)) return;
 
     try {
       // Fetch current count to generate ID

@@ -227,7 +227,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     if (!isLoggedIn) {
       showDialog(
         context: context,
-        builder: (context) => CustomDialog(
+        builder: (context) => CustomLoginDialog(
           onLoginPressed: () {
             fadeNavigation(context, targetNavigation: const LoginScreen());
           },

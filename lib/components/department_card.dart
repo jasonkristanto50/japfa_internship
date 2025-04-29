@@ -297,7 +297,7 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
     if (!isLoggedIn) {
       showDialog(
         context: context,
-        builder: (context) => CustomDialog(
+        builder: (context) => CustomLoginDialog(
           onLoginPressed: () {
             fadeNavigation(context, targetNavigation: const LoginScreen());
           },

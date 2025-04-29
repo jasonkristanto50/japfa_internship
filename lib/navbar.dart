@@ -237,15 +237,17 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
 
   // ADMIN HR/GA TAB
   void _navigateToDataPendaftaranMagangPage() {
-    fadeNavigation(context, targetNavigation: const PendaftarMagangDashboard());
+    fadeNavigation(context,
+        targetNavigation: const PendaftarMagangDashboard(), time: 200);
   }
 
   void _navigateToHomePageMagang() {
-    fadeNavigation(context, targetNavigation: const MyHomePage());
+    fadeNavigation(context, targetNavigation: const MyHomePage(), time: 200);
   }
 
   void _navigateToAdminKunjunganStudiPage() {
-    fadeNavigation(context, targetNavigation: const KunjunganStudiDashboard());
+    fadeNavigation(context,
+        targetNavigation: const KunjunganStudiDashboard(), time: 200);
   }
 
   // PESERTA MAGANG TAB

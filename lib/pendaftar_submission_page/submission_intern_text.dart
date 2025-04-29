@@ -199,11 +199,18 @@ class _SubmissionInternState extends State<SubmissionIntern> {
           fontColor: Colors.white,
           onPressed: () {
             // if (validateTextFields(context)) {
-            //   fadeNavigation(context,
-            //       targetNavigation: const SubmissionInternFile());
-            // }
             fadeNavigation(context,
-                targetNavigation: const SubmissionInternFile());
+                targetNavigation: SubmissionInternFile(
+                  name: nameController.text,
+                  address: addressController.text,
+                  phoneNumber: phoneNumberController.text,
+                  email: emailController.text,
+                  university: universityController.text,
+                  generation: generationController.text,
+                  score: scoreController.text,
+                  major: majorController.text,
+                ));
+            // }
           },
         ),
       ],

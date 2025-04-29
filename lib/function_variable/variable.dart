@@ -16,6 +16,11 @@ TextStyle regular12 = const TextStyle(
   fontSize: 12,
 );
 
+TextStyle regular14 = const TextStyle(
+  fontFamily: montserratFontFamily,
+  fontSize: 14,
+);
+
 TextStyle regular16 = const TextStyle(
   fontFamily: montserratFontFamily,
   fontSize: 16,

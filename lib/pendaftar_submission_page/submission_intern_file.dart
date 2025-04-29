@@ -1,5 +1,4 @@
 // ignore_for_file: library_private_types_in_public_api
-
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
@@ -12,7 +11,26 @@ import 'package:japfa_internship/pendaftar_submission_page/submission_intern_tex
 import 'package:japfa_internship/timeline_interview.dart';
 
 class SubmissionInternFile extends StatefulWidget {
-  const SubmissionInternFile({super.key});
+  final String name;
+  final String address;
+  final String phoneNumber;
+  final String email;
+  final String university;
+  final String generation;
+  final String score;
+  final String major;
+
+  const SubmissionInternFile({
+    super.key,
+    required this.name,
+    required this.address,
+    required this.phoneNumber,
+    required this.email,
+    required this.university,
+    required this.generation,
+    required this.score,
+    required this.major,
+  });
 
   @override
   _SubmissionInternFileState createState() => _SubmissionInternFileState();
@@ -87,7 +105,7 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
                         ),
                       ],
                     ),
-                    _buildSubmissionFileField(),
+                    _buildSubmissionFileForm(),
                   ],
                 ),
               ),
@@ -98,43 +116,8 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
     );
   }
 
-  bool validateFileFields(BuildContext context) {
-    // Check if the files are uploaded
-    if (!validateFileUpload('CV')) {
-      return false;
-    }
-
-    if (!validateFileUpload('Campus Approval')) {
-      return false;
-    }
-
-    if (!validateFileUpload('Score Transcript')) {
-      return false;
-    }
-
-    return true;
-  }
-
-  // Validate file upload (check if files are selected)
-  bool validateFileUpload(String field) {
-    String? fileName;
-    if (field == 'CV') {
-      fileName = cvFileName;
-    } else if (field == 'Campus Approval') {
-      fileName = campusApprovalFileName;
-    } else if (field == 'Score Transcript') {
-      fileName = transcriptFileName;
-    }
-
-    if (fileName == null) {
-      showSnackBar(context, '$field harus diupload');
-      return false;
-    }
-
-    return true;
-  }
-
-  Widget _buildSubmissionFileField() {
+  // BUILD WIDGET
+  Widget _buildSubmissionFileForm() {
     return Column(
       children: [
         const SizedBox(height: 15),
@@ -191,7 +174,12 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
                         const SizedBox(width: 10),
                         const Icon(Icons.picture_as_pdf, size: 20), // PDF icon
                         const SizedBox(width: 5),
-                        Text(fileName),
+                        // Text for file name with ellipsis if the name is too long
+                        SizedBox(
+                          width: 200,
+                          child: Text(_getFileNameWithEllipsis(fileName),
+                              style: regular16),
+                        ),
                       ],
                     ),
                     Row(
@@ -215,7 +203,56 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
     );
   }
 
-// Method to pick files using file_picker package with validation
+  // Function to truncate the middle part of the file name
+  String _getFileNameWithEllipsis(String fileName) {
+    if (fileName.length <= 20) {
+      return fileName; // No truncation needed if the file name is short
+    }
+    // Get the first 12 characters, add ellipsis, and append the last 12 characters
+    String start = fileName.substring(0, 10);
+    String end = fileName.substring(fileName.length - 10);
+    return '$start....$end';
+  }
+
+  // VALIDATE FIELD
+  bool validateFileFields(BuildContext context) {
+    // Check if the files are uploaded
+    if (!validateFileUpload('CV')) {
+      return false;
+    }
+
+    if (!validateFileUpload('Campus Approval')) {
+      return false;
+    }
+
+    if (!validateFileUpload('Score Transcript')) {
+      return false;
+    }
+
+    return true;
+  }
+
+  // Validate file upload (check if files are selected)
+  bool validateFileUpload(String field) {
+    String? fileName;
+    if (field == 'CV') {
+      fileName = cvFileName;
+    } else if (field == 'Campus Approval') {
+      fileName = campusApprovalFileName;
+    } else if (field == 'Score Transcript') {
+      fileName = transcriptFileName;
+    }
+
+    if (fileName == null) {
+      showSnackBar(context, '$field harus diupload');
+      return false;
+    }
+
+    return true;
+  }
+
+  // FILE MANIPULATION
+  // Method to pick files using file_picker package with validation
   void pickFile(String field) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,

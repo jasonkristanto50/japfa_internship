@@ -40,3 +40,6 @@ app.use('/api/login', loginRouter);
 
 const kunjunganStudiRouter = require('./routes/kunjungan_studi');  
 app.use('/api/kunjungan_studi', kunjunganStudiRouter);
+
+const pesertaMagangRouter = require('./routes/peserta_magang');  
+app.use('/api/peserta_magang', pesertaMagangRouter);

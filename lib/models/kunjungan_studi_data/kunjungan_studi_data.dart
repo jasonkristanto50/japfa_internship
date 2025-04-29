@@ -13,6 +13,7 @@ abstract class KunjunganStudiData with _$KunjunganStudiData {
     @JsonKey(name: 'asal_universitas') required String asalUniversitas,
     @JsonKey(name: 'jumlah_anak') required int jumlahAnak,
     @JsonKey(name: 'tanggal_kegiatan') required String tanggalKegiatan,
+    @JsonKey(name: 'status') required String status,
   }) = _KunjunganStudiData;
 
   factory KunjunganStudiData.fromJson(Map<String, dynamic> json) =>

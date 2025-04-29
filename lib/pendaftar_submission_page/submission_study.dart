@@ -184,14 +184,14 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
     final String idKunjunganStudi = 'KJS_0${currentCount + 1}';
 
     final kunjunganStudi = KunjunganStudiData(
-      idKunjunganStudi: idKunjunganStudi,
-      namaPerwakilan: nama,
-      noTelp: noTelepon,
-      email: email,
-      asalUniversitas: asalUniversitas,
-      jumlahAnak: int.parse(jumlahAnak), // Convert to int if necessary
-      tanggalKegiatan: tanggalKegiatan,
-    );
+        idKunjunganStudi: idKunjunganStudi,
+        namaPerwakilan: nama,
+        noTelp: noTelepon,
+        email: email,
+        asalUniversitas: asalUniversitas,
+        jumlahAnak: int.parse(jumlahAnak), // Convert to int if necessary
+        tanggalKegiatan: tanggalKegiatan,
+        status: "Menunggu");
 
     const String url =
         'http://localhost:3000/api/kunjungan_studi/submit-kunjungan-studi';

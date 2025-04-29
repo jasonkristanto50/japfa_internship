@@ -15,6 +15,7 @@ _KunjunganStudiData _$KunjunganStudiDataFromJson(Map<String, dynamic> json) =>
       asalUniversitas: json['asal_universitas'] as String,
       jumlahAnak: (json['jumlah_anak'] as num).toInt(),
       tanggalKegiatan: json['tanggal_kegiatan'] as String,
+      status: json['status'] as String,
     );
 
 Map<String, dynamic> _$KunjunganStudiDataToJson(_KunjunganStudiData instance) =>
@@ -26,4 +27,5 @@ Map<String, dynamic> _$KunjunganStudiDataToJson(_KunjunganStudiData instance) =>
       'asal_universitas': instance.asalUniversitas,
       'jumlah_anak': instance.jumlahAnak,
       'tanggal_kegiatan': instance.tanggalKegiatan,
+      'status': instance.status,
     };

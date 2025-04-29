@@ -13,12 +13,12 @@ const pool = new Pool({
 
 // Add a new Kunjungan Studi  
 router.post('/submit-kunjungan-studi', async (req, res) => {  
-    const { id_kunjungan_studi, nama_perwakilan, no_telp, email, asal_universitas, jumlah_anak, tanggal_kegiatan } = req.body;  
+    const { id_kunjungan_studi, nama_perwakilan, no_telp, email, asal_universitas, jumlah_anak, tanggal_kegiatan, status } = req.body;  
 
     try {   
         await pool.query(  
-            'INSERT INTO KUNJUNGAN_STUDI (id_kunjungan_studi, nama_perwakilan, no_telp, email, asal_universitas, jumlah_anak, tanggal_kegiatan) VALUES ($1, $2, $3, $4, $5, $6, $7)',  
-            [id_kunjungan_studi, nama_perwakilan, no_telp, email, asal_universitas, jumlah_anak, tanggal_kegiatan]  
+            'INSERT INTO KUNJUNGAN_STUDI (id_kunjungan_studi, nama_perwakilan, no_telp, email, asal_universitas, jumlah_anak, tanggal_kegiatan, status) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',  
+            [id_kunjungan_studi, nama_perwakilan, no_telp, email, asal_universitas, jumlah_anak, tanggal_kegiatan, status]  
         );  
         res.status(201).json({ message: 'Kunjungan Studi added successfully!' });  
     } catch (error) {  

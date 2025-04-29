@@ -29,6 +29,8 @@ mixin _$KunjunganStudiData {
   int get jumlahAnak;
   @JsonKey(name: 'tanggal_kegiatan')
   String get tanggalKegiatan;
+  @JsonKey(name: 'status')
+  String get status;
 
   /// Create a copy of KunjunganStudiData
   /// with the given fields replaced by the non-null parameter values.
@@ -57,17 +59,18 @@ mixin _$KunjunganStudiData {
             (identical(other.jumlahAnak, jumlahAnak) ||
                 other.jumlahAnak == jumlahAnak) &&
             (identical(other.tanggalKegiatan, tanggalKegiatan) ||
-                other.tanggalKegiatan == tanggalKegiatan));
+                other.tanggalKegiatan == tanggalKegiatan) &&
+            (identical(other.status, status) || other.status == status));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, idKunjunganStudi, namaPerwakilan,
-      noTelp, email, asalUniversitas, jumlahAnak, tanggalKegiatan);
+      noTelp, email, asalUniversitas, jumlahAnak, tanggalKegiatan, status);
 
   @override
   String toString() {
-    return 'KunjunganStudiData(idKunjunganStudi: $idKunjunganStudi, namaPerwakilan: $namaPerwakilan, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, jumlahAnak: $jumlahAnak, tanggalKegiatan: $tanggalKegiatan)';
+    return 'KunjunganStudiData(idKunjunganStudi: $idKunjunganStudi, namaPerwakilan: $namaPerwakilan, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, jumlahAnak: $jumlahAnak, tanggalKegiatan: $tanggalKegiatan, status: $status)';
   }
 }
 
@@ -84,7 +87,8 @@ abstract mixin class $KunjunganStudiDataCopyWith<$Res> {
       @JsonKey(name: 'email') String email,
       @JsonKey(name: 'asal_universitas') String asalUniversitas,
       @JsonKey(name: 'jumlah_anak') int jumlahAnak,
-      @JsonKey(name: 'tanggal_kegiatan') String tanggalKegiatan});
+      @JsonKey(name: 'tanggal_kegiatan') String tanggalKegiatan,
+      @JsonKey(name: 'status') String status});
 }
 
 /// @nodoc
@@ -107,6 +111,7 @@ class _$KunjunganStudiDataCopyWithImpl<$Res>
     Object? asalUniversitas = null,
     Object? jumlahAnak = null,
     Object? tanggalKegiatan = null,
+    Object? status = null,
   }) {
     return _then(_self.copyWith(
       idKunjunganStudi: null == idKunjunganStudi
@@ -137,6 +142,10 @@ class _$KunjunganStudiDataCopyWithImpl<$Res>
           ? _self.tanggalKegiatan
           : tanggalKegiatan // ignore: cast_nullable_to_non_nullable
               as String,
+      status: null == status
+          ? _self.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -151,7 +160,8 @@ class _KunjunganStudiData implements KunjunganStudiData {
       @JsonKey(name: 'email') required this.email,
       @JsonKey(name: 'asal_universitas') required this.asalUniversitas,
       @JsonKey(name: 'jumlah_anak') required this.jumlahAnak,
-      @JsonKey(name: 'tanggal_kegiatan') required this.tanggalKegiatan});
+      @JsonKey(name: 'tanggal_kegiatan') required this.tanggalKegiatan,
+      @JsonKey(name: 'status') required this.status});
   factory _KunjunganStudiData.fromJson(Map<String, dynamic> json) =>
       _$KunjunganStudiDataFromJson(json);
 
@@ -176,6 +186,9 @@ class _KunjunganStudiData implements KunjunganStudiData {
   @override
   @JsonKey(name: 'tanggal_kegiatan')
   final String tanggalKegiatan;
+  @override
+  @JsonKey(name: 'status')
+  final String status;
 
   /// Create a copy of KunjunganStudiData
   /// with the given fields replaced by the non-null parameter values.
@@ -208,17 +221,18 @@ class _KunjunganStudiData implements KunjunganStudiData {
             (identical(other.jumlahAnak, jumlahAnak) ||
                 other.jumlahAnak == jumlahAnak) &&
             (identical(other.tanggalKegiatan, tanggalKegiatan) ||
-                other.tanggalKegiatan == tanggalKegiatan));
+                other.tanggalKegiatan == tanggalKegiatan) &&
+            (identical(other.status, status) || other.status == status));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, idKunjunganStudi, namaPerwakilan,
-      noTelp, email, asalUniversitas, jumlahAnak, tanggalKegiatan);
+      noTelp, email, asalUniversitas, jumlahAnak, tanggalKegiatan, status);
 
   @override
   String toString() {
-    return 'KunjunganStudiData(idKunjunganStudi: $idKunjunganStudi, namaPerwakilan: $namaPerwakilan, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, jumlahAnak: $jumlahAnak, tanggalKegiatan: $tanggalKegiatan)';
+    return 'KunjunganStudiData(idKunjunganStudi: $idKunjunganStudi, namaPerwakilan: $namaPerwakilan, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, jumlahAnak: $jumlahAnak, tanggalKegiatan: $tanggalKegiatan, status: $status)';
   }
 }
 
@@ -237,7 +251,8 @@ abstract mixin class _$KunjunganStudiDataCopyWith<$Res>
       @JsonKey(name: 'email') String email,
       @JsonKey(name: 'asal_universitas') String asalUniversitas,
       @JsonKey(name: 'jumlah_anak') int jumlahAnak,
-      @JsonKey(name: 'tanggal_kegiatan') String tanggalKegiatan});
+      @JsonKey(name: 'tanggal_kegiatan') String tanggalKegiatan,
+      @JsonKey(name: 'status') String status});
 }
 
 /// @nodoc
@@ -260,6 +275,7 @@ class __$KunjunganStudiDataCopyWithImpl<$Res>
     Object? asalUniversitas = null,
     Object? jumlahAnak = null,
     Object? tanggalKegiatan = null,
+    Object? status = null,
   }) {
     return _then(_KunjunganStudiData(
       idKunjunganStudi: null == idKunjunganStudi
@@ -289,6 +305,10 @@ class __$KunjunganStudiDataCopyWithImpl<$Res>
       tanggalKegiatan: null == tanggalKegiatan
           ? _self.tanggalKegiatan
           : tanggalKegiatan // ignore: cast_nullable_to_non_nullable
+              as String,
+      status: null == status
+          ? _self.status
+          : status // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }

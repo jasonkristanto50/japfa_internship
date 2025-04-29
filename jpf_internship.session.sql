@@ -34,5 +34,6 @@
 --     email VARCHAR(100) NOT NULL,          -- Email  
 --     asal_universitas VARCHAR(100) NOT NULL,     -- Asal universitas
 --     jumlah_anak INTEGER NOT NULL,          -- Jumlah Anak (max 100)
---     tanggal_kegiatan VARCHAR(20) NOT NULL              -- Tanggal kegiatan
+--     tanggal_kegiatan VARCHAR(20) NOT NULL,              -- Tanggal kegiatan
+--     status VARCHAR NOT NULL                 -- Menunggu / diterima / ditolak
 -- );

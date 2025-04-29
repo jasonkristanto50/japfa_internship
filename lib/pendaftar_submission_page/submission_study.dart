@@ -198,7 +198,7 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
     if (!validateField(
         controller: universityController,
         fieldName: "Asal Universitas",
-        fieldType: FieldType.name,
+        fieldType: FieldType.school,
         context: context)) {
       return false;
     }

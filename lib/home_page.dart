@@ -158,7 +158,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             const SizedBox(height: 20),
             // List Departemen Button
             RoundedRectangleButton(
-              title: 'List Departemen',
+              title: 'Daftar Magang',
               style: regular20,
               fontColor: Colors.white,
               backgroundColor: japfaOrange,

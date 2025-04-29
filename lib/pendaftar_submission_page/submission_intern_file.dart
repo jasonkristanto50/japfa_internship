@@ -1,24 +1,24 @@
+// ignore_for_file: library_private_types_in_public_api
+
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart'; // PDF Viewer package
-import 'package:japfa_internship/navbar.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:japfa_internship/components/widget_component.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
-import 'package:japfa_internship/timeline_interview.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
-import 'package:japfa_internship/components/widget_component.dart'; // Assuming custom widget components
+import 'package:japfa_internship/navbar.dart';
+import 'package:japfa_internship/pendaftar_submission_page/submission_intern_text.dart';
+import 'package:japfa_internship/timeline_interview.dart';
 
-class SubmissionIntern extends StatefulWidget {
-  const SubmissionIntern({super.key});
+class SubmissionInternFile extends StatefulWidget {
+  const SubmissionInternFile({super.key});
 
   @override
-  _SubmissionInternState createState() => _SubmissionInternState();
+  _SubmissionInternFileState createState() => _SubmissionInternFileState();
 }
 
-class _SubmissionInternState extends State<SubmissionIntern> {
-  int pageNumber = 1;
-  bool _visible = false;
-
-  // To hold the file details (name and path)
+class _SubmissionInternFileState extends State<SubmissionInternFile> {
   String? cvFileName;
   String? campusApprovalFileName;
   String? transcriptFileName;
@@ -26,24 +26,7 @@ class _SubmissionInternState extends State<SubmissionIntern> {
   String? campusApprovalFilePath;
   String? transcriptFilePath;
 
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController addressController = TextEditingController();
-  final TextEditingController phoneNumberController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController universityController = TextEditingController();
-  final TextEditingController generationController = TextEditingController();
-  final TextEditingController majorController = TextEditingController();
-  final TextEditingController scoreController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(const Duration(milliseconds: 300), () {
-      setState(() {
-        _visible = true;
-      });
-    });
-  }
+  final _visible = true;
 
   @override
   Widget build(BuildContext context) {
@@ -88,15 +71,8 @@ class _SubmissionInternState extends State<SubmissionIntern> {
                         IconButton(
                           icon: const Icon(Icons.arrow_back),
                           onPressed: () {
-                            // If pageNumber is 2, revert it to 1
-                            if (pageNumber == 2) {
-                              setState(() {
-                                pageNumber = 1; // Revert pageNumber to 1
-                              });
-                            } else {
-                              Navigator.pop(
-                                  context); // Otherwise, go back to previous screen
-                            }
+                            fadeNavigation(context,
+                                targetNavigation: const SubmissionIntern());
                           },
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
@@ -111,10 +87,7 @@ class _SubmissionInternState extends State<SubmissionIntern> {
                         ),
                       ],
                     ),
-                    if (pageNumber == 1) ...[
-                      _buildSubmissionTextField(),
-                    ] else if (pageNumber == 2)
-                      _buildSubmissionFileField(),
+                    _buildSubmissionFileField(),
                   ],
                 ),
               ),
@@ -125,38 +98,40 @@ class _SubmissionInternState extends State<SubmissionIntern> {
     );
   }
 
-  Widget _buildSubmissionTextField() {
-    return Column(
-      children: [
-        const SizedBox(height: 20),
-        buildTextField('Name', nameController),
-        const SizedBox(height: 20),
-        buildTextField('Address', addressController),
-        const SizedBox(height: 20),
-        buildTextField('Phone Number', phoneNumberController),
-        const SizedBox(height: 20),
-        buildTextField('Email', emailController),
-        const SizedBox(height: 15),
-        buildTextField('University/School', universityController),
-        const SizedBox(height: 15),
-        buildTextField('Angkatan / Kelas', generationController),
-        const SizedBox(height: 15),
-        buildTextField('Score', scoreController),
-        const SizedBox(height: 15),
-        buildTextField('Jurusan', majorController),
-        const SizedBox(height: 20),
-        RoundedRectangleButton(
-          title: "Next",
-          backgroundColor: japfaOrange,
-          fontColor: Colors.white,
-          onPressed: () {
-            setState(() {
-              pageNumber = 2;
-            });
-          },
-        ),
-      ],
-    );
+  bool validateFileFields(BuildContext context) {
+    // Check if the files are uploaded
+    if (!validateFileUpload('CV')) {
+      return false;
+    }
+
+    if (!validateFileUpload('Campus Approval')) {
+      return false;
+    }
+
+    if (!validateFileUpload('Score Transcript')) {
+      return false;
+    }
+
+    return true;
+  }
+
+  // Validate file upload (check if files are selected)
+  bool validateFileUpload(String field) {
+    String? fileName;
+    if (field == 'CV') {
+      fileName = cvFileName;
+    } else if (field == 'Campus Approval') {
+      fileName = campusApprovalFileName;
+    } else if (field == 'Score Transcript') {
+      fileName = transcriptFileName;
+    }
+
+    if (fileName == null) {
+      showSnackBar(context, '$field harus diupload');
+      return false;
+    }
+
+    return true;
   }
 
   Widget _buildSubmissionFileField() {
@@ -176,9 +151,10 @@ class _SubmissionInternState extends State<SubmissionIntern> {
           backgroundColor: japfaOrange,
           fontColor: Colors.white,
           onPressed: () {
-            // Handle submission logic here
-            fadeNavigation(context,
-                targetNavigation: const TimelineInterview());
+            if (validateFileFields(context)) {
+              fadeNavigation(context,
+                  targetNavigation: const TimelineInterview());
+            }
           },
         ),
       ],
@@ -239,27 +215,36 @@ class _SubmissionInternState extends State<SubmissionIntern> {
     );
   }
 
-  // Method to pick files using file_picker package
+// Method to pick files using file_picker package with validation
   void pickFile(String field) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['pdf'], // Allow only PDF files
+      allowedExtensions: ['pdf', 'doc', 'docx'], // Allowed file types
     );
 
     if (result != null) {
       String fileName = result.files.single.name;
+      String? filePath = result.files.single.path;
+
+      // Validate file size (optional)
+      File file = File(filePath!);
+      int fileSizeInMB = file.lengthSync() ~/ (1024 * 1024);
+      if (fileSizeInMB > 10) {
+        showSnackBar(context, 'File size cannot be more than 10MB');
+        return; // Exit if the file size is too large
+      }
 
       setState(() {
         // Store the file names and paths for display and opening
         if (field == 'CV') {
           cvFileName = fileName;
-          cvFilePath = result.files.single.path;
+          cvFilePath = filePath;
         } else if (field == 'Campus Approval') {
           campusApprovalFileName = fileName;
-          campusApprovalFilePath = result.files.single.path;
+          campusApprovalFilePath = filePath;
         } else if (field == 'Score Transcript') {
           transcriptFileName = fileName;
-          transcriptFilePath = result.files.single.path;
+          transcriptFilePath = filePath;
         }
       });
     }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:japfa_internship/components/widget_component.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
+import 'package:japfa_internship/models/departemen_data/departemen_data.dart'; // Make sure to import DepartemenData
 
 class EditDepartmentModal extends StatefulWidget {
-  final Map<String, dynamic> department;
+  final DepartemenData department; // Change to DepartemenData
 
   const EditDepartmentModal({super.key, required this.department});
 
@@ -22,15 +23,15 @@ class _EditDepartmentModalState extends State<EditDepartmentModal> {
   void initState() {
     super.initState();
     maxQuotaController =
-        TextEditingController(text: widget.department['maxQuota'].toString());
+        TextEditingController(text: widget.department.maxKuota.toString());
     totalApplicationsController = TextEditingController(
-        text: widget.department['totalApplications'].toString());
-    approvedController =
-        TextEditingController(text: widget.department['approved'].toString());
-    onboardingController =
-        TextEditingController(text: widget.department['onboarding'].toString());
-    remainingQuotaController = TextEditingController(
-        text: widget.department['remainingQuota'].toString());
+        text: widget.department.jumlahPengajuan.toString());
+    approvedController = TextEditingController(
+        text: widget.department.jumlahApproved.toString());
+    onboardingController = TextEditingController(
+        text: widget.department.jumlahOnBoarding.toString());
+    remainingQuotaController =
+        TextEditingController(text: widget.department.sisaKuota.toString());
   }
 
   @override
@@ -61,9 +62,9 @@ class _EditDepartmentModalState extends State<EditDepartmentModal> {
             // Display the selected department under the title
             Center(
               child: Text(
-                  widget.department['department']
+                  widget.department.namaDepartemen
                       .toString()
-                      .toUpperCase(), // Display the department name here
+                      .toUpperCase(), // Access namaDepartemen directly
                   style: bold16.copyWith(color: japfaOrange)),
             ),
             const SizedBox(height: 16),
@@ -88,19 +89,7 @@ class _EditDepartmentModalState extends State<EditDepartmentModal> {
   // Function to save changes and close the modal
   void _saveChanges() {
     setState(() {
-      widget.department['maxQuota'] = int.tryParse(maxQuotaController.text) ??
-          widget.department['maxQuota'];
-      widget.department['totalApplications'] =
-          int.tryParse(totalApplicationsController.text) ??
-              widget.department['totalApplications'];
-      widget.department['approved'] = int.tryParse(approvedController.text) ??
-          widget.department['approved'];
-      widget.department['onboarding'] =
-          int.tryParse(onboardingController.text) ??
-              widget.department['onboarding'];
-      widget.department['remainingQuota'] =
-          int.tryParse(remainingQuotaController.text) ??
-              widget.department['remainingQuota'];
+      // TODO:
     });
 
     Navigator.pop(context); // Close the modal after saving

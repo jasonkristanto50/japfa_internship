@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:japfa_internship/admin_page/detail_pengajuan_magang.dart';
 import 'package:japfa_internship/admin_page/edit_department_page.dart';
+import 'package:japfa_internship/function_variable/api_service_function.dart';
+import 'package:japfa_internship/models/departemen_data/departemen_data.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/components/widget_component.dart';
 import 'package:japfa_internship/data.dart';
@@ -15,14 +17,20 @@ class PendaftarMagangDashboard extends StatefulWidget {
 }
 
 class _PendaftarMagangDashboardState extends State<PendaftarMagangDashboard> {
-  String selectedDepartment = '';
+  List<DepartemenData> departemen = [];
   String searchQuery = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDepartemen();
+  }
 
   @override
   Widget build(BuildContext context) {
     // Search filter for departments
-    List<Map<String, dynamic>> filteredData = pengajuanDepartemen
-        .where((department) => department['department']
+    List<DepartemenData> filteredData = departemen
+        .where((department) => department.namaDepartemen
             .toLowerCase()
             .contains(searchQuery.toLowerCase())) // Search filter
         .toList();
@@ -74,7 +82,20 @@ class _PendaftarMagangDashboardState extends State<PendaftarMagangDashboard> {
     );
   }
 
-  Widget _buildPengajuanTable(List<dynamic> filteredData) {
+  Future<void> _loadDepartemen() async {
+    try {
+      List<DepartemenData> fetchedDepartemen =
+          await ApiService().fetchDepartemen();
+      setState(() {
+        departemen = fetchedDepartemen;
+      });
+    } catch (e) {
+      // Handle the error (e.g., show a snackbar or dialog)
+      print("Error fetching departemen: $e");
+    }
+  }
+
+  Widget _buildPengajuanTable(List<DepartemenData> filteredData) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white, // Set the desired background color
@@ -112,17 +133,17 @@ class _PendaftarMagangDashboardState extends State<PendaftarMagangDashboard> {
           rows: filteredData.map((department) {
             return DataRow(
               cells: [
-                DataCell(Text(department['department'].toString(),
+                DataCell(Text(department.namaDepartemen,
+                    textAlign: TextAlign.center)), // Corrected this line
+                DataCell(Text(department.maxKuota.toString(),
                     textAlign: TextAlign.center)),
-                DataCell(Text(department['maxQuota'].toString(),
+                DataCell(Text(department.jumlahPengajuan.toString(),
                     textAlign: TextAlign.center)),
-                DataCell(Text(department['totalApplications'].toString(),
+                DataCell(Text(department.jumlahApproved.toString(),
                     textAlign: TextAlign.center)),
-                DataCell(Text(department['approved'].toString(),
+                DataCell(Text(department.jumlahOnBoarding.toString(),
                     textAlign: TextAlign.center)),
-                DataCell(Text(department['onboarding'].toString(),
-                    textAlign: TextAlign.center)),
-                DataCell(Text(department['remainingQuota'].toString(),
+                DataCell(Text(department.sisaKuota.toString(),
                     textAlign: TextAlign.center)),
                 DataCell(
                   Row(
@@ -146,7 +167,7 @@ class _PendaftarMagangDashboardState extends State<PendaftarMagangDashboard> {
                         width: 85,
                         rounded: 5,
                         onPressed: () =>
-                            _onViewApplications(department['department']),
+                            _onViewApplications(department.namaDepartemen),
                       ),
                     ],
                   ),
@@ -187,7 +208,7 @@ class _PendaftarMagangDashboardState extends State<PendaftarMagangDashboard> {
     );
   }
 
-  void _editTable(Map<String, dynamic> department) {
+  void _editTable(DepartemenData department) {
     showDialog(
       context: context,
       builder: (BuildContext context) {

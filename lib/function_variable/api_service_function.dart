@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:japfa_internship/models/departemen_data/departemen_data.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
 
 class ApiService {
@@ -19,6 +20,21 @@ class ApiService {
       }
     } catch (e) {
       print('Error: $e');
+    }
+  }
+
+  Future<List<DepartemenData>> fetchDepartemen() async {
+    try {
+      final response = await _dio
+          .get('http://localhost:3000/api/departemen/fetch-all-departemen');
+      if (response.statusCode == 200) {
+        List data = response.data;
+        return data.map((json) => DepartemenData.fromJson(json)).toList();
+      } else {
+        throw Exception('Failed to load departments');
+      }
+    } catch (e) {
+      rethrow;
     }
   }
 }

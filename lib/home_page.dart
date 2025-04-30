@@ -1,10 +1,12 @@
 import 'dart:ui';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/components/department_card.dart';
 import 'package:japfa_internship/authentication/login.dart';
+import 'package:japfa_internship/models/departemen_data/departemen_data.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/data.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
@@ -170,30 +172,59 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     );
   }
 
+  Future<List<DepartemenData>> fetchDepartmentData() async {
+    try {
+      var response = await Dio()
+          .get('http://localhost:3000/api/departemen/fetch-all-departemen');
+      if (response.statusCode == 200) {
+        // Parse the response data into DepartemenData list
+        List<dynamic> data = response.data;
+        return data.map((e) => DepartemenData.fromJson(e)).toList();
+      } else {
+        throw Exception('Failed to load department data');
+      }
+    } catch (e) {
+      throw Exception('Failed to load department data: $e');
+    }
+  }
+
   Widget buildCardDepartment() {
     final loginState = ref.watch(loginProvider);
-    // List deskripsi card ada di file variable
 
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 1,
-        crossAxisSpacing: 100,
-        mainAxisSpacing: 50,
-      ),
-      itemCount: cards.length,
-      itemBuilder: (context, index) {
-        return DepartmentCard(
-            title: cards[index]['title']!,
-            description: cards[index]['description']!,
-            image: cards[index]['image']!,
-            requirements: const [
-              'nanti buat di list atas untuk requirement masing',
-              'Additional requirement 1', // Example requirement
-              'Additional requirement 2',
-            ],
-            isAdmin: loginState.role == "admin");
+    return FutureBuilder<List<DepartemenData>>(
+      future: fetchDepartmentData(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (snapshot.hasData) {
+          var cards = snapshot.data!;
+
+          return GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 1,
+              crossAxisSpacing: 100,
+              mainAxisSpacing: 50,
+            ),
+            itemCount: cards.length,
+            itemBuilder: (context, index) {
+              return DepartmentCard(
+                title: cards[index].namaDepartemen,
+                description:
+                    cards[index].deskripsi ?? 'No description available',
+                image: cards[index].pathImage,
+                requirements:
+                    cards[index].syaratDepartemen ?? ['No requirements'],
+                isAdmin: loginState.role == "admin",
+              );
+            },
+          );
+        } else {
+          return const Center(child: Text('No data available'));
+        }
       },
     );
   }

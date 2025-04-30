@@ -11,6 +11,50 @@ const pool = new Pool({
     port: process.env.DB_PORT || 5432,
 });
 
+// Add multiple Departemen
+router.post('/add-multiple-departemen', async (req, res) => {
+    const departments = req.body; // Expecting an array of departemen objects
+
+    // Validate that the body is an array
+    if (!Array.isArray(departments)) {
+        return res.status(400).json({ error: 'Body must be an array of departemen objects' });
+    }
+
+    try {
+        const values = departments.map(department => [
+            department.id_departemen,
+            department.nama_departemen,
+            department.deskripsi,
+            department.syarat_departemen,
+            department.path_image,
+            department.max_kuota,
+            department.jumlah_pengajuan,
+            department.jumlah_approved,
+            department.jumlah_on_boarding,
+            department.sisa_kuota
+        ]);
+
+        const queryText = `
+            INSERT INTO DEPARTEMEN 
+            (id_departemen, nama_departemen, deskripsi, syarat_departemen, path_image, 
+            max_kuota, jumlah_pengajuan, jumlah_approved, jumlah_on_boarding, sisa_kuota)
+            VALUES %L
+        `;
+
+        // Using pg-promise or any other query builder that supports multi-row inserts
+        const query = format(queryText, values);
+        
+        // Insert the departments into the database
+        await pool.query(query);
+
+        res.status(201).json({ message: `${departments.length} Departemen(s) added successfully!` });
+    } catch (error) {
+        console.error('Error adding multiple Departemen:', error.message);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+
 // Add a new Departemen
 router.post('/add-new-departemen', async (req, res) => {
     const {

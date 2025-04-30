@@ -50,8 +50,8 @@ List<Map<String, String>> cards = [
 ];
 
 final List<String> departments = [
-  'HR&GA',
-  'IT',
+  'HR & GA',
+  'Information Technology',
   'Koperasi Karyawan',
   'Pet Food - PIB',
   'Produksi',

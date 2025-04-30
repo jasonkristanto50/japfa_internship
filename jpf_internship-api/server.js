@@ -43,3 +43,6 @@ app.use('/api/kunjungan_studi', kunjunganStudiRouter);
 
 const pesertaMagangRouter = require('./routes/peserta_magang');  
 app.use('/api/peserta_magang', pesertaMagangRouter);
+
+const departemenRouter = require('./routes/departemen');  
+app.use('/api/departemen', departemenRouter);

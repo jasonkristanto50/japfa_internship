@@ -267,7 +267,7 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
                               height: 30,
                               style: regular16,
                               onPressed: () {
-                                applyOnPressedFunction();
+                                applyDaftarFunction();
                               },
                             ),
                     ],
@@ -292,7 +292,7 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
     Navigator.of(context).pop();
   }
 
-  void applyOnPressedFunction() {
+  void applyDaftarFunction() {
     final isLoggedIn = ref.read(loginProvider).isLoggedIn;
     if (!isLoggedIn) {
       showDialog(

@@ -12,7 +12,7 @@ class DepartmentCard extends ConsumerStatefulWidget {
   final String title;
   String description;
   final String image;
-  List<String> requirements; // Add a list for requirements
+  List<String> requirements;
   final bool isAdmin;
 
   DepartmentCard({

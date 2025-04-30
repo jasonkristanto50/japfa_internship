@@ -70,13 +70,14 @@
 
 
 
--- DROP TABLE DEPARTEMEN;
+DROP TABLE DEPARTEMEN;
 
 CREATE TABLE DEPARTEMEN (  
     id_departemen VARCHAR PRIMARY KEY NOT NULL,  
     nama_departemen VARCHAR(255) NOT NULL,
     deskripsi VARCHAR(255),  
-    syarat_departemen VARCHAR(255) NOT NULL,  
+    syarat_departemen TEXT[],
+    path_image  VARCHAR NOT NULL,
     max_kuota INTEGER,  
     jumlah_pengajuan INTEGER,  
     jumlah_approved INTEGER,  

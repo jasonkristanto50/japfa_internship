@@ -22,7 +22,9 @@ mixin _$DepartemenData {
   @JsonKey(name: 'deskripsi')
   String? get deskripsi;
   @JsonKey(name: 'syarat_departemen')
-  String get syaratDepartemen;
+  List<String>? get syaratDepartemen;
+  @JsonKey(name: 'path_image')
+  String get pathImage;
   @JsonKey(name: 'max_kuota')
   int? get maxKuota;
   @JsonKey(name: 'jumlah_pengajuan')
@@ -56,8 +58,10 @@ mixin _$DepartemenData {
                 other.namaDepartemen == namaDepartemen) &&
             (identical(other.deskripsi, deskripsi) ||
                 other.deskripsi == deskripsi) &&
-            (identical(other.syaratDepartemen, syaratDepartemen) ||
-                other.syaratDepartemen == syaratDepartemen) &&
+            const DeepCollectionEquality()
+                .equals(other.syaratDepartemen, syaratDepartemen) &&
+            (identical(other.pathImage, pathImage) ||
+                other.pathImage == pathImage) &&
             (identical(other.maxKuota, maxKuota) ||
                 other.maxKuota == maxKuota) &&
             (identical(other.jumlahPengajuan, jumlahPengajuan) ||
@@ -77,7 +81,8 @@ mixin _$DepartemenData {
       idDepartemen,
       namaDepartemen,
       deskripsi,
-      syaratDepartemen,
+      const DeepCollectionEquality().hash(syaratDepartemen),
+      pathImage,
       maxKuota,
       jumlahPengajuan,
       jumlahApproved,
@@ -86,7 +91,7 @@ mixin _$DepartemenData {
 
   @override
   String toString() {
-    return 'DepartemenData(idDepartemen: $idDepartemen, namaDepartemen: $namaDepartemen, deskripsi: $deskripsi, syaratDepartemen: $syaratDepartemen, maxKuota: $maxKuota, jumlahPengajuan: $jumlahPengajuan, jumlahApproved: $jumlahApproved, jumlahOnBoarding: $jumlahOnBoarding, sisaKuota: $sisaKuota)';
+    return 'DepartemenData(idDepartemen: $idDepartemen, namaDepartemen: $namaDepartemen, deskripsi: $deskripsi, syaratDepartemen: $syaratDepartemen, pathImage: $pathImage, maxKuota: $maxKuota, jumlahPengajuan: $jumlahPengajuan, jumlahApproved: $jumlahApproved, jumlahOnBoarding: $jumlahOnBoarding, sisaKuota: $sisaKuota)';
   }
 }
 
@@ -100,7 +105,8 @@ abstract mixin class $DepartemenDataCopyWith<$Res> {
       {@JsonKey(name: 'id_departemen') String idDepartemen,
       @JsonKey(name: 'nama_departemen') String namaDepartemen,
       @JsonKey(name: 'deskripsi') String? deskripsi,
-      @JsonKey(name: 'syarat_departemen') String syaratDepartemen,
+      @JsonKey(name: 'syarat_departemen') List<String>? syaratDepartemen,
+      @JsonKey(name: 'path_image') String pathImage,
       @JsonKey(name: 'max_kuota') int? maxKuota,
       @JsonKey(name: 'jumlah_pengajuan') int? jumlahPengajuan,
       @JsonKey(name: 'jumlah_approved') int? jumlahApproved,
@@ -124,7 +130,8 @@ class _$DepartemenDataCopyWithImpl<$Res>
     Object? idDepartemen = null,
     Object? namaDepartemen = null,
     Object? deskripsi = freezed,
-    Object? syaratDepartemen = null,
+    Object? syaratDepartemen = freezed,
+    Object? pathImage = null,
     Object? maxKuota = freezed,
     Object? jumlahPengajuan = freezed,
     Object? jumlahApproved = freezed,
@@ -144,9 +151,13 @@ class _$DepartemenDataCopyWithImpl<$Res>
           ? _self.deskripsi
           : deskripsi // ignore: cast_nullable_to_non_nullable
               as String?,
-      syaratDepartemen: null == syaratDepartemen
+      syaratDepartemen: freezed == syaratDepartemen
           ? _self.syaratDepartemen
           : syaratDepartemen // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      pathImage: null == pathImage
+          ? _self.pathImage
+          : pathImage // ignore: cast_nullable_to_non_nullable
               as String,
       maxKuota: freezed == maxKuota
           ? _self.maxKuota
@@ -179,12 +190,14 @@ class _DepartemenData implements DepartemenData {
       {@JsonKey(name: 'id_departemen') required this.idDepartemen,
       @JsonKey(name: 'nama_departemen') required this.namaDepartemen,
       @JsonKey(name: 'deskripsi') this.deskripsi,
-      @JsonKey(name: 'syarat_departemen') required this.syaratDepartemen,
+      @JsonKey(name: 'syarat_departemen') final List<String>? syaratDepartemen,
+      @JsonKey(name: 'path_image') required this.pathImage,
       @JsonKey(name: 'max_kuota') this.maxKuota,
       @JsonKey(name: 'jumlah_pengajuan') this.jumlahPengajuan,
       @JsonKey(name: 'jumlah_approved') this.jumlahApproved,
       @JsonKey(name: 'jumlah_on_boarding') this.jumlahOnBoarding,
-      @JsonKey(name: 'sisa_kuota') this.sisaKuota});
+      @JsonKey(name: 'sisa_kuota') this.sisaKuota})
+      : _syaratDepartemen = syaratDepartemen;
   factory _DepartemenData.fromJson(Map<String, dynamic> json) =>
       _$DepartemenDataFromJson(json);
 
@@ -197,9 +210,21 @@ class _DepartemenData implements DepartemenData {
   @override
   @JsonKey(name: 'deskripsi')
   final String? deskripsi;
+  final List<String>? _syaratDepartemen;
   @override
   @JsonKey(name: 'syarat_departemen')
-  final String syaratDepartemen;
+  List<String>? get syaratDepartemen {
+    final value = _syaratDepartemen;
+    if (value == null) return null;
+    if (_syaratDepartemen is EqualUnmodifiableListView)
+      return _syaratDepartemen;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  @JsonKey(name: 'path_image')
+  final String pathImage;
   @override
   @JsonKey(name: 'max_kuota')
   final int? maxKuota;
@@ -242,8 +267,10 @@ class _DepartemenData implements DepartemenData {
                 other.namaDepartemen == namaDepartemen) &&
             (identical(other.deskripsi, deskripsi) ||
                 other.deskripsi == deskripsi) &&
-            (identical(other.syaratDepartemen, syaratDepartemen) ||
-                other.syaratDepartemen == syaratDepartemen) &&
+            const DeepCollectionEquality()
+                .equals(other._syaratDepartemen, _syaratDepartemen) &&
+            (identical(other.pathImage, pathImage) ||
+                other.pathImage == pathImage) &&
             (identical(other.maxKuota, maxKuota) ||
                 other.maxKuota == maxKuota) &&
             (identical(other.jumlahPengajuan, jumlahPengajuan) ||
@@ -263,7 +290,8 @@ class _DepartemenData implements DepartemenData {
       idDepartemen,
       namaDepartemen,
       deskripsi,
-      syaratDepartemen,
+      const DeepCollectionEquality().hash(_syaratDepartemen),
+      pathImage,
       maxKuota,
       jumlahPengajuan,
       jumlahApproved,
@@ -272,7 +300,7 @@ class _DepartemenData implements DepartemenData {
 
   @override
   String toString() {
-    return 'DepartemenData(idDepartemen: $idDepartemen, namaDepartemen: $namaDepartemen, deskripsi: $deskripsi, syaratDepartemen: $syaratDepartemen, maxKuota: $maxKuota, jumlahPengajuan: $jumlahPengajuan, jumlahApproved: $jumlahApproved, jumlahOnBoarding: $jumlahOnBoarding, sisaKuota: $sisaKuota)';
+    return 'DepartemenData(idDepartemen: $idDepartemen, namaDepartemen: $namaDepartemen, deskripsi: $deskripsi, syaratDepartemen: $syaratDepartemen, pathImage: $pathImage, maxKuota: $maxKuota, jumlahPengajuan: $jumlahPengajuan, jumlahApproved: $jumlahApproved, jumlahOnBoarding: $jumlahOnBoarding, sisaKuota: $sisaKuota)';
   }
 }
 
@@ -288,7 +316,8 @@ abstract mixin class _$DepartemenDataCopyWith<$Res>
       {@JsonKey(name: 'id_departemen') String idDepartemen,
       @JsonKey(name: 'nama_departemen') String namaDepartemen,
       @JsonKey(name: 'deskripsi') String? deskripsi,
-      @JsonKey(name: 'syarat_departemen') String syaratDepartemen,
+      @JsonKey(name: 'syarat_departemen') List<String>? syaratDepartemen,
+      @JsonKey(name: 'path_image') String pathImage,
       @JsonKey(name: 'max_kuota') int? maxKuota,
       @JsonKey(name: 'jumlah_pengajuan') int? jumlahPengajuan,
       @JsonKey(name: 'jumlah_approved') int? jumlahApproved,
@@ -312,7 +341,8 @@ class __$DepartemenDataCopyWithImpl<$Res>
     Object? idDepartemen = null,
     Object? namaDepartemen = null,
     Object? deskripsi = freezed,
-    Object? syaratDepartemen = null,
+    Object? syaratDepartemen = freezed,
+    Object? pathImage = null,
     Object? maxKuota = freezed,
     Object? jumlahPengajuan = freezed,
     Object? jumlahApproved = freezed,
@@ -332,9 +362,13 @@ class __$DepartemenDataCopyWithImpl<$Res>
           ? _self.deskripsi
           : deskripsi // ignore: cast_nullable_to_non_nullable
               as String?,
-      syaratDepartemen: null == syaratDepartemen
-          ? _self.syaratDepartemen
+      syaratDepartemen: freezed == syaratDepartemen
+          ? _self._syaratDepartemen
           : syaratDepartemen // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      pathImage: null == pathImage
+          ? _self.pathImage
+          : pathImage // ignore: cast_nullable_to_non_nullable
               as String,
       maxKuota: freezed == maxKuota
           ? _self.maxKuota

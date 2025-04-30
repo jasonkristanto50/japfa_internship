@@ -18,6 +18,7 @@ router.post('/add-new-departemen', async (req, res) => {
         nama_departemen,
         deskripsi,
         syarat_departemen,
+        path_image,
         max_kuota,
         jumlah_pengajuan,
         jumlah_approved,
@@ -27,15 +28,16 @@ router.post('/add-new-departemen', async (req, res) => {
 
     try {
         await pool.query(
-            'INSERT INTO DEPARTEMEN (id_departemen, nama_departemen, deskripsi, syarat_departemen, max_kuota, jumlah_pengajuan, jumlah_approved, jumlah_on_boarding, sisa_kuota) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)',
-            [id_departemen, nama_departemen, deskripsi, syarat_departemen, max_kuota, jumlah_pengajuan, jumlah_approved, jumlah_on_boarding, sisa_kuota]
+            'INSERT INTO DEPARTEMEN (id_departemen, nama_departemen, deskripsi, syarat_departemen, path_image, max_kuota, jumlah_pengajuan, jumlah_approved, jumlah_on_boarding, sisa_kuota) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
+            [id_departemen, nama_departemen, deskripsi, syarat_departemen, path_image, max_kuota, jumlah_pengajuan, jumlah_approved, jumlah_on_boarding, sisa_kuota]
         );
         res.status(201).json({ message: 'Departemen added successfully!' });
     } catch (error) {
-        console.error('Error adding Departemen:', error);
+        console.error('Error adding Departemen:', error.message);
         res.status(500).json({ error: 'Server error' });
     }
 });
+
 
 // Get all Departemen
 router.get('/fetch-all-departemen', async (req, res) => {

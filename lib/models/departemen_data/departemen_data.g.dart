@@ -11,7 +11,10 @@ _DepartemenData _$DepartemenDataFromJson(Map<String, dynamic> json) =>
       idDepartemen: json['id_departemen'] as String,
       namaDepartemen: json['nama_departemen'] as String,
       deskripsi: json['deskripsi'] as String?,
-      syaratDepartemen: json['syarat_departemen'] as String,
+      syaratDepartemen: (json['syarat_departemen'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      pathImage: json['path_image'] as String,
       maxKuota: (json['max_kuota'] as num?)?.toInt(),
       jumlahPengajuan: (json['jumlah_pengajuan'] as num?)?.toInt(),
       jumlahApproved: (json['jumlah_approved'] as num?)?.toInt(),
@@ -25,6 +28,7 @@ Map<String, dynamic> _$DepartemenDataToJson(_DepartemenData instance) =>
       'nama_departemen': instance.namaDepartemen,
       'deskripsi': instance.deskripsi,
       'syarat_departemen': instance.syaratDepartemen,
+      'path_image': instance.pathImage,
       'max_kuota': instance.maxKuota,
       'jumlah_pengajuan': instance.jumlahPengajuan,
       'jumlah_approved': instance.jumlahApproved,

@@ -34,7 +34,7 @@ flutter:
     - assets/japfa_buduran_landscape.jpg
     - assets/department_card/
     - assets/timeline/
-    - assets/file_upload_peserta
+    - assets/file_upload_peserta/
     - assets/japfa_logo_only.png
     - assets/japfa_logo_background.png
 

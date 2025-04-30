@@ -32,15 +32,12 @@ flutter:
   uses-material-design: true
   assets: 
     - assets/japfa_buduran_landscape.jpg
-    # Department card
     - assets/department_card/
-    - assets/department_card/human_resource&general_affair.png
+    - assets/timeline/
+    - assets/file_upload_peserta
     - assets/japfa_logo_only.png
     - assets/japfa_logo_background.png
-    - assets/timeline_1.png
-    - assets/timeline_2.png
-    - assets/timeline_3.png
-    - assets/timeline_4.png
+
     - assets/default_profile.png
   fonts:
     - family: Montserrat

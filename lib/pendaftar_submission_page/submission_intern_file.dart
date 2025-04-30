@@ -4,24 +4,28 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:japfa_internship/components/widget_component.dart';
+import 'package:japfa_internship/function_variable/api_service_function.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
+import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/pendaftar_submission_page/submission_intern_text.dart';
-import 'package:japfa_internship/timeline_interview.dart';
+import 'package:japfa_internship/pendaftar_submission_page/timeline_interview.dart';
 
 class SubmissionInternFile extends StatefulWidget {
+  final String departmentName;
   final String name;
   final String address;
   final String phoneNumber;
   final String email;
   final String university;
-  final String generation;
-  final String score;
+  final int generation;
+  final double score;
   final String major;
 
   const SubmissionInternFile({
     super.key,
+    required this.departmentName,
     required this.name,
     required this.address,
     required this.phoneNumber,
@@ -37,14 +41,25 @@ class SubmissionInternFile extends StatefulWidget {
 }
 
 class _SubmissionInternFileState extends State<SubmissionInternFile> {
+  // TODO : Semua File disini masih DUMMY dan HARUS DIUBAH
   String? cvFileName;
   String? campusApprovalFileName;
   String? transcriptFileName;
-  String? cvFilePath;
-  String? campusApprovalFilePath;
-  String? transcriptFilePath;
+  String? cvFilePath = "assets/file_upload_peserta/cv_dummy_jason.jpg";
+  String? campusApprovalFilePath =
+      "assets/file_upload_peserta/persetujuan_univ_dummy_jason.pdf";
+  String? transcriptFilePath =
+      "assets/file_upload_peserta/transkrip_dummy_jason.pdf";
 
   final _visible = true;
+  List<String> tipeDataFileUpload = [
+    'pdf',
+    'doc',
+    'docx',
+    'jpg',
+    'png',
+    'jpeg'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +105,9 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
                           icon: const Icon(Icons.arrow_back),
                           onPressed: () {
                             fadeNavigation(context,
-                                targetNavigation: const SubmissionIntern());
+                                targetNavigation: SubmissionIntern(
+                                  departmentName: widget.departmentName,
+                                ));
                           },
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
@@ -116,6 +133,35 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
     );
   }
 
+  // Method to submit the form
+  void _submitFormPesertaMagang() {
+    if (cvFilePath != null &&
+        campusApprovalFilePath != null &&
+        transcriptFilePath != null) {
+      PesertaMagangData pesertaMagang = PesertaMagangData(
+        idMagang: '001',
+        nama: widget.name,
+        departemen: widget.departmentName,
+        alamat: widget.address,
+        noTelp: widget.phoneNumber,
+        email: widget.email,
+        asalUniversitas: widget.university,
+        angkatan: widget.generation,
+        nilaiUniv: widget.score,
+        jurusan: widget.major,
+        pathCv: cvFilePath!,
+        pathPersetujuanUniv: campusApprovalFilePath!,
+        pathTranskripNilai: transcriptFilePath!,
+        statusMagang: 'On Process',
+        nilaiAkhirMagang: null,
+      );
+
+      ApiService().submitPesertaMagang(pesertaMagang);
+    } else {
+      showSnackBar(context, 'All files must be uploaded');
+    }
+  }
+
   // BUILD WIDGET
   Widget _buildSubmissionFileForm() {
     return Column(
@@ -135,6 +181,7 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
           fontColor: Colors.white,
           onPressed: () {
             if (validateFileFields(context)) {
+              _submitFormPesertaMagang();
               fadeNavigation(context,
                   targetNavigation: const TimelineInterview());
             }
@@ -256,7 +303,7 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
   void pickFile(String field) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['pdf', 'doc', 'docx'], // Allowed file types
+      allowedExtensions: tipeDataFileUpload, // Allowed file types
     );
 
     if (result != null) {

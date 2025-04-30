@@ -3,7 +3,7 @@ import 'package:japfa_internship/models/kunjungan_studi_data/kunjungan_studi_dat
 import 'package:japfa_internship/navbar.dart';
 import 'package:dio/dio.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
-import 'package:japfa_internship/timeline_interview.dart';
+import 'package:japfa_internship/pendaftar_submission_page/timeline_interview.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/components/widget_component.dart';
 

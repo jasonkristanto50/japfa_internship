@@ -127,7 +127,7 @@ bool validateField({
         return false;
       }
       // Validate that the score is a number between 0 and 100
-      int score = int.parse(controller.text);
+      double score = double.parse(controller.text);
       if (score < 0 || score > 100) {
         showSnackBar(context, '$fieldName harus diantara 0 dan 100');
         return false;

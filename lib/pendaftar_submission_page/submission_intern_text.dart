@@ -6,7 +6,9 @@ import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/components/widget_component.dart';
 
 class SubmissionIntern extends StatefulWidget {
-  const SubmissionIntern({super.key});
+  final String departmentName;
+
+  const SubmissionIntern({super.key, required this.departmentName});
 
   @override
   _SubmissionInternState createState() => _SubmissionInternState();
@@ -39,7 +41,7 @@ class _SubmissionInternState extends State<SubmissionIntern> {
     return Scaffold(
       appBar: Navbar(
         context: context,
-        title: appName,
+        title: "$appName - Daftar ${widget.departmentName}",
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -198,19 +200,22 @@ class _SubmissionInternState extends State<SubmissionIntern> {
           backgroundColor: japfaOrange,
           fontColor: Colors.white,
           onPressed: () {
-            // if (validateTextFields(context)) {
-            fadeNavigation(context,
-                targetNavigation: SubmissionInternFile(
-                  name: nameController.text,
-                  address: addressController.text,
-                  phoneNumber: phoneNumberController.text,
-                  email: emailController.text,
-                  university: universityController.text,
-                  generation: generationController.text,
-                  score: scoreController.text,
-                  major: majorController.text,
-                ));
-            // }
+            if (validateTextFields(context)) {
+              int? generation = int.tryParse(generationController.text);
+              double? score = double.tryParse(scoreController.text);
+              fadeNavigation(context,
+                  targetNavigation: SubmissionInternFile(
+                    departmentName: widget.departmentName,
+                    name: nameController.text,
+                    address: addressController.text,
+                    phoneNumber: phoneNumberController.text,
+                    email: emailController.text,
+                    university: universityController.text,
+                    generation: generation ?? 0,
+                    score: score ?? 0,
+                    major: majorController.text,
+                  ));
+            }
           },
         ),
       ],

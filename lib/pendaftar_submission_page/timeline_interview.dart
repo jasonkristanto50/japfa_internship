@@ -94,7 +94,8 @@ class _TimelineInterviewState extends State<TimelineInterview> {
                 color: Colors.orange),
           ),
           const SizedBox(height: 20),
-          Image.asset('assets/timeline_1.png', height: 300, width: 1000),
+          Image.asset('assets/timeline/timeline_1.png',
+              height: 300, width: 1000),
           const SizedBox(height: 20),
           const Text(
             'Your application is currently under review. Please be patient while we get back to you.',

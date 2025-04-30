@@ -59,8 +59,8 @@
 -- );  
 
 -- Ada 5 Jenis Status Magang: 
--- - On process
--- - Sedang berlangsung
+-- - On Process
+-- - Sedang Berlangsung
 -- - Approve
 -- - Selesai
 -- - Ditolak

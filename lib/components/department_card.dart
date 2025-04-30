@@ -307,7 +307,10 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
       // If already login
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (_) => const SubmissionIntern()),
+        MaterialPageRoute(
+            builder: (_) => SubmissionIntern(
+                  departmentName: widget.title,
+                )),
       );
     }
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:japfa_internship/admin_page/pendaftaran_magang_departemen.dart';
-import 'package:japfa_internship/admin_page/edit_department_page.dart';
+import 'package:japfa_internship/admin_page/edit_department_modal.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
 import 'package:japfa_internship/models/departemen_data/departemen_data.dart';
 import 'package:japfa_internship/navbar.dart';
@@ -213,7 +213,19 @@ class _DepartemenMagangDashboardState extends State<DepartemenMagangDashboard> {
       builder: (BuildContext context) {
         return EditDepartmentModal(department: department);
       },
-    );
+    ).then((updatedDepartment) {
+      if (updatedDepartment != null) {
+        setState(() {
+          // Find the index and update the list
+          int index = departemen.indexWhere(
+              (d) => d.idDepartemen == updatedDepartment.idDepartemen);
+          if (index != -1) {
+            departemen[index] =
+                updatedDepartment; // Update the list with the new department instance
+          }
+        });
+      }
+    });
   }
 
   void _onViewApplications(String departmentName) {

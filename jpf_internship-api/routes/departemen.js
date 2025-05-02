@@ -86,7 +86,7 @@ router.post('/add-new-departemen', async (req, res) => {
 // Get all Departemen
 router.get('/fetch-all-departemen', async (req, res) => {
     try {
-        const result = await pool.query('SELECT * FROM DEPARTEMEN');
+        const result = await pool.query('SELECT * FROM DEPARTEMEN ORDER BY id_departemen ASC');
         res.status(200).json(result.rows);
     } catch (error) {
         console.error('Error fetching Departemen:', error);
@@ -105,117 +105,37 @@ router.get('/count', async (req, res) => {
     }
 });
 
-// Update max_kuota of Departemen
-router.put('/update-max-kuota/:id', async (req, res) => {
-    const { id } = req.params;
-    const { max_kuota } = req.body;
+// Update max_kuota and calculate sisa_kuota  
+router.put('/update-max-kuota/:id', async (req, res) => {  
+    const { id } = req.params;  
+    const { max_kuota } = req.body;  
 
-    try {
-        const result = await pool.query(
-            'UPDATE DEPARTEMEN SET max_kuota = $1 WHERE id_departemen = $2 RETURNING *',
-            [max_kuota, id]
-        );
+    try {  
+        // Get current jumlah_approved  
+        const jumlahApprovedResult = await pool.query(  
+            'SELECT jumlah_approved FROM DEPARTEMEN WHERE id_departemen = $1',  
+            [id]  
+        );  
 
-        if (result.rowCount === 0) {
-            return res.status(404).json({ error: 'Departemen not found' });
-        }
+        if (jumlahApprovedResult.rowCount === 0) {  
+            return res.status(404).json({ error: 'Departemen not found' });  
+        }  
 
-        res.status(200).json({ message: 'max_kuota updated successfully!', data: result.rows[0] });
-    } catch (error) {
-        console.error('Error updating max_kuota:', error);
-        res.status(500).json({ error: 'Server error' });
-    }
-});
+        const jumlahApproved = jumlahApprovedResult.rows[0].jumlah_approved;  
+        const newSisaKuota = max_kuota - jumlahApproved;  
 
-// Update jumlah_pengajuan of Departemen
-router.put('/update-jumlah-pengajuan/:id', async (req, res) => {
-    const { id } = req.params;
-    const { jumlah_pengajuan } = req.body;
+        // Now update max_kuota and sisa_kuota  
+        const result = await pool.query(  
+            'UPDATE DEPARTEMEN SET max_kuota = $1, sisa_kuota = $2 WHERE id_departemen = $3 RETURNING *',  
+            [max_kuota, newSisaKuota, id]  
+        );  
 
-    try {
-        const result = await pool.query(
-            'UPDATE DEPARTEMEN SET jumlah_pengajuan = $1 WHERE id_departemen = $2 RETURNING *',
-            [jumlah_pengajuan, id]
-        );
-
-        if (result.rowCount === 0) {
-            return res.status(404).json({ error: 'Departemen not found' });
-        }
-
-        res.status(200).json({ message: 'jumlah_pengajuan updated successfully!', data: result.rows[0] });
-    } catch (error) {
-        console.error('Error updating jumlah_pengajuan:', error);
-        res.status(500).json({ error: 'Server error' });
-    }
-});
-
-// Update jumlah_approved of Departemen
-router.put('/update-jumlah-approved/:id', async (req, res) => {
-    const { id } = req.params;
-    const { jumlah_approved } = req.body;
-
-    try {
-        const result = await pool.query(
-            'UPDATE DEPARTEMEN SET jumlah_approved = $1 WHERE id_departemen = $2 RETURNING *',
-            [jumlah_approved, id]
-        );
-
-        if (result.rowCount === 0) {
-            return res.status(404).json({ error: 'Departemen not found' });
-        }
-
-        res.status(200).json({ message: 'jumlah_approved updated successfully!', data: result.rows[0] });
-    } catch (error) {
-        console.error('Error updating jumlah_approved:', error);
-        res.status(500).json({ error: 'Server error' });
-    }
-});
-
-
-// Update jumlah_on_boarding of Departemen
-router.put('/update-jumlah-on-boarding/:id', async (req, res) => {
-    const { id } = req.params;
-    const { jumlah_on_boarding } = req.body;
-
-    try {
-        const result = await pool.query(
-            'UPDATE DEPARTEMEN SET jumlah_on_boarding = $1 WHERE id_departemen = $2 RETURNING *',
-            [jumlah_on_boarding, id]
-        );
-
-        if (result.rowCount === 0) {
-            return res.status(404).json({ error: 'Departemen not found' });
-        }
-
-        res.status(200).json({ message: 'jumlah_on_boarding updated successfully!', data: result.rows[0] });
-    } catch (error) {
-        console.error('Error updating jumlah_on_boarding:', error);
-        res.status(500).json({ error: 'Server error' });
-    }
-});
-
-
-// Update sisa_kuota of Departemen
-router.put('/update-sisa-kuota/:id', async (req, res) => {
-    const { id } = req.params;
-    const { sisa_kuota } = req.body;
-
-    try {
-        const result = await pool.query(
-            'UPDATE DEPARTEMEN SET sisa_kuota = $1 WHERE id_departemen = $2 RETURNING *',
-            [sisa_kuota, id]
-        );
-
-        if (result.rowCount === 0) {
-            return res.status(404).json({ error: 'Departemen not found' });
-        }
-
-        res.status(200).json({ message: 'sisa_kuota updated successfully!', data: result.rows[0] });
-    } catch (error) {
-        console.error('Error updating sisa_kuota:', error);
-        res.status(500).json({ error: 'Server error' });
-    }
-});
+        res.status(200).json({ message: 'Max kuota and sisa kuota updated successfully!', data: result.rows[0] });  
+    } catch (error) {  
+        console.error('Error updating max_kuota:', error);  
+        res.status(500).json({ error: 'Server error' });  
+    }  
+});  
 
 
 

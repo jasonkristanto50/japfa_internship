@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:japfa_internship/components/widget_component.dart';
+import 'package:japfa_internship/function_variable/api_service_function.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/models/departemen_data/departemen_data.dart'; // Make sure to import DepartemenData
 
 class EditDepartmentModal extends StatefulWidget {
-  final DepartemenData department; // Change to DepartemenData
+  final DepartemenData department;
 
   const EditDepartmentModal({super.key, required this.department});
 
@@ -14,33 +15,17 @@ class EditDepartmentModal extends StatefulWidget {
 
 class _EditDepartmentModalState extends State<EditDepartmentModal> {
   late TextEditingController maxQuotaController;
-  late TextEditingController totalApplicationsController;
-  late TextEditingController approvedController;
-  late TextEditingController onboardingController;
-  late TextEditingController remainingQuotaController;
 
   @override
   void initState() {
     super.initState();
     maxQuotaController =
         TextEditingController(text: widget.department.maxKuota.toString());
-    totalApplicationsController = TextEditingController(
-        text: widget.department.jumlahPengajuan.toString());
-    approvedController = TextEditingController(
-        text: widget.department.jumlahApproved.toString());
-    onboardingController = TextEditingController(
-        text: widget.department.jumlahOnBoarding.toString());
-    remainingQuotaController =
-        TextEditingController(text: widget.department.sisaKuota.toString());
   }
 
   @override
   void dispose() {
     maxQuotaController.dispose();
-    totalApplicationsController.dispose();
-    approvedController.dispose();
-    onboardingController.dispose();
-    remainingQuotaController.dispose();
     super.dispose();
   }
 
@@ -52,8 +37,7 @@ class _EditDepartmentModalState extends State<EditDepartmentModal> {
           borderRadius:
               BorderRadius.circular(16)), // Rounded corners for the modal
       title: Center(
-        // Center the title
-        child: Text('EDIT department', style: bold14),
+        child: Text('EDIT Department', style: bold14),
       ),
       content: SingleChildScrollView(
         child: Column(
@@ -69,13 +53,8 @@ class _EditDepartmentModalState extends State<EditDepartmentModal> {
             ),
             const SizedBox(height: 16),
             _buildTextField(maxQuotaController, 'Max Kuota'),
-            _buildTextField(totalApplicationsController, 'Jumlah Pengajuan'),
-            _buildTextField(approvedController, 'Jumlah Approved'),
-            _buildTextField(onboardingController, 'Jumlah On Boarding'),
-            _buildTextField(remainingQuotaController, 'Sisa Kuota'),
             const SizedBox(height: 16),
             Center(
-                // Center the Save Changes button
                 child: RoundedRectangleButton(
                     title: 'SAVE',
                     backgroundColor: japfaOrange,
@@ -87,15 +66,32 @@ class _EditDepartmentModalState extends State<EditDepartmentModal> {
   }
 
   // Function to save changes and close the modal
-  void _saveChanges() {
-    setState(() {
-      // TODO:
-    });
+  void _saveChanges() async {
+    try {
+      int departmentNowMaxKuota = widget.department.maxKuota ?? 0;
+      int newMaxKuota =
+          int.tryParse(maxQuotaController.text) ?? departmentNowMaxKuota;
 
-    Navigator.pop(context); // Close the modal after saving
+      // Calculate new sisa_kuota based on jumlah approved
+      int departmentNowApproved = widget.department.jumlahApproved ?? 0;
+      int newSisaKuota = newMaxKuota - departmentNowApproved;
+
+      // Call the API method to update max kuota
+      await ApiService().updateMaxKuotaDepartemen(
+          widget.department.idDepartemen, newMaxKuota);
+
+      // Create a new instance of DepartemenData with the updated maxKuota
+      DepartemenData updatedDepartment = widget.department
+          .copyWith(maxKuota: newMaxKuota, sisaKuota: newSisaKuota);
+
+      Navigator.pop(context, updatedDepartment);
+    } catch (e) {
+      // Handle errors (e.g., show a snackbar or dialog)
+      print('Failed to save changes: $e');
+    }
   }
 
-  // Custom method to build text fields for the modal
+  // Custom method to build text field for the modal
   Widget _buildTextField(TextEditingController controller, String label) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -106,10 +102,7 @@ class _EditDepartmentModalState extends State<EditDepartmentModal> {
           labelStyle: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: controller.text.isEmpty
-                ? Colors.black
-                : Colors
-                    .orange, // Change label color to red when the field is focused
+            color: controller.text.isEmpty ? Colors.black : Colors.orange,
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
@@ -117,15 +110,12 @@ class _EditDepartmentModalState extends State<EditDepartmentModal> {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(
-                color: japfaOrange,
-                width: 2), // Focused border color set to red
+            borderSide: BorderSide(color: japfaOrange, width: 2),
           ),
         ),
         keyboardType: TextInputType.number,
-        style: const TextStyle(
-            color: Colors.black), // Text color (black by default)
-        cursorColor: Colors.black, // Cursor color set to red
+        style: const TextStyle(color: Colors.black),
+        cursorColor: Colors.black,
       ),
     );
   }

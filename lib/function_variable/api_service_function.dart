@@ -54,6 +54,24 @@ class ApiService {
     }
   }
 
+  //////////////////////////////////////////  DEPARTEMEN   ///////////////////////////////////////////////////////////
+
+  Future<void> updateMaxKuotaDepartemen(String id, int maxKuota) async {
+    try {
+      final response = await Dio().put(
+        'http://localhost:3000/api/departemen/update-max-kuota/$id',
+        data: {'max_kuota': maxKuota},
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to update max kuota');
+      }
+    } catch (e) {
+      print('Error updating max kuota: $e');
+      rethrow;
+    }
+  }
+
   Future<List<DepartemenData>> fetchDepartemen() async {
     try {
       final response = await _dio

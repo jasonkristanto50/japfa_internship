@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:japfa_internship/admin_page/pendaftar_magang_dashboard.dart';
+import 'package:japfa_internship/admin_page/departemen_magang_dashboard.dart';
 import 'package:japfa_internship/admin_page/kunjungan_studi_dashboard.dart';
 import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
@@ -110,7 +110,7 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
                     buildNavBarTab(
                         'Home Page Magang', _navigateToHomePageMagang),
                     buildNavBarTab('Data Pendaftar Magang',
-                        _navigateToDataPendaftaranMagangPage),
+                        _navigateToDepartemenPendaftaranMagangPage),
                     buildNavBarTab(
                         'Kunjungan Studi', _navigateToAdminKunjunganStudiPage),
                   ] else if (loginState.role == "peserta magang") ...[
@@ -219,7 +219,7 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
       case "admin":
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
-              builder: (context) => const PendaftarMagangDashboard()),
+              builder: (context) => const DepartemenMagangDashboard()),
           (route) => false,
         );
         break;
@@ -236,9 +236,9 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
   }
 
   // ADMIN HR/GA TAB
-  void _navigateToDataPendaftaranMagangPage() {
+  void _navigateToDepartemenPendaftaranMagangPage() {
     fadeNavigation(context,
-        targetNavigation: const PendaftarMagangDashboard(), time: 200);
+        targetNavigation: const DepartemenMagangDashboard(), time: 200);
   }
 
   void _navigateToHomePageMagang() {

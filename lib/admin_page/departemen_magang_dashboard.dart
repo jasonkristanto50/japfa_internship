@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:japfa_internship/admin_page/detail_pengajuan_magang.dart';
+import 'package:japfa_internship/admin_page/pendaftaran_magang_departemen.dart';
 import 'package:japfa_internship/admin_page/edit_department_page.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
 import 'package:japfa_internship/models/departemen_data/departemen_data.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/components/widget_component.dart';
-import 'package:japfa_internship/data.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 
-class PendaftarMagangDashboard extends StatefulWidget {
-  const PendaftarMagangDashboard({super.key});
+class DepartemenMagangDashboard extends StatefulWidget {
+  const DepartemenMagangDashboard({super.key});
 
   @override
-  State<PendaftarMagangDashboard> createState() =>
-      _PendaftarMagangDashboardState();
+  State<DepartemenMagangDashboard> createState() =>
+      _DepartemenMagangDashboardState();
 }
 
-class _PendaftarMagangDashboardState extends State<PendaftarMagangDashboard> {
+class _DepartemenMagangDashboardState extends State<DepartemenMagangDashboard> {
   List<DepartemenData> departemen = [];
   String searchQuery = "";
 
@@ -222,7 +221,7 @@ class _PendaftarMagangDashboardState extends State<PendaftarMagangDashboard> {
       context,
       MaterialPageRoute(
         builder: (context) =>
-            DetailPengajuanMagang(departmentName: departmentName),
+            PendaftaranMagangDepartemen(departmentName: departmentName),
       ),
     );
   }

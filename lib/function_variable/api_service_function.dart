@@ -23,6 +23,37 @@ class ApiService {
     }
   }
 
+  Future<List<PesertaMagangData>> fetchPesertaMagangData() async {
+    try {
+      final response = await _dio.get(
+          'http://localhost:3000/api/peserta_magang/fetch-all-peserta-data');
+      if (response.statusCode == 200) {
+        List<dynamic> data = response.data; // Adjust based on your API response
+        return data.map((item) => PesertaMagangData.fromJson(item)).toList();
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+      rethrow;
+    }
+  }
+
+  Future<int> countPesertaMagang() async {
+    try {
+      final response =
+          await _dio.get('http://localhost:3000/api/peserta_magang/count');
+      if (response.statusCode == 200) {
+        return response.data['count']; // Adjust according to your API response
+      } else {
+        throw Exception('Failed to fetch count');
+      }
+    } catch (e) {
+      print('Error fetching count: $e');
+      rethrow; // Rethrow the error for handling in the caller
+    }
+  }
+
   Future<List<DepartemenData>> fetchDepartemen() async {
     try {
       final response = await _dio

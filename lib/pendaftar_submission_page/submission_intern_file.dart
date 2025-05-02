@@ -134,29 +134,42 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
   }
 
   // Method to submit the form
-  void _submitFormPesertaMagang() {
+  void _submitFormPesertaMagang() async {
     if (cvFilePath != null &&
         campusApprovalFilePath != null &&
         transcriptFilePath != null) {
-      PesertaMagangData pesertaMagang = PesertaMagangData(
-        idMagang: '001',
-        nama: widget.name,
-        departemen: widget.departmentName,
-        alamat: widget.address,
-        noTelp: widget.phoneNumber,
-        email: widget.email,
-        asalUniversitas: widget.university,
-        angkatan: widget.generation,
-        nilaiUniv: widget.score,
-        jurusan: widget.major,
-        pathCv: cvFilePath!,
-        pathPersetujuanUniv: campusApprovalFilePath!,
-        pathTranskripNilai: transcriptFilePath!,
-        statusMagang: 'On Process',
-        nilaiAkhirMagang: null,
-      );
+      try {
+        // Fetch the count of peserta magang
+        int count = await ApiService().countPesertaMagang();
 
-      ApiService().submitPesertaMagang(pesertaMagang);
+        // Construct the idMagang
+        String idMagang = 'PDFT_MG_0$count';
+
+        // Create the PesertaMagangData object
+        PesertaMagangData pesertaMagang = PesertaMagangData(
+          idMagang: idMagang,
+          nama: widget.name,
+          departemen: widget.departmentName,
+          alamat: widget.address,
+          noTelp: widget.phoneNumber,
+          email: widget.email,
+          asalUniversitas: widget.university,
+          angkatan: widget.generation,
+          nilaiUniv: widget.score,
+          jurusan: widget.major,
+          pathCv: cvFilePath!,
+          pathPersetujuanUniv: campusApprovalFilePath!,
+          pathTranskripNilai: transcriptFilePath!,
+          statusMagang: 'On Process',
+          nilaiAkhirMagang: null,
+        );
+
+        // Submit the form
+        await ApiService().submitPesertaMagang(pesertaMagang);
+      } catch (error) {
+        print('Error occurred: $error');
+        showSnackBar(context, 'An error occurred while submitting the form');
+      }
     } else {
       showSnackBar(context, 'All files must be uploaded');
     }

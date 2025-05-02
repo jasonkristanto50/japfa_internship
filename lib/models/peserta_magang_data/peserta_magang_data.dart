@@ -19,6 +19,7 @@ abstract class PesertaMagangData with _$PesertaMagangData {
     @JsonKey(name: 'path_cv') required String pathCv,
     @JsonKey(name: 'path_persetujuan_univ') required String pathPersetujuanUniv,
     @JsonKey(name: 'path_transkrip_nilai') required String pathTranskripNilai,
+    @JsonKey(name: 'path_foto_diri') required String pathFotoDiri,
     @JsonKey(name: 'status_magang') required String statusMagang,
     @JsonKey(name: 'nilai_akhir_magang') int? nilaiAkhirMagang,
   }) = _PesertaMagangData;

@@ -26,14 +26,15 @@ router.post('/submit-peserta-magang', async (req, res) => {
         jurusan,  
         path_cv,  
         path_persetujuan_univ,  
-        path_transkrip_nilai,  
+        path_transkrip_nilai,
+        path_foto_diri,  
         status_magang,  
         nilai_akhir_magang,  
     } = req.body;  
 
     try {  
         await pool.query(  
-            'INSERT INTO PESERTA_MAGANG (id_magang, nama, departemen, alamat, no_telp, email, asal_universitas, angkatan, nilai_univ, jurusan, path_cv, path_persetujuan_univ, path_transkrip_nilai, status_magang, nilai_akhir_magang) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)',  
+            'INSERT INTO PESERTA_MAGANG (id_magang, nama, departemen, alamat, no_telp, email, asal_universitas, angkatan, nilai_univ, jurusan, path_cv, path_persetujuan_univ, path_transkrip_nilai, path_foto_diri, status_magang, nilai_akhir_magang) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)',  
             [  
                 id_magang,  
                 nama,  
@@ -47,7 +48,8 @@ router.post('/submit-peserta-magang', async (req, res) => {
                 jurusan,  
                 path_cv,  
                 path_persetujuan_univ,  
-                path_transkrip_nilai,  
+                path_transkrip_nilai,
+                path_foto_diri,  
                 status_magang,  
                 nilai_akhir_magang,  
             ]  

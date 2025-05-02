@@ -299,12 +299,14 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
         context: context,
         builder: (context) => CustomLoginDialog(
           onLoginPressed: () {
+            Navigator.pop(context); // pop dialog card
             fadeNavigation(context, targetNavigation: const LoginScreen());
           },
         ),
       );
     } else {
       // If already login
+      Navigator.pop(context);
       Navigator.push(
         context,
         MaterialPageRoute(

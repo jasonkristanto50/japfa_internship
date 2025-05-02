@@ -45,11 +45,13 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
   String? cvFileName;
   String? campusApprovalFileName;
   String? transcriptFileName;
+  String? fotoDiriFileName;
   String? cvFilePath = "assets/file_upload_peserta/cv_dummy_jason.jpg";
   String? campusApprovalFilePath =
       "assets/file_upload_peserta/persetujuan_univ_dummy_jason.pdf";
   String? transcriptFilePath =
       "assets/file_upload_peserta/transkrip_dummy_jason.pdf";
+  String? fotoDiriFilePath = "assets/file_upload_peserta/dummy_foto_diri.png";
 
   final _visible = true;
   List<String> tipeDataFileUpload = [
@@ -60,6 +62,7 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
     'png',
     'jpeg'
   ];
+  List<String> tipeDataFotoUpload = ['jpg', 'png', 'jpeg'];
 
   @override
   Widget build(BuildContext context) {
@@ -160,6 +163,7 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
           pathCv: cvFilePath!,
           pathPersetujuanUniv: campusApprovalFilePath!,
           pathTranskripNilai: transcriptFilePath!,
+          pathFotoDiri: fotoDiriFilePath!,
           statusMagang: 'On Process',
           nilaiAkhirMagang: null,
         );
@@ -184,13 +188,15 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
     return Column(
       children: [
         const SizedBox(height: 15),
-        buildFileField('CV', cvFileName, 'CV'),
+        buildFileField('CV', cvFileName, 'CV', false),
+        const SizedBox(height: 15),
+        buildFileField('Campus Approval', campusApprovalFileName,
+            'Campus Approval', false),
         const SizedBox(height: 15),
         buildFileField(
-            'Campus Approval', campusApprovalFileName, 'Campus Approval'),
+            'Score Transcript', transcriptFileName, 'Score Transcript', false),
         const SizedBox(height: 15),
-        buildFileField(
-            'Score Transcript', transcriptFileName, 'Score Transcript'),
+        buildFileField('Foto Diri', fotoDiriFileName, 'Foto Diri', false),
         const SizedBox(height: 20),
         RoundedRectangleButton(
           title: "Submit",
@@ -209,7 +215,8 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
   }
 
   // Custom method to create file upload fields with delete functionality
-  Widget buildFileField(String label, String? fileName, String field) {
+  Widget buildFileField(
+      String label, String? fileName, String field, bool isFoto) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -227,7 +234,7 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
           ),
           child: fileName == null
               ? InkWell(
-                  onTap: () => pickFile(field),
+                  onTap: () => pickFile(field, isFoto),
                   child: const Center(child: Text('Click to upload file')),
                 )
               : Row(
@@ -292,6 +299,9 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
     if (!validateFileUpload('Score Transcript')) {
       return false;
     }
+    if (!validateFileUpload('Foto Diri')) {
+      return false;
+    }
 
     return true;
   }
@@ -305,6 +315,8 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
       fileName = campusApprovalFileName;
     } else if (field == 'Score Transcript') {
       fileName = transcriptFileName;
+    } else if (field == 'Foto Diri') {
+      fileName = fotoDiriFileName;
     }
 
     if (fileName == null) {
@@ -317,11 +329,25 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
 
   // FILE MANIPULATION
   // Method to pick files using file_picker package with validation
-  void pickFile(String field) async {
+  void pickFile(String field, bool isFoto) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: tipeDataFileUpload, // Allowed file types
+      allowedExtensions: isFoto
+          ? tipeDataFotoUpload
+          : tipeDataFileUpload, // Allowed file types
     );
+
+    // TODO:
+    // Checking if a file was selected and if it matches the allowed types
+    if (result == null ||
+        (isFoto &&
+            !tipeDataFotoUpload.contains(result.files.single.extension)) ||
+        (!isFoto &&
+            !tipeDataFileUpload.contains(result.files.single.extension))) {
+      // Show warning
+      showSnackBar(context,
+          'Tipe data tidak sesuai, foto : $tipeDataFotoUpload, file : $tipeDataFileUpload');
+    }
 
     if (result != null) {
       String fileName = result.files.single.name;
@@ -346,6 +372,9 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
         } else if (field == 'Score Transcript') {
           transcriptFileName = fileName;
           transcriptFilePath = filePath;
+        } else if (field == 'Foto Diri') {
+          fotoDiriFileName = fileName;
+          fotoDiriFilePath = filePath;
         }
       });
     }
@@ -363,6 +392,9 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
       } else if (field == 'Score Transcript') {
         transcriptFileName = null;
         transcriptFilePath = null;
+      } else if (field == 'Foto Diri') {
+        fotoDiriFileName = null;
+        fotoDiriFilePath = null;
       }
     });
   }

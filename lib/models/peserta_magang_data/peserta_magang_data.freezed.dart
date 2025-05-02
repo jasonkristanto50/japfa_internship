@@ -41,6 +41,8 @@ mixin _$PesertaMagangData {
   String get pathPersetujuanUniv;
   @JsonKey(name: 'path_transkrip_nilai')
   String get pathTranskripNilai;
+  @JsonKey(name: 'path_foto_diri')
+  String get pathFotoDiri;
   @JsonKey(name: 'status_magang')
   String get statusMagang;
   @JsonKey(name: 'nilai_akhir_magang')
@@ -82,6 +84,8 @@ mixin _$PesertaMagangData {
                 other.pathPersetujuanUniv == pathPersetujuanUniv) &&
             (identical(other.pathTranskripNilai, pathTranskripNilai) ||
                 other.pathTranskripNilai == pathTranskripNilai) &&
+            (identical(other.pathFotoDiri, pathFotoDiri) ||
+                other.pathFotoDiri == pathFotoDiri) &&
             (identical(other.statusMagang, statusMagang) ||
                 other.statusMagang == statusMagang) &&
             (identical(other.nilaiAkhirMagang, nilaiAkhirMagang) ||
@@ -105,12 +109,13 @@ mixin _$PesertaMagangData {
       pathCv,
       pathPersetujuanUniv,
       pathTranskripNilai,
+      pathFotoDiri,
       statusMagang,
       nilaiAkhirMagang);
 
   @override
   String toString() {
-    return 'PesertaMagangData(idMagang: $idMagang, nama: $nama, departemen: $departemen, alamat: $alamat, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, angkatan: $angkatan, nilaiUniv: $nilaiUniv, jurusan: $jurusan, pathCv: $pathCv, pathPersetujuanUniv: $pathPersetujuanUniv, pathTranskripNilai: $pathTranskripNilai, statusMagang: $statusMagang, nilaiAkhirMagang: $nilaiAkhirMagang)';
+    return 'PesertaMagangData(idMagang: $idMagang, nama: $nama, departemen: $departemen, alamat: $alamat, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, angkatan: $angkatan, nilaiUniv: $nilaiUniv, jurusan: $jurusan, pathCv: $pathCv, pathPersetujuanUniv: $pathPersetujuanUniv, pathTranskripNilai: $pathTranskripNilai, pathFotoDiri: $pathFotoDiri, statusMagang: $statusMagang, nilaiAkhirMagang: $nilaiAkhirMagang)';
   }
 }
 
@@ -134,6 +139,7 @@ abstract mixin class $PesertaMagangDataCopyWith<$Res> {
       @JsonKey(name: 'path_cv') String pathCv,
       @JsonKey(name: 'path_persetujuan_univ') String pathPersetujuanUniv,
       @JsonKey(name: 'path_transkrip_nilai') String pathTranskripNilai,
+      @JsonKey(name: 'path_foto_diri') String pathFotoDiri,
       @JsonKey(name: 'status_magang') String statusMagang,
       @JsonKey(name: 'nilai_akhir_magang') int? nilaiAkhirMagang});
 }
@@ -164,6 +170,7 @@ class _$PesertaMagangDataCopyWithImpl<$Res>
     Object? pathCv = null,
     Object? pathPersetujuanUniv = null,
     Object? pathTranskripNilai = null,
+    Object? pathFotoDiri = null,
     Object? statusMagang = null,
     Object? nilaiAkhirMagang = freezed,
   }) {
@@ -220,6 +227,10 @@ class _$PesertaMagangDataCopyWithImpl<$Res>
           ? _self.pathTranskripNilai
           : pathTranskripNilai // ignore: cast_nullable_to_non_nullable
               as String,
+      pathFotoDiri: null == pathFotoDiri
+          ? _self.pathFotoDiri
+          : pathFotoDiri // ignore: cast_nullable_to_non_nullable
+              as String,
       statusMagang: null == statusMagang
           ? _self.statusMagang
           : statusMagang // ignore: cast_nullable_to_non_nullable
@@ -249,6 +260,7 @@ class _PesertaMagangData implements PesertaMagangData {
       @JsonKey(name: 'path_cv') required this.pathCv,
       @JsonKey(name: 'path_persetujuan_univ') required this.pathPersetujuanUniv,
       @JsonKey(name: 'path_transkrip_nilai') required this.pathTranskripNilai,
+      @JsonKey(name: 'path_foto_diri') required this.pathFotoDiri,
       @JsonKey(name: 'status_magang') required this.statusMagang,
       @JsonKey(name: 'nilai_akhir_magang') this.nilaiAkhirMagang});
   factory _PesertaMagangData.fromJson(Map<String, dynamic> json) =>
@@ -293,6 +305,9 @@ class _PesertaMagangData implements PesertaMagangData {
   @override
   @JsonKey(name: 'path_transkrip_nilai')
   final String pathTranskripNilai;
+  @override
+  @JsonKey(name: 'path_foto_diri')
+  final String pathFotoDiri;
   @override
   @JsonKey(name: 'status_magang')
   final String statusMagang;
@@ -340,6 +355,8 @@ class _PesertaMagangData implements PesertaMagangData {
                 other.pathPersetujuanUniv == pathPersetujuanUniv) &&
             (identical(other.pathTranskripNilai, pathTranskripNilai) ||
                 other.pathTranskripNilai == pathTranskripNilai) &&
+            (identical(other.pathFotoDiri, pathFotoDiri) ||
+                other.pathFotoDiri == pathFotoDiri) &&
             (identical(other.statusMagang, statusMagang) ||
                 other.statusMagang == statusMagang) &&
             (identical(other.nilaiAkhirMagang, nilaiAkhirMagang) ||
@@ -363,12 +380,13 @@ class _PesertaMagangData implements PesertaMagangData {
       pathCv,
       pathPersetujuanUniv,
       pathTranskripNilai,
+      pathFotoDiri,
       statusMagang,
       nilaiAkhirMagang);
 
   @override
   String toString() {
-    return 'PesertaMagangData(idMagang: $idMagang, nama: $nama, departemen: $departemen, alamat: $alamat, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, angkatan: $angkatan, nilaiUniv: $nilaiUniv, jurusan: $jurusan, pathCv: $pathCv, pathPersetujuanUniv: $pathPersetujuanUniv, pathTranskripNilai: $pathTranskripNilai, statusMagang: $statusMagang, nilaiAkhirMagang: $nilaiAkhirMagang)';
+    return 'PesertaMagangData(idMagang: $idMagang, nama: $nama, departemen: $departemen, alamat: $alamat, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, angkatan: $angkatan, nilaiUniv: $nilaiUniv, jurusan: $jurusan, pathCv: $pathCv, pathPersetujuanUniv: $pathPersetujuanUniv, pathTranskripNilai: $pathTranskripNilai, pathFotoDiri: $pathFotoDiri, statusMagang: $statusMagang, nilaiAkhirMagang: $nilaiAkhirMagang)';
   }
 }
 
@@ -394,6 +412,7 @@ abstract mixin class _$PesertaMagangDataCopyWith<$Res>
       @JsonKey(name: 'path_cv') String pathCv,
       @JsonKey(name: 'path_persetujuan_univ') String pathPersetujuanUniv,
       @JsonKey(name: 'path_transkrip_nilai') String pathTranskripNilai,
+      @JsonKey(name: 'path_foto_diri') String pathFotoDiri,
       @JsonKey(name: 'status_magang') String statusMagang,
       @JsonKey(name: 'nilai_akhir_magang') int? nilaiAkhirMagang});
 }
@@ -424,6 +443,7 @@ class __$PesertaMagangDataCopyWithImpl<$Res>
     Object? pathCv = null,
     Object? pathPersetujuanUniv = null,
     Object? pathTranskripNilai = null,
+    Object? pathFotoDiri = null,
     Object? statusMagang = null,
     Object? nilaiAkhirMagang = freezed,
   }) {
@@ -479,6 +499,10 @@ class __$PesertaMagangDataCopyWithImpl<$Res>
       pathTranskripNilai: null == pathTranskripNilai
           ? _self.pathTranskripNilai
           : pathTranskripNilai // ignore: cast_nullable_to_non_nullable
+              as String,
+      pathFotoDiri: null == pathFotoDiri
+          ? _self.pathFotoDiri
+          : pathFotoDiri // ignore: cast_nullable_to_non_nullable
               as String,
       statusMagang: null == statusMagang
           ? _self.statusMagang

@@ -54,6 +54,7 @@
 --     path_cv  VARCHAR(255) NOT NULL,
 --     path_persetujuan_univ  VARCHAR(255) NOT NULL,
 --     path_transkrip_nilai  VARCHAR(255) NOT NULL,
+--     path_foto_diri VARCHAR(255) NOT NULL,
 --     status_magang VARCHAR(50) NOT NULL,     
 --     nilai_akhir_magang INTEGER  
 -- );  

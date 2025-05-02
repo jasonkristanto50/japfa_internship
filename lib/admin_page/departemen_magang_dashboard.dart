@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:japfa_internship/admin_page/pendaftaran_magang_departemen.dart';
 import 'package:japfa_internship/admin_page/edit_department_modal.dart';
@@ -83,13 +84,27 @@ class _DepartemenMagangDashboardState extends State<DepartemenMagangDashboard> {
 
   Future<void> _loadDepartemen() async {
     try {
+      // Fetch all departments
       List<DepartemenData> fetchedDepartemen =
           await ApiService().fetchDepartemen();
+
+      // // Count applicants for each department using Dio
+      // for (var department in fetchedDepartemen) {
+      //   // Make the request to get the count of applicants
+      //   Response response = await Dio().get(
+      //       'http/localhost:3000/api/peserta_magang/count-pengajuan-for-department/:${department.namaDepartemen}');
+
+      //   // Update jumlahPengajuan based on the response
+      //   if (response.data['data'] != null) {
+      //     int totalCount = response.data['data']['total_count'];
+      //     department = department.copyWith(jumlahPengajuan: totalCount);
+      //   }
+      // }
+
       setState(() {
         departemen = fetchedDepartemen;
       });
     } catch (e) {
-      // Handle the error (e.g., show a snackbar or dialog)
       print("Error fetching departemen: $e");
     }
   }

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Pool } = require('pg');
+const pgp = require('pg-promise')();
 require('dotenv').config();
 
 const pool = new Pool({
@@ -11,50 +12,55 @@ const pool = new Pool({
     port: process.env.DB_PORT || 5432,
 });
 
-// Add multiple Departemen
-router.post('/add-multiple-departemen', async (req, res) => {
-    const departments = req.body; // Expecting an array of departemen objects
+////////////////////////////////////////////////  ADD NEW /////////////////////////////////////////////////////////
 
-    // Validate that the body is an array
-    if (!Array.isArray(departments)) {
-        return res.status(400).json({ error: 'Body must be an array of departemen objects' });
-    }
+router.post('/add-multiple-departemen', async (req, res) => {  
+    const departments = req.body; // Expecting an array of departemen objects  
 
-    try {
-        const values = departments.map(department => [
-            department.id_departemen,
-            department.nama_departemen,
-            department.deskripsi,
-            department.syarat_departemen,
-            department.path_image,
-            department.max_kuota,
-            department.jumlah_pengajuan,
-            department.jumlah_approved,
-            department.jumlah_on_boarding,
-            department.sisa_kuota
-        ]);
+    // Validate that the body is an array  
+    if (!Array.isArray(departments)) {  
+        return res.status(400).json({ error: 'Body must be an array of departemen objects' });  
+    }  
 
-        const queryText = `
-            INSERT INTO DEPARTEMEN 
-            (id_departemen, nama_departemen, deskripsi, syarat_departemen, path_image, 
-            max_kuota, jumlah_pengajuan, jumlah_approved, jumlah_on_boarding, sisa_kuota)
-            VALUES %L
-        `;
+    try {  
+        const values = departments.map(department => ({  
+            id_departemen: department.id_departemen,  
+            nama_departemen: department.nama_departemen,  
+            deskripsi: department.deskripsi,  
+            syarat_departemen: department.syarat_departemen,  
+            path_image: department.path_image,  
+            max_kuota: department.max_kuota,  
+            jumlah_pengajuan: department.jumlah_pengajuan,  
+            jumlah_approved: department.jumlah_approved,  
+            jumlah_on_boarding: department.jumlah_on_boarding,  
+            sisa_kuota: department.sisa_kuota  
+        }));  
 
-        // Using pg-promise or any other query builder that supports multi-row inserts
-        const query = format(queryText, values);
-        
-        // Insert the departments into the database
-        await pool.query(query);
+        // Define the columns explicitly  
+        const columns = new pgp.helpers.ColumnSet([  
+            'id_departemen',  
+            'nama_departemen',  
+            'deskripsi',  
+            'syarat_departemen',  
+            'path_image',  
+            'max_kuota',  
+            'jumlah_pengajuan',  
+            'jumlah_approved',  
+            'jumlah_on_boarding',  
+            'sisa_kuota'  
+        ], { table: 'departemen' });  
 
-        res.status(201).json({ message: `${departments.length} Departemen(s) added successfully!` });
-    } catch (error) {
-        console.error('Error adding multiple Departemen:', error.message);
-        res.status(500).json({ error: 'Server error' });
-    }
-});
+        const query = pgp.helpers.insert(values, columns);  
 
+        // Insert the departments into the database  
+        await pool.query(query);  
 
+        res.status(201).json({ message: `${departments.length} Departemen(s) added successfully!` });  
+    } catch (error) {  
+        console.error('Error adding multiple Departemen:', error.message);  
+        res.status(500).json({ error: 'Server error' });  
+    }  
+});  
 // Add a new Departemen
 router.post('/add-new-departemen', async (req, res) => {
     const {
@@ -83,6 +89,7 @@ router.post('/add-new-departemen', async (req, res) => {
 });
 
 
+//////////////////////////////////////////// FETCH DATA ///////////////////////////////////////////////////////
 // Get all Departemen
 router.get('/fetch-all-departemen', async (req, res) => {
     try {
@@ -104,6 +111,9 @@ router.get('/count', async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 });
+
+
+////////////////////////////////////////////// UPDATE DATA ///////////////////////////////////////////////
 
 // Update max_kuota and calculate sisa_kuota  
 router.put('/update-max-kuota/:id', async (req, res) => {  
@@ -137,7 +147,60 @@ router.put('/update-max-kuota/:id', async (req, res) => {
     }  
 });  
 
+// Add/Subtract jumlah_pengajuan based on department name  
+router.put('/update-jumlah-pengajuan/:departmentName', async (req, res) => {  
+    const { departmentName } = req.params;  
+    const { jumlah } = req.body; // Positive number to add, negative to subtract  
 
+    try {  
+        // Update jumlah_pengajuan for the given department  
+        const result = await pool.query(  
+            'UPDATE DEPARTEMEN SET jumlah_pengajuan = jumlah_pengajuan + $1 WHERE nama_departemen = $2 RETURNING *',  
+            [jumlah, departmentName]  
+        );  
+
+        if (result.rowCount === 0) {  
+            return res.status(404).json({ error: 'Department not found' });  
+        }  
+
+        res.status(200).json({  
+            message: 'Jumlah pengajuan updated successfully!',  
+            data: result.rows[0],  
+        });  
+    } catch (error) {  
+        console.error('Error updating jumlah_pengajuan:', error);  
+        res.status(500).json({ error: 'Server error' });  
+    }  
+});  
+
+// Add/Subtract jumlah_approved based on department name  
+router.put('/update-jumlah-approved/:departmentName', async (req, res) => {  
+    const { departmentName } = req.params;  
+    const { jumlah } = req.body; // Positive number to add, negative to subtract  
+
+    try {  
+        // Update jumlah_approved for the given department  
+        const result = await pool.query(  
+            'UPDATE DEPARTEMEN SET jumlah_approved = jumlah_approved + $1 WHERE nama_departemen = $2 RETURNING *',  
+            [jumlah, departmentName]  
+        );  
+
+        if (result.rowCount === 0) {  
+            return res.status(404).json({ error: 'Department not found' });  
+        }  
+
+        res.status(200).json({  
+            message: 'Jumlah approved updated successfully!',  
+            data: result.rows[0],  
+        });  
+    } catch (error) {  
+        console.error('Error updating jumlah_approved:', error);  
+        res.status(500).json({ error: 'Server error' });  
+    }  
+});  
+
+
+////////////////////////////////////////////// DELETE DATA ///////////////////////////////////////////////////////
 
 // Delete all Departemen records
 router.delete('/delete-all-departemen', async (req, res) => {

@@ -106,6 +106,40 @@ class ApiService {
     }
   }
 
+  Future<void> updateJumlahPengajuan(String departmentName) async {
+    try {
+      // Fetch the current jumlahPengajuan
+      final response = await _dio.get(
+          'http://localhost:3000/api/departemen/add-pengajuan-departemen/$departmentName');
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to fetch jumlah pengajuan');
+      }
+
+      final currentData = response.data;
+      int currentJumlahPengajuan = currentData['data']['total_count'];
+
+      // Increment the jumlahPengajuan by 1
+      int newJumlahPengajuan = currentJumlahPengajuan + 1;
+
+      // Update the department with the new jumlahPengajuan
+      final updateResponse = await _dio.put(
+          'http://localhost:3000/api/departemen/update-jumlah-pengajuan',
+          data: {
+            'department_name': departmentName,
+            'new_jumlah_pengajuan': newJumlahPengajuan
+          });
+
+      if (updateResponse.statusCode != 200) {
+        throw Exception('Failed to update jumlah pengajuan');
+      }
+
+      print('Updated jumlah pengajuan for department: $newJumlahPengajuan');
+    } catch (e) {
+      throw Exception('Error updating jumlah pengajuan: $e');
+    }
+  }
+
   Future<List<DepartemenData>> fetchDepartemen() async {
     try {
       final response = await _dio

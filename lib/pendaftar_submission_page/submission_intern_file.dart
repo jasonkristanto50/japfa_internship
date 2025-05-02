@@ -166,6 +166,10 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
 
         // Submit the form
         await ApiService().submitPesertaMagang(pesertaMagang);
+
+        // Update jumlahPengajuan based on department name
+        // TODO :
+        await ApiService().updateJumlahPengajuan(widget.departmentName);
       } catch (error) {
         print('Error occurred: $error');
         showSnackBar(context, 'An error occurred while submitting the form');

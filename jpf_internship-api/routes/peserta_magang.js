@@ -59,6 +59,8 @@ router.post('/submit-peserta-magang', async (req, res) => {
     }  
 });  
 
+////////////////////////////////////////////////// FETCH DATA ///////////////////////////////////////////////////////
+
 // Get all Peserta Magang  
 router.get('/fetch-all-peserta-data', async (req, res) => {  
     try {  
@@ -80,6 +82,76 @@ router.get('/count', async (req, res) => {
         res.status(500).json({ error: 'Server error' });  
     }  
 });  
+
+// Count jumlah_pengajuan based on peserta magang for specific department  
+router.get('/count-pengajuan-for-department', async (req, res) => {  
+    // const { departmentName } = req.params;  
+
+    try {  
+        // Query to count the number of applicants for the specific department  
+        const result = await pool.query(  
+            `SELECT COUNT(*) AS total_count  
+             FROM PESERTA_MAGANG  
+             WHERE departemen = produksi`,  
+             
+        );  
+
+        // const totalCount = parseInt(result.rows[0].total_count);  
+
+        // // Update jumlah_pengajuan in the DEPARTEMEN table  
+        // await pool.query(  
+        //     'UPDATE DEPARTEMEN SET jumlah_pengajuan = $1 WHERE nama_departemen = $2',  
+        //     [totalCount, departmentName]  
+        // );  
+
+        // res.status(200).json({  
+        //     message: 'Jumlah pengajuan counted and updated successfully!',  
+        //     data: {  
+        //         total_count: totalCount,  
+        //     },  
+        // });  
+    } catch (error) {  
+        console.error('Error counting pengajuan for department:', error.message);  
+        res.status(500).json({ error: 'Server error' });  
+    }  
+});  
+
+// Count jumlahApproved based on peserta magang for specific department  
+router.get('/count-approved-for-department/:departmentName', async (req, res) => {  
+    const { departmentName } = req.params;  
+
+    try {  
+        // Query to count the number of approved applicants for the specific department  
+        const result = await pool.query(  
+            `SELECT COUNT(*) AS total_approved  
+             FROM PESERTA_MAGANG  
+             WHERE nama_departemen = $1 AND status_magang = 'Diterima'`,  
+            [departmentName]  
+        );  
+
+        const totalApproved = parseInt(result.rows[0].total_approved);  
+
+        // Update jumlah_approved in the DEPARTEMEN table  
+        await pool.query(  
+            'UPDATE DEPARTEMEN SET jumlah_approved = $1 WHERE nama_departemen = $2',  
+            [totalApproved, departmentName]  
+        );  
+
+        res.status(200).json({  
+            message: 'Jumlah approved counted and updated successfully!',  
+            data: {  
+                total_approved: totalApproved,  
+            },  
+        });  
+    } catch (error) {  
+        console.error('Error counting approved for department:', error);  
+        res.status(500).json({ error: 'Server error' });  
+    }  
+});  
+
+
+///////////////////////////////////////////// UPDATE DATA ////////////////////////////////////////////////////////
+
 
 // Update Peserta Magang by ID  
 router.put('/update-data/:id', async (req, res) => {  

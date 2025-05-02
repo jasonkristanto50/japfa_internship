@@ -112,6 +112,35 @@ router.get('/count', async (req, res) => {
     }
 });
 
+// Fetch current jumlahPengajuan for a specific department  
+router.get('/fetch-pengajuan-departemen/:departmentName', async (req, res) => {  
+    const { departmentName } = req.params;  
+  
+    try {  
+      const result = await pool.query(  
+        `SELECT jumlah_pengajuan FROM DEPARTEMEN WHERE nama_departemen = $1`,  
+        [departmentName]  
+      );  
+  
+      // Check if any department was found  
+      if (result.rowCount === 0) {  
+        return res.status(404).json({ error: 'Department not found' });  
+      }  
+  
+      const currentJumlahPengajuan = result.rows[0].jumlah_pengajuan;  
+  
+      res.status(200).json({  
+        message: 'Current jumlah pengajuan fetched successfully!',  
+        data: {  
+          total_count: currentJumlahPengajuan,  
+        },  
+      });  
+    } catch (error) {  
+      console.error('Error fetching jumlah pengajuan:', error);  
+      res.status(500).json({ error: 'Server error' });  
+    }  
+  });  
+
 
 ////////////////////////////////////////////// UPDATE DATA ///////////////////////////////////////////////
 
@@ -147,16 +176,15 @@ router.put('/update-max-kuota/:id', async (req, res) => {
     }  
 });  
 
-// Add/Subtract jumlah_pengajuan based on department name  
+// Update jumlah_pengajuan for a specific department  
 router.put('/update-jumlah-pengajuan/:departmentName', async (req, res) => {  
-    const { departmentName } = req.params;  
-    const { jumlah } = req.body; // Positive number to add, negative to subtract  
+    const { departmentName } = req.params;  // Grab the department name from the URL  
+    const { jumlah_pengajuan } = req.body;  // Extract jumlah_pengajuan from the request body  
 
     try {  
-        // Update jumlah_pengajuan for the given department  
         const result = await pool.query(  
-            'UPDATE DEPARTEMEN SET jumlah_pengajuan = jumlah_pengajuan + $1 WHERE nama_departemen = $2 RETURNING *',  
-            [jumlah, departmentName]  
+            `UPDATE DEPARTEMEN SET jumlah_pengajuan = jumlah_pengajuan + $1 WHERE nama_departemen = $2 RETURNING *`,  
+            [jumlah_pengajuan, departmentName]  
         );  
 
         if (result.rowCount === 0) {  
@@ -171,7 +199,7 @@ router.put('/update-jumlah-pengajuan/:departmentName', async (req, res) => {
         console.error('Error updating jumlah_pengajuan:', error);  
         res.status(500).json({ error: 'Server error' });  
     }  
-});  
+});     
 
 // Add/Subtract jumlah_approved based on department name  
 router.put('/update-jumlah-approved/:departmentName', async (req, res) => {  

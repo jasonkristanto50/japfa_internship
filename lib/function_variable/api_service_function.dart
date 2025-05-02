@@ -110,7 +110,7 @@ class ApiService {
     try {
       // Fetch the current jumlahPengajuan
       final response = await _dio.get(
-          'http://localhost:3000/api/departemen/add-pengajuan-departemen/$departmentName');
+          'http://localhost:3000/api/departemen/fetch-pengajuan-departemen/$departmentName');
 
       if (response.statusCode != 200) {
         throw Exception('Failed to fetch jumlah pengajuan');
@@ -124,10 +124,10 @@ class ApiService {
 
       // Update the department with the new jumlahPengajuan
       final updateResponse = await _dio.put(
-          'http://localhost:3000/api/departemen/update-jumlah-pengajuan',
+          'http://localhost:3000/api/departemen/update-jumlah-pengajuan/$departmentName',
           data: {
-            'department_name': departmentName,
-            'new_jumlah_pengajuan': newJumlahPengajuan
+            'nama_departemen': departmentName,
+            'jumlah_pengajuan': newJumlahPengajuan
           });
 
       if (updateResponse.statusCode != 200) {

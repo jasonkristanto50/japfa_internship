@@ -84,3 +84,5 @@
 --     jumlah_on_boarding INTEGER,  
 --     sisa_kuota INTEGER
 -- );  
+
+-- UPDATE DEPARTEMEN SET jumlah_pengajuan = 1 WHERE nama_departemen = 'Produksi'

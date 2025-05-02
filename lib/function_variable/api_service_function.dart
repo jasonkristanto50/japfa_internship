@@ -5,6 +5,8 @@ import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.
 class ApiService {
   final Dio _dio = Dio();
 
+  ////////////////////////////////////////////// PESERTA MAGANG  //////////////////////////////////////////////////
+
   Future<void> submitPesertaMagang(PesertaMagangData data) async {
     try {
       // Replace the URL with your actual endpoint

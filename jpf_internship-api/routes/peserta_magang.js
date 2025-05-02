@@ -62,7 +62,7 @@ router.post('/submit-peserta-magang', async (req, res) => {
 // Get all Peserta Magang  
 router.get('/fetch-all-peserta-data', async (req, res) => {  
     try {  
-        const result = await pool.query('SELECT * FROM PESERTA_MAGANG');  
+        const result = await pool.query('SELECT * FROM PESERTA_MAGANG ORDER BY id_magang ASC');  
         res.status(200).json(result.rows);  
     } catch (error) {  
         console.error('Error fetching Peserta Magang:', error);  

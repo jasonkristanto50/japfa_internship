@@ -35,6 +35,7 @@ flutter:
     - assets/department_card/
     - assets/timeline/
     - assets/file_upload_peserta/
+    - assets/file_upload_peserta/dummy_foto_diri.png
     - assets/japfa_logo_only.png
     - assets/japfa_logo_background.png
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:japfa_internship/admin_page/pendaftaran_magang_detail_page.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
+import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/components/widget_component.dart';
@@ -17,8 +19,7 @@ class PendaftaranMagangDepartemen extends StatefulWidget {
 class _PendaftaranMagangDepartemenState
     extends State<PendaftaranMagangDepartemen> {
   String searchQuery = "";
-  List<PesertaMagangData> pesertaMagangList =
-      []; // Your list of PesertaMagangData
+  List<PesertaMagangData> pesertaMagangList = [];
 
   @override
   void initState() {
@@ -81,7 +82,8 @@ class _PendaftaranMagangDepartemenState
                       border: TableBorder.all(color: Colors.grey, width: 1),
                       columns: const [
                         DataColumn(label: Text('Nama')),
-                        DataColumn(label: Text('Departemen')),
+                        DataColumn(label: Text('No. Telp')),
+                        DataColumn(label: Text('Email')),
                         DataColumn(label: Text('Universitas')),
                         DataColumn(label: Text('Jurusan')),
                         DataColumn(label: Text('Angkatan')),
@@ -93,8 +95,9 @@ class _PendaftaranMagangDepartemenState
                           cells: [
                             DataCell(Text(peserta.nama,
                                 textAlign: TextAlign.center)),
-                            DataCell(Text(
-                                peserta.departemen ?? "Tidak ada departemen",
+                            DataCell(Text(peserta.noTelp,
+                                textAlign: TextAlign.center)),
+                            DataCell(Text(peserta.email,
                                 textAlign: TextAlign.center)),
                             DataCell(Text(peserta.asalUniversitas,
                                 textAlign: TextAlign.center)),
@@ -115,7 +118,7 @@ class _PendaftaranMagangDepartemenState
                                   width: 150,
                                   rounded: 5,
                                   onPressed: () {
-                                    // _viewDetails(peserta);
+                                    _viewDetails(peserta);
                                   },
                                 ),
                               ),
@@ -140,14 +143,16 @@ class _PendaftaranMagangDepartemenState
       List<PesertaMagangData> data =
           await ApiService().fetchPesertaMagangData();
       setState(() {
-        pesertaMagangList = data; // Assign the fetched data to the list
+        pesertaMagangList = data;
       });
     } catch (e) {
       print('Error fetching data: $e');
     }
   }
 
-  void _viewDetails(Map<String, dynamic> detailPengajuan) {
-    // Navigate to a new page to show more details
+  void _viewDetails(PesertaMagangData peserta) {
+    fadeNavigation(context,
+        targetNavigation: PendaftaranMagangDetailPage(peserta: peserta),
+        time: 200);
   }
 }

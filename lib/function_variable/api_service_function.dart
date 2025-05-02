@@ -140,6 +140,28 @@ class ApiService {
     }
   }
 
+  Future<void> updateJumlahApproved(
+      String departmentName, bool diterima) async {
+    String formattedDepartmentName = departmentName;
+    int jumlahTambahan = diterima ? 1 : 0; // diterima +1, ditolak +0
+    try {
+      final response = await _dio.put(
+        'http://localhost:3000/api/departemen/update-jumlah-approved/$formattedDepartmentName',
+        data: {'jumlah_approved': jumlahTambahan},
+      );
+
+      if (response.statusCode == 200) {
+        return response.data['data'];
+      } else if (response.statusCode == 404) {
+        throw Exception('Department not found');
+      } else {
+        throw Exception('Failed to update jumlah approved');
+      }
+    } catch (e) {
+      throw Exception('Error: $e');
+    }
+  }
+
   Future<List<DepartemenData>> fetchDepartemen() async {
     try {
       final response = await _dio

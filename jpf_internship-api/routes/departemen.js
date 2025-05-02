@@ -201,16 +201,16 @@ router.put('/update-jumlah-pengajuan/:departmentName', async (req, res) => {
     }  
 });     
 
-// Add/Subtract jumlah_approved based on department name  
+// Update jumlah_approved based on department name  
 router.put('/update-jumlah-approved/:departmentName', async (req, res) => {  
     const { departmentName } = req.params;  
-    const { jumlah } = req.body; // Positive number to add, negative to subtract  
+    const { jumlah_approved } = req.body; // Positive number to add, negative to subtract  
 
     try {  
         // Update jumlah_approved for the given department  
         const result = await pool.query(  
             'UPDATE DEPARTEMEN SET jumlah_approved = jumlah_approved + $1 WHERE nama_departemen = $2 RETURNING *',  
-            [jumlah, departmentName]  
+            [jumlah_approved, departmentName]  
         );  
 
         if (result.rowCount === 0) {  

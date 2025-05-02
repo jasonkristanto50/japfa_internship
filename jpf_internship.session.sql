@@ -86,3 +86,7 @@
 -- );  
 
 -- UPDATE DEPARTEMEN SET jumlah_pengajuan = 1 WHERE nama_departemen = 'Produksi'
+
+-- SELECT * FROM kunjungan_studi WHERE status = 'Ditolak'
+
+UPDATE DEPARTEMEN SET jumlah_approved = jumlah_approved + 1 WHERE nama_departemen = 'Koperasi Karyawan' RETURNING *

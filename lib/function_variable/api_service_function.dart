@@ -56,6 +56,38 @@ class ApiService {
     }
   }
 
+  Future<PesertaMagangData?> updatePesertaMagangStatus(
+      String idMagang, String newStatus) async {
+    final url =
+        'http://localhost:3000/api/peserta_magang/update-status/$idMagang';
+
+    try {
+      final response = await _dio.put(
+        url,
+        data: {
+          'status_magang': newStatus,
+        },
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        // Return the updated PesertaMagangData
+        return PesertaMagangData.fromJson(response.data['data']);
+      } else {
+        // Handle other status codes appropriately
+        return null; // or handle accordingly
+      }
+    } catch (e) {
+      // Handle Dio errors: you can log or throw exceptions here
+      print('Dio error: $e');
+      return null; // or handle accordingly
+    }
+  }
+
   //////////////////////////////////////////  DEPARTEMEN   ///////////////////////////////////////////////////////////
 
   Future<void> updateMaxKuotaDepartemen(String id, int maxKuota) async {

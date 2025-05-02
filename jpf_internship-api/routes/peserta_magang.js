@@ -82,7 +82,7 @@ router.get('/count', async (req, res) => {
 });  
 
 // Update Peserta Magang by ID  
-router.put('/:id', async (req, res) => {  
+router.put('/update-data/:id', async (req, res) => {  
     const { id } = req.params;  // ID of the Peserta Magang to update  
     const {  
         nama,  
@@ -130,6 +130,31 @@ router.put('/:id', async (req, res) => {
         res.status(200).json({ message: 'Peserta Magang updated successfully!', data: result.rows[0] });  
     } catch (error) {  
         console.error('Error updating Peserta Magang:', error);  
+        res.status(500).json({ error: 'Server error' });  
+    }  
+});  
+
+// Update Peserta Magang STATUS by ID  
+router.put('/update-status/:id', async (req, res) => {  
+    const { id } = req.params;  // ID of the Peserta Magang to update  
+    const { status_magang } = req.body;  // New status value  
+
+    try {  
+        const result = await pool.query(  
+            'UPDATE PESERTA_MAGANG SET status_magang = $1 WHERE id_magang = $2 RETURNING *',  
+            [  
+                status_magang,  
+                id,  
+            ]  
+        );  
+
+        if (result.rowCount === 0) {  
+            return res.status(404).json({ error: 'Peserta Magang not found' });  
+        }  
+
+        res.status(200).json({ message: 'Peserta Magang status updated successfully!', data: result.rows[0] });  
+    } catch (error) {  
+        console.error('Error updating Peserta Magang status:', error);  
         res.status(500).json({ error: 'Server error' });  
     }  
 });  

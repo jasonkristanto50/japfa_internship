@@ -30,7 +30,7 @@ router.post('/submit-kunjungan-studi', async (req, res) => {
 // Get all Kunjungan Studi  
 router.get('/fetch-all-kunjungan-data', async (req, res) => {  
     try {  
-        const result = await pool.query('SELECT * FROM KUNJUNGAN_STUDI');  
+        const result = await pool.query('SELECT * FROM KUNJUNGAN_STUDI ORDER BY tanggal_kegiatan ASC');  
         res.status(200).json(result.rows);  
     } catch (error) {  
         console.error('Error fetching Kunjungan Studi:', error);  

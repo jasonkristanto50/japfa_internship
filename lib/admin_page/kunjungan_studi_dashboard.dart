@@ -43,6 +43,7 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
           children: [
             // Search bar
             CustomSearchBar(
+              labelSearchBar: "Ketikkan nama universitas",
               onChanged: (value) {
                 setState(() {
                   searchQuery = value; // Update search query
@@ -129,18 +130,24 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
                               ),
                             ),
                             DataCell(
-                              Text(
-                                kunjungan.status,
-                                textAlign: TextAlign.center,
-                              ),
+                              Text(kunjungan.status,
+                                  textAlign: TextAlign.center,
+                                  style: bold14.copyWith(
+                                    color: kunjungan.status == 'Diterima'
+                                        ? Colors.green
+                                        : kunjungan.status == 'Ditolak'
+                                            ? Colors.red
+                                            : kunjungan.status == 'Menunggu'
+                                                ? Colors.orange
+                                                : Colors.black,
+                                  )),
                             ),
                             DataCell(
                               Align(
                                 alignment: Alignment.center,
                                 child: RoundedRectangleButton(
                                   title: "RESPOND",
-                                  backgroundColor:
-                                      const Color.fromARGB(255, 247, 211, 159),
+                                  backgroundColor: lightBlue,
                                   height: 30,
                                   width: 150,
                                   rounded: 5,
@@ -220,7 +227,7 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
     // Call the API to update the status in the backend
     try {
       final response = await Dio().put(
-        'http://localhost:3000/api/kunjungan_studi/${kunjungan.idKunjunganStudi}', // Replace with your actual endpoint
+        'http://localhost:3000/api/kunjungan_studi/${kunjungan.idKunjunganStudi}',
         data: {
           'status': kunjungan.status, // Send the updated status
         },

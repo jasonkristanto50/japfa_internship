@@ -160,8 +160,7 @@ class _DepartemenMagangDashboardState extends State<DepartemenMagangDashboard> {
                       const SizedBox(width: 8), // Space between buttons
                       RoundedRectangleButton(
                         title: "VIEW",
-                        backgroundColor:
-                            const Color.fromARGB(255, 152, 209, 255),
+                        backgroundColor: lightBlue,
                         height: 30,
                         width: 85,
                         rounded: 5,

@@ -177,7 +177,7 @@ class CustomRespondDialog extends StatelessWidget {
                   onPressed: onAccept,
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
-                    backgroundColor: japfaOrange,
+                    backgroundColor: Colors.green,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 30, vertical: 12),
                     shape: RoundedRectangleBorder(
@@ -198,9 +198,14 @@ class CustomRespondDialog extends StatelessWidget {
 // Custom Search Bar Field
 class CustomSearchBar extends StatelessWidget {
   final Function(String) onChanged; // Callback for search query change
+  final String? labelSearchBar;
   final double? widthValue;
 
-  const CustomSearchBar({super.key, required this.onChanged, this.widthValue});
+  const CustomSearchBar(
+      {super.key,
+      required this.onChanged,
+      this.labelSearchBar,
+      this.widthValue});
 
   @override
   Widget build(BuildContext context) {
@@ -223,7 +228,7 @@ class CustomSearchBar extends StatelessWidget {
                   child: TextField(
                     onChanged: onChanged, // Use the passed in callback
                     decoration: InputDecoration(
-                      labelText: 'Ketikkan pencarian',
+                      labelText: labelSearchBar ?? 'Ketikkan pencarian',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: const BorderSide(

@@ -62,7 +62,7 @@
 -- Ada 5 Jenis Status Magang: 
 -- - On Process
 -- - Sedang Berlangsung
--- - Approve
+-- - Diterima
 -- - Selesai
 -- - Ditolak
 -- 

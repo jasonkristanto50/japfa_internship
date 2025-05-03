@@ -84,6 +84,7 @@ class _DepartemenMagangDashboardState extends State<DepartemenMagangDashboard> {
   Future<void> _loadDepartemen() async {
     try {
       // Fetch all departments
+      // TODO: update kuota tersisa
       List<DepartemenData> fetchedDepartemen =
           await ApiService().fetchDepartemenPengajuanApprovedCount();
 

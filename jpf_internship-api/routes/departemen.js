@@ -112,8 +112,8 @@ router.get('/count', async (req, res) => {
     }
 });
 
-// Endpoint to fetch all departments and update jumlah pengajuan approve counts  
-router.get('/fetch-all-departemen-pengajuan-approve-updated', async (req, res) => {  
+// Endpoint to fetch all departments and update data 
+router.get('/fetch-all-departemen-data-updated', async (req, res) => {  
     try {  
         // Fetch all departments  
         const result = await pool.query(`SELECT * FROM DEPARTEMEN ORDER BY id_departemen ASC`);  
@@ -130,17 +130,19 @@ router.get('/fetch-all-departemen-pengajuan-approve-updated', async (req, res) =
 
             // Fetch counts  
             const newJumlahPengajuan = await countPengajuan(namaDepartemen);  
-            const newJumlahApproved = await countApproved(namaDepartemen);  
+            const newJumlahApproved = await countApproved(namaDepartemen); 
+            const newJumlahOnBoarding = await countOnBoarding(namaDepartemen); 
 
             // Update counts in the DEPARTEMEN table  
             await pool.query(  
-                'UPDATE DEPARTEMEN SET jumlah_pengajuan = $1, jumlah_approved = $2 WHERE nama_departemen = $3',  
-                [newJumlahPengajuan, newJumlahApproved, namaDepartemen]  
+                'UPDATE DEPARTEMEN SET jumlah_pengajuan = $1, jumlah_approved = $2, jumlah_on_boarding = $3 WHERE nama_departemen = $4',  
+                [newJumlahPengajuan, newJumlahApproved, newJumlahOnBoarding, namaDepartemen]  
             );  
 
             // Update the department object with new values  
             department.jumlah_pengajuan = newJumlahPengajuan;  
-            department.jumlah_approved = newJumlahApproved;  
+            department.jumlah_approved = newJumlahApproved; 
+            department.jumlah_on_boarding = newJumlahOnBoarding;
         }  
 
         res.status(200).json(departemenList); // Return the updated list of departments  
@@ -305,7 +307,7 @@ router.delete('/delete-departemen-by-id/:id', async (req, res) => {
 // Function to count jumlah_pengajuan  
 async function countPengajuan(departmentName) {  
     const result = await pool.query(  
-        `SELECT COUNT(*) AS total_count FROM PESERTA_MAGANG WHERE departemen = $1`,   
+        `SELECT COUNT(*) AS total_count FROM PESERTA_MAGANG WHERE departemen = $1 AND status_magang = 'On Process'`,   
         [departmentName]  
     );  
     return parseInt(result.rows[0].total_count);  
@@ -318,6 +320,15 @@ async function countApproved(departmentName) {
         [departmentName]  
     );  
     return parseInt(result.rows[0].total_approved);  
+}
+
+// Function to count jumlah_on_boarding
+async function countOnBoarding(departmentName) {  
+    const result = await pool.query(  
+        `SELECT COUNT(*) AS total_on_boarding FROM PESERTA_MAGANG WHERE departemen = $1 AND status_magang = 'Sedang Berlangsung'`,   
+        [departmentName]  
+    );  
+    return parseInt(result.rows[0].total_on_boarding);  
 } 
 
 module.exports = router;

@@ -36,6 +36,22 @@ class LoginNotifier extends StateNotifier<LoginState> {
   LoginNotifier() : super(LoginState());
 
   Future<void> login(String email, String password) async {
+    if (email == 'peserta' && password == '123') {
+      state = LoginState(
+        isLoading: false,
+        isLoggedIn: true,
+        role: 'peserta magang',
+      );
+      return;
+    }
+    if (email == 'kepala' && password == '123') {
+      state = LoginState(
+        isLoading: false,
+        isLoggedIn: true,
+        role: 'kepala departemen',
+      );
+      return;
+    }
     state = state.copyWith(isLoading: true, errorMessage: null);
 
     String url =

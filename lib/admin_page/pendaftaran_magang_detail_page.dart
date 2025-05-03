@@ -207,8 +207,6 @@ class _PendaftaranMagangDetailPageState
           height: 40,
           onPressed: () async {
             await updateStatus(context, peserta.idMagang, "Ditolak");
-            await ApiService()
-                .updateJumlahApproved(peserta.departemen ?? '', false);
           },
         ),
         const SizedBox(width: 20),
@@ -220,8 +218,6 @@ class _PendaftaranMagangDetailPageState
           height: 40,
           onPressed: () async {
             await updateStatus(context, peserta.idMagang, "Diterima");
-            await ApiService()
-                .updateJumlahApproved(peserta.departemen ?? '', true);
           },
         ),
       ],

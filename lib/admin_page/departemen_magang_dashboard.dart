@@ -85,7 +85,7 @@ class _DepartemenMagangDashboardState extends State<DepartemenMagangDashboard> {
     try {
       // Fetch all departments
       List<DepartemenData> fetchedDepartemen =
-          await ApiService().fetchDepartemen();
+          await ApiService().fetchDepartemenPengajuanApprovedCount();
 
       setState(() {
         departemen = fetchedDepartemen;

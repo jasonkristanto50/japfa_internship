@@ -56,6 +56,38 @@ class ApiService {
     }
   }
 
+  // Fetch peserta magang count with specific department
+  Future<int> fetchPengajuanCount(String departmentName) async {
+    try {
+      final response = await _dio.get(
+          'http://localhost:3000/api/peserta_magang/count-pengajuan-for-department/$departmentName');
+      if (response.statusCode == 200) {
+        return response.data['data']['total_count'];
+      } else {
+        throw Exception('Failed to fetch pengajuan count');
+      }
+    } catch (e) {
+      print('Error fetching pengajuan count: $e');
+      return 0; // Return 0 if error occurs
+    }
+  }
+
+  // Fetch peserta magang Approved count with specific department
+  Future<int> fetchApprovedCount(String departmentName) async {
+    try {
+      final response = await _dio.get(
+          'http://localhost:3000/api/peserta_magang/count-approved-for-department/$departmentName');
+      if (response.statusCode == 200) {
+        return response.data['data']['total_approved'];
+      } else {
+        throw Exception('Failed to fetch approved count');
+      }
+    } catch (e) {
+      print('Error fetching approved count: $e');
+      return 0; // Return 0 if error occurs
+    }
+  }
+
   Future<PesertaMagangData?> updatePesertaMagangStatus(
       String idMagang, String newStatus) async {
     final url =
@@ -106,61 +138,61 @@ class ApiService {
     }
   }
 
-  Future<void> updateJumlahPengajuan(String departmentName) async {
-    try {
-      // Fetch the current jumlahPengajuan
-      final response = await _dio.get(
-          'http://localhost:3000/api/departemen/fetch-pengajuan-departemen/$departmentName');
+  // Future<void> updateJumlahPengajuan(String departmentName) async {
+  //   try {
+  //     // Fetch the current jumlahPengajuan
+  //     final response = await _dio.get(
+  //         'http://localhost:3000/api/departemen/fetch-pengajuan-departemen/$departmentName');
 
-      if (response.statusCode != 200) {
-        throw Exception('Failed to fetch jumlah pengajuan');
-      }
+  //     if (response.statusCode != 200) {
+  //       throw Exception('Failed to fetch jumlah pengajuan');
+  //     }
 
-      final currentData = response.data;
-      int currentJumlahPengajuan = currentData['data']['total_count'];
+  //     final currentData = response.data;
+  //     int currentJumlahPengajuan = currentData['data']['total_count'];
 
-      // Increment the jumlahPengajuan by 1
-      int newJumlahPengajuan = currentJumlahPengajuan + 1;
+  //     // Increment the jumlahPengajuan by 1
+  //     int newJumlahPengajuan = currentJumlahPengajuan + 1;
 
-      // Update the department with the new jumlahPengajuan
-      final updateResponse = await _dio.put(
-          'http://localhost:3000/api/departemen/update-jumlah-pengajuan/$departmentName',
-          data: {
-            'nama_departemen': departmentName,
-            'jumlah_pengajuan': newJumlahPengajuan
-          });
+  //     // Update the department with the new jumlahPengajuan
+  //     final updateResponse = await _dio.put(
+  //         'http://localhost:3000/api/departemen/update-jumlah-pengajuan/$departmentName',
+  //         data: {
+  //           'nama_departemen': departmentName,
+  //           'jumlah_pengajuan': newJumlahPengajuan
+  //         });
 
-      if (updateResponse.statusCode != 200) {
-        throw Exception('Failed to update jumlah pengajuan');
-      }
+  //     if (updateResponse.statusCode != 200) {
+  //       throw Exception('Failed to update jumlah pengajuan');
+  //     }
 
-      print('Updated jumlah pengajuan for department: $newJumlahPengajuan');
-    } catch (e) {
-      throw Exception('Error updating jumlah pengajuan: $e');
-    }
-  }
+  //     print('Updated jumlah pengajuan for department: $newJumlahPengajuan');
+  //   } catch (e) {
+  //     throw Exception('Error updating jumlah pengajuan: $e');
+  //   }
+  // }
 
-  Future<void> updateJumlahApproved(
-      String departmentName, bool diterima) async {
-    String formattedDepartmentName = departmentName;
-    int jumlahTambahan = diterima ? 1 : 0; // diterima +1, ditolak +0
-    try {
-      final response = await _dio.put(
-        'http://localhost:3000/api/departemen/update-jumlah-approved/$formattedDepartmentName',
-        data: {'jumlah_approved': jumlahTambahan},
-      );
+  // Future<void> updateJumlahApproved(
+  //     String departmentName, bool diterima) async {
+  //   String formattedDepartmentName = departmentName;
+  //   int jumlahTambahan = diterima ? 1 : 0; // diterima +1, ditolak +0
+  //   try {
+  //     final response = await _dio.put(
+  //       'http://localhost:3000/api/departemen/update-jumlah-approved/$formattedDepartmentName',
+  //       data: {'jumlah_approved': jumlahTambahan},
+  //     );
 
-      if (response.statusCode == 200) {
-        return response.data['data'];
-      } else if (response.statusCode == 404) {
-        throw Exception('Department not found');
-      } else {
-        throw Exception('Failed to update jumlah approved');
-      }
-    } catch (e) {
-      throw Exception('Error: $e');
-    }
-  }
+  //     if (response.statusCode == 200) {
+  //       return response.data['data'];
+  //     } else if (response.statusCode == 404) {
+  //       throw Exception('Department not found');
+  //     } else {
+  //       throw Exception('Failed to update jumlah approved');
+  //     }
+  //   } catch (e) {
+  //     throw Exception('Error: $e');
+  //   }
+  // }
 
   Future<List<DepartemenData>> fetchDepartemen() async {
     try {
@@ -174,6 +206,27 @@ class ApiService {
       }
     } catch (e) {
       rethrow;
+    }
+  }
+
+  // Fetch all department data with jumlahPengajuan & jumlahApproved updated
+  Future<List<DepartemenData>> fetchDepartemenPengajuanApprovedCount() async {
+    try {
+      final response = await _dio.get(
+          'http://localhost:3000/api/departemen/fetch-all-departemen-pengajuan-approve-updated');
+
+      if (response.statusCode == 200) {
+        List<DepartemenData> departemenList = (response.data as List)
+            .map((item) => DepartemenData.fromJson(item))
+            .toList();
+
+        return departemenList; // Return the updated list from the server
+      } else {
+        throw Exception('Failed to load departments');
+      }
+    } catch (e) {
+      print('Error fetching departments: $e');
+      rethrow; // Rethrow the exception for handling in the widget
     }
   }
 }

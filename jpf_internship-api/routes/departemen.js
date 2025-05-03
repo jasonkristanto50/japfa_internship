@@ -112,6 +112,45 @@ router.get('/count', async (req, res) => {
     }
 });
 
+// Endpoint to fetch all departments and update jumlah pengajuan approve counts  
+router.get('/fetch-all-departemen-pengajuan-approve-updated', async (req, res) => {  
+    try {  
+        // Fetch all departments  
+        const result = await pool.query(`SELECT * FROM DEPARTEMEN ORDER BY id_departemen ASC`);  
+
+        if (result.rows.length === 0) {  
+            return res.status(404).json({ message: 'No departments found' });  
+        }  
+
+        const departemenList = result.rows;  
+
+        // Process each department to fetch and update counts  
+        for (const department of departemenList) {  
+            const namaDepartemen = department.nama_departemen;  
+
+            // Fetch counts  
+            const newJumlahPengajuan = await countPengajuan(namaDepartemen);  
+            const newJumlahApproved = await countApproved(namaDepartemen);  
+
+            // Update counts in the DEPARTEMEN table  
+            await pool.query(  
+                'UPDATE DEPARTEMEN SET jumlah_pengajuan = $1, jumlah_approved = $2 WHERE nama_departemen = $3',  
+                [newJumlahPengajuan, newJumlahApproved, namaDepartemen]  
+            );  
+
+            // Update the department object with new values  
+            department.jumlah_pengajuan = newJumlahPengajuan;  
+            department.jumlah_approved = newJumlahApproved;  
+        }  
+
+        res.status(200).json(departemenList); // Return the updated list of departments  
+    } catch (error) {  
+        console.error('Error fetching and updating departments:', error);  
+        res.status(500).json({ error: 'Server error' });  
+    }  
+});  
+
+
 // Fetch current jumlahPengajuan for a specific department  
 router.get('/fetch-pengajuan-departemen/:departmentName', async (req, res) => {  
     const { departmentName } = req.params;  
@@ -258,5 +297,27 @@ router.delete('/delete-departemen-by-id/:id', async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 });
+
+
+
+
+///////////////////////////////////////////// FUNCTION //////////////////////////////////////////////////////////
+// Function to count jumlah_pengajuan  
+async function countPengajuan(departmentName) {  
+    const result = await pool.query(  
+        `SELECT COUNT(*) AS total_count FROM PESERTA_MAGANG WHERE departemen = $1`,   
+        [departmentName]  
+    );  
+    return parseInt(result.rows[0].total_count);  
+}  
+
+// Function to count jumlah_approved  
+async function countApproved(departmentName) {  
+    const result = await pool.query(  
+        `SELECT COUNT(*) AS total_approved FROM PESERTA_MAGANG WHERE departemen = $1 AND status_magang = 'Diterima'`,   
+        [departmentName]  
+    );  
+    return parseInt(result.rows[0].total_approved);  
+} 
 
 module.exports = router;

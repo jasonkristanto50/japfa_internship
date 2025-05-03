@@ -219,6 +219,34 @@ router.put('/update-max-kuota/:id', async (req, res) => {
     }  
 });  
 
+// Update deskripsi and syarat  
+router.put('/update-deskripsi-syarat/:departmentName', async (req, res) => {  
+    const { departmentName } = req.params;  
+    const { deskripsi, syarat_departemen } = req.body;  
+
+    try {  
+        // Check if department exists  
+        const departmentCheckResult = await pool.query(  
+            'SELECT nama_departemen, deskripsi, syarat_departemen FROM DEPARTEMEN WHERE nama_departemen = $1',  
+            [departmentName]  
+        );  
+
+        if (departmentCheckResult.rowCount === 0) {  
+            return res.status(404).json({ error: 'Departemen not found' });  
+        }  
+
+        // Update deskripsi and syarat  
+        const result = await pool.query(  
+            'UPDATE DEPARTEMEN SET deskripsi = $1, syarat_departemen = $2 WHERE nama_departemen = $3 RETURNING *',  
+            [deskripsi, syarat_departemen, departmentName]  
+        );  
+
+        res.status(200).json({ message: 'Deskripsi and syarat updated successfully!', data: result.rows[0] });  
+    } catch (error) {  
+        console.error('Error updating deskripsi and syarat:', error);  
+        res.status(500).json({ error: 'Server error' });  
+    }  
+});  
 
 
 ////////////////////////////////////////////// DELETE DATA ///////////////////////////////////////////////////////

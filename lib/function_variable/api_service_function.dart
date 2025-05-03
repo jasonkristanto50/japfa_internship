@@ -173,4 +173,28 @@ class ApiService {
       rethrow; // Rethrow the exception for handling in the widget
     }
   }
+
+  // Function to update deskripsi and syarat for a department
+  Future<DepartemenData> updateDepartemenDeskripsiSyarat(String departmentName,
+      String deskripsi, List<String> syaratDepartemen) async {
+    try {
+      final response = await _dio.put(
+        'http://localhost:3000/api/departemen/update-deskripsi-syarat/$departmentName',
+        data: {
+          'deskripsi': deskripsi,
+          'syarat_departemen': syaratDepartemen,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // Map the response data to the DepartemenData object
+        return DepartemenData.fromJson(response.data['data']);
+      } else {
+        throw Exception('Failed to update department');
+      }
+    } catch (e) {
+      print('Error updating department: $e');
+      rethrow; // Rethrow the exception for handling in the widget
+    }
+  }
 }

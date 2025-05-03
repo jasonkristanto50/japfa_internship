@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:japfa_internship/authentication/login.dart';
 import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/components/widget_component.dart';
+import 'package:japfa_internship/function_variable/api_service_function.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/pendaftar_submission_page/submission_intern_text.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
@@ -374,15 +375,41 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
     }
   }
 
-  void saveChangesOnPressedFunction() {
-    // Save the updated values locally
-    setState(() {
-      // No longer trying to modify final widget values
-      widget.description = _descriptionController.text;
-      widget.requirements =
-          _requirementControllers.map((controller) => controller.text).toList();
-    });
-    Navigator.of(context).pop();
+  void saveChangesOnPressedFunction() async {
+    final newDeskripsi = _descriptionController.text;
+    final List<String> newSyarat =
+        _requirementControllers.map((controller) => controller.text).toList();
+
+    try {
+      final updatedDepartemenData =
+          await ApiService().updateDepartemenDeskripsiSyarat(
+        widget.title,
+        newDeskripsi,
+        newSyarat,
+      );
+
+      // Save the updated values locally
+      setState(() {
+        // Update the local state with the new values returned from API
+        widget.description =
+            updatedDepartemenData.deskripsi ?? widget.description;
+        widget.requirements =
+            updatedDepartemenData.syaratDepartemen ?? widget.requirements;
+      });
+
+      // Optionally, show a success message if necessary
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Changes saved successfully!')),
+      );
+
+      Navigator.of(context).pop(); // Close the modal
+    } catch (e) {
+      print('Failed to save changes: $e');
+      // Optionally show an error message to the user
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to save changes: $e')),
+      );
+    }
   }
 
   void applyDaftarFunction() {

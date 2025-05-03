@@ -131,18 +131,20 @@ router.get('/fetch-all-departemen-data-updated', async (req, res) => {
             // Fetch counts  
             const newJumlahPengajuan = await countPengajuan(namaDepartemen);  
             const newJumlahApproved = await countApproved(namaDepartemen); 
-            const newJumlahOnBoarding = await countOnBoarding(namaDepartemen); 
+            const newJumlahOnBoarding = await countOnBoarding(namaDepartemen);
+            const newSisaKuota = department.max_kuota - newJumlahApproved; 
 
             // Update counts in the DEPARTEMEN table  
             await pool.query(  
-                'UPDATE DEPARTEMEN SET jumlah_pengajuan = $1, jumlah_approved = $2, jumlah_on_boarding = $3 WHERE nama_departemen = $4',  
-                [newJumlahPengajuan, newJumlahApproved, newJumlahOnBoarding, namaDepartemen]  
+                'UPDATE DEPARTEMEN SET jumlah_pengajuan = $1, jumlah_approved = $2, jumlah_on_boarding = $3, sisa_kuota = $4 WHERE nama_departemen = $5',  
+                [newJumlahPengajuan, newJumlahApproved, newJumlahOnBoarding, newSisaKuota, namaDepartemen]  
             );  
 
             // Update the department object with new values  
             department.jumlah_pengajuan = newJumlahPengajuan;  
             department.jumlah_approved = newJumlahApproved; 
             department.jumlah_on_boarding = newJumlahOnBoarding;
+            department.sisa_kuota = newSisaKuota;
         }  
 
         res.status(200).json(departemenList); // Return the updated list of departments  
@@ -217,56 +219,6 @@ router.put('/update-max-kuota/:id', async (req, res) => {
     }  
 });  
 
-// Update jumlah_pengajuan for a specific department  
-router.put('/update-jumlah-pengajuan/:departmentName', async (req, res) => {  
-    const { departmentName } = req.params;  // Grab the department name from the URL  
-    const { jumlah_pengajuan } = req.body;  // Extract jumlah_pengajuan from the request body  
-
-    try {  
-        const result = await pool.query(  
-            `UPDATE DEPARTEMEN SET jumlah_pengajuan = jumlah_pengajuan + $1 WHERE nama_departemen = $2 RETURNING *`,  
-            [jumlah_pengajuan, departmentName]  
-        );  
-
-        if (result.rowCount === 0) {  
-            return res.status(404).json({ error: 'Department not found' });  
-        }  
-
-        res.status(200).json({  
-            message: 'Jumlah pengajuan updated successfully!',  
-            data: result.rows[0],  
-        });  
-    } catch (error) {  
-        console.error('Error updating jumlah_pengajuan:', error);  
-        res.status(500).json({ error: 'Server error' });  
-    }  
-});     
-
-// Update jumlah_approved based on department name  
-router.put('/update-jumlah-approved/:departmentName', async (req, res) => {  
-    const { departmentName } = req.params;  
-    const { jumlah_approved } = req.body; // Positive number to add, negative to subtract  
-
-    try {  
-        // Update jumlah_approved for the given department  
-        const result = await pool.query(  
-            'UPDATE DEPARTEMEN SET jumlah_approved = jumlah_approved + $1 WHERE nama_departemen = $2 RETURNING *',  
-            [jumlah_approved, departmentName]  
-        );  
-
-        if (result.rowCount === 0) {  
-            return res.status(404).json({ error: 'Department not found' });  
-        }  
-
-        res.status(200).json({  
-            message: 'Jumlah approved updated successfully!',  
-            data: result.rows[0],  
-        });  
-    } catch (error) {  
-        console.error('Error updating jumlah_approved:', error);  
-        res.status(500).json({ error: 'Server error' });  
-    }  
-});  
 
 
 ////////////////////////////////////////////// DELETE DATA ///////////////////////////////////////////////////////

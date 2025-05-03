@@ -154,7 +154,7 @@ class ApiService {
   }
 
   // Fetch all department data with count data updated
-  Future<List<DepartemenData>> fetchDepartemenPengajuanApprovedCount() async {
+  Future<List<DepartemenData>> fetchDepartemenDataUpdateCount() async {
     try {
       final response = await _dio.get(
           'http://localhost:3000/api/departemen/fetch-all-departemen-data-updated');

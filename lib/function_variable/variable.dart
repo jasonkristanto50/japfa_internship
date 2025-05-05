@@ -72,6 +72,18 @@ TextStyle bold16 = TextStyle(
   fontSize: 16.sp,
 );
 
+TextStyle bold18 = TextStyle(
+  fontFamily: montserratFontFamily,
+  fontWeight: FontWeight.bold,
+  fontSize: 16.sp,
+);
+
+TextStyle bold20 = TextStyle(
+  fontFamily: montserratFontFamily,
+  fontWeight: FontWeight.bold,
+  fontSize: 20.sp,
+);
+
 TextStyle bold24 = TextStyle(
   fontFamily: montserratFontFamily,
   fontWeight: FontWeight.bold,

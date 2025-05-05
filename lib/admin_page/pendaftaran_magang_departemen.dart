@@ -30,7 +30,7 @@ class _PendaftaranMagangDepartemenState
 
   @override
   Widget build(BuildContext context) {
-    final filteredData = pesertaMagangList
+    final filteredPesertaData = pesertaMagangList
         .where((peserta) =>
             peserta.departemen == widget.departmentName &&
             peserta.nama.toLowerCase().contains(searchQuery.toLowerCase()))
@@ -58,85 +58,86 @@ class _PendaftaranMagangDepartemenState
                 },
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Center(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.1),
-                        spreadRadius: 1,
-                        blurRadius: 4,
-                        offset: const Offset(0, 1),
-                      ),
-                    ],
-                  ),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: DataTable(
-                      headingRowColor:
-                          WidgetStateProperty.all(Colors.orange[500]),
-                      headingTextStyle: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      border: TableBorder.all(color: Colors.grey, width: 1),
-                      columns: const [
-                        DataColumn(label: Text('Nama')),
-                        DataColumn(label: Text('No. Telp')),
-                        DataColumn(label: Text('Email')),
-                        DataColumn(label: Text('Universitas')),
-                        DataColumn(label: Text('Jurusan')),
-                        DataColumn(label: Text('Angkatan')),
-                        DataColumn(label: Text('IPK')),
-                        DataColumn(label: Text('Aksi')),
-                      ],
-                      rows: filteredData.map((peserta) {
-                        return DataRow(
-                          cells: [
-                            DataCell(Text(peserta.nama,
-                                textAlign: TextAlign.center)),
-                            DataCell(Text(peserta.noTelp,
-                                textAlign: TextAlign.center)),
-                            DataCell(Text(peserta.email,
-                                textAlign: TextAlign.center)),
-                            DataCell(Text(peserta.asalUniversitas,
-                                textAlign: TextAlign.center)),
-                            DataCell(Text(peserta.jurusan,
-                                textAlign: TextAlign.center)),
-                            DataCell(Text(peserta.angkatan.toString(),
-                                textAlign: TextAlign.center)),
-                            DataCell(Text(peserta.nilaiUniv.toString(),
-                                textAlign: TextAlign.center)),
-                            DataCell(
-                              Align(
-                                alignment: Alignment.center,
-                                child: RoundedRectangleButton(
-                                  title: "VIEW DETAILS",
-                                  backgroundColor:
-                                      const Color.fromARGB(255, 152, 209, 255),
-                                  height: 30,
-                                  width: 150,
-                                  rounded: 5,
-                                  onPressed: () {
-                                    _viewDetails(peserta);
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            _buildPesertaMagangDataTable(filteredPesertaData),
             const SizedBox(height: 24),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPesertaMagangDataTable(
+      List<PesertaMagangData> filteredPesertaData) {
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Center(
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.1),
+                spreadRadius: 1,
+                blurRadius: 4,
+                offset: const Offset(0, 1),
+              ),
+            ],
+          ),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              headingRowColor: WidgetStateProperty.all(Colors.orange[500]),
+              headingTextStyle: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+              border: TableBorder.all(color: Colors.grey, width: 1),
+              columns: const [
+                DataColumn(label: Text('Nama')),
+                DataColumn(label: Text('No. Telp')),
+                DataColumn(label: Text('Email')),
+                DataColumn(label: Text('Universitas')),
+                DataColumn(label: Text('Jurusan')),
+                DataColumn(label: Text('Angkatan')),
+                DataColumn(label: Text('IPK')),
+                DataColumn(label: Text('Aksi')),
+              ],
+              rows: filteredPesertaData.map((peserta) {
+                return DataRow(
+                  cells: [
+                    DataCell(Text(peserta.nama, textAlign: TextAlign.center)),
+                    DataCell(Text(peserta.noTelp, textAlign: TextAlign.center)),
+                    DataCell(Text(peserta.email, textAlign: TextAlign.center)),
+                    DataCell(Text(peserta.asalUniversitas,
+                        textAlign: TextAlign.center)),
+                    DataCell(
+                        Text(peserta.jurusan, textAlign: TextAlign.center)),
+                    DataCell(Text(peserta.angkatan.toString(),
+                        textAlign: TextAlign.center)),
+                    DataCell(Text(peserta.nilaiUniv.toString(),
+                        textAlign: TextAlign.center)),
+                    DataCell(
+                      Align(
+                        alignment: Alignment.center,
+                        child: RoundedRectangleButton(
+                          title: "VIEW DETAILS",
+                          backgroundColor:
+                              const Color.fromARGB(255, 152, 209, 255),
+                          height: 30,
+                          width: 150,
+                          rounded: 5,
+                          onPressed: () {
+                            _viewDetails(peserta);
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }).toList(),
+            ),
+          ),
         ),
       ),
     );

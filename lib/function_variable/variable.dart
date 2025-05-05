@@ -38,6 +38,16 @@ TextStyle regular24 = TextStyle(
   fontSize: 24.sp,
 );
 
+TextStyle regular30 = TextStyle(
+  fontFamily: montserratFontFamily,
+  fontSize: 30.sp,
+);
+
+TextStyle regular34 = TextStyle(
+  fontFamily: montserratFontFamily,
+  fontSize: 34.sp,
+);
+
 TextStyle bold12 = TextStyle(
   fontFamily: montserratFontFamily,
   fontWeight: FontWeight.bold,
@@ -66,6 +76,24 @@ TextStyle bold24 = TextStyle(
   fontFamily: montserratFontFamily,
   fontWeight: FontWeight.bold,
   fontSize: 24.sp,
+);
+
+TextStyle bold28 = TextStyle(
+  fontFamily: montserratFontFamily,
+  fontWeight: FontWeight.bold,
+  fontSize: 26.sp,
+);
+
+TextStyle bold30 = TextStyle(
+  fontFamily: montserratFontFamily,
+  fontWeight: FontWeight.bold,
+  fontSize: 30.sp,
+);
+
+TextStyle bold34 = TextStyle(
+  fontFamily: montserratFontFamily,
+  fontWeight: FontWeight.bold,
+  fontSize: 34.sp,
 );
 
 TextStyle light12 = TextStyle(

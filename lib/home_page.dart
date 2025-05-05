@@ -127,16 +127,21 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Selamat Datang ke Japfa Internship',
+              'Selamat Datang ke',
               style: bold24.copyWith(color: Colors.black),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 20), // Reduced height for spacing
+            Text(
+              appName,
+              style: bold34.copyWith(color: Colors.black),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 30),
             if (!isLogin) ...[
               // Login Button
               RoundedRectangleButton(
                 title: 'Login',
-                style: regular24,
+                style: regular30,
                 fontColor: japfaOrange,
                 backgroundColor: Colors.white,
                 outlineColor: japfaOrange,
@@ -147,7 +152,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             // New Kunjungan Studi Button
             RoundedRectangleButton(
               title: 'Kunjungan Studi',
-              style: regular20,
+              style: regular24,
               fontColor: Colors.white,
               backgroundColor: japfaOrange,
               onPressed: kunjunganStudiOnPressed,
@@ -156,7 +161,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             // List Departemen Button
             RoundedRectangleButton(
               title: 'Daftar Magang',
-              style: regular20,
+              style: regular24,
               fontColor: Colors.white,
               backgroundColor: japfaOrange,
               onPressed: scrollToCard,

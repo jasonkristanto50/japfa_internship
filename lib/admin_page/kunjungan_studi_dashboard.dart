@@ -134,7 +134,7 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
                             DataCell(
                               Text(kunjungan.status,
                                   textAlign: TextAlign.center,
-                                  style: bold14.copyWith(
+                                  style: bold16.copyWith(
                                     color: kunjungan.status == 'Diterima'
                                         ? Colors.green
                                         : kunjungan.status == 'Ditolak'

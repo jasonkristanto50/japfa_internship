@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:japfa_internship/admin_page/pendaftaran_magang_detail_page.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
@@ -47,12 +48,15 @@ class _PendaftaranMagangDepartemenState
         child: Column(
           children: [
             // Add Search Bar
-            CustomSearchBar(
-              onChanged: (value) {
-                setState(() {
-                  searchQuery = value;
-                });
-              },
+            Center(
+              child: CustomSearchBar(
+                widthValue: 1500.w,
+                onChanged: (value) {
+                  setState(() {
+                    searchQuery = value;
+                  });
+                },
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(24.0),

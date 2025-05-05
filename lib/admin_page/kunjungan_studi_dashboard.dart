@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:japfa_internship/models/kunjungan_studi_data/kunjungan_studi_data.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/components/widget_component.dart';
@@ -44,6 +45,7 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
             // Search bar
             CustomSearchBar(
               labelSearchBar: "Ketikkan nama universitas",
+              widthValue: 1500.w,
               onChanged: (value) {
                 setState(() {
                   searchQuery = value; // Update search query

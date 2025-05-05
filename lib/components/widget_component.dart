@@ -195,75 +195,56 @@ class CustomRespondDialog extends StatelessWidget {
   }
 }
 
-// Custom Search Bar Field
+// ---------------- CustomSearchBar ----------------
 class CustomSearchBar extends StatelessWidget {
-  final Function(String) onChanged; // Callback for search query change
+  final Function(String) onChanged;
   final String? labelSearchBar;
   final double? widthValue;
+  final bool withSearchButton;
 
-  const CustomSearchBar(
-      {super.key,
-      required this.onChanged,
-      this.labelSearchBar,
-      this.widthValue});
+  const CustomSearchBar({
+    super.key,
+    required this.onChanged,
+    this.labelSearchBar,
+    this.widthValue,
+    this.withSearchButton = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(24.0),
+      padding: const EdgeInsets.all(25.0),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8),
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
           child: Container(
+            width: widthValue,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.5), // Optional opacity
+              color: Colors.white.withOpacity(0.5),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  width: 1000, // Search field width
-                  child: TextField(
-                    onChanged: onChanged, // Use the passed in callback
-                    decoration: InputDecoration(
-                      labelText: labelSearchBar ?? 'Ketikkan pencarian',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(
-                          color: Colors.orange, // Border color
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(
-                          color: Colors.orange, // Border color when enabled
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(
-                          color: Colors.orange, // Border color when focused
-                          width: 2,
-                        ),
-                      ),
-                      prefixIcon: const Icon(Icons.search),
-                    ),
+                // If widthValue is given → use it, otherwise expand
+                widthValue != null
+                    ? SizedBox(
+                        width: widthValue,
+                        child: _buildTextField(),
+                      )
+                    : Expanded(child: _buildTextField()),
+                if (withSearchButton) ...[
+                  const SizedBox(width: 8), // small gap
+                  RoundedRectangleButton(
+                    title: 'Search',
+                    fontColor: Colors.white,
+                    backgroundColor: Colors.orange,
+                    height: 45,
+                    width: 100,
+                    rounded: 5,
+                    onPressed: () {},
                   ),
-                ),
-                const SizedBox(width: 10),
-                RoundedRectangleButton(
-                  title: "Search",
-                  fontColor: Colors.white,
-                  backgroundColor: Colors.orange,
-                  height: 45,
-                  width: widthValue ?? 100,
-                  rounded: 5,
-                  onPressed: () {
-                    // Optionally, add any search logic here if needed
-                  },
-                ),
+                ],
               ],
             ),
           ),
@@ -271,4 +252,24 @@ class CustomSearchBar extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildTextField() => TextField(
+        onChanged: onChanged,
+        decoration: InputDecoration(
+          labelText: labelSearchBar ?? 'Ketikkan pencarian',
+          prefixIcon: const Icon(Icons.search),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.orange),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.orange),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.orange, width: 2),
+          ),
+        ),
+      );
 }

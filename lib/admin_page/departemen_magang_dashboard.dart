@@ -44,37 +44,10 @@ class _DepartemenMagangDashboardState extends State<DepartemenMagangDashboard> {
         decoration: buildJapfaLogoBackground(),
         child: Column(
           children: [
-            // Add Custom Search Bar
-            CustomSearchBar(
-              onChanged: (value) {
-                setState(() {
-                  searchQuery = value; // Update search query
-                });
-              },
-              widthValue: 175,
-            ),
-            // Button to add a new department - left aligned
-            Padding(
-              padding: const EdgeInsets.only(left: 175.0, top: 0.0, bottom: 10),
-              child: Align(
-                alignment: Alignment.centerLeft, // Align to the left
-                child: RoundedRectangleButton(
-                  title: "Tambah Departemen",
-                  backgroundColor: Colors.white,
-                  outlineColor: japfaOrange,
-                  height: 40,
-                  width: 200,
-                  rounded: 5,
-                  onPressed: () {
-                    _addNewDepartment();
-                  },
-                ),
-              ),
-            ),
-            const SizedBox(height: 10), // Space between button and table
+            _buildSearchAndAddDepartemenButton(),
+            const SizedBox(height: 10),
 
             // Table Section
-
             _buildDepartemenTable(filteredData),
           ],
         ),
@@ -95,6 +68,37 @@ class _DepartemenMagangDashboardState extends State<DepartemenMagangDashboard> {
     } catch (e) {
       print("Error fetching departemen: $e");
     }
+  }
+
+  Widget _buildSearchAndAddDepartemenButton() {
+    return // Add Custom Search Bar
+        Center(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CustomSearchBar(
+            onChanged: (value) {
+              setState(() {
+                searchQuery = value; // Update search query
+              });
+            },
+            widthValue: 1200.w,
+          ),
+          // Button to add a new department
+          RoundedRectangleButton(
+            title: "Tambah Departemen",
+            backgroundColor: Colors.white,
+            outlineColor: japfaOrange,
+            height: 40,
+            width: 200,
+            rounded: 5,
+            onPressed: () {
+              _addNewDepartment();
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildDepartemenTable(List<DepartemenData> filteredData) {

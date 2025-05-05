@@ -41,9 +41,10 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
               Column(
                 children: [
                   if (loginState.role == "admin") ...[
+                    // Blur japfa logo background
                     _blurBackground(),
                   ] else ...[
-                    _buildBackgroundBlurImage(),
+                    _buildBackgroundBlurImageWithContainer(),
                     const SizedBox(height: 50),
                   ]
                 ],
@@ -81,7 +82,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     );
   }
 
-  Widget _buildBackgroundBlurImage() {
+  Widget _buildBackgroundBlurImageWithContainer() {
     // Full-Height Login Section with Blurry Background
     return SizedBox(
       height: MediaQuery.of(context).size.height, // Full height of the screen
@@ -125,13 +126,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
           mainAxisSize: MainAxisSize.min, // Ensure the column size is minimum
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
+            Text(
               'Selamat Datang ke Japfa Internship',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
+              style: bold24.copyWith(color: Colors.black),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20), // Reduced height for spacing
@@ -139,7 +136,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
               // Login Button
               RoundedRectangleButton(
                 title: 'Login',
-                style: regular20,
+                style: regular24,
                 fontColor: japfaOrange,
                 backgroundColor: Colors.white,
                 outlineColor: japfaOrange,

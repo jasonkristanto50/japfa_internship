@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:japfa_internship/admin_page/pendaftaran_magang_departemen.dart';
 import 'package:japfa_internship/admin_page/edit_department_modal.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
@@ -74,7 +75,7 @@ class _DepartemenMagangDashboardState extends State<DepartemenMagangDashboard> {
 
             // Table Section
 
-            _buildPengajuanTable(filteredData),
+            _buildDepartemenTable(filteredData),
           ],
         ),
       ),
@@ -96,10 +97,10 @@ class _DepartemenMagangDashboardState extends State<DepartemenMagangDashboard> {
     }
   }
 
-  Widget _buildPengajuanTable(List<DepartemenData> filteredData) {
+  Widget _buildDepartemenTable(List<DepartemenData> filteredData) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white, // Set the desired background color
+        color: Colors.white,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
@@ -110,71 +111,69 @@ class _DepartemenMagangDashboardState extends State<DepartemenMagangDashboard> {
           ),
         ],
       ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: DataTable(
-          headingRowColor: WidgetStateProperty.all(Colors.orange[500]),
-          headingTextStyle: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-          border: TableBorder.all(
-            color: Colors.grey,
-            width: 1,
-          ),
-          columns: const [
-            DataColumn(label: Text('Departemen')),
-            DataColumn(label: Text('Max Kuota')),
-            DataColumn(label: Text('Jumlah Pengajuan')),
-            DataColumn(label: Text('Jumlah Approved')),
-            DataColumn(label: Text('Jumlah On Boarding')),
-            DataColumn(label: Text('Sisa Kuota')),
-            DataColumn(label: Text('Action')),
-          ],
-          rows: filteredData.map((department) {
-            return DataRow(
-              cells: [
-                DataCell(Text(department.namaDepartemen,
-                    textAlign: TextAlign.center)), // Corrected this line
-                DataCell(Text(department.maxKuota.toString(),
-                    textAlign: TextAlign.center)),
-                DataCell(Text(department.jumlahPengajuan.toString(),
-                    textAlign: TextAlign.center)),
-                DataCell(Text(department.jumlahApproved.toString(),
-                    textAlign: TextAlign.center)),
-                DataCell(Text(department.jumlahOnBoarding.toString(),
-                    textAlign: TextAlign.center)),
-                DataCell(Text(department.sisaKuota.toString(),
-                    textAlign: TextAlign.center)),
-                DataCell(
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      RoundedRectangleButton(
-                        title: "EDIT",
-                        backgroundColor:
-                            const Color.fromARGB(255, 247, 211, 159),
-                        height: 30,
-                        width: 85,
-                        rounded: 5,
-                        onPressed: () => _editTable(department),
-                      ),
-                      const SizedBox(width: 8), // Space between buttons
-                      RoundedRectangleButton(
-                        title: "VIEW",
-                        backgroundColor: lightBlue,
-                        height: 30,
-                        width: 85,
-                        rounded: 5,
-                        onPressed: () =>
-                            _onViewApplications(department.namaDepartemen),
-                      ),
-                    ],
-                  ),
-                ),
+      // Give the table some vertical room; or wrap it in Expanded/Flexible
+      child: SizedBox(
+        height: 700.h,
+        child: SingleChildScrollView(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              headingRowColor: WidgetStateProperty.all(Colors.orange[500]),
+              headingTextStyle: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+              border: TableBorder.all(color: Colors.grey, width: 1),
+              columns: const [
+                DataColumn(label: Text('Departemen')),
+                DataColumn(label: Text('Max Kuota')),
+                DataColumn(label: Text('Jumlah Pengajuan')),
+                DataColumn(label: Text('Jumlah Approved')),
+                DataColumn(label: Text('Jumlah On Boarding')),
+                DataColumn(label: Text('Sisa Kuota')),
+                DataColumn(label: Text('Action')),
               ],
-            );
-          }).toList(),
+              rows: filteredData
+                  .map((d) => DataRow(cells: [
+                        DataCell(Text(d.namaDepartemen,
+                            textAlign: TextAlign.center)),
+                        DataCell(
+                            Text('${d.maxKuota}', textAlign: TextAlign.center)),
+                        DataCell(Text('${d.jumlahPengajuan}',
+                            textAlign: TextAlign.center)),
+                        DataCell(Text('${d.jumlahApproved}',
+                            textAlign: TextAlign.center)),
+                        DataCell(Text('${d.jumlahOnBoarding}',
+                            textAlign: TextAlign.center)),
+                        DataCell(Text('${d.sisaKuota}',
+                            textAlign: TextAlign.center)),
+                        DataCell(Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            RoundedRectangleButton(
+                              title: 'EDIT',
+                              backgroundColor: const Color(0xFFF7D39F),
+                              height: 30,
+                              width: 85,
+                              rounded: 5,
+                              onPressed: () => _editTable(d),
+                            ),
+                            const SizedBox(width: 8),
+                            RoundedRectangleButton(
+                              title: 'VIEW',
+                              backgroundColor: lightBlue,
+                              height: 30,
+                              width: 85,
+                              rounded: 5,
+                              onPressed: () =>
+                                  _onViewApplications(d.namaDepartemen),
+                            ),
+                          ],
+                        )),
+                      ]))
+                  .toList(),
+            ),
+          ),
         ),
       ),
     );

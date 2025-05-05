@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 String appName = "Japfa Internship";
 Dio dio = Dio();
@@ -12,58 +13,69 @@ String japfaLogoBackgroundImgPath = 'assets/japfa_logo_background.png';
 
 const String montserratFontFamily = 'assets/fonts/Montserrat';
 
-TextStyle regular12 = const TextStyle(
+TextStyle regular12 = TextStyle(
   fontFamily: montserratFontFamily,
-  fontSize: 12,
+  fontSize: 12.sp,
 );
 
-TextStyle regular14 = const TextStyle(
+TextStyle regular14 = TextStyle(
   fontFamily: montserratFontFamily,
-  fontSize: 14,
+  fontSize: 14.sp,
 );
 
-TextStyle regular16 = const TextStyle(
+TextStyle regular16 = TextStyle(
   fontFamily: montserratFontFamily,
-  fontSize: 16,
+  fontSize: 16.sp,
 );
 
-TextStyle regular20 = const TextStyle(
+TextStyle regular20 = TextStyle(
   fontFamily: montserratFontFamily,
-  fontSize: 20,
+  fontSize: 20.sp,
 );
 
-TextStyle bold12 = const TextStyle(
+TextStyle regular24 = TextStyle(
   fontFamily: montserratFontFamily,
-  fontWeight: FontWeight.bold,
-  fontSize: 12,
+  fontSize: 24.sp,
 );
 
-TextStyle bold13 = const TextStyle(
-  fontFamily: montserratFontFamily,
-  fontWeight: FontWeight.bold,
-  fontSize: 13,
-);
-
-TextStyle bold14 = const TextStyle(
+TextStyle bold12 = TextStyle(
   fontFamily: montserratFontFamily,
   fontWeight: FontWeight.bold,
-  fontSize: 14,
+  fontSize: 12.sp,
 );
 
-TextStyle bold16 = const TextStyle(
+TextStyle bold13 = TextStyle(
   fontFamily: montserratFontFamily,
   fontWeight: FontWeight.bold,
-  fontSize: 16,
+  fontSize: 13.sp,
 );
 
-TextStyle light12 = const TextStyle(
+TextStyle bold14 = TextStyle(
+  fontFamily: montserratFontFamily,
+  fontWeight: FontWeight.bold,
+  fontSize: 14.sp,
+);
+
+TextStyle bold16 = TextStyle(
+  fontFamily: montserratFontFamily,
+  fontWeight: FontWeight.bold,
+  fontSize: 16.sp,
+);
+
+TextStyle bold24 = TextStyle(
+  fontFamily: montserratFontFamily,
+  fontWeight: FontWeight.bold,
+  fontSize: 24.sp,
+);
+
+TextStyle light12 = TextStyle(
   fontFamily: montserratFontFamily,
   fontWeight: FontWeight.normal,
-  fontSize: 12,
+  fontSize: 12.sp,
 );
 
-TextStyle light16 = const TextStyle(
+TextStyle light16 = TextStyle(
   fontFamily: montserratFontFamily,
   fontWeight: FontWeight.normal,
-  fontSize: 16,
+  fontSize: 16.sp,
 );

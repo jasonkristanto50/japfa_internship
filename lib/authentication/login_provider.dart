@@ -36,6 +36,7 @@ class LoginNotifier extends StateNotifier<LoginState> {
   LoginNotifier() : super(LoginState());
 
   Future<void> login(String email, String password) async {
+    // TODO: buat akun untuk peserta
     if (email == 'peserta' && password == '123') {
       state = LoginState(
         isLoading: false,

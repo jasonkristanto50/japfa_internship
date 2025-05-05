@@ -196,11 +196,12 @@ class _SubmissionInternState extends State<SubmissionIntern> {
         buildTextField('Jurusan', majorController),
         const SizedBox(height: 20),
         RoundedRectangleButton(
-          title: "Next",
-          backgroundColor: japfaOrange,
-          fontColor: Colors.white,
-          onPressed: () {
-            if (validateTextFields(context)) {
+            title: "Next",
+            backgroundColor: japfaOrange,
+            fontColor: Colors.white,
+            onPressed: () {
+              // if (validateTextFields(context)) {
+              // TODO: skip validate for checking
               int? generation = int.tryParse(generationController.text);
               double? score = double.tryParse(scoreController.text);
               fadeNavigation(context,
@@ -216,8 +217,8 @@ class _SubmissionInternState extends State<SubmissionIntern> {
                     major: majorController.text,
                   ));
             }
-          },
-        ),
+            // },
+            ),
       ],
     );
   }

@@ -1,5 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api
 import 'dart:io';
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
@@ -72,13 +74,7 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
         title: appName,
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          image: DecorationImage(
-            image: AssetImage('assets/japfa_logo_background.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
+        decoration: buildJapfaLogoBackground(),
         child: Center(
           child: AnimatedOpacity(
             opacity: _visible ? 1.0 : 0.0,
@@ -325,56 +321,62 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
     return true;
   }
 
-  // FILE MANIPULATION
+  /////////////////////////////////////////// FILE MANIPULATION /////////////////////////////////////////////////////////
   // Method to pick files using file_picker package with validation
   void pickFile(String field, bool isFoto) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: isFoto
-          ? tipeDataFotoUpload
-          : tipeDataFileUpload, // Allowed file types
+      allowedExtensions: isFoto ? tipeDataFotoUpload : tipeDataFileUpload,
     );
-
-    // TODO:
-    // Checking if a file was selected and if it matches the allowed types
-    if (result == null ||
-        (isFoto &&
-            !tipeDataFotoUpload.contains(result.files.single.extension)) ||
-        (!isFoto &&
-            !tipeDataFileUpload.contains(result.files.single.extension))) {
-      // Show warning
-      showSnackBar(context,
-          'Tipe data tidak sesuai, foto : $tipeDataFotoUpload, file : $tipeDataFileUpload');
-    }
 
     if (result != null) {
       String fileName = result.files.single.name;
-      String? filePath = result.files.single.path;
 
-      // Validate file size (optional)
-      File file = File(filePath!);
-      int fileSizeInMB = file.lengthSync() ~/ (1024 * 1024);
-      if (fileSizeInMB > 10) {
-        showSnackBar(context, 'File size cannot be more than 10MB');
-        return; // Exit if the file size is too large
-      }
-
-      setState(() {
-        // Store the file names and paths for display and opening
-        if (field == 'CV') {
-          cvFileName = fileName;
-          cvFilePath = filePath;
-        } else if (field == 'Campus Approval') {
-          campusApprovalFileName = fileName;
-          campusApprovalFilePath = filePath;
-        } else if (field == 'Score Transcript') {
-          transcriptFileName = fileName;
-          transcriptFilePath = filePath;
-        } else if (field == 'Foto Diri') {
-          fotoDiriFileName = fileName;
-          fotoDiriFilePath = filePath;
+      // Web-specific handling
+      if (kIsWeb) {
+        // Access bytes for web
+        Uint8List? fileBytes = result.files.single.bytes;
+        if (fileBytes != null) {
+          // Handle the file bytes according to your needs
+          // For example, you might upload it directly to the server
+          setState(() {
+            if (field == 'CV') {
+              cvFileName = fileName;
+              // Process the bytes as needed
+            } else if (field == 'Campus Approval') {
+              campusApprovalFileName = fileName;
+              // Process the bytes as needed
+            } else if (field == 'Score Transcript') {
+              transcriptFileName = fileName;
+              // Process the bytes as needed
+            } else if (field == 'Foto Diri') {
+              fotoDiriFileName = fileName;
+              // Process the bytes as needed
+            }
+          });
         }
-      });
+      } else {
+        // Mobile/Desktop handling
+        String? filePath = result.files.single.path;
+        setState(() {
+          if (field == 'CV') {
+            cvFileName = fileName;
+            cvFilePath = filePath;
+          } else if (field == 'Campus Approval') {
+            campusApprovalFileName = fileName;
+            campusApprovalFilePath = filePath;
+          } else if (field == 'Score Transcript') {
+            transcriptFileName = fileName;
+            transcriptFilePath = filePath;
+          } else if (field == 'Foto Diri') {
+            fotoDiriFileName = fileName;
+            fotoDiriFilePath = filePath;
+          }
+        });
+      }
+    } else {
+      // Handle the case where no file was selected
+      showSnackBar(context, 'No file selected.');
     }
   }
 
@@ -406,6 +408,24 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
           builder: (context) => PDFPreviewScreen(filePath: filePath),
         ),
       );
+    }
+  }
+
+  // Upload file to server
+  Future<String> uploadFileToServer(
+      Uint8List fileBytes, String fileName) async {
+    final formData = FormData.fromMap({
+      'file': MultipartFile.fromBytes(fileBytes, filename: fileName),
+    });
+
+    final response = await Dio().post(
+        'http://localhost:3000/api/peserta_magang/upload-file',
+        data: formData);
+
+    if (response.statusCode == 200) {
+      return response.data['filePath']; // Adjust based on server response
+    } else {
+      throw Exception('Failed to upload file');
     }
   }
 

@@ -5,6 +5,8 @@ const express = require('express');
 const { Pool } = require('pg');  
 const cors = require('cors');  
 const bodyParser = require('body-parser');  
+const multer = require('multer'); // Import multer  
+const path = require('path'); // Import path module  
 require('dotenv').config(); // For environment variables  
 
 const app = express();  

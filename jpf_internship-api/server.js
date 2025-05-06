@@ -16,6 +16,9 @@ const port = process.env.PORT || 3000;
 app.use(cors());  
 app.use(bodyParser.json());  
 
+// Serve static files from the 'uploads' directory
+app.use('/api/jpf_internship-api/uploads', express.static(path.join(__dirname, 'uploads')));
+
 // PostgreSQL connection pool  
 const pool = new Pool({  
     user: process.env.DB_USER,          // Using environment variables  

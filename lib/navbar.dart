@@ -103,7 +103,7 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
                   // Logged in => Check role
                   // PENDAFTAR Navbar
                   if (loginState.role == "pendaftar") ...[
-                    buildNavBarTab("Submission", onSubmissionPressed),
+                    buildNavBarTab("My Submission", onSubmissionPressed),
                     buildNavBarTab("Timeline", onTimelinePressed)
                   ] else if (loginState.role == "admin") ...[
                     // ADMIN Navbar
@@ -119,6 +119,11 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
                     buildNavBarTab("Pembimbing", _navigateToPembimbingPage),
                     buildNavBarTab("Logbook", _navigateToLogbookPage),
                     buildNavBarTab("Laporan", _navigateToLaporanPage),
+                  ] else if (loginState.role == "kepala departemen") ...[
+                    // PESERTA MAGANG Navbar
+                    buildNavBarTab("Logbook", _navigateToLogbookPage),
+                    buildNavBarTab("Laporan", _navigateToLaporanPage),
+                    buildNavBarTab("Departemen", _navigateToHomePageMagang)
                   ],
                   const SizedBox(width: 16),
 

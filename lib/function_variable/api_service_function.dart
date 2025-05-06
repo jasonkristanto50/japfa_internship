@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:japfa_internship/models/departemen_data/departemen_data.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
 
@@ -6,6 +7,24 @@ class ApiService {
   final Dio _dio = Dio();
 
   ////////////////////////////////////////////// PESERTA MAGANG  //////////////////////////////////////////////////
+
+  // Upload file to server
+  Future<String> uploadFileToServer(
+      Uint8List fileBytes, String fileName) async {
+    final formData = FormData.fromMap({
+      'file': MultipartFile.fromBytes(fileBytes, filename: fileName),
+    });
+
+    final response = await Dio().post(
+        'http://localhost:3000/api/peserta_magang/upload-file',
+        data: formData);
+
+    if (response.statusCode == 200) {
+      return response.data['filePath']; // Adjust based on server response
+    } else {
+      throw Exception('Failed to upload file');
+    }
+  }
 
   Future<void> submitPesertaMagang(PesertaMagangData data) async {
     try {

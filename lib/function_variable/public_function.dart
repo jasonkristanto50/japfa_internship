@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:japfa_internship/function_variable/variable.dart';
 
 void fadeNavigation(BuildContext context,
     {required Widget targetNavigation, int? time}) {
@@ -101,10 +102,11 @@ bool validateField({
         showSnackBar(context, '$fieldName harus diisi dan harus angka');
         return false;
       }
-      // Jumlah maksimal anak = 50
+      // Jumlah maksimal anak = 55
       int value = int.parse(controller.text);
-      if (value > 50) {
-        showSnackBar(context, '$fieldName tidak boleh lebih dari 50');
+      if (value > jumlahMaksimalPeserta) {
+        showSnackBar(context,
+            '$fieldName tidak boleh lebih dari $jumlahMaksimalPeserta');
         return false;
       }
 

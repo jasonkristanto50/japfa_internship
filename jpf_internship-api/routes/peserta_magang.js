@@ -16,12 +16,12 @@ const pool = new Pool({
 //////////////////////////////////////////// FILE UPLOADS ///////////////////////////////////////////////////////////////
 
 // Configure multer for file uploads  
-const storage = multer.diskStorage({  
+{const storage = multer.diskStorage({  
     destination: (req, file, cb) => {  
       cb(null, 'uploads/'); // Specify the upload directory -> jpf_internship-api/uploads 
     },  
     filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const uniqueSuffix = Date.now();
         cb(null, file.originalname + '-' + uniqueSuffix +path.extname(file.originalname)); // Ensure unique filenames
     }, 
   });  
@@ -34,8 +34,8 @@ const storage = multer.diskStorage({
       return res.status(400).json({ error: 'No file uploaded' });  
     }  
   
-    const filePath = req.file.path; // Save the file path  
-    return res.status(200).json({ message: 'File uploaded successfully', filePath: filePath });  
+    const apiFilePath = `/api/jpf_internship-api/uploads/${req.file.filename}`; // Save the file path  
+    return res.status(200).json({ message: 'File uploaded successfully', filePath: apiFilePath });  
   }); 
 
 // Add a new Peserta Magang  
@@ -87,7 +87,7 @@ router.post('/submit-peserta-magang', async (req, res) => {
         res.status(500).json({ error: 'Server error', error });  
     }  
 });  
-
+}
 ////////////////////////////////////////////////// FETCH DATA ///////////////////////////////////////////////////////
 
 // Get all Peserta Magang  

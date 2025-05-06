@@ -1,6 +1,5 @@
 // ignore_for_file: library_private_types_in_public_api
-import 'dart:io';
-import 'package:dio/dio.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
@@ -48,12 +47,18 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
   String? campusApprovalFileName;
   String? transcriptFileName;
   String? fotoDiriFileName;
+
   String? cvFilePath = "assets/file_upload_peserta/cv_dummy_jason.jpg";
   String? campusApprovalFilePath =
       "assets/file_upload_peserta/persetujuan_univ_dummy_jason.pdf";
   String? transcriptFilePath =
       "assets/file_upload_peserta/transkrip_dummy_jason.pdf";
   String? fotoDiriFilePath = "assets/file_upload_peserta/dummy_foto_diri.png";
+
+  Uint8List? cvFile;
+  Uint8List? campusApprovalFile;
+  Uint8List? transcriptFile;
+  Uint8List? fotoDiriFile;
 
   final _visible = true;
   List<String> tipeDataFileUpload = [
@@ -138,6 +143,15 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
         campusApprovalFilePath != null &&
         transcriptFilePath != null) {
       try {
+        // Set the file path
+        cvFilePath =
+            await ApiService().uploadFileToServer(cvFile!, cvFileName!);
+        campusApprovalFilePath = await ApiService()
+            .uploadFileToServer(campusApprovalFile!, campusApprovalFileName!);
+        transcriptFilePath = await ApiService()
+            .uploadFileToServer(transcriptFile!, transcriptFileName!);
+        fotoDiriFilePath = await ApiService()
+            .uploadFileToServer(fotoDiriFile!, fotoDiriFileName!);
         // Fetch the count of peserta magang
         int count = await ApiService().countPesertaMagang();
 
@@ -342,16 +356,16 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
           setState(() {
             if (field == 'CV') {
               cvFileName = fileName;
-              // Process the bytes as needed
+              cvFile = fileBytes;
             } else if (field == 'Campus Approval') {
               campusApprovalFileName = fileName;
-              // Process the bytes as needed
+              campusApprovalFile = fileBytes;
             } else if (field == 'Score Transcript') {
               transcriptFileName = fileName;
-              // Process the bytes as needed
+              transcriptFile = fileBytes;
             } else if (field == 'Foto Diri') {
               fotoDiriFileName = fileName;
-              // Process the bytes as needed
+              fotoDiriFile = fileBytes;
             }
           });
         }
@@ -408,24 +422,6 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
           builder: (context) => PDFPreviewScreen(filePath: filePath),
         ),
       );
-    }
-  }
-
-  // Upload file to server
-  Future<String> uploadFileToServer(
-      Uint8List fileBytes, String fileName) async {
-    final formData = FormData.fromMap({
-      'file': MultipartFile.fromBytes(fileBytes, filename: fileName),
-    });
-
-    final response = await Dio().post(
-        'http://localhost:3000/api/peserta_magang/upload-file',
-        data: formData);
-
-    if (response.statusCode == 200) {
-      return response.data['filePath']; // Adjust based on server response
-    } else {
-      throw Exception('Failed to upload file');
     }
   }
 

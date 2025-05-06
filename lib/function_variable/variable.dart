@@ -11,6 +11,8 @@ Color darkGrey = const Color.fromARGB(255, 50, 50, 50);
 String japfaBuduranImgPath = 'assets/japfa_buduran_landscape.jpg';
 String japfaLogoBackgroundImgPath = 'assets/japfa_logo_background.png';
 
+int jumlahMaksimalPeserta = 55;
+
 const String montserratFontFamily = 'assets/fonts/Montserrat';
 
 TextStyle regular12 = TextStyle(

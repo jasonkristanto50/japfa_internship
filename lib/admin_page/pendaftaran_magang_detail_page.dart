@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:japfa_internship/components/widget_component.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
+import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
 import 'package:japfa_internship/navbar.dart';
@@ -39,7 +40,7 @@ class _PendaftaranMagangDetailPageState
           child: Container(
             width: 1000,
             height: 600,
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(25),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(10),
@@ -66,41 +67,38 @@ class _PendaftaranMagangDetailPageState
                 const SizedBox(height: 20), // Space between title and content
 
                 // First Row: Information Fields and File Paths
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Participant data
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            buildInfoField('Nama', peserta.nama),
-                            buildInfoField('No. Telp', peserta.noTelp),
-                            buildInfoField('Email', peserta.email),
-                            buildInfoField(
-                                'Universitas', peserta.asalUniversitas),
-                            buildInfoField('Jurusan', peserta.jurusan),
-                            buildInfoField(
-                                'Angkatan', peserta.angkatan.toString()),
-                            buildInfoField('IPK', peserta.nilaiUniv.toString()),
-                          ],
+                Padding(
+                  padding: const EdgeInsets.only(left: 15, right: 15),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Participant data
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              buildInfoField('Nama', peserta.nama),
+                              buildInfoField('No. Telp', peserta.noTelp),
+                              buildInfoField('Email', peserta.email),
+                              buildInfoField(
+                                  'Universitas', peserta.asalUniversitas),
+                              buildInfoField('Jurusan', peserta.jurusan),
+                              buildInfoField(
+                                  'Angkatan', peserta.angkatan.toString()),
+                              buildInfoField(
+                                  'IPK', peserta.nilaiUniv.toString()),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 50),
+                      const SizedBox(width: 50),
 
-                    buildFileAndStatus(),
-
-                    // Image
-                    const SizedBox(width: 50),
-                    Image.asset(
-                      'assets/file_upload_peserta/dummy_foto_diri.png',
-                      height: 300,
-                      width: 225,
-                      fit: BoxFit.cover,
-                    ),
-                  ],
+                      buildFileAndStatus(),
+                      const SizedBox(width: 50),
+                      buildFotoDiriPeserta(),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 30),
 
@@ -149,15 +147,15 @@ class _PendaftaranMagangDetailPageState
       children: [
         // CV
         buildFileButton('CV', () {
-          // Logic to open/view CV file
+          launchURLImagePath(peserta.pathCv);
         }),
         // Persetujuan Kampus
         buildFileButton('Persetujuan Kampus', () {
-          // Logic to open/view persetujuan kampus file
+          launchURLImagePath(peserta.pathPersetujuanUniv);
         }),
         // Transkrip Nilai
         buildFileButton('Transkrip Nilai', () {
-          // Logic to open/view transkrip nilai file
+          launchURLImagePath(peserta.pathTranskripNilai);
         }),
         // Status
         Padding(
@@ -178,17 +176,50 @@ class _PendaftaranMagangDetailPageState
     );
   }
 
+  Widget buildFotoDiriPeserta() {
+    // Full Path
+    final String imagePath = '$baseUrl${peserta.pathFotoDiri}';
+
+    return Image.network(
+      imagePath,
+      height: 300,
+      width: 225,
+      fit: BoxFit.cover,
+      loadingBuilder: (BuildContext context, Widget child,
+          ImageChunkEvent? loadingProgress) {
+        if (loadingProgress == null) return child;
+        return Center(
+          child: CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded /
+                      (loadingProgress.expectedTotalBytes ?? 1)
+                  : null),
+        );
+      },
+      errorBuilder:
+          (BuildContext context, Object error, StackTrace? stackTrace) {
+        return const Center(child: Text('Failed to load image.'));
+      },
+    );
+  }
+
   Widget buildFileButton(String title, VoidCallback onPressed) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('$title:', style: regular14),
+          Text('$title:', style: bold14),
           const SizedBox(height: 5), // Space between label and button
-          ElevatedButton(
+          RoundedRectangleButton(
+            title: "Tampilkan",
+            style: regular14,
+            fontColor: Colors.white,
+            backgroundColor: japfaOrange,
+            width: 150,
+            height: 35,
+            rounded: 5,
             onPressed: onPressed,
-            child: Text('Show $title'),
           ),
         ],
       ),

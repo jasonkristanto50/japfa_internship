@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void fadeNavigation(BuildContext context,
     {required Widget targetNavigation, int? time}) {
@@ -210,5 +211,16 @@ void showSnackBar(BuildContext? context, String message) {
       content: Text(message),
       backgroundColor: Colors.red,
     ));
+  }
+}
+
+// Launch Image URL
+void launchURLImagePath(String path) async {
+  final String fullPath = '$baseUrl$path';
+  final Uri finalPath = Uri.parse(fullPath);
+  if (await canLaunchUrl(finalPath)) {
+    await launchUrl(finalPath);
+  } else {
+    throw 'Could not launch $path';
   }
 }

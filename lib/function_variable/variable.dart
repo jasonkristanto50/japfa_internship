@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 String appName = "Japfa Internship";
+const String baseUrl = 'http://localhost:3000';
 Dio dio = Dio();
 Color japfaOrange = const Color.fromARGB(255, 252, 146, 48);
 Color lightBlue = const Color.fromARGB(255, 152, 209, 255);

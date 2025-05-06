@@ -166,7 +166,7 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
                         ),
                         DataCell(
                           Text(
-                            kunjungan.jumlahAnak.toString(),
+                            kunjungan.jumlahPeserta.toString(),
                             textAlign: TextAlign.center,
                           ),
                         ),

@@ -15,6 +15,7 @@ class SubmissionStudy extends StatefulWidget {
 }
 
 class _SubmissionStudyState extends State<SubmissionStudy> {
+  bool _isFirstForm = true; // Flag to toggle between forms
   bool _visible = false;
 
   final TextEditingController nameController = TextEditingController();
@@ -22,9 +23,13 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
   final TextEditingController studentCountController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController dateController = TextEditingController();
 
+  // Second form controllers
   DateTime? selectedDate;
+  final TextEditingController dateController = TextEditingController();
+  TimeOfDay? selectedTime;
+  String? selectedTimeOption;
+  String? uploadedFilePath; // File upload path
 
   @override
   void initState() {
@@ -44,17 +49,19 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
         title: appName,
       ),
       body: Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            image: DecorationImage(
-              image: AssetImage('assets/japfa_logo_background.png'),
-              fit: BoxFit.cover,
-            ),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          image: DecorationImage(
+            image: AssetImage('assets/japfa_logo_background.png'),
+            fit: BoxFit.cover,
           ),
-          child: _buildKunjunganStudiForm()),
+        ),
+        child: _isFirstForm ? _buildKunjunganStudiForm() : _buildSecondForm(),
+      ),
     );
   }
 
+  // First form without date
   Widget _buildKunjunganStudiForm() {
     return Center(
       child: AnimatedOpacity(
@@ -115,15 +122,87 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
                 buildTextField('No Telepon', phoneController),
                 const SizedBox(height: 15),
                 buildTextField('Email', emailController),
-                const SizedBox(height: 15),
+                const SizedBox(height: 20),
+                RoundedRectangleButton(
+                  title: "Next",
+                  backgroundColor: japfaOrange,
+                  fontColor: Colors.white,
+                  onPressed: () {
+                    if (validateFields(context)) {
+                      setState(() {
+                        _isFirstForm = false; // Show second form
+                      });
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Second form with date, time, and file upload
+  Widget _buildSecondForm() {
+    return Center(
+      child: AnimatedOpacity(
+        opacity: _visible ? 1.0 : 0.0,
+        duration: const Duration(milliseconds: 500),
+        child: SingleChildScrollView(
+          child: Container(
+            width: 400,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 10,
+                  offset: Offset(0, 5),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: () {
+                        setState(() {
+                          _isFirstForm = true; // Back to first form
+                        });
+                      },
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                    const SizedBox(width: 61),
+                    const Text(
+                      'Kunjungan Studi',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
                 buildDateField(),
+                const SizedBox(height: 15),
+                buildTimeOptions(),
+                const SizedBox(height: 15),
+                buildFileUploadField(),
                 const SizedBox(height: 20),
                 RoundedRectangleButton(
                   title: "Submit",
                   backgroundColor: japfaOrange,
                   fontColor: Colors.white,
                   onPressed: () async {
-                    if (validateFields(context)) {
+                    if (validateSecondFormFields(context)) {
                       await _submitStudyDetails();
                     }
                   },
@@ -136,11 +215,11 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
     );
   }
 
-  // Method to create a date picker field
+  // Date field method for second form
   Widget buildDateField() {
     return TextField(
       controller: dateController,
-      readOnly: true, // Make it read-only to prevent manual input
+      readOnly: true,
       decoration: InputDecoration(
         labelText: "Tanggal Kegiatan",
         suffixIcon: IconButton(
@@ -152,40 +231,86 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
     );
   }
 
+  // Time option selection method
+  Widget buildTimeOptions() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Jam Kegiatan:', style: TextStyle(fontSize: 16)),
+        ListTile(
+          title: const Text('Morning'),
+          leading: Radio<String>(
+            value: 'Morning',
+            groupValue: selectedTimeOption,
+            onChanged: (value) {
+              setState(() {
+                selectedTimeOption = value;
+              });
+            },
+          ),
+        ),
+        ListTile(
+          title: const Text('Afternoon'),
+          leading: Radio<String>(
+            value: 'Afternoon',
+            groupValue: selectedTimeOption,
+            onChanged: (value) {
+              setState(() {
+                selectedTimeOption = value;
+              });
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  // File upload field method
+  Widget buildFileUploadField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Upload File:', style: TextStyle(fontSize: 16)),
+        ElevatedButton(
+          onPressed: () async {
+            // Implement your file picker logic here
+            // For example, you can use file_picker package to pick a file
+            // final result = await FilePicker.platform.pickFiles();
+            // if (result != null) {
+            //   setState(() {
+            //     uploadedFilePath = result.files.single.path;
+            //   });
+            // }
+          },
+          child: const Text('Choose File'),
+        ),
+        if (uploadedFilePath != null && uploadedFilePath!.isNotEmpty)
+          Text('Uploaded File: $uploadedFilePath'),
+      ],
+    );
+  }
+
+  // Method to select the date
   Future<void> _selectDate(BuildContext context) async {
     final DateTime now = DateTime.now();
-
-    // Disable today's date and past dates, and disable Mondays
-    final DateTime firstAvailableDate =
-        now.add(const Duration(days: 1)); // No today
+    final DateTime firstAvailableDate = now.add(const Duration(days: 1));
 
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: selectedDate ?? firstAvailableDate, // Default to tomorrow
-      firstDate: firstAvailableDate, // Cannot pick today or any past dates
+      initialDate: selectedDate ?? firstAvailableDate,
+      firstDate: firstAvailableDate,
       lastDate: DateTime(2101),
-      selectableDayPredicate: (DateTime date) {
-        // Disable Mondays (weekday == 1)
-        if (date.isBefore(now)) {
-          return false; // Disable past dates
-        }
-        if (date.weekday == DateTime.monday) {
-          return false; // Disable Mondays
-        }
-        return true; // Enable other dates
-      },
     );
 
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        dateController.text = "${picked.toLocal()}"
-            .split(' ')[0]; // Set the selected date in the TextField
+        dateController.text = "${picked.toLocal()}".split(' ')[0];
       });
     }
   }
 
-  // validate all form fields
+  // Validate fields for the first form
   bool validateFields(BuildContext context) {
     if (!validateField(
         controller: nameController,
@@ -194,7 +319,6 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
         context: context)) {
       return false;
     }
-
     if (!validateField(
         controller: universityController,
         fieldName: "Asal Universitas",
@@ -202,7 +326,6 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
         context: context)) {
       return false;
     }
-
     if (!validateField(
         controller: studentCountController,
         fieldName: "Jumlah Anak",
@@ -210,7 +333,6 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
         context: context)) {
       return false;
     }
-
     if (!validateField(
         controller: phoneController,
         fieldName: "No Telepon",
@@ -218,7 +340,6 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
         context: context)) {
       return false;
     }
-
     if (!validateField(
         controller: emailController,
         fieldName: "Email",
@@ -226,7 +347,11 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
         context: context)) {
       return false;
     }
+    return true;
+  }
 
+  // Validate fields for the second form
+  bool validateSecondFormFields(BuildContext context) {
     if (!validateField(
         controller: dateController,
         fieldName: "Tanggal Kegiatan",
@@ -234,15 +359,24 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
         context: context)) {
       return false;
     }
-
+    if (selectedTimeOption == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Please select a time option")));
+      return false;
+    }
+    if (uploadedFilePath == null) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Please upload a file")));
+      return false;
+    }
     return true;
   }
 
-  // Method to submit the details
+  // Method to submit the details, both forms combined
   Future<void> _submitStudyDetails() async {
     final String nama = nameController.text;
     final String asalUniversitas = universityController.text;
-    final String jumlahAnak = studentCountController.text;
+    final String jumlahPeserta = studentCountController.text;
     final String noTelepon = phoneController.text;
     final String email = emailController.text;
     final String tanggalKegiatan = dateController.text;
@@ -251,18 +385,20 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
     final countResponse =
         await Dio().get('http://localhost:3000/api/kunjungan_studi/count');
     final currentCount = int.parse(countResponse.data['count']);
-
     final String idKunjunganStudi = 'KJS_0${currentCount + 1}';
 
     final kunjunganStudi = KunjunganStudiData(
-        idKunjunganStudi: idKunjunganStudi,
-        namaPerwakilan: nama,
-        noTelp: noTelepon,
-        email: email,
-        asalUniversitas: asalUniversitas,
-        jumlahAnak: int.parse(jumlahAnak), // Convert to int if necessary
-        tanggalKegiatan: tanggalKegiatan,
-        status: "Menunggu");
+      idKunjunganStudi: idKunjunganStudi,
+      namaPerwakilan: nama,
+      noTelp: noTelepon,
+      email: email,
+      asalUniversitas: asalUniversitas,
+      jumlahPeserta: int.parse(jumlahPeserta),
+      tanggalKegiatan: tanggalKegiatan,
+      jamKegiatan: selectedTimeOption ?? '',
+      pathPersetujuanInstansi: uploadedFilePath ?? '',
+      status: "Menunggu",
+    );
 
     const String url =
         'http://localhost:3000/api/kunjungan_studi/submit-kunjungan-studi';
@@ -276,16 +412,14 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
 
       if (response.statusCode == 201) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Submission successful!')),
-        );
+            const SnackBar(content: Text('Submission successful!')));
         fadeNavigation(context, targetNavigation: const TimelineInterview());
       } else {
         throw Exception('Failed to submit details');
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Submission failed: $e')),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Submission failed: $e')));
     }
   }
 }

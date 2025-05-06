@@ -23,6 +23,10 @@ _PesertaMagangData _$PesertaMagangDataFromJson(Map<String, dynamic> json) =>
       pathTranskripNilai: json['path_transkrip_nilai'] as String,
       pathFotoDiri: json['path_foto_diri'] as String,
       statusMagang: json['status_magang'] as String,
+      passwordToken: json['password_token'] as String?,
+      pathSuratPenerimaan: json['path_surat_penerimaan'] as String?,
+      linkMeetInterview: json['link_meet_interview'] as String?,
+      catatanHr: json['catatan_hr'] as String?,
       nilaiAkhirMagang: (json['nilai_akhir_magang'] as num?)?.toInt(),
     );
 
@@ -43,5 +47,9 @@ Map<String, dynamic> _$PesertaMagangDataToJson(_PesertaMagangData instance) =>
       'path_transkrip_nilai': instance.pathTranskripNilai,
       'path_foto_diri': instance.pathFotoDiri,
       'status_magang': instance.statusMagang,
+      'password_token': instance.passwordToken,
+      'path_surat_penerimaan': instance.pathSuratPenerimaan,
+      'link_meet_interview': instance.linkMeetInterview,
+      'catatan_hr': instance.catatanHr,
       'nilai_akhir_magang': instance.nilaiAkhirMagang,
     };

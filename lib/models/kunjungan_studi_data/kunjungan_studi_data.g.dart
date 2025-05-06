@@ -13,9 +13,12 @@ _KunjunganStudiData _$KunjunganStudiDataFromJson(Map<String, dynamic> json) =>
       noTelp: json['no_telp'] as String,
       email: json['email'] as String,
       asalUniversitas: json['asal_universitas'] as String,
-      jumlahAnak: (json['jumlah_anak'] as num).toInt(),
+      jumlahPeserta: (json['jumlah_peserta'] as num).toInt(),
       tanggalKegiatan: json['tanggal_kegiatan'] as String,
+      jamKegiatan: json['jam_kegiatan'] as String,
+      pathPersetujuanInstansi: json['path_persetujuan_instansi'] as String,
       status: json['status'] as String,
+      passwordToken: json['password_token'] as String?,
     );
 
 Map<String, dynamic> _$KunjunganStudiDataToJson(_KunjunganStudiData instance) =>
@@ -25,7 +28,10 @@ Map<String, dynamic> _$KunjunganStudiDataToJson(_KunjunganStudiData instance) =>
       'no_telp': instance.noTelp,
       'email': instance.email,
       'asal_universitas': instance.asalUniversitas,
-      'jumlah_anak': instance.jumlahAnak,
+      'jumlah_peserta': instance.jumlahPeserta,
       'tanggal_kegiatan': instance.tanggalKegiatan,
+      'jam_kegiatan': instance.jamKegiatan,
+      'path_persetujuan_instansi': instance.pathPersetujuanInstansi,
       'status': instance.status,
+      'password_token': instance.passwordToken,
     };

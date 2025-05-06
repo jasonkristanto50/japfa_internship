@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:japfa_internship/components/widget_component.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
+import 'package:japfa_internship/function_variable/file_uploading_function.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
@@ -48,19 +49,16 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
   String? transcriptFileName;
   String? fotoDiriFileName;
 
-  String? cvFilePath = "assets/file_upload_peserta/cv_dummy_jason.jpg";
-  String? campusApprovalFilePath =
-      "assets/file_upload_peserta/persetujuan_univ_dummy_jason.pdf";
-  String? transcriptFilePath =
-      "assets/file_upload_peserta/transkrip_dummy_jason.pdf";
-  String? fotoDiriFilePath = "assets/file_upload_peserta/dummy_foto_diri.png";
+  String? cvFilePath;
+  String? campusApprovalFilePath;
+  String? transcriptFilePath;
+  String? fotoDiriFilePath;
 
   Uint8List? cvFile;
   Uint8List? campusApprovalFile;
   Uint8List? transcriptFile;
   Uint8List? fotoDiriFile;
 
-  final _visible = true;
   List<String> tipeDataFileUpload = [
     'pdf',
     'doc',
@@ -70,6 +68,12 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
     'jpeg'
   ];
   List<String> tipeDataFotoUpload = ['jpg', 'png', 'jpeg'];
+
+  final _visible = true;
+  String labelCV = 'CV';
+  String labelPersetujuanUniv = 'Persetujuan Univ';
+  String labelTranskripNilai = 'Transkrip Nilai';
+  String labelFotoDiri = 'Foto Diri';
 
   @override
   Widget build(BuildContext context) {
@@ -139,9 +143,9 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
 
   // Method to submit the form
   void _submitFormPesertaMagang() async {
-    if (cvFilePath != null &&
-        campusApprovalFilePath != null &&
-        transcriptFilePath != null) {
+    if (cvFileName != null &&
+        campusApprovalFileName != null &&
+        transcriptFileName != null) {
       try {
         // Set the file path
         cvFilePath =
@@ -196,18 +200,40 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
     return Column(
       children: [
         const SizedBox(height: 15),
-        buildFileField('CV', cvFileName, 'CV', false),
-        const SizedBox(height: 15),
-        buildFileField('Campus Approval', campusApprovalFileName,
-            'Campus Approval', false),
+        buildFileField(
+          labelPersetujuanUniv,
+          campusApprovalFileName,
+          () => pickFile(setState, labelPersetujuanUniv, false, updateFileData),
+          () => removeFile(setState, labelPersetujuanUniv, updateFileData),
+          () => {},
+        ),
         const SizedBox(height: 15),
         buildFileField(
-            'Score Transcript', transcriptFileName, 'Score Transcript', false),
+          labelCV,
+          cvFileName,
+          () => pickFile(setState, labelCV, false, updateFileData),
+          () => removeFile(setState, labelCV, updateFileData),
+          () => {},
+        ),
         const SizedBox(height: 15),
-        buildFileField('Foto Diri', fotoDiriFileName, 'Foto Diri', false),
+        buildFileField(
+          labelTranskripNilai,
+          transcriptFileName,
+          () => pickFile(setState, labelTranskripNilai, false, updateFileData),
+          () => removeFile(setState, labelTranskripNilai, updateFileData),
+          () => {},
+        ),
+        const SizedBox(height: 15),
+        buildFileField(
+          labelFotoDiri,
+          fotoDiriFileName,
+          () => pickFile(setState, labelFotoDiri, true, updateFileData),
+          () => removeFile(setState, labelFotoDiri, updateFileData),
+          () => {},
+        ),
         const SizedBox(height: 20),
         RoundedRectangleButton(
-          title: "Submit",
+          title: "Kirim",
           backgroundColor: japfaOrange,
           fontColor: Colors.white,
           onPressed: () {
@@ -222,92 +248,21 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
     );
   }
 
-  // Custom method to create file upload fields with delete functionality
-  Widget buildFileField(
-      String label, String? fileName, String field, bool isFoto) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 5),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: fileName == null
-              ? InkWell(
-                  onTap: () => pickFile(field, isFoto),
-                  child: const Center(child: Text('Click to upload file')),
-                )
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        const SizedBox(width: 10),
-                        const Icon(Icons.picture_as_pdf, size: 20), // PDF icon
-                        const SizedBox(width: 5),
-                        // Text for file name with ellipsis if the name is too long
-                        SizedBox(
-                          width: 200,
-                          child: Text(_getFileNameWithEllipsis(fileName),
-                              style: regular16),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.remove_circle_outline,
-                              color: Colors.red),
-                          onPressed: () => removeFile(field),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.remove_red_eye,
-                              color: Colors.blue),
-                          onPressed: () => openFilePreview(getFilePath(field)),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-        ),
-      ],
-    );
-  }
-
-  // Function to truncate the middle part of the file name
-  String _getFileNameWithEllipsis(String fileName) {
-    if (fileName.length <= 20) {
-      return fileName; // No truncation needed if the file name is short
-    }
-    // Get the first 12 characters, add ellipsis, and append the last 12 characters
-    String start = fileName.substring(0, 10);
-    String end = fileName.substring(fileName.length - 10);
-    return '$start....$end';
-  }
-
   // VALIDATE FIELD
   bool validateFileFields(BuildContext context) {
     // Check if the files are uploaded
-    if (!validateFileUpload('CV')) {
+    if (!validateFileUpload(labelCV)) {
       return false;
     }
 
-    if (!validateFileUpload('Campus Approval')) {
+    if (!validateFileUpload(labelPersetujuanUniv)) {
       return false;
     }
 
-    if (!validateFileUpload('Score Transcript')) {
+    if (!validateFileUpload(labelTranskripNilai)) {
       return false;
     }
-    if (!validateFileUpload('Foto Diri')) {
+    if (!validateFileUpload(labelFotoDiri)) {
       return false;
     }
 
@@ -317,13 +272,13 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
   // Validate file upload (check if files are selected)
   bool validateFileUpload(String field) {
     String? fileName;
-    if (field == 'CV') {
+    if (field == labelCV) {
       fileName = cvFileName;
-    } else if (field == 'Campus Approval') {
+    } else if (field == labelPersetujuanUniv) {
       fileName = campusApprovalFileName;
-    } else if (field == 'Score Transcript') {
+    } else if (field == labelTranskripNilai) {
       fileName = transcriptFileName;
-    } else if (field == 'Foto Diri') {
+    } else if (field == labelFotoDiri) {
       fileName = fotoDiriFileName;
     }
 
@@ -335,123 +290,20 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
     return true;
   }
 
-  /////////////////////////////////////////// FILE MANIPULATION /////////////////////////////////////////////////////////
-  // Method to pick files using file_picker package with validation
-  void pickFile(String field, bool isFoto) async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: isFoto ? tipeDataFotoUpload : tipeDataFileUpload,
-    );
-
-    if (result != null) {
-      String fileName = result.files.single.name;
-
-      // Web-specific handling
-      if (kIsWeb) {
-        // Access bytes for web
-        Uint8List? fileBytes = result.files.single.bytes;
-        if (fileBytes != null) {
-          // Handle the file bytes according to your needs
-          // For example, you might upload it directly to the server
-          setState(() {
-            if (field == 'CV') {
-              cvFileName = fileName;
-              cvFile = fileBytes;
-            } else if (field == 'Campus Approval') {
-              campusApprovalFileName = fileName;
-              campusApprovalFile = fileBytes;
-            } else if (field == 'Score Transcript') {
-              transcriptFileName = fileName;
-              transcriptFile = fileBytes;
-            } else if (field == 'Foto Diri') {
-              fotoDiriFileName = fileName;
-              fotoDiriFile = fileBytes;
-            }
-          });
-        }
-      } else {
-        // Mobile/Desktop handling
-        String? filePath = result.files.single.path;
-        setState(() {
-          if (field == 'CV') {
-            cvFileName = fileName;
-            cvFilePath = filePath;
-          } else if (field == 'Campus Approval') {
-            campusApprovalFileName = fileName;
-            campusApprovalFilePath = filePath;
-          } else if (field == 'Score Transcript') {
-            transcriptFileName = fileName;
-            transcriptFilePath = filePath;
-          } else if (field == 'Foto Diri') {
-            fotoDiriFileName = fileName;
-            fotoDiriFilePath = filePath;
-          }
-        });
-      }
-    } else {
-      // Handle the case where no file was selected
-      showSnackBar(context, 'No file selected.');
+// Function to update file data based on the field
+  void updateFileData(String field, String? fileName, Uint8List fileBytes) {
+    if (field == labelCV) {
+      cvFileName = fileName;
+      cvFile = fileBytes;
+    } else if (field == labelPersetujuanUniv) {
+      campusApprovalFileName = fileName;
+      campusApprovalFile = fileBytes;
+    } else if (field == labelTranskripNilai) {
+      transcriptFileName = fileName;
+      transcriptFile = fileBytes;
+    } else if (field == labelFotoDiri) {
+      fotoDiriFileName = fileName;
+      fotoDiriFile = fileBytes;
     }
-  }
-
-  // Method to remove the uploaded file
-  void removeFile(String field) {
-    setState(() {
-      if (field == 'CV') {
-        cvFileName = null;
-        cvFilePath = null;
-      } else if (field == 'Campus Approval') {
-        campusApprovalFileName = null;
-        campusApprovalFilePath = null;
-      } else if (field == 'Score Transcript') {
-        transcriptFileName = null;
-        transcriptFilePath = null;
-      } else if (field == 'Foto Diri') {
-        fotoDiriFileName = null;
-        fotoDiriFilePath = null;
-      }
-    });
-  }
-
-  // Method to open PDF file for preview
-  void openFilePreview(String? filePath) {
-    if (filePath != null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => PDFPreviewScreen(filePath: filePath),
-        ),
-      );
-    }
-  }
-
-  // Get file path based on field
-  String? getFilePath(String field) {
-    if (field == 'CV') {
-      return cvFilePath;
-    } else if (field == 'Campus Approval') {
-      return campusApprovalFilePath;
-    } else if (field == 'Score Transcript') {
-      return transcriptFilePath;
-    }
-    return null;
-  }
-}
-
-// Screen for previewing the PDF
-class PDFPreviewScreen extends StatelessWidget {
-  final String filePath;
-  const PDFPreviewScreen({super.key, required this.filePath});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Preview File"),
-      ),
-      body: PDFView(
-        filePath: filePath,
-      ),
-    );
   }
 }

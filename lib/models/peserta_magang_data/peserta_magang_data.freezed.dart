@@ -45,6 +45,14 @@ mixin _$PesertaMagangData {
   String get pathFotoDiri;
   @JsonKey(name: 'status_magang')
   String get statusMagang;
+  @JsonKey(name: 'password_token')
+  String? get passwordToken;
+  @JsonKey(name: 'path_surat_penerimaan')
+  String? get pathSuratPenerimaan;
+  @JsonKey(name: 'link_meet_interview')
+  String? get linkMeetInterview;
+  @JsonKey(name: 'catatan_hr')
+  String? get catatanHr;
   @JsonKey(name: 'nilai_akhir_magang')
   int? get nilaiAkhirMagang;
 
@@ -88,34 +96,47 @@ mixin _$PesertaMagangData {
                 other.pathFotoDiri == pathFotoDiri) &&
             (identical(other.statusMagang, statusMagang) ||
                 other.statusMagang == statusMagang) &&
+            (identical(other.passwordToken, passwordToken) ||
+                other.passwordToken == passwordToken) &&
+            (identical(other.pathSuratPenerimaan, pathSuratPenerimaan) ||
+                other.pathSuratPenerimaan == pathSuratPenerimaan) &&
+            (identical(other.linkMeetInterview, linkMeetInterview) ||
+                other.linkMeetInterview == linkMeetInterview) &&
+            (identical(other.catatanHr, catatanHr) ||
+                other.catatanHr == catatanHr) &&
             (identical(other.nilaiAkhirMagang, nilaiAkhirMagang) ||
                 other.nilaiAkhirMagang == nilaiAkhirMagang));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      idMagang,
-      nama,
-      departemen,
-      alamat,
-      noTelp,
-      email,
-      asalUniversitas,
-      angkatan,
-      nilaiUniv,
-      jurusan,
-      pathCv,
-      pathPersetujuanUniv,
-      pathTranskripNilai,
-      pathFotoDiri,
-      statusMagang,
-      nilaiAkhirMagang);
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        idMagang,
+        nama,
+        departemen,
+        alamat,
+        noTelp,
+        email,
+        asalUniversitas,
+        angkatan,
+        nilaiUniv,
+        jurusan,
+        pathCv,
+        pathPersetujuanUniv,
+        pathTranskripNilai,
+        pathFotoDiri,
+        statusMagang,
+        passwordToken,
+        pathSuratPenerimaan,
+        linkMeetInterview,
+        catatanHr,
+        nilaiAkhirMagang
+      ]);
 
   @override
   String toString() {
-    return 'PesertaMagangData(idMagang: $idMagang, nama: $nama, departemen: $departemen, alamat: $alamat, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, angkatan: $angkatan, nilaiUniv: $nilaiUniv, jurusan: $jurusan, pathCv: $pathCv, pathPersetujuanUniv: $pathPersetujuanUniv, pathTranskripNilai: $pathTranskripNilai, pathFotoDiri: $pathFotoDiri, statusMagang: $statusMagang, nilaiAkhirMagang: $nilaiAkhirMagang)';
+    return 'PesertaMagangData(idMagang: $idMagang, nama: $nama, departemen: $departemen, alamat: $alamat, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, angkatan: $angkatan, nilaiUniv: $nilaiUniv, jurusan: $jurusan, pathCv: $pathCv, pathPersetujuanUniv: $pathPersetujuanUniv, pathTranskripNilai: $pathTranskripNilai, pathFotoDiri: $pathFotoDiri, statusMagang: $statusMagang, passwordToken: $passwordToken, pathSuratPenerimaan: $pathSuratPenerimaan, linkMeetInterview: $linkMeetInterview, catatanHr: $catatanHr, nilaiAkhirMagang: $nilaiAkhirMagang)';
   }
 }
 
@@ -141,6 +162,10 @@ abstract mixin class $PesertaMagangDataCopyWith<$Res> {
       @JsonKey(name: 'path_transkrip_nilai') String pathTranskripNilai,
       @JsonKey(name: 'path_foto_diri') String pathFotoDiri,
       @JsonKey(name: 'status_magang') String statusMagang,
+      @JsonKey(name: 'password_token') String? passwordToken,
+      @JsonKey(name: 'path_surat_penerimaan') String? pathSuratPenerimaan,
+      @JsonKey(name: 'link_meet_interview') String? linkMeetInterview,
+      @JsonKey(name: 'catatan_hr') String? catatanHr,
       @JsonKey(name: 'nilai_akhir_magang') int? nilaiAkhirMagang});
 }
 
@@ -172,6 +197,10 @@ class _$PesertaMagangDataCopyWithImpl<$Res>
     Object? pathTranskripNilai = null,
     Object? pathFotoDiri = null,
     Object? statusMagang = null,
+    Object? passwordToken = freezed,
+    Object? pathSuratPenerimaan = freezed,
+    Object? linkMeetInterview = freezed,
+    Object? catatanHr = freezed,
     Object? nilaiAkhirMagang = freezed,
   }) {
     return _then(_self.copyWith(
@@ -235,6 +264,22 @@ class _$PesertaMagangDataCopyWithImpl<$Res>
           ? _self.statusMagang
           : statusMagang // ignore: cast_nullable_to_non_nullable
               as String,
+      passwordToken: freezed == passwordToken
+          ? _self.passwordToken
+          : passwordToken // ignore: cast_nullable_to_non_nullable
+              as String?,
+      pathSuratPenerimaan: freezed == pathSuratPenerimaan
+          ? _self.pathSuratPenerimaan
+          : pathSuratPenerimaan // ignore: cast_nullable_to_non_nullable
+              as String?,
+      linkMeetInterview: freezed == linkMeetInterview
+          ? _self.linkMeetInterview
+          : linkMeetInterview // ignore: cast_nullable_to_non_nullable
+              as String?,
+      catatanHr: freezed == catatanHr
+          ? _self.catatanHr
+          : catatanHr // ignore: cast_nullable_to_non_nullable
+              as String?,
       nilaiAkhirMagang: freezed == nilaiAkhirMagang
           ? _self.nilaiAkhirMagang
           : nilaiAkhirMagang // ignore: cast_nullable_to_non_nullable
@@ -262,6 +307,10 @@ class _PesertaMagangData implements PesertaMagangData {
       @JsonKey(name: 'path_transkrip_nilai') required this.pathTranskripNilai,
       @JsonKey(name: 'path_foto_diri') required this.pathFotoDiri,
       @JsonKey(name: 'status_magang') required this.statusMagang,
+      @JsonKey(name: 'password_token') this.passwordToken,
+      @JsonKey(name: 'path_surat_penerimaan') this.pathSuratPenerimaan,
+      @JsonKey(name: 'link_meet_interview') this.linkMeetInterview,
+      @JsonKey(name: 'catatan_hr') this.catatanHr,
       @JsonKey(name: 'nilai_akhir_magang') this.nilaiAkhirMagang});
   factory _PesertaMagangData.fromJson(Map<String, dynamic> json) =>
       _$PesertaMagangDataFromJson(json);
@@ -312,6 +361,18 @@ class _PesertaMagangData implements PesertaMagangData {
   @JsonKey(name: 'status_magang')
   final String statusMagang;
   @override
+  @JsonKey(name: 'password_token')
+  final String? passwordToken;
+  @override
+  @JsonKey(name: 'path_surat_penerimaan')
+  final String? pathSuratPenerimaan;
+  @override
+  @JsonKey(name: 'link_meet_interview')
+  final String? linkMeetInterview;
+  @override
+  @JsonKey(name: 'catatan_hr')
+  final String? catatanHr;
+  @override
   @JsonKey(name: 'nilai_akhir_magang')
   final int? nilaiAkhirMagang;
 
@@ -359,34 +420,47 @@ class _PesertaMagangData implements PesertaMagangData {
                 other.pathFotoDiri == pathFotoDiri) &&
             (identical(other.statusMagang, statusMagang) ||
                 other.statusMagang == statusMagang) &&
+            (identical(other.passwordToken, passwordToken) ||
+                other.passwordToken == passwordToken) &&
+            (identical(other.pathSuratPenerimaan, pathSuratPenerimaan) ||
+                other.pathSuratPenerimaan == pathSuratPenerimaan) &&
+            (identical(other.linkMeetInterview, linkMeetInterview) ||
+                other.linkMeetInterview == linkMeetInterview) &&
+            (identical(other.catatanHr, catatanHr) ||
+                other.catatanHr == catatanHr) &&
             (identical(other.nilaiAkhirMagang, nilaiAkhirMagang) ||
                 other.nilaiAkhirMagang == nilaiAkhirMagang));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      idMagang,
-      nama,
-      departemen,
-      alamat,
-      noTelp,
-      email,
-      asalUniversitas,
-      angkatan,
-      nilaiUniv,
-      jurusan,
-      pathCv,
-      pathPersetujuanUniv,
-      pathTranskripNilai,
-      pathFotoDiri,
-      statusMagang,
-      nilaiAkhirMagang);
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        idMagang,
+        nama,
+        departemen,
+        alamat,
+        noTelp,
+        email,
+        asalUniversitas,
+        angkatan,
+        nilaiUniv,
+        jurusan,
+        pathCv,
+        pathPersetujuanUniv,
+        pathTranskripNilai,
+        pathFotoDiri,
+        statusMagang,
+        passwordToken,
+        pathSuratPenerimaan,
+        linkMeetInterview,
+        catatanHr,
+        nilaiAkhirMagang
+      ]);
 
   @override
   String toString() {
-    return 'PesertaMagangData(idMagang: $idMagang, nama: $nama, departemen: $departemen, alamat: $alamat, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, angkatan: $angkatan, nilaiUniv: $nilaiUniv, jurusan: $jurusan, pathCv: $pathCv, pathPersetujuanUniv: $pathPersetujuanUniv, pathTranskripNilai: $pathTranskripNilai, pathFotoDiri: $pathFotoDiri, statusMagang: $statusMagang, nilaiAkhirMagang: $nilaiAkhirMagang)';
+    return 'PesertaMagangData(idMagang: $idMagang, nama: $nama, departemen: $departemen, alamat: $alamat, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, angkatan: $angkatan, nilaiUniv: $nilaiUniv, jurusan: $jurusan, pathCv: $pathCv, pathPersetujuanUniv: $pathPersetujuanUniv, pathTranskripNilai: $pathTranskripNilai, pathFotoDiri: $pathFotoDiri, statusMagang: $statusMagang, passwordToken: $passwordToken, pathSuratPenerimaan: $pathSuratPenerimaan, linkMeetInterview: $linkMeetInterview, catatanHr: $catatanHr, nilaiAkhirMagang: $nilaiAkhirMagang)';
   }
 }
 
@@ -414,6 +488,10 @@ abstract mixin class _$PesertaMagangDataCopyWith<$Res>
       @JsonKey(name: 'path_transkrip_nilai') String pathTranskripNilai,
       @JsonKey(name: 'path_foto_diri') String pathFotoDiri,
       @JsonKey(name: 'status_magang') String statusMagang,
+      @JsonKey(name: 'password_token') String? passwordToken,
+      @JsonKey(name: 'path_surat_penerimaan') String? pathSuratPenerimaan,
+      @JsonKey(name: 'link_meet_interview') String? linkMeetInterview,
+      @JsonKey(name: 'catatan_hr') String? catatanHr,
       @JsonKey(name: 'nilai_akhir_magang') int? nilaiAkhirMagang});
 }
 
@@ -445,6 +523,10 @@ class __$PesertaMagangDataCopyWithImpl<$Res>
     Object? pathTranskripNilai = null,
     Object? pathFotoDiri = null,
     Object? statusMagang = null,
+    Object? passwordToken = freezed,
+    Object? pathSuratPenerimaan = freezed,
+    Object? linkMeetInterview = freezed,
+    Object? catatanHr = freezed,
     Object? nilaiAkhirMagang = freezed,
   }) {
     return _then(_PesertaMagangData(
@@ -508,6 +590,22 @@ class __$PesertaMagangDataCopyWithImpl<$Res>
           ? _self.statusMagang
           : statusMagang // ignore: cast_nullable_to_non_nullable
               as String,
+      passwordToken: freezed == passwordToken
+          ? _self.passwordToken
+          : passwordToken // ignore: cast_nullable_to_non_nullable
+              as String?,
+      pathSuratPenerimaan: freezed == pathSuratPenerimaan
+          ? _self.pathSuratPenerimaan
+          : pathSuratPenerimaan // ignore: cast_nullable_to_non_nullable
+              as String?,
+      linkMeetInterview: freezed == linkMeetInterview
+          ? _self.linkMeetInterview
+          : linkMeetInterview // ignore: cast_nullable_to_non_nullable
+              as String?,
+      catatanHr: freezed == catatanHr
+          ? _self.catatanHr
+          : catatanHr // ignore: cast_nullable_to_non_nullable
+              as String?,
       nilaiAkhirMagang: freezed == nilaiAkhirMagang
           ? _self.nilaiAkhirMagang
           : nilaiAkhirMagang // ignore: cast_nullable_to_non_nullable

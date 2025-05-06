@@ -40,9 +40,6 @@ app.use('/api/pendaftar', pendaftarRouter);
 const adminRouter = require('./routes/admin');  
 app.use('/api/admin', adminRouter);  
 
-const loginRouter = require('./routes/login');  
-app.use('/api/login', loginRouter);
-
 const kunjunganStudiRouter = require('./routes/kunjungan_studi');  
 app.use('/api/kunjungan_studi', kunjunganStudiRouter);
 
@@ -51,3 +48,9 @@ app.use('/api/peserta_magang', pesertaMagangRouter);
 
 const departemenRouter = require('./routes/departemen');  
 app.use('/api/departemen', departemenRouter);
+
+const loginRouter = require('./routes/login');  
+app.use('/api/login', loginRouter);
+
+const file_uploadRouter = require('./routes/file_upload');  
+app.use('/api/file_upload', file_uploadRouter);

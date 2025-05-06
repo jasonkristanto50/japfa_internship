@@ -5,14 +5,27 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 String appName = "Japfa Internship";
 const String baseUrl = 'http://localhost:3000';
 Dio dio = Dio();
+int jumlahMaksimalPeserta = 55;
+
+var pilihanJamKunjunganStudi = [
+  const DropdownMenuItem<String>(
+    value: 'sesi1',
+    child: Text('Sesi 1 (08.30 - 12.00)'),
+  ),
+  const DropdownMenuItem<String>(
+    value: 'sesi2',
+    child: Text('Sesi 2 (13.00 - 16.00)'),
+  ),
+];
+
+// Colors
 Color japfaOrange = const Color.fromARGB(255, 252, 146, 48);
 Color lightBlue = const Color.fromARGB(255, 152, 209, 255);
 Color darkGrey = const Color.fromARGB(255, 50, 50, 50);
 
+// Image path
 String japfaBuduranImgPath = 'assets/japfa_buduran_landscape.jpg';
 String japfaLogoBackgroundImgPath = 'assets/japfa_logo_background.png';
-
-int jumlahMaksimalPeserta = 55;
 
 const String montserratFontFamily = 'assets/fonts/Montserrat';
 

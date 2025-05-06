@@ -13,20 +13,24 @@ const pool = new Pool({
 
 // Add a new Kunjungan Studi  
 router.post('/submit-kunjungan-studi', async (req, res) => {  
-    const { id_kunjungan_studi, nama_perwakilan, no_telp, email, asal_universitas, jumlah_anak, tanggal_kegiatan, status } = req.body;  
+  const { id_kunjungan_studi, nama_perwakilan, no_telp, email, asal_universitas, jumlah_peserta, tanggal_kegiatan, jam_kegiatan,path_persetujuan_instansi, status } = req.body;  
 
-    try {   
-        await pool.query(  
-            'INSERT INTO KUNJUNGAN_STUDI (id_kunjungan_studi, nama_perwakilan, no_telp, email, asal_universitas, jumlah_anak, tanggal_kegiatan, status) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',  
-            [id_kunjungan_studi, nama_perwakilan, no_telp, email, asal_universitas, jumlah_anak, tanggal_kegiatan, status]  
-        );  
-        res.status(201).json({ message: 'Kunjungan Studi added successfully!' });  
-    } catch (error) {  
-        console.error('Error adding Kunjungan Studi:', error);  
-        res.status(500).json({ error: 'Server error' });  
-    }  
-});  
+  // Validate required fields
+  if (!id_kunjungan_studi || !nama_perwakilan || !no_telp || !email || !asal_universitas || !jumlah_peserta || !tanggal_kegiatan || !jam_kegiatan || !path_persetujuan_instansi || !status) {
+      return res.status(400).json({ error: 'All fields are required' });
+  }
 
+  try {   
+      await pool.query(  
+          'INSERT INTO KUNJUNGAN_STUDI (id_kunjungan_studi, nama_perwakilan, no_telp, email, asal_universitas, jumlah_peserta, tanggal_kegiatan, jam_kegiatan, path_persetujuan_instansi, status) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',  
+          [id_kunjungan_studi, nama_perwakilan, no_telp, email, asal_universitas, parseInt(jumlah_peserta), tanggal_kegiatan, jam_kegiatan, path_persetujuan_instansi, status] // Ensure jumlah_peserta is parsed as an integer
+      );  
+      res.status(201).json({ message: 'Kunjungan Studi added successfully!' });  
+  } catch (error) {  
+      console.error('Error adding Kunjungan Studi:', error);  
+      res.status(500).json({ error: 'Server error' });  
+  }  
+});
 // Get all Kunjungan Studi  
 router.get('/fetch-all-kunjungan-data', async (req, res) => {  
     try {  

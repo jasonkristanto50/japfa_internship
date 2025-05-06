@@ -1,12 +1,8 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:japfa_internship/components/widget_component.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
-import 'package:japfa_internship/function_variable/file_uploading_function.dart';
+import 'package:japfa_internship/function_variable/file_uploading.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
@@ -43,7 +39,6 @@ class SubmissionInternFile extends StatefulWidget {
 }
 
 class _SubmissionInternFileState extends State<SubmissionInternFile> {
-  // TODO : Semua File disini masih DUMMY dan HARUS DIUBAH
   String? cvFileName;
   String? campusApprovalFileName;
   String? transcriptFileName;
@@ -187,7 +182,6 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
 
         // Update jumlahPengajuan based on department name
       } catch (error) {
-        print('Error occurred: $error');
         showSnackBar(context, 'An error occurred while submitting the form');
       }
     } else {
@@ -200,35 +194,42 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
     return Column(
       children: [
         const SizedBox(height: 15),
-        buildFileField(
+        FileUploading().buildFileField(
           labelPersetujuanUniv,
           campusApprovalFileName,
-          () => pickFile(setState, labelPersetujuanUniv, false, updateFileData),
-          () => removeFile(setState, labelPersetujuanUniv, updateFileData),
+          () => FileUploading()
+              .pickFile(setState, labelPersetujuanUniv, false, updateFileData),
+          () => FileUploading()
+              .removeFile(setState, labelPersetujuanUniv, updateFileData),
           () => {},
         ),
         const SizedBox(height: 15),
-        buildFileField(
+        FileUploading().buildFileField(
           labelCV,
           cvFileName,
-          () => pickFile(setState, labelCV, false, updateFileData),
-          () => removeFile(setState, labelCV, updateFileData),
+          () => FileUploading()
+              .pickFile(setState, labelCV, false, updateFileData),
+          () => FileUploading().removeFile(setState, labelCV, updateFileData),
           () => {},
         ),
         const SizedBox(height: 15),
-        buildFileField(
+        FileUploading().buildFileField(
           labelTranskripNilai,
           transcriptFileName,
-          () => pickFile(setState, labelTranskripNilai, false, updateFileData),
-          () => removeFile(setState, labelTranskripNilai, updateFileData),
+          () => FileUploading()
+              .pickFile(setState, labelTranskripNilai, false, updateFileData),
+          () => FileUploading()
+              .removeFile(setState, labelTranskripNilai, updateFileData),
           () => {},
         ),
         const SizedBox(height: 15),
-        buildFileField(
+        FileUploading().buildFileField(
           labelFotoDiri,
           fotoDiriFileName,
-          () => pickFile(setState, labelFotoDiri, true, updateFileData),
-          () => removeFile(setState, labelFotoDiri, updateFileData),
+          () => FileUploading()
+              .pickFile(setState, labelFotoDiri, true, updateFileData),
+          () => FileUploading()
+              .removeFile(setState, labelFotoDiri, updateFileData),
           () => {},
         ),
         const SizedBox(height: 20),

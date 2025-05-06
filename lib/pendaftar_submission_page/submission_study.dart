@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:japfa_internship/function_variable/api_service_function.dart';
+import 'package:japfa_internship/function_variable/file_uploading.dart';
 import 'package:japfa_internship/models/kunjungan_studi_data/kunjungan_studi_data.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:dio/dio.dart';
@@ -6,6 +9,7 @@ import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/pendaftar_submission_page/timeline_interview.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/components/widget_component.dart';
+import 'package:intl/intl.dart';
 
 class SubmissionStudy extends StatefulWidget {
   const SubmissionStudy({super.key});
@@ -15,8 +19,12 @@ class SubmissionStudy extends StatefulWidget {
 }
 
 class _SubmissionStudyState extends State<SubmissionStudy> {
-  bool _isFirstForm = true; // Flag to toggle between forms
+  bool _isFirstForm = true;
   bool _visible = false;
+  String labelFieldPersetujuan = 'Dokumen Persetujuan Instansi';
+  String? persetujuanInstansiFileName;
+  String? persetujuanInstansiPath;
+  Uint8List? persetujuanInstansiFile;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController universityController = TextEditingController();
@@ -27,9 +35,8 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
   // Second form controllers
   DateTime? selectedDate;
   final TextEditingController dateController = TextEditingController();
-  TimeOfDay? selectedTime;
-  String? selectedTimeOption;
-  String? uploadedFilePath; // File upload path
+  TimeOfDay? selectedTie;
+  String? selectedSession;
 
   @override
   void initState() {
@@ -56,12 +63,14 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
             fit: BoxFit.cover,
           ),
         ),
-        child: _isFirstForm ? _buildKunjunganStudiForm() : _buildSecondForm(),
+        child: _isFirstForm
+            ? _buildKunjunganStudiForm()
+            : _buildKunjunganStudiForm2(),
       ),
     );
   }
 
-  // First form without date
+  // Form pertama
   Widget _buildKunjunganStudiForm() {
     return Center(
       child: AnimatedOpacity(
@@ -143,8 +152,8 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
     );
   }
 
-  // Second form with date, time, and file upload
-  Widget _buildSecondForm() {
+  // Form bagian kedua
+  Widget _buildKunjunganStudiForm2() {
     return Center(
       child: AnimatedOpacity(
         opacity: _visible ? 1.0 : 0.0,
@@ -191,19 +200,27 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
                   ],
                 ),
                 const SizedBox(height: 10),
-                buildDateField(),
+                buildTanggalField(),
                 const SizedBox(height: 15),
-                buildTimeOptions(),
+                buildJamKunjungan(),
                 const SizedBox(height: 15),
-                buildFileUploadField(),
+                FileUploading().buildFileField(
+                  labelFieldPersetujuan,
+                  persetujuanInstansiFileName,
+                  () => FileUploading().pickFile(
+                      setState, labelFieldPersetujuan, false, updateFileData),
+                  () => FileUploading().removeFile(
+                      setState, labelFieldPersetujuan, updateFileData),
+                  () => {},
+                ),
                 const SizedBox(height: 20),
                 RoundedRectangleButton(
-                  title: "Submit",
+                  title: "Kirim",
                   backgroundColor: japfaOrange,
                   fontColor: Colors.white,
                   onPressed: () async {
                     if (validateSecondFormFields(context)) {
-                      await _submitStudyDetails();
+                      await _submitKunjunganStudiData();
                     }
                   },
                 ),
@@ -215,8 +232,8 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
     );
   }
 
-  // Date field method for second form
-  Widget buildDateField() {
+  // Date field
+  Widget buildTanggalField() {
     return TextField(
       controller: dateController,
       readOnly: true,
@@ -231,66 +248,28 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
     );
   }
 
-  // Time option selection method
-  Widget buildTimeOptions() {
+// Pilihan jam kunjungan
+  Widget buildJamKunjungan() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Jam Kegiatan:', style: TextStyle(fontSize: 16)),
-        ListTile(
-          title: const Text('Morning'),
-          leading: Radio<String>(
-            value: 'Morning',
-            groupValue: selectedTimeOption,
-            onChanged: (value) {
-              setState(() {
-                selectedTimeOption = value;
-              });
-            },
-          ),
-        ),
-        ListTile(
-          title: const Text('Afternoon'),
-          leading: Radio<String>(
-            value: 'Afternoon',
-            groupValue: selectedTimeOption,
-            onChanged: (value) {
-              setState(() {
-                selectedTimeOption = value;
-              });
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  // File upload field method
-  Widget buildFileUploadField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('Upload File:', style: TextStyle(fontSize: 16)),
-        ElevatedButton(
-          onPressed: () async {
-            // Implement your file picker logic here
-            // For example, you can use file_picker package to pick a file
-            // final result = await FilePicker.platform.pickFiles();
-            // if (result != null) {
-            //   setState(() {
-            //     uploadedFilePath = result.files.single.path;
-            //   });
-            // }
+        Text('Jam Kegiatan:', style: regular16),
+        DropdownButton<String>(
+          value: selectedSession,
+          hint: const Text('Pilih Jam'),
+          items: pilihanJamKunjunganStudi,
+          onChanged: (value) {
+            setState(() {
+              selectedSession = value;
+            });
           },
-          child: const Text('Choose File'),
+          isExpanded: true,
         ),
-        if (uploadedFilePath != null && uploadedFilePath!.isNotEmpty)
-          Text('Uploaded File: $uploadedFilePath'),
       ],
     );
   }
 
-  // Method to select the date
+// Method to select the date
   Future<void> _selectDate(BuildContext context) async {
     final DateTime now = DateTime.now();
     final DateTime firstAvailableDate = now.add(const Duration(days: 1));
@@ -300,12 +279,19 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
       initialDate: selectedDate ?? firstAvailableDate,
       firstDate: firstAvailableDate,
       lastDate: DateTime(2101),
+      selectableDayPredicate: (DateTime date) {
+        // Senin, Jumat, Sabtu, Minggu tidak boleh dipilih untuk kunjungan
+        return date.weekday != DateTime.monday &&
+            date.weekday != DateTime.friday &&
+            date.weekday != DateTime.saturday &&
+            date.weekday != DateTime.sunday;
+      },
     );
 
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        dateController.text = "${picked.toLocal()}".split(' ')[0];
+        dateController.text = DateFormat('dd-mm-yyyy').format(picked);
       });
     }
   }
@@ -359,21 +345,26 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
         context: context)) {
       return false;
     }
-    if (selectedTimeOption == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please select a time option")));
+    if (selectedSession == null) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Silahkan pilih jam")));
       return false;
     }
-    if (uploadedFilePath == null) {
+    if (persetujuanInstansiFileName == null) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Please upload a file")));
+          .showSnackBar(const SnackBar(content: Text("Tolong upload file ")));
       return false;
     }
     return true;
   }
 
-  // Method to submit the details, both forms combined
-  Future<void> _submitStudyDetails() async {
+  void updateFileData(String field, String? fileName, Uint8List fileBytes) {
+    persetujuanInstansiFileName = fileName;
+    persetujuanInstansiFile = fileBytes;
+  }
+
+  // Submit Kunjungan Studi Data
+  Future<void> _submitKunjunganStudiData() async {
     final String nama = nameController.text;
     final String asalUniversitas = universityController.text;
     final String jumlahPeserta = studentCountController.text;
@@ -387,6 +378,9 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
     final currentCount = int.parse(countResponse.data['count']);
     final String idKunjunganStudi = 'KJS_0${currentCount + 1}';
 
+    persetujuanInstansiPath = await ApiService().uploadFileToServer(
+        persetujuanInstansiFile!, persetujuanInstansiFileName!);
+
     final kunjunganStudi = KunjunganStudiData(
       idKunjunganStudi: idKunjunganStudi,
       namaPerwakilan: nama,
@@ -395,8 +389,8 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
       asalUniversitas: asalUniversitas,
       jumlahPeserta: int.parse(jumlahPeserta),
       tanggalKegiatan: tanggalKegiatan,
-      jamKegiatan: selectedTimeOption ?? '',
-      pathPersetujuanInstansi: uploadedFilePath ?? '',
+      jamKegiatan: selectedSession!,
+      pathPersetujuanInstansi: persetujuanInstansiPath!,
       status: "Menunggu",
     );
 

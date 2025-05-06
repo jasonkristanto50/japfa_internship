@@ -6,25 +6,32 @@ import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.
 class ApiService {
   final Dio _dio = Dio();
 
-  ////////////////////////////////////////////// PESERTA MAGANG  //////////////////////////////////////////////////
+  /////////////////////////////////////////////// UPLOAD FILE ///////////////////////////////////////////
 
-  // Upload file to server
   Future<String> uploadFileToServer(
       Uint8List fileBytes, String fileName) async {
     final formData = FormData.fromMap({
       'file': MultipartFile.fromBytes(fileBytes, filename: fileName),
     });
 
-    final response = await Dio().post(
-        'http://localhost:3000/api/peserta_magang/upload-file',
-        data: formData);
+    try {
+      final response = await Dio().post(
+        'http://localhost:3000/api/file_upload/upload-file',
+        data: formData,
+      );
 
-    if (response.statusCode == 200) {
-      return response.data['filePath']; // Adjust based on server response
-    } else {
-      throw Exception('Failed to upload file');
+      if (response.statusCode == 200) {
+        return response.data['filePath']; // Adjust based on server response
+      } else {
+        throw Exception('Failed to upload file: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Simplified error handling
+      throw Exception('An error occurred while uploading the file: $e');
     }
   }
+
+  ////////////////////////////////////////////// PESERTA MAGANG  //////////////////////////////////////////////////
 
   Future<void> submitPesertaMagang(PesertaMagangData data) async {
     try {

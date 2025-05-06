@@ -1,8 +1,6 @@
 const express = require('express');  
 const router = express.Router();  
-const { Pool } = require('pg');
-const multer = require('multer'); // Import multer  
-const path = require('path'); // Import path module   
+const { Pool } = require('pg'); 
 require('dotenv').config();  
 
 const pool = new Pool({  
@@ -13,30 +11,7 @@ const pool = new Pool({
     port: process.env.DB_PORT || 5432,  
 });  
 
-//////////////////////////////////////////// FILE UPLOADS ///////////////////////////////////////////////////////////////
 
-// Configure multer for file uploads  
-{const storage = multer.diskStorage({  
-    destination: (req, file, cb) => {  
-      cb(null, 'uploads/'); // Specify the upload directory -> jpf_internship-api/uploads 
-    },  
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now();
-        cb(null, file.originalname + '-' + uniqueSuffix +path.extname(file.originalname)); // Ensure unique filenames
-    }, 
-  });  
-  
-  const upload = multer({ storage: storage });  
-  
-  // New route for file upload  
-  router.post('/upload-file', upload.single('file'), (req, res) => {  
-    if (!req.file) {  
-      return res.status(400).json({ error: 'No file uploaded' });  
-    }  
-  
-    const apiFilePath = `/api/jpf_internship-api/uploads/${req.file.filename}`; // Save the file path  
-    return res.status(200).json({ message: 'File uploaded successfully', filePath: apiFilePath });  
-  }); 
 
 // Add a new Peserta Magang  
 router.post('/submit-peserta-magang', async (req, res) => {  
@@ -87,7 +62,6 @@ router.post('/submit-peserta-magang', async (req, res) => {
         res.status(500).json({ error: 'Server error', error });  
     }  
 });  
-}
 ////////////////////////////////////////////////// FETCH DATA ///////////////////////////////////////////////////////
 
 // Get all Peserta Magang  

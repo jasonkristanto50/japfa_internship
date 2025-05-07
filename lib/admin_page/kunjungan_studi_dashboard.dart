@@ -125,24 +125,23 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
                     width: 1,
                   ),
                   columns: const [
-                    DataColumn(label: Text('Tanggal')),
                     DataColumn(label: Text('Asal Universitas')),
+                    DataColumn(label: Text('Tanggal')),
+                    DataColumn(label: Text('Jam Kegiatan')),
                     DataColumn(label: Text('Nama Perwakilan')),
-                    DataColumn(label: Text('No Telp')),
                     DataColumn(label: Text('Email')),
                     DataColumn(label: Text('Jumlah Anak')),
                     DataColumn(label: Text('Status')),
                     DataColumn(label: Text('Aksi')),
                   ],
                   rows: filteredKunjunganData.map((kunjungan) {
+                    String infoJamDariSesi = kunjungan.jamKegiatan == 'sesi1'
+                        ? 'Sesi 1 ($durasiSesi1)'
+                        : (kunjungan.jamKegiatan == 'sesi2'
+                            ? 'Sesi 1 ($durasiSesi2)'
+                            : '');
                     return DataRow(
                       cells: [
-                        DataCell(
-                          Text(
-                            kunjungan.tanggalKegiatan,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
                         DataCell(
                           Text(
                             kunjungan.asalUniversitas,
@@ -151,13 +150,19 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
                         ),
                         DataCell(
                           Text(
-                            kunjungan.namaPerwakilan,
+                            kunjungan.tanggalKegiatan,
                             textAlign: TextAlign.center,
                           ),
                         ),
                         DataCell(
                           Text(
-                            kunjungan.noTelp,
+                            (infoJamDariSesi),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        DataCell(
+                          Text(
+                            kunjungan.namaPerwakilan,
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -194,6 +199,7 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
                               children: [
                                 RoundedRectangleButton(
                                   title: "DETAIL",
+                                  style: regular16,
                                   backgroundColor: lightOrange,
                                   height: 30,
                                   width: 100,
@@ -202,7 +208,8 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
                                 ),
                                 SizedBox(width: 8.w),
                                 RoundedRectangleButton(
-                                  title: "RESPOND",
+                                  title: "RESPON",
+                                  style: regular16,
                                   backgroundColor: lightBlue,
                                   height: 30,
                                   width: 100,
@@ -226,6 +233,9 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
   }
 
   void _showDetail(KunjunganStudiData kunjungan) {
+    String infoJamDariSesi = kunjungan.jamKegiatan == 'sesi1'
+        ? 'Sesi 1 ($durasiSesi1)'
+        : (kunjungan.jamKegiatan == 'sesi2' ? 'Sesi 1 ($durasiSesi2)' : '');
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -256,7 +266,7 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
                     verticalPadding: 5),
                 buildDataInfoField(
                     label: 'Jam Kegiatan',
-                    value: kunjungan.jamKegiatan,
+                    value: infoJamDariSesi,
                     verticalPadding: 5),
                 buildDataInfoField(
                     label: 'Jumlah Peserta',

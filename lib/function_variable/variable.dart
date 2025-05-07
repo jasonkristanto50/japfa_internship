@@ -7,14 +7,16 @@ const String baseUrl = 'http://localhost:3000';
 Dio dio = Dio();
 int jumlahMaksimalPeserta = 55;
 
+String durasiSesi1 = '08.30 - 12.00';
+String durasiSesi2 = '13.00 - 16.00';
 var pilihanJamKunjunganStudi = [
-  const DropdownMenuItem<String>(
+  DropdownMenuItem<String>(
     value: 'sesi1',
-    child: Text('Sesi 1 (08.30 - 12.00)'),
+    child: Text('Sesi 1 ($durasiSesi1)'),
   ),
-  const DropdownMenuItem<String>(
+  DropdownMenuItem<String>(
     value: 'sesi2',
-    child: Text('Sesi 2 (13.00 - 16.00)'),
+    child: Text('Sesi 2 ($durasiSesi2)'),
   ),
 ];
 

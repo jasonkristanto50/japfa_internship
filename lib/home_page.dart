@@ -112,8 +112,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
   }
 
   Widget _buildWelcomeContainer() {
-    final isLogin = ref.watch(loginProvider).isLoggedIn;
-
     return Center(
       child: Container(
         padding: const EdgeInsets.all(30.0),
@@ -121,10 +119,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(20.0),
         ),
-        // No fixed constraints, allow the content to dictate size
-        width: 350, // Set a width if needed for consistency
+        width: 350,
         child: Column(
-          mainAxisSize: MainAxisSize.min, // Ensure the column size is minimum
+          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
@@ -138,18 +135,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 30),
-            if (!isLogin) ...[
-              // Login Button
-              RoundedRectangleButton(
-                title: 'Login',
-                style: regular30,
-                fontColor: japfaOrange,
-                backgroundColor: Colors.white,
-                outlineColor: japfaOrange,
-                onPressed: _navigateToLogin,
-              ),
-              const SizedBox(height: 20),
-            ],
             // New Kunjungan Studi Button
             RoundedRectangleButton(
               title: 'Kunjungan Studi',
@@ -241,22 +226,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
   }
 
   void kunjunganStudiOnPressed() {
-    final isLoggedIn = ref.read(loginProvider).isLoggedIn;
-    if (!isLoggedIn) {
-      showDialog(
-        context: context,
-        builder: (context) => CustomLoginDialog(
-          onLoginPressed: () {
-            fadeNavigation(context, targetNavigation: const LoginScreen());
-          },
-        ),
-      );
-    } else {
-      // If already login
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (_) => const SubmissionStudy()),
-      );
-    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const SubmissionStudy()),
+    );
   }
 }

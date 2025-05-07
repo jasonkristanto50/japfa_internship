@@ -413,27 +413,12 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
   }
 
   void applyDaftarFunction() {
-    final isLoggedIn = ref.read(loginProvider).isLoggedIn;
-    if (!isLoggedIn) {
-      showDialog(
-        context: context,
-        builder: (context) => CustomLoginDialog(
-          onLoginPressed: () {
-            Navigator.pop(context); // pop dialog card
-            fadeNavigation(context, targetNavigation: const LoginScreen());
-          },
-        ),
-      );
-    } else {
-      // If already login
-      Navigator.pop(context);
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (_) => SubmissionIntern(
-                  departmentName: widget.title,
-                )),
-      );
-    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (_) => SubmissionIntern(
+                departmentName: widget.title,
+              )),
+    );
   }
 }

@@ -313,7 +313,13 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
           },
           onReject: () {
             Navigator.of(context).pop();
-            _handleResponse(kunjungan, false); // Reject
+            return showCustomConfirmDeleteWithNote(
+              context: context,
+              title: "Apakah Yakin Menolak ?",
+              message: "Silahkan berikan catatan",
+              onReject: () => _handleResponse(kunjungan, false),
+              onCancel: () => Navigator.pop(context),
+            );
           },
         );
       },

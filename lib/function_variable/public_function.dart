@@ -94,6 +94,102 @@ Widget buildDataInfoField(
   );
 }
 
+void showCustomConfirmDeleteWithNote({
+  required BuildContext context,
+  required String title,
+  required String message,
+  required VoidCallback onReject,
+  required VoidCallback onCancel,
+}) {
+  final TextEditingController noteController = TextEditingController();
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        elevation: 5.0,
+        child: Container(
+          width: 350,
+          height: 350,
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Title
+              Text(title, style: bold24.copyWith(color: japfaOrange)),
+              const SizedBox(height: 16),
+              // Message
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: regular20,
+              ),
+              const SizedBox(height: 16),
+              // TextField for notes
+              TextField(
+                controller: noteController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Tulis Catatan...',
+                ),
+                maxLines: 6,
+              ),
+              const Spacer(),
+              // Buttons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Reject Button
+                  ElevatedButton(
+                    onPressed: () {
+                      onReject();
+                      noteController.clear(); // Clear the input field
+                      Navigator.of(context).pop(); // Close the dialog
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.red,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text('Ditolak'),
+                  ),
+                  const SizedBox(width: 16),
+                  // Accept Button
+                  ElevatedButton(
+                    onPressed: () {
+                      onCancel();
+                      noteController.clear();
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.green,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text('Diterima'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
 enum FieldType {
   name,
   school,

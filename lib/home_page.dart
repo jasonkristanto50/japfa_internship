@@ -7,7 +7,6 @@ import 'package:japfa_internship/authentication/login.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
 import 'package:japfa_internship/models/departemen_data/departemen_data.dart';
 import 'package:japfa_internship/navbar.dart';
-import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/components/widget_component.dart';
 import 'package:japfa_internship/pendaftar_submission_page/submission_study.dart';

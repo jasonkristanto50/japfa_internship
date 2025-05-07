@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:japfa_internship/authentication/login.dart';
-import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/components/widget_component.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
-import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/pendaftar_submission_page/submission_intern_text.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 

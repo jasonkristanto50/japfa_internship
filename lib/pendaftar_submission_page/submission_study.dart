@@ -291,7 +291,7 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        dateController.text = DateFormat('dd-mm-yyyy').format(picked);
+        dateController.text = DateFormat('dd-MM-yyyy').format(picked);
       });
     }
   }

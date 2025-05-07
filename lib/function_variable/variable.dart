@@ -20,6 +20,7 @@ var pilihanJamKunjunganStudi = [
 
 // Colors
 Color japfaOrange = const Color.fromARGB(255, 252, 146, 48);
+Color lightOrange = const Color(0xFFF7D39F);
 Color lightBlue = const Color.fromARGB(255, 152, 209, 255);
 Color darkGrey = const Color.fromARGB(255, 50, 50, 50);
 

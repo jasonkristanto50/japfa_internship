@@ -33,8 +33,11 @@ const storage = multer.diskStorage({
     if (!req.file) {  
       return res.status(400).json({ error: 'No file uploaded' });  
     }  
+
+    // Path in where the file stored
+    const filename = req.file.filename;
+    const filePath = `/api/jpf_internship-api/uploads/${filename}`;
   
-    const filePath = req.file.path; // Save the file path  
     return res.status(200).json({ message: 'File uploaded successfully', filePath: filePath });  
   }); 
 

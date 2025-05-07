@@ -78,16 +78,23 @@ class _PendaftaranMagangDetailPageState
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              buildInfoField('Nama', peserta.nama),
-                              buildInfoField('No. Telp', peserta.noTelp),
-                              buildInfoField('Email', peserta.email),
-                              buildInfoField(
-                                  'Universitas', peserta.asalUniversitas),
-                              buildInfoField('Jurusan', peserta.jurusan),
-                              buildInfoField(
-                                  'Angkatan', peserta.angkatan.toString()),
-                              buildInfoField(
-                                  'IPK', peserta.nilaiUniv.toString()),
+                              buildDataInfoField(
+                                  label: "Nama", value: peserta.nama),
+                              buildDataInfoField(
+                                  label: "No. Telp", value: peserta.noTelp),
+                              buildDataInfoField(
+                                  label: "Email", value: peserta.email),
+                              buildDataInfoField(
+                                  label: "Universitas",
+                                  value: peserta.asalUniversitas),
+                              buildDataInfoField(
+                                  label: "Jurusan", value: peserta.jurusan),
+                              buildDataInfoField(
+                                  label: "Angkatan",
+                                  value: peserta.angkatan.toString()),
+                              buildDataInfoField(
+                                  label: "IPK",
+                                  value: peserta.nilaiUniv.toString()),
                             ],
                           ),
                         ),
@@ -200,29 +207,6 @@ class _PendaftaranMagangDetailPageState
           (BuildContext context, Object error, StackTrace? stackTrace) {
         return const Center(child: Text('Failed to load image.'));
       },
-    );
-  }
-
-  Widget buildFileButton(String title, VoidCallback onPressed) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('$title:', style: bold14),
-          const SizedBox(height: 5), // Space between label and button
-          RoundedRectangleButton(
-            title: "Tampilkan",
-            style: regular14,
-            fontColor: Colors.white,
-            backgroundColor: japfaOrange,
-            width: 150,
-            height: 35,
-            rounded: 5,
-            onPressed: onPressed,
-          ),
-        ],
-      ),
     );
   }
 

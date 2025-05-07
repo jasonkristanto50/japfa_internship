@@ -156,7 +156,7 @@ class _DepartemenMagangDashboardState extends State<DepartemenMagangDashboard> {
                           children: [
                             RoundedRectangleButton(
                               title: 'EDIT',
-                              backgroundColor: const Color(0xFFF7D39F),
+                              backgroundColor: lightOrange,
                               height: 30,
                               width: 85,
                               rounded: 5,

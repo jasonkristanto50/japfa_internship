@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/models/kunjungan_studi_data/kunjungan_studi_data.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/components/widget_component.dart';
@@ -75,10 +76,12 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
 
         // Sort by date (tanggalKegiatan) in descending order (latest first)
         kunjunganList.sort((a, b) {
-          // Assuming 'tanggalKegiatan' is a string in the format 'YYYY-MM-DD'
-          final dateA = DateTime.parse(a.tanggalKegiatan);
-          final dateB = DateTime.parse(b.tanggalKegiatan);
-          return dateB.compareTo(dateA); // To sort in descending order
+          // Parse the date format 'DD-MM-YYYY'
+          final dateA =
+              DateTime.parse(a.tanggalKegiatan.split('-').reversed.join('-'));
+          final dateB =
+              DateTime.parse(b.tanggalKegiatan.split('-').reversed.join('-'));
+          return dateA.compareTo(dateB); // To sort in ascending order
         });
       });
     } catch (e) {
@@ -105,7 +108,7 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
             ],
           ),
           child: SizedBox(
-            height: 700.h, // Set a fixed height as required
+            height: 700.h,
             child: SingleChildScrollView(
               // Vertical Scroll
               child: SingleChildScrollView(
@@ -186,13 +189,27 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
                         DataCell(
                           Align(
                             alignment: Alignment.center,
-                            child: RoundedRectangleButton(
-                              title: "RESPOND",
-                              backgroundColor: lightBlue,
-                              height: 30,
-                              width: 150,
-                              rounded: 5,
-                              onPressed: () => _respond(kunjungan),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                RoundedRectangleButton(
+                                  title: "DETAIL",
+                                  backgroundColor: lightOrange,
+                                  height: 30,
+                                  width: 100,
+                                  rounded: 5,
+                                  onPressed: () => _showDetail(kunjungan),
+                                ),
+                                SizedBox(width: 8.w),
+                                RoundedRectangleButton(
+                                  title: "RESPOND",
+                                  backgroundColor: lightBlue,
+                                  height: 30,
+                                  width: 100,
+                                  rounded: 5,
+                                  onPressed: () => _respond(kunjungan),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -205,6 +222,71 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showDetail(KunjunganStudiData kunjungan) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Center(
+            child: Text(
+              'Detail Kunjungan Studi',
+              style: bold24,
+            ),
+          ),
+          backgroundColor: Colors.white,
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                buildDataInfoField(
+                    label: 'Asal Universitas',
+                    value: kunjungan.asalUniversitas,
+                    verticalPadding: 5),
+                buildDataInfoField(
+                    label: 'Nama Perwakilan',
+                    value: kunjungan.namaPerwakilan,
+                    verticalPadding: 5),
+                buildDataInfoField(
+                    label: 'Tanggal Kegiatan',
+                    value: kunjungan.tanggalKegiatan,
+                    verticalPadding: 5),
+                buildDataInfoField(
+                    label: 'Jam Kegiatan',
+                    value: kunjungan.jamKegiatan,
+                    verticalPadding: 5),
+                buildDataInfoField(
+                    label: 'Jumlah Peserta',
+                    value: kunjungan.jumlahPeserta.toString(),
+                    verticalPadding: 5),
+                buildDataInfoField(
+                    label: 'Email', value: kunjungan.email, verticalPadding: 5),
+                buildDataInfoField(
+                    label: 'No. Telepon',
+                    value: kunjungan.noTelp,
+                    verticalPadding: 5),
+                buildDataInfoField(
+                    label: 'Status',
+                    value: kunjungan.status,
+                    verticalPadding: 5),
+                const SizedBox(height: 10),
+                buildFileButton('Persetujuan Kampus', () {
+                  launchURLImagePath(kunjungan.pathPersetujuanInstansi);
+                }),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: const Text('TUTUP'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
     );
   }
 

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:japfa_internship/components/widget_component.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -35,6 +36,61 @@ Widget buildTextField(String label, TextEditingController controller,
       border: const OutlineInputBorder(),
     ),
     cursorColor: const Color.fromARGB(255, 48, 48, 48),
+  );
+}
+
+Widget buildFileButton(String title, VoidCallback onPressed) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 10),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('$title:', style: bold14),
+        const SizedBox(height: 5), // Space between label and button
+        RoundedRectangleButton(
+          title: "Tampilkan",
+          style: regular14,
+          fontColor: Colors.white,
+          backgroundColor: japfaOrange,
+          width: 150,
+          height: 35,
+          rounded: 5,
+          onPressed: onPressed,
+        ),
+      ],
+    ),
+  );
+}
+
+Widget buildDataInfoField(
+    {required String label,
+    required String value,
+    double verticalPadding = 10}) {
+  return Padding(
+    padding: EdgeInsets.symmetric(vertical: verticalPadding),
+    child: Row(
+      children: [
+        Expanded(
+          child: Text(
+            '$label:',
+            style: bold16,
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          flex: 2,
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              border: Border.all(color: japfaOrange),
+              borderRadius: BorderRadius.circular(5),
+              color: Colors.white,
+            ),
+            child: Text(value, style: regular16),
+          ),
+        ),
+      ],
+    ),
   );
 }
 

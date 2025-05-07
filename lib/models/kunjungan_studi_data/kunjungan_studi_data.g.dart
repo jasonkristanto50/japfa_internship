@@ -18,6 +18,7 @@ _KunjunganStudiData _$KunjunganStudiDataFromJson(Map<String, dynamic> json) =>
       jamKegiatan: json['jam_kegiatan'] as String,
       pathPersetujuanInstansi: json['path_persetujuan_instansi'] as String,
       status: json['status'] as String,
+      catatanHr: json['catatan_hr'] as String?,
       passwordToken: json['password_token'] as String?,
     );
 
@@ -33,5 +34,6 @@ Map<String, dynamic> _$KunjunganStudiDataToJson(_KunjunganStudiData instance) =>
       'jam_kegiatan': instance.jamKegiatan,
       'path_persetujuan_instansi': instance.pathPersetujuanInstansi,
       'status': instance.status,
+      'catatan_hr': instance.catatanHr,
       'password_token': instance.passwordToken,
     };

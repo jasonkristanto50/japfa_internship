@@ -17,6 +17,7 @@ abstract class KunjunganStudiData with _$KunjunganStudiData {
     @JsonKey(name: 'path_persetujuan_instansi')
     required String pathPersetujuanInstansi,
     @JsonKey(name: 'status') required String status,
+    @JsonKey(name: 'catatan_hr') String? catatanHr,
     @JsonKey(name: 'password_token') String? passwordToken,
   }) = _KunjunganStudiData;
 

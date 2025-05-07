@@ -44,35 +44,71 @@ router.get('/fetch-all-kunjungan-data', async (req, res) => {
 
 // Get count of Kunjungan Studi  
 router.get('/count', async (req, res) => {  
-    try {  
-        const result = await pool.query('SELECT COUNT(*) AS count FROM KUNJUNGAN_STUDI');  
-        res.status(200).json({ count: result.rows[0].count });  
-    } catch (error) {  
-        console.error('Error fetching count:', error);  
-        res.status(500).json({ error: 'Server error' });  
-    }  
+        try {  
+            const result = await pool.query('SELECT COUNT(*) AS count FROM KUNJUNGAN_STUDI');  
+            res.status(200).json({ count: result.rows[0].count });  
+        } catch (error) {  
+            console.error('Error fetching count:', error);  
+            res.status(500).json({ error: 'Server error' });  
+        }  
 }); 
 
 
-// Update status of Kunjungan Studi
-router.put('/:id', async (req, res) => {
-    const { id } = req.params;  // ID of the Kunjungan Studi to update
-    const { status } = req.body;  // New status ("Diterima" or "Ditolak")
-  
-    try {
-      const result = await pool.query(
-        'UPDATE KUNJUNGAN_STUDI SET status = $1 WHERE id_kunjungan_studi = $2 RETURNING *',
-        [status, id]
-      );
-  
+// Update status and optional catatan_hr of Kunjungan Studi
+router.put('/update_status-catatan/:id', async (req, res) => {
+  const { id } = req.params; 
+  const { status, catatan_hr } = req.body;  // New status and optional catatan
+
+  try {
+      // Prepare the query based on the presence of catatan_hr
+      const query = `
+        UPDATE KUNJUNGAN_STUDI 
+        SET status = $1, catatan_hr = $2 
+        WHERE id_kunjungan_studi = $3 RETURNING *
+      `;
+
+      // Prepare parameters for the query
+      const params =[status, catatan_hr, id];
+
+      const result = await pool.query(query, params);
+
       if (result.rowCount === 0) {
-        return res.status(404).json({ error: 'Kunjungan Studi not found' });
+          return res.status(404).json({ error: 'Kunjungan Studi not found' });
       }
-  
+
       res.status(200).json({ message: 'Status updated successfully!', data: result.rows[0] });
-    } catch (error) {
+  } catch (error) {
       console.error('Error updating Kunjungan Studi status:', error);
       res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// Update status and optional catatan_hr of Kunjungan Studi
+router.put('/update_status/:id', async (req, res) => {
+    const { id } = req.params; 
+    const { status} = req.body;  // New status and optional catatan
+  
+    try {
+        // Prepare the query based on the presence of catatan_hr
+        const query = `
+          UPDATE KUNJUNGAN_STUDI 
+          SET status = $1 
+          WHERE id_kunjungan_studi = $2 RETURNING *
+        `;
+  
+        // Prepare parameters for the query
+        const params =[status, id];
+  
+        const result = await pool.query(query, params);
+  
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: 'Kunjungan Studi not found' });
+        }
+  
+        res.status(200).json({ message: 'Status updated successfully!', data: result.rows[0] });
+    } catch (error) {
+        console.error('Error updating Kunjungan Studi status:', error);
+        res.status(500).json({ error: 'Server error' });
     }
   });
   

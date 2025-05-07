@@ -391,7 +391,7 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
       tanggalKegiatan: tanggalKegiatan,
       jamKegiatan: selectedSession!,
       pathPersetujuanInstansi: persetujuanInstansiPath!,
-      status: "Menunggu",
+      status: statusKunjunganMenunggu,
     );
 
     const String url =

@@ -35,6 +35,8 @@ mixin _$KunjunganStudiData {
   String get pathPersetujuanInstansi;
   @JsonKey(name: 'status')
   String get status;
+  @JsonKey(name: 'catatan_hr')
+  String? get catatanHr;
   @JsonKey(name: 'password_token')
   String? get passwordToken;
 
@@ -72,6 +74,8 @@ mixin _$KunjunganStudiData {
                     other.pathPersetujuanInstansi, pathPersetujuanInstansi) ||
                 other.pathPersetujuanInstansi == pathPersetujuanInstansi) &&
             (identical(other.status, status) || other.status == status) &&
+            (identical(other.catatanHr, catatanHr) ||
+                other.catatanHr == catatanHr) &&
             (identical(other.passwordToken, passwordToken) ||
                 other.passwordToken == passwordToken));
   }
@@ -90,11 +94,12 @@ mixin _$KunjunganStudiData {
       jamKegiatan,
       pathPersetujuanInstansi,
       status,
+      catatanHr,
       passwordToken);
 
   @override
   String toString() {
-    return 'KunjunganStudiData(idKunjunganStudi: $idKunjunganStudi, namaPerwakilan: $namaPerwakilan, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, jumlahPeserta: $jumlahPeserta, tanggalKegiatan: $tanggalKegiatan, jamKegiatan: $jamKegiatan, pathPersetujuanInstansi: $pathPersetujuanInstansi, status: $status, passwordToken: $passwordToken)';
+    return 'KunjunganStudiData(idKunjunganStudi: $idKunjunganStudi, namaPerwakilan: $namaPerwakilan, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, jumlahPeserta: $jumlahPeserta, tanggalKegiatan: $tanggalKegiatan, jamKegiatan: $jamKegiatan, pathPersetujuanInstansi: $pathPersetujuanInstansi, status: $status, catatanHr: $catatanHr, passwordToken: $passwordToken)';
   }
 }
 
@@ -116,6 +121,7 @@ abstract mixin class $KunjunganStudiDataCopyWith<$Res> {
       @JsonKey(name: 'path_persetujuan_instansi')
       String pathPersetujuanInstansi,
       @JsonKey(name: 'status') String status,
+      @JsonKey(name: 'catatan_hr') String? catatanHr,
       @JsonKey(name: 'password_token') String? passwordToken});
 }
 
@@ -142,6 +148,7 @@ class _$KunjunganStudiDataCopyWithImpl<$Res>
     Object? jamKegiatan = null,
     Object? pathPersetujuanInstansi = null,
     Object? status = null,
+    Object? catatanHr = freezed,
     Object? passwordToken = freezed,
   }) {
     return _then(_self.copyWith(
@@ -185,6 +192,10 @@ class _$KunjunganStudiDataCopyWithImpl<$Res>
           ? _self.status
           : status // ignore: cast_nullable_to_non_nullable
               as String,
+      catatanHr: freezed == catatanHr
+          ? _self.catatanHr
+          : catatanHr // ignore: cast_nullable_to_non_nullable
+              as String?,
       passwordToken: freezed == passwordToken
           ? _self.passwordToken
           : passwordToken // ignore: cast_nullable_to_non_nullable
@@ -208,6 +219,7 @@ class _KunjunganStudiData implements KunjunganStudiData {
       @JsonKey(name: 'path_persetujuan_instansi')
       required this.pathPersetujuanInstansi,
       @JsonKey(name: 'status') required this.status,
+      @JsonKey(name: 'catatan_hr') this.catatanHr,
       @JsonKey(name: 'password_token') this.passwordToken});
   factory _KunjunganStudiData.fromJson(Map<String, dynamic> json) =>
       _$KunjunganStudiDataFromJson(json);
@@ -242,6 +254,9 @@ class _KunjunganStudiData implements KunjunganStudiData {
   @override
   @JsonKey(name: 'status')
   final String status;
+  @override
+  @JsonKey(name: 'catatan_hr')
+  final String? catatanHr;
   @override
   @JsonKey(name: 'password_token')
   final String? passwordToken;
@@ -284,6 +299,8 @@ class _KunjunganStudiData implements KunjunganStudiData {
                     other.pathPersetujuanInstansi, pathPersetujuanInstansi) ||
                 other.pathPersetujuanInstansi == pathPersetujuanInstansi) &&
             (identical(other.status, status) || other.status == status) &&
+            (identical(other.catatanHr, catatanHr) ||
+                other.catatanHr == catatanHr) &&
             (identical(other.passwordToken, passwordToken) ||
                 other.passwordToken == passwordToken));
   }
@@ -302,11 +319,12 @@ class _KunjunganStudiData implements KunjunganStudiData {
       jamKegiatan,
       pathPersetujuanInstansi,
       status,
+      catatanHr,
       passwordToken);
 
   @override
   String toString() {
-    return 'KunjunganStudiData(idKunjunganStudi: $idKunjunganStudi, namaPerwakilan: $namaPerwakilan, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, jumlahPeserta: $jumlahPeserta, tanggalKegiatan: $tanggalKegiatan, jamKegiatan: $jamKegiatan, pathPersetujuanInstansi: $pathPersetujuanInstansi, status: $status, passwordToken: $passwordToken)';
+    return 'KunjunganStudiData(idKunjunganStudi: $idKunjunganStudi, namaPerwakilan: $namaPerwakilan, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, jumlahPeserta: $jumlahPeserta, tanggalKegiatan: $tanggalKegiatan, jamKegiatan: $jamKegiatan, pathPersetujuanInstansi: $pathPersetujuanInstansi, status: $status, catatanHr: $catatanHr, passwordToken: $passwordToken)';
   }
 }
 
@@ -330,6 +348,7 @@ abstract mixin class _$KunjunganStudiDataCopyWith<$Res>
       @JsonKey(name: 'path_persetujuan_instansi')
       String pathPersetujuanInstansi,
       @JsonKey(name: 'status') String status,
+      @JsonKey(name: 'catatan_hr') String? catatanHr,
       @JsonKey(name: 'password_token') String? passwordToken});
 }
 
@@ -356,6 +375,7 @@ class __$KunjunganStudiDataCopyWithImpl<$Res>
     Object? jamKegiatan = null,
     Object? pathPersetujuanInstansi = null,
     Object? status = null,
+    Object? catatanHr = freezed,
     Object? passwordToken = freezed,
   }) {
     return _then(_KunjunganStudiData(
@@ -399,6 +419,10 @@ class __$KunjunganStudiDataCopyWithImpl<$Res>
           ? _self.status
           : status // ignore: cast_nullable_to_non_nullable
               as String,
+      catatanHr: freezed == catatanHr
+          ? _self.catatanHr
+          : catatanHr // ignore: cast_nullable_to_non_nullable
+              as String?,
       passwordToken: freezed == passwordToken
           ? _self.passwordToken
           : passwordToken // ignore: cast_nullable_to_non_nullable

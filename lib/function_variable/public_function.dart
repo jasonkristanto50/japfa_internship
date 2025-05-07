@@ -94,16 +94,17 @@ Widget buildDataInfoField(
   );
 }
 
-void showCustomConfirmDeleteWithNote({
+Future<String?> showCustomConfirmDeleteWithNote({
   required BuildContext context,
   required String title,
   required String message,
-  required VoidCallback onReject,
-  required VoidCallback onCancel,
+  required bool withNote,
+  required VoidCallback onAccept,
+  required Function(String? note) onReject,
 }) {
   final TextEditingController noteController = TextEditingController();
 
-  showDialog(
+  return showDialog<String?>(
     context: context,
     builder: (BuildContext context) {
       return Dialog(
@@ -130,14 +131,16 @@ void showCustomConfirmDeleteWithNote({
               ),
               const SizedBox(height: 16),
               // TextField for notes
-              TextField(
-                controller: noteController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Tulis Catatan...',
-                ),
-                maxLines: 6,
-              ),
+              withNote
+                  ? TextField(
+                      controller: noteController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Tulis Catatan...',
+                      ),
+                      maxLines: 6,
+                    )
+                  : const SizedBox(),
               const Spacer(),
               // Buttons
               Row(
@@ -146,9 +149,10 @@ void showCustomConfirmDeleteWithNote({
                   // Reject Button
                   ElevatedButton(
                     onPressed: () {
-                      onReject();
-                      noteController.clear(); // Clear the input field
-                      Navigator.of(context).pop(); // Close the dialog
+                      final note = noteController.text.toString();
+                      Navigator.of(context).pop(note); // Close the dialog
+                      onReject(note);
+                      noteController.clear();
                     },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
@@ -165,9 +169,9 @@ void showCustomConfirmDeleteWithNote({
                   // Accept Button
                   ElevatedButton(
                     onPressed: () {
-                      onCancel();
+                      onAccept();
                       noteController.clear();
-                      Navigator.of(context).pop();
+                      Navigator.of(context).pop(); // Tidak mengirim note
                     },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,

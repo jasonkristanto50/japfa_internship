@@ -300,28 +300,22 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
     );
   }
 
-  void _respond(KunjunganStudiData kunjungan) {
-    showDialog(
+  void _respond(KunjunganStudiData kunjungan) async {
+    await showCustomConfirmDeleteWithNote(
       context: context,
-      builder: (BuildContext context) {
-        return CustomRespondDialog(
-          title: "Berikan Respon",
-          message: "Mau menerima / menolak kunjungan ?",
-          onAccept: () {
-            Navigator.of(context).pop();
-            _handleResponse(kunjungan, true); // Accept
-          },
-          onReject: () {
-            Navigator.of(context).pop();
-            return showCustomConfirmDeleteWithNote(
-              context: context,
-              title: "Apakah Yakin Menolak ?",
-              message: "Silahkan berikan catatan",
-              onReject: () => _handleResponse(kunjungan, false),
-              onCancel: () => Navigator.pop(context),
-            );
-          },
-        );
+      title: "Berikan Respon",
+      message: "Mau menerima / menolak kunjungan ?",
+      withNote: true,
+      onAccept: () {
+        _handleResponse(kunjungan, true);
+      },
+      // Note hanya dikirim ke pengaju saat ditolak
+      onReject: (note) {
+        if (note == null) {
+          _handleResponse(kunjungan, false);
+        } else {
+          _handleResponseWithNote(kunjungan, false, note);
+        }
       },
     );
     setState(() {});
@@ -330,33 +324,77 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
   void _handleResponse(KunjunganStudiData kunjungan, bool isAccepted) async {
     // Update status locally first
     setState(() {
-      kunjungan =
-          kunjungan.copyWith(status: isAccepted ? 'Diterima' : 'Ditolak');
+      kunjungan = kunjungan.copyWith(
+        status: isAccepted ? statusKunjunganDiterima : statusKunjunganDitolak,
+      );
     });
+
+    // Prepare data payload
+    final dataToUpdate = {
+      'status': kunjungan.status, // Send the updated status
+    };
 
     // Call the API to update the status in the backend
     try {
       final response = await Dio().put(
-        'http://localhost:3000/api/kunjungan_studi/${kunjungan.idKunjunganStudi}',
-        data: {
-          'status': kunjungan.status, // Send the updated status
-        },
+        'http://localhost:3000/api/kunjungan_studi/update_status/${kunjungan.idKunjunganStudi}',
+        data: dataToUpdate,
       );
 
       if (response.statusCode == 200) {
         // Optionally, show a success message or handle UI updates
         print('Status updated to: ${kunjungan.status}');
-        // Refresh data by calling the function that fetches the latest data from the backend
+        // Refresh data
         _fetchKunjunganData();
       } else {
-        // If the backend response isn't successful, revert the local change or show an error message
         print('Failed to update status');
       }
     } catch (e) {
       print('Error updating status: $e');
-      // Optionally revert status if error occurs
       setState(() {
-        kunjungan = kunjungan.copyWith(status: 'Pending');
+        kunjungan =
+            kunjungan.copyWith(status: 'Pending'); // Clear the note on error
+      });
+    }
+  }
+
+  void _handleResponseWithNote(
+      KunjunganStudiData kunjungan, bool isAccepted, String catatan) async {
+    // Update status locally first
+    setState(() {
+      kunjungan = kunjungan.copyWith(
+        status: isAccepted ? statusKunjunganDiterima : statusKunjunganDitolak,
+        catatanHr: catatan, // Include the note here
+      );
+    });
+
+    // Prepare data payload
+    final dataToUpdate = {
+      'status': kunjungan.status, // Send the updated status
+      'catatan_hr': kunjungan.catatanHr
+    };
+
+    // Call the API to update the status in the backend
+    try {
+      final response = await Dio().put(
+        'http://localhost:3000/api/kunjungan_studi/update_status-catatan/${kunjungan.idKunjunganStudi}',
+        data: dataToUpdate,
+      );
+
+      if (response.statusCode == 200) {
+        // Optionally, show a success message or handle UI updates
+        print('Status updated to: ${kunjungan.status}');
+        print('catatan_hr updated to: ${kunjungan.catatanHr}');
+        // Refresh data
+        _fetchKunjunganData();
+      } else {
+        print('Failed to update status');
+      }
+    } catch (e) {
+      print('Error updating status: $e');
+      setState(() {
+        kunjungan = kunjungan.copyWith(
+            status: 'Pending', catatanHr: null); // Clear the note on error
       });
     }
   }

@@ -7,6 +7,10 @@ const String baseUrl = 'http://localhost:3000';
 Dio dio = Dio();
 int jumlahMaksimalPeserta = 55;
 
+String statusKunjunganDiterima = 'Diterima';
+String statusKunjunganDitolak = 'Ditolak';
+String statusKunjunganMenunggu = 'Menunggu';
+
 String durasiSesi1 = '08.30 - 12.00';
 String durasiSesi2 = '13.00 - 16.00';
 var pilihanJamKunjunganStudi = [

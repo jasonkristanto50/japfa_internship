@@ -7,7 +7,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');  
 const multer = require('multer'); // Import multer  
 const path = require('path'); // Import path module  
-require('dotenv').config(); // For environment variables  
+require('dotenv').config(); // For environment variables
 
 const app = express();  
 const port = process.env.PORT || 3000;  
@@ -54,3 +54,6 @@ app.use('/api/login', loginRouter);
 
 const file_uploadRouter = require('./routes/file_upload');  
 app.use('/api/file_upload', file_uploadRouter);
+
+const emailRouter = require('./routes/email');
+app.use('/api/email', emailRouter);

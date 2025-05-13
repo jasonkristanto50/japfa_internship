@@ -30,13 +30,14 @@ router.post('/submit-peserta-magang', async (req, res) => {
         path_persetujuan_univ,  
         path_transkrip_nilai,
         path_foto_diri,  
-        status_magang,  
+        status_magang, 
+        password_token, 
         nilai_akhir_magang,  
     } = req.body;  
 
     try {  
         await pool.query(  
-            'INSERT INTO PESERTA_MAGANG (id_magang, nama, departemen, alamat, no_telp, email, asal_universitas, angkatan, nilai_univ, jurusan, path_cv, path_persetujuan_univ, path_transkrip_nilai, path_foto_diri, status_magang, nilai_akhir_magang) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)',  
+            'INSERT INTO PESERTA_MAGANG (id_magang, nama, departemen, alamat, no_telp, email, asal_universitas, angkatan, nilai_univ, jurusan, path_cv, path_persetujuan_univ, path_transkrip_nilai, path_foto_diri, status_magang, password_token, nilai_akhir_magang) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)',  
             [  
                 id_magang,  
                 nama,  
@@ -53,6 +54,7 @@ router.post('/submit-peserta-magang', async (req, res) => {
                 path_transkrip_nilai,
                 path_foto_diri,  
                 status_magang,  
+                password_token,
                 nilai_akhir_magang,  
             ]  
         );  
@@ -217,6 +219,31 @@ router.put('/update-data/:id', async (req, res) => {
         res.status(200).json({ message: 'Peserta Magang updated successfully!', data: result.rows[0] });  
     } catch (error) {  
         console.error('Error updating Peserta Magang:', error);  
+        res.status(500).json({ error: 'Server error' });  
+    }  
+}); 
+
+// Update Peserta Magang STATUS by ID  
+router.put('/update-password-token/:email', async (req, res) => {  
+    const { email } = req.params;
+    const { password_token } = req.body;
+
+    try {  
+        const result = await pool.query(  
+            'UPDATE PESERTA_MAGANG SET password_token = $1 WHERE email = $2 RETURNING *',  
+            [  
+                password_token,  
+                email,  
+            ]  
+        );  
+
+        if (result.rowCount === 0) {  
+            return res.status(404).json({ error: 'Peserta Magang not found' });  
+        }  
+
+        res.status(200).json({ message: 'Peserta Magang password token updated successfully!', data: result.rows[0] });  
+    } catch (error) {  
+        console.error('Error updating Peserta Magang password token:', error);  
         res.status(500).json({ error: 'Server error' });  
     }  
 });  

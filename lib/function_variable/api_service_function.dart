@@ -6,6 +6,30 @@ import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.
 class ApiService {
   final Dio _dio = Dio();
 
+  //////////////////////////////////////////////// SEND EMAIL /////////////////////////////////////////////////////
+
+  Future<void> sendEmail(String email, String name, String pin) async {
+    try {
+      final response = await _dio.post(
+        'http://localhost:3000/api/email/send-email',
+        data: {
+          'email': email,
+          'name': name,
+          'pin': pin,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Email sent successfully: ${response.data}');
+      } else {
+        throw Exception('Failed to send email');
+      }
+    } catch (error) {
+      print('Error sending email: $error');
+      rethrow; // Rethrow error for further handling if needed
+    }
+  }
+
   /////////////////////////////////////////////// UPLOAD FILE ///////////////////////////////////////////
 
   Future<String> uploadFileToServer(
@@ -96,6 +120,33 @@ class ApiService {
     } on DioException catch (e) {
       final msg = e.response?.data?['error'] ?? e.message;
       throw Exception('Failed to fetch Peserta Magang data: $msg');
+    }
+  }
+
+  // Update Password Token
+  Future<PesertaMagangData> updatePesertaMagangPasswordToken(
+      String email, String passwordToken) async {
+    try {
+      // Check if passwordToken is null before proceeding
+      // ignore: unnecessary_null_comparison
+      if (passwordToken == null) {
+        throw Exception('Password token cannot be null');
+      }
+
+      final response = await _dio.put(
+        'http://localhost:3000/api/peserta_magang/update-password-token/$email',
+        data: {'password_token': passwordToken},
+      );
+
+      if (response.statusCode == 200) {
+        // If the response structure contains password_token
+        return PesertaMagangData.fromJson(response.data);
+      } else {
+        throw Exception('Failed to update password token: ${response.data}');
+      }
+    } catch (error) {
+      print('Error updating password token: $error'); // Log the error
+      throw Exception('Error updating password token: $error');
     }
   }
 

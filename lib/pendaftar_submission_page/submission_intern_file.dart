@@ -143,19 +143,30 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
         transcriptFileName != null) {
       try {
         // Set the file path
-        cvFilePath =
-            await ApiService().uploadFileToServer(cvFile!, cvFileName!);
-        campusApprovalFilePath = await ApiService()
-            .uploadFileToServer(campusApprovalFile!, campusApprovalFileName!);
-        transcriptFilePath = await ApiService()
-            .uploadFileToServer(transcriptFile!, transcriptFileName!);
-        fotoDiriFilePath = await ApiService()
-            .uploadFileToServer(fotoDiriFile!, fotoDiriFileName!);
+        cvFilePath = await ApiService().uploadFileToServer(
+          cvFile!,
+          cvFileName!,
+        );
+        campusApprovalFilePath = await ApiService().uploadFileToServer(
+          campusApprovalFile!,
+          campusApprovalFileName!,
+        );
+        transcriptFilePath = await ApiService().uploadFileToServer(
+          transcriptFile!,
+          transcriptFileName!,
+        );
+        fotoDiriFilePath = await ApiService().uploadFileToServer(
+          fotoDiriFile!,
+          fotoDiriFileName!,
+        );
         // Fetch the count of peserta magang
         int count = await ApiService().countPesertaMagang();
 
         // Construct the idMagang
         String idMagang = 'PDFT_MG_0$count';
+
+        // Generate password token
+        String passwordTokenValue = generateRandomPassword(10);
 
         // Create the PesertaMagangData object
         PesertaMagangData pesertaMagang = PesertaMagangData(
@@ -174,14 +185,24 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
           pathTranskripNilai: transcriptFilePath!,
           pathFotoDiri: fotoDiriFilePath!,
           statusMagang: 'On Process',
+          passwordToken: passwordTokenValue,
           nilaiAkhirMagang: null,
         );
 
         // Submit the form
         await ApiService().submitPesertaMagang(pesertaMagang);
 
-        // Update jumlahPengajuan based on department name
+        // Send Email contain passwordToken to user
+        await ApiService().sendEmail(
+          widget.email,
+          widget.name,
+          passwordTokenValue,
+        );
+
+        print("Email 2 : ${widget.email}");
+        print("Nama2: ${widget.name}");
       } catch (error) {
+        print("Submission: $error");
         showSnackBar(context, 'An error occurred while submitting the form');
       }
     } else {

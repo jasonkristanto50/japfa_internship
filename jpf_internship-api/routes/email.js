@@ -8,10 +8,13 @@ router.post('/send-email', async (req, res) => {
     console.log(req.body); // Log the incoming request body
     const applicationData = req.body; // Expecting application data in the body
 
+    // Extract the name and PIN from the request body
+    const { name, pin } = applicationData;
+
     // Construct email information
     const recipient = applicationData.email;
-    const subject = 'Application Confirmation';
-    const text = `Hello ${applicationData.name},\n\nYour application has been received! We will get back to you soon.\n\nBest regards,\nYour Company`;
+    const subject = 'Konfirmasi Pengajuan';
+    const text = `Salam ${name},\n\nPengajuan anda sudah diterima. Silahkan login gunakan "PIN: ${pin}" untuk melihat status pengajuan. Mohon menunggu\n\nSalam,\nYour Best Friend`;
 
     try {
         await sendEmail(recipient, subject, text);

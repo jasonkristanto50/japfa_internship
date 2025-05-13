@@ -4,9 +4,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:japfa_internship/admin_page/departemen_magang_dashboard.dart';
 import 'package:japfa_internship/admin_page/kunjungan_studi_dashboard.dart';
+import 'package:japfa_internship/admin_page/pendaftaran_magang_detail_page.dart';
 import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/home_page.dart';
+import 'package:japfa_internship/models/kunjungan_studi_data/kunjungan_studi_data.dart';
+import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
+import 'package:japfa_internship/pendaftar_submission_page/timeline_interview.dart';
 import 'package:japfa_internship/peserta_magang_page/laporan_peserta_magang.dart';
 import 'package:japfa_internship/peserta_magang_page/logbook_peserta.dart';
 import 'package:japfa_internship/peserta_magang_page/pembimbing_peserta.dart';
@@ -24,6 +28,8 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
   final VoidCallback? onAdminHomePageMagang;
   final VoidCallback? onAdminKunjunganStudi;
   final VoidCallback? onLogoutPressed;
+  final PesertaMagangData? peserta;
+  final KunjunganStudiData? kunjungan;
   final bool showBackButton;
 
   Navbar({
@@ -37,6 +43,8 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
     this.onAdminHomePageMagang,
     this.onAdminKunjunganStudi,
     this.onLogoutPressed,
+    this.peserta,
+    this.kunjungan,
     this.showBackButton = false, // Default to false
     super.key,
   });
@@ -78,7 +86,9 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
                 ),
                 const Spacer(),
                 if (!loginState.isLoggedIn) ...[
-                  // Not logged in yet => Show "Login" Button
+                  buildNavBarTab("My Submission", _navigateToSubmissionData),
+                  buildNavBarTab("Timeline", _navigateToTimeLine),
+                  const SizedBox(width: 10),
                   Padding(
                     padding: const EdgeInsets.only(right: 16.0),
                     child: TextButton(
@@ -101,11 +111,7 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
                   ),
                 ] else ...[
                   // Logged in => Check role
-                  // PENDAFTAR Navbar
-                  if (loginState.role == "pendaftar") ...[
-                    buildNavBarTab("My Submission", onSubmissionPressed),
-                    buildNavBarTab("Timeline", onTimelinePressed)
-                  ] else if (loginState.role == "admin") ...[
+                  if (loginState.role == "admin") ...[
                     // ADMIN Navbar
                     buildNavBarTab(
                         'Home Page Magang', _navigateToHomePageMagang),
@@ -124,6 +130,10 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
                     buildNavBarTab("Logbook", _navigateToLogbookPage),
                     buildNavBarTab("Laporan", _navigateToLaporanPage),
                     buildNavBarTab("Departemen", _navigateToHomePageMagang)
+                  ] else if (loginState.role == "pendaftar") ...[
+                    // PENDAFTAR
+                    buildNavBarTab("My Submission", _navigateToSubmissionData),
+                    buildNavBarTab("Timeline", _navigateToTimeLine),
                   ],
                   const SizedBox(width: 16),
 
@@ -238,6 +248,16 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) => const ProfilePage()),
     );
+  }
+
+  // NOT LOGIN
+  void _navigateToSubmissionData() {
+    fadeNavigation(context,
+        targetNavigation: PendaftaranMagangDetailPage(peserta: peserta));
+  }
+
+  void _navigateToTimeLine() {
+    fadeNavigation(context, targetNavigation: const TimelineInterview());
   }
 
   // ADMIN HR/GA TAB

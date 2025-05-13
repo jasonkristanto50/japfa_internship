@@ -67,6 +67,38 @@ class ApiService {
     }
   }
 
+  /// GET /fetch-peserta-data/:email
+  Future<PesertaMagangData> fetchPesertaMagangByEmail(String email) async {
+    try {
+      final encodedEmail = Uri.encodeComponent(email);
+
+      final response = await _dio.get(
+        'http://localhost:3000/api/peserta_magang/fetch-peserta-data/$encodedEmail',
+      );
+
+      if (response.statusCode == 200) {
+        final body = response.data;
+
+        // server returns a single object  { ... }
+        if (body is Map<String, dynamic>) {
+          return PesertaMagangData.fromJson(body);
+        }
+
+        // server returns an array with one object  [ { ... } ]
+        if (body is List &&
+            body.isNotEmpty &&
+            body.first is Map<String, dynamic>) {
+          return PesertaMagangData.fromJson(body.first as Map<String, dynamic>);
+        }
+      }
+
+      throw Exception('No Peserta Magang found for $email');
+    } on DioException catch (e) {
+      final msg = e.response?.data?['error'] ?? e.message;
+      throw Exception('Failed to fetch Peserta Magang data: $msg');
+    }
+  }
+
   Future<int> countPesertaMagang() async {
     try {
       final response =

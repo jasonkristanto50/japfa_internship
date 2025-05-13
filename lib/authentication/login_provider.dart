@@ -7,12 +7,14 @@ class LoginState {
   final String? errorMessage;
   final bool isLoggedIn;
   final String? role;
+  final String? email;
 
   LoginState({
     this.isLoading = false,
     this.errorMessage,
     this.isLoggedIn = false,
     this.role,
+    this.email,
   });
 
   LoginState copyWith({
@@ -20,6 +22,7 @@ class LoginState {
     String? errorMessage,
     bool? isLoggedIn,
     String? role,
+    String? email,
   }) {
     return LoginState(
       isLoading: isLoading ?? this.isLoading,
@@ -42,6 +45,7 @@ class LoginNotifier extends StateNotifier<LoginState> {
         isLoading: false,
         isLoggedIn: true,
         role: 'peserta magang',
+        email: email,
       );
       return;
     }
@@ -50,6 +54,7 @@ class LoginNotifier extends StateNotifier<LoginState> {
         isLoading: false,
         isLoggedIn: true,
         role: 'kepala departemen',
+        email: email,
       );
       return;
     }

@@ -93,3 +93,5 @@
 --     jumlah_on_boarding INTEGER,  
 --     sisa_kuota INTEGER
 -- );  
+
+UPDATE PESERTA_MAGANG SET status_magang = 'Ditolak', catatan_hr = 'HAHAH' WHERE id_magang = 'PDFT_MG_00' RETURNING *

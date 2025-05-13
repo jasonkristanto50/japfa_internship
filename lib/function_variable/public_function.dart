@@ -94,11 +94,13 @@ Widget buildDataInfoField(
   );
 }
 
-Future<String?> showCustomConfirmDeleteWithNote({
+Future<String?> showCustomConfirmRejectDialogWithNote({
   required BuildContext context,
   required String title,
   required String message,
   required bool withNote,
+  String? acceptText,
+  String? rejectText,
   required VoidCallback onAccept,
   required Function(String? note) onReject,
 }) {
@@ -163,7 +165,7 @@ Future<String?> showCustomConfirmDeleteWithNote({
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text('Ditolak'),
+                    child: Text(rejectText ?? "Ditolak"),
                   ),
                   const SizedBox(width: 16),
                   // Accept Button
@@ -182,7 +184,109 @@ Future<String?> showCustomConfirmDeleteWithNote({
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text('Diterima'),
+                    child: Text(acceptText ?? 'Diterima'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
+Future<String?> showCustomConfirmAcceptDialogWithNote({
+  required BuildContext context,
+  required String title,
+  required String message,
+  required bool withNote,
+  String? acceptText,
+  String? rejectText,
+  required Function(String? note) onAccept,
+  required VoidCallback onReject,
+}) {
+  final TextEditingController noteController = TextEditingController();
+
+  return showDialog<String?>(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        elevation: 5.0,
+        child: Container(
+          width: 350,
+          height: 350,
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Title
+              Text(title, style: bold24.copyWith(color: japfaOrange)),
+              const SizedBox(height: 16),
+              // Message
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: regular20,
+              ),
+              const SizedBox(height: 16),
+              // TextField for notes
+              withNote
+                  ? TextField(
+                      controller: noteController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Tulis Catatan...',
+                      ),
+                      maxLines: 6,
+                    )
+                  : const SizedBox(),
+              const Spacer(),
+              // Buttons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Reject Button
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      onReject();
+                      noteController.clear();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.red,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Text(rejectText ?? "Ditolak"),
+                  ),
+                  const SizedBox(width: 16),
+                  // Accept Button
+                  ElevatedButton(
+                    onPressed: () {
+                      final note = noteController.text.toString();
+                      Navigator.of(context).pop(note);
+                      onAccept(note);
+                      noteController.clear();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.green,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Text(acceptText ?? 'Diterima'),
                   ),
                 ],
               ),

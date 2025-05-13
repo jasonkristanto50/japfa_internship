@@ -234,6 +234,33 @@ router.put('/update-status/:id', async (req, res) => {
     }  
 });  
 
+// Update status and optional catatan_hr of Peserta Magang
+router.put('/update_status-catatan/:id', async (req, res) => {
+    const { id } = req.params; 
+    const { status_magang, catatan_hr } = req.body;
+  
+    try {
+        // Prepare the query based on the presence of catatan_hr
+        const query = 
+          'UPDATE PESERTA_MAGANG SET status_magang = $1, catatan_hr = $2 WHERE id_magang = $3 RETURNING *'
+        ;
+  
+        // Prepare parameters for the query
+        const params =[status_magang, catatan_hr, id];
+  
+        const result = await pool.query(query, params);
+  
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: 'Peserta Magang not found' });
+        }
+  
+        res.status(200).json({ message: 'Status updated successfully!', data: result.rows[0] });
+    } catch (error) {
+        console.error('Error updating Peserta Magang status:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+  });
+
 // Delete all Peserta Magang records  
 router.delete('/delete-all-peserta-data', async (req, res) => {  
     try {  

@@ -179,6 +179,18 @@ class _PendaftaranMagangDetailPageState
             ],
           ),
         ),
+        // Note
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('NOTE:', style: regular14),
+              const SizedBox(height: 5),
+              Text(peserta.catatanHr ?? 'Tidak ada catatan')
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -220,8 +232,8 @@ class _PendaftaranMagangDetailPageState
           fontColor: Colors.white,
           width: 100,
           height: 40,
-          onPressed: () async {
-            await updateStatus(context, peserta.idMagang, "Ditolak");
+          onPressed: () {
+            confirmReject(peserta);
           },
         ),
         const SizedBox(width: 20),
@@ -231,12 +243,45 @@ class _PendaftaranMagangDetailPageState
           fontColor: Colors.white,
           width: 100,
           height: 40,
-          onPressed: () async {
-            await updateStatus(context, peserta.idMagang, "Diterima");
+          onPressed: () {
+            confirmAccept(peserta);
           },
         ),
       ],
     );
+  }
+
+  void confirmAccept(PesertaMagangData peserta) async {
+    await showCustomConfirmAcceptDialogWithNote(
+        context: context,
+        title: "Konfirmasi Terima ?",
+        message: "Berikan Konfirmasi",
+        withNote: false,
+        rejectText: "Batal",
+        onAccept: (note) {
+          if (note == null) {
+            updateStatus(context, peserta.idMagang, statusMagangDiterima);
+          } else {
+            updateStatusWithNote(peserta, true, note);
+          }
+        },
+        onReject: () {});
+  }
+
+  void confirmReject(PesertaMagangData peserta) async {
+    await showCustomConfirmRejectDialogWithNote(
+        context: context,
+        title: "Konfirmasi Ditolak ?",
+        message: "Berikan Konfirmasi",
+        withNote: true,
+        onAccept: () {},
+        onReject: (note) {
+          if (note == null) {
+            updateStatus(context, peserta.idMagang, statusMagangDitolak);
+          } else {
+            updateStatusWithNote(peserta, false, note);
+          }
+        });
   }
 
   Future<void> updateStatus(
@@ -264,5 +309,41 @@ class _PendaftaranMagangDetailPageState
         ),
       );
     }
+  }
+
+  Future<void> updateStatusWithNote(
+      PesertaMagangData peserta, bool isAccepted, String catatan) async {
+    // Update status locally first
+    setState(() {
+      peserta = peserta.copyWith(
+        statusMagang: isAccepted ? statusMagangDiterima : statusMagangDitolak,
+        catatanHr: catatan,
+      );
+    });
+    try {
+      final success = await ApiService().updatePesertaMagangStatusWithNote(
+        idMagang: peserta.idMagang,
+        status: peserta.statusMagang,
+        catatanHr: peserta.catatanHr,
+      );
+
+      if (success) {
+        debugPrint('Status & note updated 👍');
+      } else {
+        debugPrint('Server responded but not 200');
+      }
+    } catch (e) {
+      // Connection / timeout / parsing errors end up here
+      debugPrint('Error updating status: $e');
+      setState(() {
+        peserta = peserta.copyWith(
+          statusMagang: 'Pending',
+          catatanHr: null,
+        ); // revert on error
+      });
+    }
+    fadeNavigation(context,
+        targetNavigation: PendaftaranMagangDetailPage(peserta: peserta),
+        time: 0);
   }
 }

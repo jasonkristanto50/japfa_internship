@@ -301,7 +301,7 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
   }
 
   void _respond(KunjunganStudiData kunjungan) async {
-    await showCustomConfirmDeleteWithNote(
+    await showCustomConfirmRejectDialogWithNote(
       context: context,
       title: "Berikan Respon",
       message: "Mau menerima / menolak kunjungan ?",

@@ -7,6 +7,12 @@ const String baseUrl = 'http://localhost:3000';
 Dio dio = Dio();
 int jumlahMaksimalPeserta = 55;
 
+String statusMagangDiterima = 'Diterima';
+String statusMagangDitolak = 'Ditolak';
+String statusMagangMenunggu = 'On Process';
+String statusMagangBerlangsung = 'Sedang Berlangsung';
+String statusMagangSelesai = 'Selesai';
+
 String statusKunjunganDiterima = 'Diterima';
 String statusKunjunganDitolak = 'Ditolak';
 String statusKunjunganMenunggu = 'Menunggu';

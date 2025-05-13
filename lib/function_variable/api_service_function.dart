@@ -146,6 +146,24 @@ class ApiService {
     }
   }
 
+  Future<bool> updatePesertaMagangStatusWithNote({
+    required String idMagang,
+    required String status,
+    required String? catatanHr,
+  }) async {
+    final payload = {
+      'status_magang': status,
+      'catatan_hr': catatanHr,
+    };
+
+    final Response res = await _dio.put(
+      'http://localhost:3000/api/peserta_magang/update_status-catatan/$idMagang',
+      data: payload,
+    );
+
+    return res.statusCode == 200;
+  }
+
   //////////////////////////////////////////  DEPARTEMEN   ///////////////////////////////////////////////////////////
 
   Future<void> updateMaxKuotaDepartemen(String id, int maxKuota) async {

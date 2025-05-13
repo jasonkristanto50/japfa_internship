@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:japfa_internship/function_variable/variable.dart';
 
 class LoginState {
   final bool isLoading;
@@ -38,7 +39,10 @@ class LoginNotifier extends StateNotifier<LoginState> {
 
   LoginNotifier() : super(LoginState());
 
-  Future<void> login(String email, String password) async {
+  Future<void> loginPassword({
+    required String email,
+    required String password,
+  }) async {
     // TODO: buat akun untuk peserta
     if (email == 'peserta' && password == '123') {
       state = LoginState(
@@ -61,7 +65,7 @@ class LoginNotifier extends StateNotifier<LoginState> {
     state = state.copyWith(isLoading: true, errorMessage: null);
 
     String url =
-        'http://localhost:3000/api/login'; // Update to your login endpoint
+        'http://localhost:3000/api/login/login-password'; // Update to your login endpoint
 
     try {
       final response = await _dio.post(
@@ -86,6 +90,43 @@ class LoginNotifier extends StateNotifier<LoginState> {
             errorMessage: "Invalid credentials",
           );
         }
+      } else {
+        state = state.copyWith(
+          isLoading: false,
+          errorMessage: "Login failed. Please try again.",
+        );
+      }
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: "An error occurred. Please try again.",
+      );
+    }
+  }
+
+  Future<void> loginToken({
+    required String email,
+    required String passwordToken,
+  }) async {
+    state = state.copyWith(isLoading: true, errorMessage: null);
+
+    String url =
+        'http://localhost:3000/api/login/login-token'; // Update to your token login endpoint
+
+    try {
+      final response = await _dio.post(
+        url,
+        data: jsonEncode({'email': email, 'password_token': passwordToken}),
+        options: Options(contentType: 'application/json'),
+      );
+
+      if (response.statusCode == 200) {
+        state = LoginState(
+          isLoading: false,
+          isLoggedIn: true,
+          role: rolePendaftarValue,
+          email: email,
+        );
       } else {
         state = state.copyWith(
           isLoading: false,

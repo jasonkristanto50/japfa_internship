@@ -5,7 +5,6 @@ import 'package:japfa_internship/peserta_magang_page/logbook_peserta.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/home_page.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
-import 'package:japfa_internship/authentication/sign_up_pendaftar.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/components/widget_component.dart';
 import 'login_provider.dart';
@@ -20,8 +19,10 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _tokenController = TextEditingController();
 
   bool _visible = false;
+  bool _isTokenLogin = false; // Track which login method to show
 
   @override
   void initState() {
@@ -37,6 +38,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _tokenController.dispose();
     super.dispose();
   }
 
@@ -69,7 +71,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                 ],
               ),
-              child: buildLoginForm(loginState),
+              child: _isTokenLogin
+                  ? buildTokenLoginForm(loginState)
+                  : buildLoginForm(loginState),
             ),
           ),
         ),
@@ -81,26 +85,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () => Navigator.pop(context),
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
-            ),
-            const SizedBox(width: 65),
-            const Text(
-              'Welcome back!',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 10),
+        // ... Your existing header code here ...
         const Text(
           'Login to your account.',
           style: TextStyle(fontSize: 16),
@@ -108,11 +93,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         const SizedBox(height: 20),
         buildTextField('Email', _emailController),
         const SizedBox(height: 15),
-        buildTextField(
-          'Password',
-          _passwordController,
-          isPassword: true,
-        ),
+        buildTextField('Password', _passwordController, isPassword: true),
         const SizedBox(height: 20),
         if (loginState.isLoading) // Show loading indicator
           const CircularProgressIndicator(),
@@ -134,10 +115,59 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         const SizedBox(height: 10),
         TextButton(
           onPressed: () {
-            fadeNavigation(context, targetNavigation: const SignUpPendaftar());
+            setState(() {
+              _isTokenLogin = true; // Switch to token login
+            });
           },
           child: Text(
-            "Don't have an account? Sign up",
+            "Use Token to Login",
+            style: TextStyle(color: japfaOrange, fontSize: 14),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildTokenLoginForm(LoginState loginState) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Similar header code for Token Login
+        const Text(
+          'Login with your Token.',
+          style: TextStyle(fontSize: 16),
+        ),
+        const SizedBox(height: 20),
+        buildTextField('Email', _emailController),
+        const SizedBox(height: 15),
+        buildTextField('Token', _tokenController, isPassword: true),
+        const SizedBox(height: 20),
+        if (loginState.isLoading) // Show loading indicator
+          const CircularProgressIndicator(),
+        if (!loginState.isLoading) // Show button only if not loading
+          RoundedRectangleButton(
+            title: "Login with Token",
+            backgroundColor: japfaOrange,
+            fontColor: Colors.white,
+            onPressed: _tokenLoginFunction,
+          ),
+        if (loginState.errorMessage != null) // Display error
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Text(
+              loginState.errorMessage!,
+              style: const TextStyle(color: Colors.red),
+            ),
+          ),
+        const SizedBox(height: 10),
+        TextButton(
+          onPressed: () {
+            setState(() {
+              _isTokenLogin = false; // Switch back to password login
+            });
+          },
+          child: Text(
+            "Use Password to Login",
             style: TextStyle(color: japfaOrange, fontSize: 14),
           ),
         ),
@@ -156,8 +186,32 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       return;
     }
 
-    await ref.read(loginProvider.notifier).login(email, password);
+    await ref
+        .read(loginProvider.notifier)
+        .loginPassword(email: email, password: password);
 
+    _handleLoginResponse();
+  }
+
+  Future<void> _tokenLoginFunction() async {
+    String email = _emailController.text.trim();
+    String token = _tokenController.text.trim();
+
+    if (email.isEmpty || token.isEmpty) {
+      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+      ref.read(loginProvider.notifier).state =
+          LoginState(errorMessage: "Please fill in all fields");
+      return;
+    }
+
+    await ref
+        .read(loginProvider.notifier)
+        .loginToken(email: email, passwordToken: token);
+
+    _handleLoginResponse();
+  }
+
+  void _handleLoginResponse() {
     final currentState = ref.read(loginProvider);
     // Now check if logged in after the state is updated
     if (currentState.isLoggedIn) {

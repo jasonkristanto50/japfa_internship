@@ -12,7 +12,7 @@ const pool = new Pool({
 });  
 
 // Unified login endpoint  
-router.post('/', async (req, res) => {  
+router.post('/login-password', async (req, res) => {  
     const { email, password } = req.body;  
 
     try {  
@@ -49,5 +49,45 @@ router.post('/', async (req, res) => {
         return res.status(500).json({ error: 'Server error' });  
     }  
 });  
+
+// Login by password token endpoint
+router.post('/login-token', async (req, res) => {  
+    const { email, password_token } = req.body;  // Expect email and password_token
+
+    try {  
+        // Check in peserta_magang table with password_token
+        let result = await pool.query(  
+            'SELECT * FROM PESERTA_MAGANG WHERE email = $1 AND password_token = $2',  
+            [email, password_token]  
+        );  
+
+        if (result.rows.length > 0) {  
+            const user = result.rows[0];  
+            return res.status(200).json({  
+                nama: user.nama,
+                email: user.email
+            });  
+        }  
+
+        // Check in kunjungan_studi table with password_token
+        result = await pool.query(  
+            'SELECT * FROM KUNJUNGAN_STUDI WHERE email = $1 AND password_token = $2',  
+            [email, password_token]  
+        );  
+
+        if (result.rows.length > 0) {  
+            const user = result.rows[0];  
+            return res.status(200).json({  
+                email: user.email // Return role for pendaftar  
+            });  
+        } 
+
+        // If no user found  
+        return res.status(401).json({ error: 'Invalid credentials' });  
+    } catch (error) {  
+        console.error('Login error:', error);  
+        return res.status(500).json({ error: 'Server error' });  
+    }  
+});
 
 module.exports = router;  

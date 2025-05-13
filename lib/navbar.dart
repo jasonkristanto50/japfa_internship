@@ -7,6 +7,7 @@ import 'package:japfa_internship/admin_page/kunjungan_studi_dashboard.dart';
 import 'package:japfa_internship/admin_page/pendaftaran_magang_detail_page.dart';
 import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
+import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/home_page.dart';
 import 'package:japfa_internship/models/kunjungan_studi_data/kunjungan_studi_data.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
@@ -130,7 +131,7 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
                     buildNavBarTab("Logbook", _navigateToLogbookPage),
                     buildNavBarTab("Laporan", _navigateToLaporanPage),
                     buildNavBarTab("Departemen", _navigateToHomePageMagang)
-                  ] else if (loginState.role == "pendaftar") ...[
+                  ] else if (loginState.role == rolePendaftarValue) ...[
                     // PENDAFTAR
                     buildNavBarTab("My Submission", _navigateToSubmissionData),
                     buildNavBarTab("Timeline", _navigateToTimeLine),

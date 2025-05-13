@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:japfa_internship/components/widget_component.dart';
+import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
+import 'package:japfa_internship/home_page.dart';
 import 'package:japfa_internship/navbar.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
@@ -44,6 +46,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       appBar: Navbar(
         title: appName,
         context: context,
+        titleOnPressed: () {
+          fadeNavigation(context, targetNavigation: const MyHomePage());
+        },
       ),
       body: Container(
         decoration: buildJapfaLogoBackground(),

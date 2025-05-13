@@ -28,8 +28,8 @@ class _PendaftaranMagangDetailPageState
     peserta = widget.peserta;
 
     final login = ref.read(loginProvider);
-    if (peserta == null) {
-      _fetchByEmail('jason@gmail.com');
+    if (peserta == null && login.email != null) {
+      _fetchByEmail(login.email!);
     }
   }
 

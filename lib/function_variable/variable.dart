@@ -7,6 +7,10 @@ const String baseUrl = 'http://localhost:3000';
 Dio dio = Dio();
 int jumlahMaksimalPeserta = 55;
 
+// pendaftar magang & kunjungan yg blm diterima
+String rolePendaftarValue = "pendaftar";
+String rolePesertaMagangValue = "peserta magang";
+
 String statusMagangDiterima = 'Diterima';
 String statusMagangDitolak = 'Ditolak';
 String statusMagangMenunggu = 'On Process';
@@ -19,6 +23,7 @@ String statusKunjunganMenunggu = 'Menunggu';
 
 String durasiSesi1 = '08.30 - 12.00';
 String durasiSesi2 = '13.00 - 16.00';
+
 var pilihanJamKunjunganStudi = [
   DropdownMenuItem<String>(
     value: 'sesi1',

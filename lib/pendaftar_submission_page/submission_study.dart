@@ -369,8 +369,13 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
     final String asalUniversitas = universityController.text;
     final String jumlahPeserta = studentCountController.text;
     final String noTelepon = phoneController.text;
-    final String email = emailController.text;
+    final String email = emailController.text.trim();
     final String tanggalKegiatan = dateController.text;
+
+    persetujuanInstansiPath = await ApiService().uploadFileToServer(
+      persetujuanInstansiFile!,
+      persetujuanInstansiFileName!,
+    );
 
     // Fetch the current count to generate the new ID
     final countResponse =
@@ -378,8 +383,8 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
     final currentCount = int.parse(countResponse.data['count']);
     final String idKunjunganStudi = 'KJS_0${currentCount + 1}';
 
-    persetujuanInstansiPath = await ApiService().uploadFileToServer(
-        persetujuanInstansiFile!, persetujuanInstansiFileName!);
+    // Generate password token
+    String passwordTokenValue = generateRandomPassword(7);
 
     final kunjunganStudi = KunjunganStudiData(
       idKunjunganStudi: idKunjunganStudi,
@@ -392,16 +397,18 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
       jamKegiatan: selectedSession!,
       pathPersetujuanInstansi: persetujuanInstansiPath!,
       status: statusKunjunganMenunggu,
+      passwordToken: passwordTokenValue,
     );
 
-    const String url =
-        'http://localhost:3000/api/kunjungan_studi/submit-kunjungan-studi';
-
     try {
-      final response = await Dio().post(
-        url,
-        data: kunjunganStudi.toJson(),
-        options: Options(contentType: 'application/json'),
+      // Submit the data
+      final response = await ApiService().submitKunjunganStudi(kunjunganStudi);
+
+      // Send Email contain passwordToken to user
+      await ApiService().sendEmail(
+        emailController.text.trim(),
+        nameController.text,
+        passwordTokenValue,
       );
 
       if (response.statusCode == 201) {

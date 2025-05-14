@@ -107,10 +107,12 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
                         IconButton(
                           icon: const Icon(Icons.arrow_back),
                           onPressed: () {
-                            fadeNavigation(context,
-                                targetNavigation: SubmissionIntern(
-                                  departmentName: widget.departmentName,
-                                ));
+                            fadeNavigation(
+                              context,
+                              targetNavigation: SubmissionIntern(
+                                departmentName: widget.departmentName,
+                              ),
+                            );
                           },
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
@@ -166,7 +168,7 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
         String idMagang = 'PDFT_MG_0$count';
 
         // Generate password token
-        String passwordTokenValue = generateRandomPassword(10);
+        String passwordTokenValue = generateRandomPassword(7);
 
         // Create the PesertaMagangData object
         PesertaMagangData pesertaMagang = PesertaMagangData(
@@ -198,11 +200,7 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
           widget.name,
           passwordTokenValue,
         );
-
-        print("Email 2 : ${widget.email}");
-        print("Nama2: ${widget.name}");
       } catch (error) {
-        print("Submission: $error");
         showSnackBar(context, 'An error occurred while submitting the form');
       }
     } else {

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -493,5 +494,7 @@ void launchURLImagePath(String path) async {
 
 String generateRandomPassword(int length) {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  return List.generate(length, (index) => chars[(index % chars.length)]).join();
+  final Random random = Random();
+  return List.generate(length, (index) => chars[random.nextInt(chars.length)])
+      .join();
 }

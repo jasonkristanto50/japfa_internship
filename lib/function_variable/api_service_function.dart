@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:japfa_internship/models/departemen_data/departemen_data.dart';
+import 'package:japfa_internship/models/kunjungan_studi_data/kunjungan_studi_data.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
 
 class ApiService {
@@ -323,5 +324,18 @@ class ApiService {
       print('Error updating department: $e');
       rethrow; // Rethrow the exception for handling in the widget
     }
+  }
+
+  ////////////////////////////////////// KUNJUNGAN STUDI ///////////////////////////////////////////////////
+  Future<Response> submitKunjunganStudi(
+      KunjunganStudiData kunjunganStudi) async {
+    const String url =
+        'http://localhost:3000/api/kunjungan_studi/submit-kunjungan-studi';
+
+    return await Dio().post(
+      url,
+      data: kunjunganStudi.toJson(),
+      options: Options(contentType: 'application/json'),
+    );
   }
 }

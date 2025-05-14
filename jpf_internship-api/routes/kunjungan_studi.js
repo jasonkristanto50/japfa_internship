@@ -13,7 +13,7 @@ const pool = new Pool({
 
 // Add a new Kunjungan Studi  
 router.post('/submit-kunjungan-studi', async (req, res) => {  
-  const { id_kunjungan_studi, nama_perwakilan, no_telp, email, asal_universitas, jumlah_peserta, tanggal_kegiatan, jam_kegiatan,path_persetujuan_instansi, status } = req.body;  
+  const { id_kunjungan_studi, nama_perwakilan, no_telp, email, asal_universitas, jumlah_peserta, tanggal_kegiatan, jam_kegiatan, path_persetujuan_instansi, status, password_token } = req.body;  
 
   // Validate required fields
   if (!id_kunjungan_studi || !nama_perwakilan || !no_telp || !email || !asal_universitas || !jumlah_peserta || !tanggal_kegiatan || !jam_kegiatan || !path_persetujuan_instansi || !status) {
@@ -22,8 +22,8 @@ router.post('/submit-kunjungan-studi', async (req, res) => {
 
   try {   
       await pool.query(  
-          'INSERT INTO KUNJUNGAN_STUDI (id_kunjungan_studi, nama_perwakilan, no_telp, email, asal_universitas, jumlah_peserta, tanggal_kegiatan, jam_kegiatan, path_persetujuan_instansi, status) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',  
-          [id_kunjungan_studi, nama_perwakilan, no_telp, email, asal_universitas, parseInt(jumlah_peserta), tanggal_kegiatan, jam_kegiatan, path_persetujuan_instansi, status] // Ensure jumlah_peserta is parsed as an integer
+          'INSERT INTO KUNJUNGAN_STUDI (id_kunjungan_studi, nama_perwakilan, no_telp, email, asal_universitas, jumlah_peserta, tanggal_kegiatan, jam_kegiatan, path_persetujuan_instansi, status, password_token) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',  
+          [id_kunjungan_studi, nama_perwakilan, no_telp, email, asal_universitas, parseInt(jumlah_peserta), tanggal_kegiatan, jam_kegiatan, path_persetujuan_instansi, status, password_token]
       );  
       res.status(201).json({ message: 'Kunjungan Studi added successfully!' });  
   } catch (error) {  
@@ -31,6 +31,7 @@ router.post('/submit-kunjungan-studi', async (req, res) => {
       res.status(500).json({ error: 'Server error' });  
   }  
 });
+
 // Get all Kunjungan Studi  
 router.get('/fetch-all-kunjungan-data', async (req, res) => {  
     try {  

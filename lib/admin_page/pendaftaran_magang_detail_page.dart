@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:japfa_internship/authentication/login.dart';
 import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/components/widget_component.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
+import 'package:japfa_internship/home_page.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
 import 'package:japfa_internship/navbar.dart';
 
@@ -33,17 +35,6 @@ class _PendaftaranMagangDetailPageState
     }
   }
 
-  Future<void> _fetchByEmail(String email) async {
-    setState(() => _loading = true);
-    try {
-      // TODO
-      final data = await ApiService().fetchPesertaMagangByEmail(email);
-      setState(() => peserta = data);
-    } finally {
-      setState(() => _loading = false);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,6 +52,19 @@ class _PendaftaranMagangDetailPageState
 
   Widget _body() {
     if (_loading) return const Center(child: CircularProgressIndicator());
+    final login = ref.read(loginProvider);
+    if (login.isLoggedIn == false) {
+      return CustomLoginDialog(
+        onLoginPressed: () => fadeNavigation(
+          context,
+          targetNavigation: const LoginScreen(),
+        ),
+        onClearTap: () => fadeNavigation(
+          context,
+          targetNavigation: const MyHomePage(),
+        ),
+      );
+    }
     if (peserta == null) {
       return const Center(child: Text('Tidak ada data peserta.'));
     }
@@ -91,57 +95,58 @@ class _PendaftaranMagangDetailPageState
     );
   }
 
-  Widget _mainContent() => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    buildDataInfoField(label: 'Nama', value: peserta!.nama),
-                    buildDataInfoField(
-                        label: 'No. Telp', value: peserta!.noTelp),
-                    buildDataInfoField(label: 'Email', value: peserta!.email),
-                    buildDataInfoField(
-                        label: 'Universitas', value: peserta!.asalUniversitas),
-                    buildDataInfoField(
-                        label: 'Jurusan', value: peserta!.jurusan),
-                    buildDataInfoField(
-                        label: 'Angkatan', value: peserta!.angkatan.toString()),
-                    buildDataInfoField(
-                        label: 'IPK', value: peserta!.nilaiUniv.toString()),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(width: 50),
-            _fileAndStatus(),
-            const SizedBox(width: 50),
-            _foto(),
-          ],
-        ),
-      );
-
-  Widget _fileAndStatus() => Column(
+  Widget _mainContent() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          buildFileButton('CV', () => launchURLImagePath(peserta!.pathCv)),
-          buildFileButton('Persetujuan Kampus',
-              () => launchURLImagePath(peserta!.pathPersetujuanUniv)),
-          buildFileButton('Transkrip Nilai',
-              () => launchURLImagePath(peserta!.pathTranskripNilai)),
-          const SizedBox(height: 10),
-          Text('STATUS:', style: bold14),
-          Text(peserta!.statusMagang,
-              style: bold16.copyWith(color: japfaOrange)),
-          const SizedBox(height: 10),
-          Text('NOTE:', style: regular14),
-          Text(peserta!.catatanHr ?? 'Tidak ada catatan'),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  buildDataInfoField(label: 'Nama', value: peserta!.nama),
+                  buildDataInfoField(label: 'No. Telp', value: peserta!.noTelp),
+                  buildDataInfoField(label: 'Email', value: peserta!.email),
+                  buildDataInfoField(
+                      label: 'Universitas', value: peserta!.asalUniversitas),
+                  buildDataInfoField(label: 'Jurusan', value: peserta!.jurusan),
+                  buildDataInfoField(
+                      label: 'Angkatan', value: peserta!.angkatan.toString()),
+                  buildDataInfoField(
+                      label: 'IPK', value: peserta!.nilaiUniv.toString()),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(width: 50),
+          _fileAndStatus(),
+          const SizedBox(width: 50),
+          _foto(),
         ],
-      );
+      ),
+    );
+  }
+
+  Widget _fileAndStatus() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        buildFileButton('CV', () => launchURLImagePath(peserta!.pathCv)),
+        buildFileButton('Persetujuan Kampus',
+            () => launchURLImagePath(peserta!.pathPersetujuanUniv)),
+        buildFileButton('Transkrip Nilai',
+            () => launchURLImagePath(peserta!.pathTranskripNilai)),
+        const SizedBox(height: 10),
+        Text('STATUS:', style: bold14),
+        Text(peserta!.statusMagang, style: bold16.copyWith(color: japfaOrange)),
+        const SizedBox(height: 10),
+        Text('NOTE:', style: regular14),
+        Text(peserta!.catatanHr ?? 'Tidak ada catatan'),
+      ],
+    );
+  }
 
   Widget _foto() {
     final img = '$baseUrl${peserta!.pathFotoDiri}';
@@ -156,7 +161,10 @@ class _PendaftaranMagangDetailPageState
     );
   }
 
-  Widget _actionButtons() => Row(
+  Widget _actionButtons() {
+    final loginState = ref.watch(loginProvider);
+    if (loginState.role == roleAdminValue) {
+      return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           RoundedRectangleButton(
@@ -178,8 +186,23 @@ class _PendaftaranMagangDetailPageState
           ),
         ],
       );
+    } else {
+      return const SizedBox();
+    }
+  }
 
-  void _confirmAccept(PesertaMagangData p) async {
+  Future<void> _fetchByEmail(String email) async {
+    setState(() => _loading = true);
+    try {
+      // TODO
+      final data = await ApiService().fetchPesertaMagangByEmail(email);
+      setState(() => peserta = data);
+    } finally {
+      setState(() => _loading = false);
+    }
+  }
+
+  void _confirmAccept(PesertaMagangData peserta) async {
     await showCustomConfirmAcceptDialogWithNote(
       context: context,
       title: 'Konfirmasi Terima ?',
@@ -188,16 +211,16 @@ class _PendaftaranMagangDetailPageState
       rejectText: 'Batal',
       onAccept: (note) {
         if (note == null) {
-          _updateStatus(p.idMagang, statusMagangDiterima);
+          _updateStatus(peserta.idMagang, statusMagangDiterima);
         } else {
-          _updateStatusWithNote(p, true, note);
+          _updateStatusWithNote(peserta, true, note);
         }
       },
       onReject: () {},
     );
   }
 
-  void _confirmReject(PesertaMagangData p) async {
+  void _confirmReject(PesertaMagangData peserta) async {
     await showCustomConfirmRejectDialogWithNote(
       context: context,
       title: 'Konfirmasi Ditolak ?',
@@ -206,9 +229,9 @@ class _PendaftaranMagangDetailPageState
       onAccept: () {},
       onReject: (note) {
         if (note == null) {
-          _updateStatus(p.idMagang, statusMagangDitolak);
+          _updateStatus(peserta.idMagang, statusMagangDitolak);
         } else {
-          _updateStatusWithNote(p, false, note);
+          _updateStatusWithNote(peserta, false, note);
         }
       },
     );

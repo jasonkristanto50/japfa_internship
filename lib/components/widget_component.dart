@@ -67,40 +67,60 @@ class RoundedRectangleButton extends StatelessWidget {
   }
 }
 
-// Custom Dialog Widget for Login
+// Custom Dialog Widget for Login if user not login
 class CustomLoginDialog extends StatelessWidget {
   final VoidCallback onLoginPressed;
+  final VoidCallback? onClearTap;
 
-  const CustomLoginDialog({required this.onLoginPressed, super.key});
+  const CustomLoginDialog(
+      {required this.onLoginPressed, this.onClearTap, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      backgroundColor: Colors.white,
-      contentPadding: const EdgeInsets.all(24),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Text(
-            "Please Login",
-            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+    return GestureDetector(
+      onTap: () {
+        if (onClearTap == null) {
+          onClearTap?.call();
+        } else {
+          Navigator.of(context).pop();
+        }
+      },
+      child: Container(
+        color: Colors.black.withOpacity(0.5), // Black transparent background
+        child: Center(
+          child: GestureDetector(
+            onTap: () {}, // Prevent taps on the dialog from closing it
+            child: AlertDialog(
+              backgroundColor: Colors.white,
+              contentPadding: const EdgeInsets.all(24),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    "Please Login",
+                    style:
+                        TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 16.0),
+                  const Text("You need to login to apply."),
+                  const SizedBox(height: 24.0),
+                  RoundedRectangleButton(
+                    title: "LOGIN",
+                    backgroundColor: japfaOrange,
+                    fontColor: Colors.white,
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Close the dialog
+                      onLoginPressed(); // Trigger the login navigation
+                    },
+                  ),
+                ],
+              ),
+            ),
           ),
-          const SizedBox(height: 16.0),
-          const Text("You need to login to apply."),
-          const SizedBox(height: 24.0),
-          RoundedRectangleButton(
-            title: "LOGIN",
-            backgroundColor: japfaOrange,
-            fontColor: Colors.white,
-            onPressed: () {
-              Navigator.of(context).pop(); // Close the dialog
-              onLoginPressed(); // Trigger the login navigation
-            },
-          ),
-        ],
+        ),
       ),
     );
   }

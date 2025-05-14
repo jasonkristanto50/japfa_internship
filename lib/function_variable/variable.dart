@@ -8,8 +8,11 @@ Dio dio = Dio();
 int jumlahMaksimalPeserta = 55;
 
 // pendaftar magang & kunjungan yg blm diterima
+String roleAdminValue = "admin";
 String rolePendaftarValue = "pendaftar";
 String rolePesertaMagangValue = "peserta magang";
+String roleKepalaDeptValue = "kepala departemen";
+String roleKunjunganStudiValue = "kunjungan";
 
 String statusMagangDiterima = 'Diterima';
 String statusMagangDitolak = 'Ditolak';

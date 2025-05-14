@@ -6,8 +6,11 @@ import 'package:japfa_internship/components/widget_component.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-void fadeNavigation(BuildContext context,
-    {required Widget targetNavigation, int? time}) {
+void fadeNavigation(
+  BuildContext context, {
+  required Widget targetNavigation,
+  int? time,
+}) {
   final fadeDuration = time != null
       ? Duration(milliseconds: time)
       : const Duration(milliseconds: 500);
@@ -26,8 +29,11 @@ void fadeNavigation(BuildContext context,
   );
 }
 
-Widget buildTextField(String label, TextEditingController controller,
-    {bool isPassword = false}) {
+Widget buildTextField(
+  String label,
+  TextEditingController controller, {
+  bool isPassword = false,
+}) {
   return TextField(
     controller: controller,
     obscureText: isPassword,

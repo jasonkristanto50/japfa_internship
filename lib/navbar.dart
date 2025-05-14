@@ -241,6 +241,10 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
         break;
       default:
         // Handle any other roles or errors as necessary
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const MyHomePage()),
+          (route) => false,
+        );
         break;
     }
   }

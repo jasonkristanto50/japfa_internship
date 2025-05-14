@@ -65,7 +65,8 @@ router.post('/login-token', async (req, res) => {
             const user = result.rows[0];  
             return res.status(200).json({  
                 nama: user.nama,
-                email: user.email
+                email: user.email,
+                status_magang: user.status_magang
             });  
         }  
 

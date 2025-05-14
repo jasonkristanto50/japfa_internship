@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/components/widget_component.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/navbar.dart';
@@ -25,9 +26,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    _nameController.text = userName;
-    _emailController.text = userEmail;
-    _roleController.text = userRole;
+    final loginState = ref.read(loginProvider);
+    _nameController.text = loginState.name!;
+    _emailController.text = loginState.email!;
+    _roleController.text = loginState.role!;
   }
 
   @override

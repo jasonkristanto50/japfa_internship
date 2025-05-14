@@ -7,15 +7,19 @@ class LoginState {
   final bool isLoading;
   final String? errorMessage;
   final bool isLoggedIn;
+  final String? name;
   final String? role;
   final String? email;
+  final String? statusMagang;
 
   LoginState({
     this.isLoading = false,
     this.errorMessage,
     this.isLoggedIn = false,
+    this.name,
     this.role,
     this.email,
+    this.statusMagang,
   });
 
   LoginState copyWith({
@@ -121,12 +125,24 @@ class LoginNotifier extends StateNotifier<LoginState> {
       );
 
       if (response.statusCode == 200) {
-        state = LoginState(
-          isLoading: false,
-          isLoggedIn: true,
-          role: rolePendaftarValue,
-          email: email,
-        );
+        final data = response.data;
+        if (data['status_magang'] == statusMagangBerlangsung) {
+          state = LoginState(
+              isLoading: false,
+              isLoggedIn: true,
+              name: data['nama'],
+              email: email,
+              role: rolePesertaMagangValue,
+              statusMagang: data['status_magang']);
+        } else if (data['status_magang'] == statusMagangMenunggu) {
+          state = LoginState(
+              isLoading: false,
+              isLoggedIn: true,
+              name: data['nama'],
+              email: email,
+              role: rolePendaftarValue,
+              statusMagang: data['status_magang']);
+        }
       } else {
         state = state.copyWith(
           isLoading: false,

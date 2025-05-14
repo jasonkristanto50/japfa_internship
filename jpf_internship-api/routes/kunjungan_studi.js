@@ -43,6 +43,18 @@ router.get('/fetch-all-kunjungan-data', async (req, res) => {
     }  
 });  
 
+// Get Peserta Magang data by ID
+router.get('/fetch-kunjungan-data/:email', async (req, res) => { 
+    const{email} = req.params
+    try {  
+        const result = await pool.query('SELECT * FROM KUNJUNGAN_STUDI WHERE email = $1', [email] );  
+        res.status(200).json(result.rows);  
+    } catch (error) {  
+        console.error('Error fetching Peserta Magang:', error);  
+        res.status(500).json({ error: 'Server error' });  
+    }  
+}); 
+
 // Get count of Kunjungan Studi  
 router.get('/count', async (req, res) => {  
         try {  

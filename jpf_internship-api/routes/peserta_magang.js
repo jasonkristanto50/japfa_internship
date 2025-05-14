@@ -223,7 +223,7 @@ router.put('/update-data/:id', async (req, res) => {
     }  
 }); 
 
-// Update Peserta Magang STATUS by ID  
+// Update Peserta Magang STATUS by Email  
 router.put('/update-password-token/:email', async (req, res) => {  
     const { email } = req.params;
     const { password_token } = req.body;

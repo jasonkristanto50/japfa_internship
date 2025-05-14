@@ -11,16 +11,17 @@ class LoginState {
   final String? role;
   final String? email;
   final String? statusMagang;
+  final String? statusKunjungan;
 
-  LoginState({
-    this.isLoading = false,
-    this.errorMessage,
-    this.isLoggedIn = false,
-    this.name,
-    this.role,
-    this.email,
-    this.statusMagang,
-  });
+  LoginState(
+      {this.isLoading = false,
+      this.errorMessage,
+      this.isLoggedIn = false,
+      this.name,
+      this.role,
+      this.email,
+      this.statusMagang,
+      this.statusKunjungan});
 
   LoginState copyWith({
     bool? isLoading,
@@ -142,6 +143,16 @@ class LoginNotifier extends StateNotifier<LoginState> {
               email: email,
               role: rolePendaftarValue,
               statusMagang: data['status_magang']);
+        }
+
+        if (data['status'] == statusKunjunganMenunggu) {
+          state = LoginState(
+              isLoading: false,
+              isLoggedIn: true,
+              name: data['nama_perwakilan'],
+              email: email,
+              role: rolePendaftarValue,
+              statusKunjungan: data['status']);
         }
       } else {
         state = state.copyWith(

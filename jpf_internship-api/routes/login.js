@@ -78,8 +78,10 @@ router.post('/login-token', async (req, res) => {
 
         if (result.rows.length > 0) {  
             const user = result.rows[0];  
-            return res.status(200).json({  
-                email: user.email // Return role for pendaftar  
+            return res.status(200).json({
+                nama_perwakilan: user.nama_perwakilan,  
+                email: user.email,
+                status: user.status
             });  
         } 
 

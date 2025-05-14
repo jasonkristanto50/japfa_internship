@@ -11,6 +11,7 @@ import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/home_page.dart';
 import 'package:japfa_internship/models/kunjungan_studi_data/kunjungan_studi_data.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
+import 'package:japfa_internship/pendaftar_submission_page/kunjungan_studi_detail_page.dart';
 import 'package:japfa_internship/pendaftar_submission_page/timeline_interview.dart';
 import 'package:japfa_internship/peserta_magang_page/laporan_peserta_magang.dart';
 import 'package:japfa_internship/peserta_magang_page/logbook_peserta.dart';
@@ -127,13 +128,16 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
                     buildNavBarTab("Logbook", _navigateToLogbookPage),
                     buildNavBarTab("Laporan", _navigateToLaporanPage),
                   ] else if (loginState.role == "kepala departemen") ...[
-                    // PESERTA MAGANG Navbar
+                    // KEPALA DEPARTEMEN Navbar
                     buildNavBarTab("Logbook", _navigateToLogbookPage),
                     buildNavBarTab("Laporan", _navigateToLaporanPage),
                     buildNavBarTab("Departemen", _navigateToHomePageMagang)
                   ] else if (loginState.role == rolePendaftarValue) ...[
                     // PENDAFTAR
-                    buildNavBarTab("My Submission", _navigateToSubmissionData),
+                    buildNavBarTab(
+                        "Pengajuan Magang", _navigateToSubmissionData),
+                    buildNavBarTab(
+                        "Pengajuan Kunjungan", _navigateToKunjunganData),
                     buildNavBarTab("Timeline", _navigateToTimeLine),
                   ],
                   const SizedBox(width: 16),
@@ -259,6 +263,10 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
   void _navigateToSubmissionData() {
     fadeNavigation(context,
         targetNavigation: PendaftaranMagangDetailPage(peserta: peserta));
+  }
+
+  void _navigateToKunjunganData() {
+    fadeNavigation(context, targetNavigation: const KunjunganStudiDetailPage());
   }
 
   void _navigateToTimeLine() {

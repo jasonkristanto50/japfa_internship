@@ -338,4 +338,20 @@ class ApiService {
       options: Options(contentType: 'application/json'),
     );
   }
+
+  // Fetch Kunjungan Studi Data by Email
+  Future<List<KunjunganStudiData>> fetchKunjunganDataByEmail(
+    String email,
+  ) async {
+    final response = await _dio.get(
+        'http://localhost:3000/api/kunjungan_studi/fetch-kunjungan-data/$email');
+
+    if (response.statusCode == 200) {
+      // Assuming that the response is a list of kunjungan studi data
+      final List<dynamic> data = response.data;
+      return data.map((json) => KunjunganStudiData.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load Kunjungan Studi data');
+    }
+  }
 }

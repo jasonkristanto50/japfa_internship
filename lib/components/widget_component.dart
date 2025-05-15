@@ -355,3 +355,81 @@ class ConfirmationDialog extends StatelessWidget {
     );
   }
 }
+
+// Custom Alert Dialog
+class CustomAlertDialog extends StatelessWidget {
+  final String title;
+  final String departmentName;
+  final TextEditingController controller;
+  final String label;
+  final VoidCallback onSave;
+
+  const CustomAlertDialog({
+    super.key,
+    required this.title,
+    required this.departmentName,
+    required this.controller,
+    required this.label,
+    required this.onSave,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      title: Center(
+        child: Text(title, style: bold24),
+      ),
+      content: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Text(
+                departmentName.toUpperCase(),
+                style: regular20.copyWith(color: japfaOrange),
+              ),
+            ),
+            const SizedBox(height: 16),
+            _buildTextField(controller, label),
+            const SizedBox(height: 16),
+            Center(
+                child: RoundedRectangleButton(
+              title: "Simpan",
+              backgroundColor: japfaOrange,
+              fontColor: Colors.white,
+              onPressed: onSave,
+            )),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String label) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: regular14.copyWith(color: Colors.black),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.orange, width: 2),
+          ),
+        ),
+        keyboardType: TextInputType.number,
+        style: const TextStyle(color: Colors.black),
+        cursorColor: Colors.black,
+      ),
+    );
+  }
+}

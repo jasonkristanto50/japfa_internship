@@ -4,11 +4,12 @@ import 'package:japfa_internship/components/widget_component.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
 import 'package:japfa_internship/function_variable/file_uploading.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
+import 'package:japfa_internship/function_variable/string_value.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
+import 'package:japfa_internship/home_page.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/pendaftar_submission_page/submission_intern_text.dart';
-import 'package:japfa_internship/pendaftar_submission_page/timeline_interview.dart';
 
 class SubmissionInternFile extends StatefulWidget {
   final String departmentName;
@@ -259,8 +260,12 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
           onPressed: () {
             if (validateFileFields(context)) {
               _submitFormPesertaMagang();
-              fadeNavigation(context,
-                  targetNavigation: const TimelineInterview());
+              fadeNavigation(context, targetNavigation: const MyHomePage());
+              showConfirmationDialog(
+                context,
+                title: confirmationTitleValue,
+                message: confirmationMessageValue,
+              );
             }
           },
         ),

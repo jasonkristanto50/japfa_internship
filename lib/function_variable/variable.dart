@@ -7,23 +7,6 @@ const String baseUrl = 'http://localhost:3000';
 Dio dio = Dio();
 int jumlahMaksimalPeserta = 55;
 
-// pendaftar magang & kunjungan yg blm diterima
-String roleAdminValue = "admin";
-String rolePendaftarValue = "pendaftar";
-String rolePesertaMagangValue = "peserta magang";
-String roleKepalaDeptValue = "kepala departemen";
-String roleKunjunganStudiValue = "kunjungan";
-
-String statusMagangDiterima = 'Diterima';
-String statusMagangDitolak = 'Ditolak';
-String statusMagangMenunggu = 'On Process';
-String statusMagangBerlangsung = 'Sedang Berlangsung';
-String statusMagangSelesai = 'Selesai';
-
-String statusKunjunganDiterima = 'Diterima';
-String statusKunjunganDitolak = 'Ditolak';
-String statusKunjunganMenunggu = 'Menunggu';
-
 String durasiSesi1 = '08.30 - 12.00';
 String durasiSesi2 = '13.00 - 16.00';
 

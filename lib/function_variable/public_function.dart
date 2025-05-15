@@ -498,3 +498,17 @@ String generateRandomPassword(int length) {
   return List.generate(length, (index) => chars[random.nextInt(chars.length)])
       .join();
 }
+
+// Show Confirmation Dialog
+Future<void> showConfirmationDialog(BuildContext context,
+    {required String title, required String message}) {
+  return showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return ConfirmationDialog(
+        title: title,
+        message: message,
+      );
+    },
+  );
+}

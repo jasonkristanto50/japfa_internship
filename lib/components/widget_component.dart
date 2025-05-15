@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 
 // Build the Japfa Logo Background
@@ -215,7 +216,7 @@ class CustomRespondDialog extends StatelessWidget {
   }
 }
 
-// ---------------- CustomSearchBar ----------------
+// CustomSearchBar
 class CustomSearchBar extends StatelessWidget {
   final Function(String) onChanged;
   final String? labelSearchBar;
@@ -292,4 +293,65 @@ class CustomSearchBar extends StatelessWidget {
           ),
         ),
       );
+}
+
+// Custom Confirmation Dialog
+class ConfirmationDialog extends StatelessWidget {
+  final String title;
+  final String message;
+
+  const ConfirmationDialog({
+    super.key,
+    required this.title,
+    required this.message,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.white, // Set background to white
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0), // Rounded corners
+      ),
+      child: Container(
+        constraints: const BoxConstraints(maxWidth: 400), // Set max width
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // Dynamic height based on content
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                title,
+                style: bold28.copyWith(color: japfaOrange),
+                textAlign: TextAlign.center, // Center align title
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text(
+                message,
+                style: regular20,
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(height: 24), // Space before button
+            Center(
+              child: RoundedRectangleButton(
+                title: "OK",
+                backgroundColor: japfaOrange,
+                height: 50.h,
+                width: 300.w,
+                rounded: 5,
+                fontColor: Colors.white,
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+              ),
+            ),
+            const SizedBox(height: 16), // Space at the bottom
+          ],
+        ),
+      ),
+    );
+  }
 }

@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
 import 'package:japfa_internship/function_variable/file_uploading.dart';
+import 'package:japfa_internship/function_variable/string_value.dart';
+import 'package:japfa_internship/home_page.dart';
 import 'package:japfa_internship/models/kunjungan_studi_data/kunjungan_studi_data.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:dio/dio.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
-import 'package:japfa_internship/pendaftar_submission_page/timeline_interview.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/components/widget_component.dart';
 import 'package:intl/intl.dart';
@@ -269,8 +270,9 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
     );
   }
 
-// Method to select the date
   Future<void> _selectDate(BuildContext context) async {
+    print("DatePicker: Initializing date selection");
+
     final DateTime now = DateTime.now();
     final DateTime firstAvailableDate = now.add(const Duration(days: 1));
 
@@ -279,14 +281,10 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
       initialDate: selectedDate ?? firstAvailableDate,
       firstDate: firstAvailableDate,
       lastDate: DateTime(2101),
-      selectableDayPredicate: (DateTime date) {
-        // Senin, Jumat, Sabtu, Minggu tidak boleh dipilih untuk kunjungan
-        return date.weekday != DateTime.monday &&
-            date.weekday != DateTime.friday &&
-            date.weekday != DateTime.saturday &&
-            date.weekday != DateTime.sunday;
-      },
     );
+
+    print(
+        "DatePicker: Date selected: ${picked.toString()}"); // Check if this is printed
 
     if (picked != null && picked != selectedDate) {
       setState(() {
@@ -412,9 +410,13 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
       );
 
       if (response.statusCode == 201) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Submission successful!')));
-        fadeNavigation(context, targetNavigation: const TimelineInterview());
+        showSnackBar(context, pengajuanSuksesValue);
+        fadeNavigation(context, targetNavigation: const MyHomePage());
+        showConfirmationDialog(
+          context,
+          title: confirmationTitleValue,
+          message: confirmationMessageValue,
+        );
       } else {
         throw Exception('Failed to submit details');
       }

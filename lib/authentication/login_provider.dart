@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:japfa_internship/function_variable/variable.dart';
+import 'package:japfa_internship/function_variable/string_value.dart';
 
 class LoginState {
   final bool isLoading;

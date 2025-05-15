@@ -66,6 +66,7 @@ router.post('/login-token', async (req, res) => {
             return res.status(200).json({  
                 nama: user.nama,
                 email: user.email,
+                departemen: user.departemen,
                 status_magang: user.status_magang
             });  
         }  

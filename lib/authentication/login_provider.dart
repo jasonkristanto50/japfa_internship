@@ -10,6 +10,7 @@ class LoginState {
   final String? name;
   final String? role;
   final String? email;
+  final String? departemen;
   final String? statusMagang;
   final String? statusKunjungan;
 
@@ -20,6 +21,7 @@ class LoginState {
       this.name,
       this.role,
       this.email,
+      this.departemen,
       this.statusMagang,
       this.statusKunjungan});
 
@@ -134,6 +136,7 @@ class LoginNotifier extends StateNotifier<LoginState> {
               name: data['nama'],
               email: email,
               role: rolePesertaMagangValue,
+              departemen: data['departemen'],
               statusMagang: data['status_magang']);
         } else if (data['status_magang'] == statusMagangMenunggu) {
           state = LoginState(
@@ -142,6 +145,7 @@ class LoginNotifier extends StateNotifier<LoginState> {
               name: data['nama'],
               email: email,
               role: rolePendaftarValue,
+              departemen: data['departemen'],
               statusMagang: data['status_magang']);
         }
 

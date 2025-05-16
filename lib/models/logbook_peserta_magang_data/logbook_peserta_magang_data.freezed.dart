@@ -4,7 +4,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'laporan_peserta_magang_data.dart';
+part of 'logbook_peserta_magang_data.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,9 +14,9 @@ part of 'laporan_peserta_magang_data.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$LaporanPesertaMagangData {
-  @JsonKey(name: 'id_laporan')
-  String get idLaporan;
+mixin _$LogbookPesertaMagangData {
+  @JsonKey(name: 'id_logbook')
+  String get idLogbook;
   @JsonKey(name: 'nama_peserta')
   String get namaPeserta;
   @JsonKey(name: 'departemen')
@@ -25,6 +25,8 @@ mixin _$LaporanPesertaMagangData {
   String get email;
   @JsonKey(name: 'nama_aktivitas')
   String get namaAktivitas;
+  @JsonKey(name: 'tanggal_aktivitas')
+  String get tanggalAktivitas;
   @JsonKey(name: 'url_lampiran')
   String get urlLampiran;
   @JsonKey(name: 'validasi_pembimbing')
@@ -32,24 +34,24 @@ mixin _$LaporanPesertaMagangData {
   @JsonKey(name: 'catatan_pembimbing')
   String? get catatanPembimbing;
 
-  /// Create a copy of LaporanPesertaMagangData
+  /// Create a copy of LogbookPesertaMagangData
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  $LaporanPesertaMagangDataCopyWith<LaporanPesertaMagangData> get copyWith =>
-      _$LaporanPesertaMagangDataCopyWithImpl<LaporanPesertaMagangData>(
-          this as LaporanPesertaMagangData, _$identity);
+  $LogbookPesertaMagangDataCopyWith<LogbookPesertaMagangData> get copyWith =>
+      _$LogbookPesertaMagangDataCopyWithImpl<LogbookPesertaMagangData>(
+          this as LogbookPesertaMagangData, _$identity);
 
-  /// Serializes this LaporanPesertaMagangData to a JSON map.
+  /// Serializes this LogbookPesertaMagangData to a JSON map.
   Map<String, dynamic> toJson();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is LaporanPesertaMagangData &&
-            (identical(other.idLaporan, idLaporan) ||
-                other.idLaporan == idLaporan) &&
+            other is LogbookPesertaMagangData &&
+            (identical(other.idLogbook, idLogbook) ||
+                other.idLogbook == idLogbook) &&
             (identical(other.namaPeserta, namaPeserta) ||
                 other.namaPeserta == namaPeserta) &&
             (identical(other.departemen, departemen) ||
@@ -57,6 +59,8 @@ mixin _$LaporanPesertaMagangData {
             (identical(other.email, email) || other.email == email) &&
             (identical(other.namaAktivitas, namaAktivitas) ||
                 other.namaAktivitas == namaAktivitas) &&
+            (identical(other.tanggalAktivitas, tanggalAktivitas) ||
+                other.tanggalAktivitas == tanggalAktivitas) &&
             (identical(other.urlLampiran, urlLampiran) ||
                 other.urlLampiran == urlLampiran) &&
             (identical(other.validasiPembimbing, validasiPembimbing) ||
@@ -69,64 +73,67 @@ mixin _$LaporanPesertaMagangData {
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      idLaporan,
+      idLogbook,
       namaPeserta,
       departemen,
       email,
       namaAktivitas,
+      tanggalAktivitas,
       urlLampiran,
       validasiPembimbing,
       catatanPembimbing);
 
   @override
   String toString() {
-    return 'LaporanPesertaMagangData(idLaporan: $idLaporan, namaPeserta: $namaPeserta, departemen: $departemen, email: $email, namaAktivitas: $namaAktivitas, urlLampiran: $urlLampiran, validasiPembimbing: $validasiPembimbing, catatanPembimbing: $catatanPembimbing)';
+    return 'LogbookPesertaMagangData(idLogbook: $idLogbook, namaPeserta: $namaPeserta, departemen: $departemen, email: $email, namaAktivitas: $namaAktivitas, tanggalAktivitas: $tanggalAktivitas, urlLampiran: $urlLampiran, validasiPembimbing: $validasiPembimbing, catatanPembimbing: $catatanPembimbing)';
   }
 }
 
 /// @nodoc
-abstract mixin class $LaporanPesertaMagangDataCopyWith<$Res> {
-  factory $LaporanPesertaMagangDataCopyWith(LaporanPesertaMagangData value,
-          $Res Function(LaporanPesertaMagangData) _then) =
-      _$LaporanPesertaMagangDataCopyWithImpl;
+abstract mixin class $LogbookPesertaMagangDataCopyWith<$Res> {
+  factory $LogbookPesertaMagangDataCopyWith(LogbookPesertaMagangData value,
+          $Res Function(LogbookPesertaMagangData) _then) =
+      _$LogbookPesertaMagangDataCopyWithImpl;
   @useResult
   $Res call(
-      {@JsonKey(name: 'id_laporan') String idLaporan,
+      {@JsonKey(name: 'id_logbook') String idLogbook,
       @JsonKey(name: 'nama_peserta') String namaPeserta,
       @JsonKey(name: 'departemen') String? departemen,
       @JsonKey(name: 'email') String email,
       @JsonKey(name: 'nama_aktivitas') String namaAktivitas,
+      @JsonKey(name: 'tanggal_aktivitas') String tanggalAktivitas,
       @JsonKey(name: 'url_lampiran') String urlLampiran,
       @JsonKey(name: 'validasi_pembimbing') String? validasiPembimbing,
       @JsonKey(name: 'catatan_pembimbing') String? catatanPembimbing});
 }
 
 /// @nodoc
-class _$LaporanPesertaMagangDataCopyWithImpl<$Res>
-    implements $LaporanPesertaMagangDataCopyWith<$Res> {
-  _$LaporanPesertaMagangDataCopyWithImpl(this._self, this._then);
+class _$LogbookPesertaMagangDataCopyWithImpl<$Res>
+    implements $LogbookPesertaMagangDataCopyWith<$Res> {
+  _$LogbookPesertaMagangDataCopyWithImpl(this._self, this._then);
 
-  final LaporanPesertaMagangData _self;
-  final $Res Function(LaporanPesertaMagangData) _then;
+  final LogbookPesertaMagangData _self;
+  final $Res Function(LogbookPesertaMagangData) _then;
 
-  /// Create a copy of LaporanPesertaMagangData
+  /// Create a copy of LogbookPesertaMagangData
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? idLaporan = null,
+    Object? idLogbook = null,
     Object? namaPeserta = null,
     Object? departemen = freezed,
     Object? email = null,
     Object? namaAktivitas = null,
+    Object? tanggalAktivitas = null,
     Object? urlLampiran = null,
     Object? validasiPembimbing = freezed,
     Object? catatanPembimbing = freezed,
   }) {
     return _then(_self.copyWith(
-      idLaporan: null == idLaporan
-          ? _self.idLaporan
-          : idLaporan // ignore: cast_nullable_to_non_nullable
+      idLogbook: null == idLogbook
+          ? _self.idLogbook
+          : idLogbook // ignore: cast_nullable_to_non_nullable
               as String,
       namaPeserta: null == namaPeserta
           ? _self.namaPeserta
@@ -143,6 +150,10 @@ class _$LaporanPesertaMagangDataCopyWithImpl<$Res>
       namaAktivitas: null == namaAktivitas
           ? _self.namaAktivitas
           : namaAktivitas // ignore: cast_nullable_to_non_nullable
+              as String,
+      tanggalAktivitas: null == tanggalAktivitas
+          ? _self.tanggalAktivitas
+          : tanggalAktivitas // ignore: cast_nullable_to_non_nullable
               as String,
       urlLampiran: null == urlLampiran
           ? _self.urlLampiran
@@ -162,22 +173,23 @@ class _$LaporanPesertaMagangDataCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _LaporanPesertaMagangData implements LaporanPesertaMagangData {
-  const _LaporanPesertaMagangData(
-      {@JsonKey(name: 'id_laporan') required this.idLaporan,
+class _LogbookPesertaMagangData implements LogbookPesertaMagangData {
+  const _LogbookPesertaMagangData(
+      {@JsonKey(name: 'id_logbook') required this.idLogbook,
       @JsonKey(name: 'nama_peserta') required this.namaPeserta,
       @JsonKey(name: 'departemen') this.departemen,
       @JsonKey(name: 'email') required this.email,
       @JsonKey(name: 'nama_aktivitas') required this.namaAktivitas,
+      @JsonKey(name: 'tanggal_aktivitas') required this.tanggalAktivitas,
       @JsonKey(name: 'url_lampiran') required this.urlLampiran,
       @JsonKey(name: 'validasi_pembimbing') this.validasiPembimbing,
       @JsonKey(name: 'catatan_pembimbing') this.catatanPembimbing});
-  factory _LaporanPesertaMagangData.fromJson(Map<String, dynamic> json) =>
-      _$LaporanPesertaMagangDataFromJson(json);
+  factory _LogbookPesertaMagangData.fromJson(Map<String, dynamic> json) =>
+      _$LogbookPesertaMagangDataFromJson(json);
 
   @override
-  @JsonKey(name: 'id_laporan')
-  final String idLaporan;
+  @JsonKey(name: 'id_logbook')
+  final String idLogbook;
   @override
   @JsonKey(name: 'nama_peserta')
   final String namaPeserta;
@@ -191,6 +203,9 @@ class _LaporanPesertaMagangData implements LaporanPesertaMagangData {
   @JsonKey(name: 'nama_aktivitas')
   final String namaAktivitas;
   @override
+  @JsonKey(name: 'tanggal_aktivitas')
+  final String tanggalAktivitas;
+  @override
   @JsonKey(name: 'url_lampiran')
   final String urlLampiran;
   @override
@@ -201,18 +216,18 @@ class _LaporanPesertaMagangData implements LaporanPesertaMagangData {
   @JsonKey(name: 'catatan_pembimbing')
   final String? catatanPembimbing;
 
-  /// Create a copy of LaporanPesertaMagangData
+  /// Create a copy of LogbookPesertaMagangData
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$LaporanPesertaMagangDataCopyWith<_LaporanPesertaMagangData> get copyWith =>
-      __$LaporanPesertaMagangDataCopyWithImpl<_LaporanPesertaMagangData>(
+  _$LogbookPesertaMagangDataCopyWith<_LogbookPesertaMagangData> get copyWith =>
+      __$LogbookPesertaMagangDataCopyWithImpl<_LogbookPesertaMagangData>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$LaporanPesertaMagangDataToJson(
+    return _$LogbookPesertaMagangDataToJson(
       this,
     );
   }
@@ -221,9 +236,9 @@ class _LaporanPesertaMagangData implements LaporanPesertaMagangData {
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _LaporanPesertaMagangData &&
-            (identical(other.idLaporan, idLaporan) ||
-                other.idLaporan == idLaporan) &&
+            other is _LogbookPesertaMagangData &&
+            (identical(other.idLogbook, idLogbook) ||
+                other.idLogbook == idLogbook) &&
             (identical(other.namaPeserta, namaPeserta) ||
                 other.namaPeserta == namaPeserta) &&
             (identical(other.departemen, departemen) ||
@@ -231,6 +246,8 @@ class _LaporanPesertaMagangData implements LaporanPesertaMagangData {
             (identical(other.email, email) || other.email == email) &&
             (identical(other.namaAktivitas, namaAktivitas) ||
                 other.namaAktivitas == namaAktivitas) &&
+            (identical(other.tanggalAktivitas, tanggalAktivitas) ||
+                other.tanggalAktivitas == tanggalAktivitas) &&
             (identical(other.urlLampiran, urlLampiran) ||
                 other.urlLampiran == urlLampiran) &&
             (identical(other.validasiPembimbing, validasiPembimbing) ||
@@ -243,66 +260,69 @@ class _LaporanPesertaMagangData implements LaporanPesertaMagangData {
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      idLaporan,
+      idLogbook,
       namaPeserta,
       departemen,
       email,
       namaAktivitas,
+      tanggalAktivitas,
       urlLampiran,
       validasiPembimbing,
       catatanPembimbing);
 
   @override
   String toString() {
-    return 'LaporanPesertaMagangData(idLaporan: $idLaporan, namaPeserta: $namaPeserta, departemen: $departemen, email: $email, namaAktivitas: $namaAktivitas, urlLampiran: $urlLampiran, validasiPembimbing: $validasiPembimbing, catatanPembimbing: $catatanPembimbing)';
+    return 'LogbookPesertaMagangData(idLogbook: $idLogbook, namaPeserta: $namaPeserta, departemen: $departemen, email: $email, namaAktivitas: $namaAktivitas, tanggalAktivitas: $tanggalAktivitas, urlLampiran: $urlLampiran, validasiPembimbing: $validasiPembimbing, catatanPembimbing: $catatanPembimbing)';
   }
 }
 
 /// @nodoc
-abstract mixin class _$LaporanPesertaMagangDataCopyWith<$Res>
-    implements $LaporanPesertaMagangDataCopyWith<$Res> {
-  factory _$LaporanPesertaMagangDataCopyWith(_LaporanPesertaMagangData value,
-          $Res Function(_LaporanPesertaMagangData) _then) =
-      __$LaporanPesertaMagangDataCopyWithImpl;
+abstract mixin class _$LogbookPesertaMagangDataCopyWith<$Res>
+    implements $LogbookPesertaMagangDataCopyWith<$Res> {
+  factory _$LogbookPesertaMagangDataCopyWith(_LogbookPesertaMagangData value,
+          $Res Function(_LogbookPesertaMagangData) _then) =
+      __$LogbookPesertaMagangDataCopyWithImpl;
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'id_laporan') String idLaporan,
+      {@JsonKey(name: 'id_logbook') String idLogbook,
       @JsonKey(name: 'nama_peserta') String namaPeserta,
       @JsonKey(name: 'departemen') String? departemen,
       @JsonKey(name: 'email') String email,
       @JsonKey(name: 'nama_aktivitas') String namaAktivitas,
+      @JsonKey(name: 'tanggal_aktivitas') String tanggalAktivitas,
       @JsonKey(name: 'url_lampiran') String urlLampiran,
       @JsonKey(name: 'validasi_pembimbing') String? validasiPembimbing,
       @JsonKey(name: 'catatan_pembimbing') String? catatanPembimbing});
 }
 
 /// @nodoc
-class __$LaporanPesertaMagangDataCopyWithImpl<$Res>
-    implements _$LaporanPesertaMagangDataCopyWith<$Res> {
-  __$LaporanPesertaMagangDataCopyWithImpl(this._self, this._then);
+class __$LogbookPesertaMagangDataCopyWithImpl<$Res>
+    implements _$LogbookPesertaMagangDataCopyWith<$Res> {
+  __$LogbookPesertaMagangDataCopyWithImpl(this._self, this._then);
 
-  final _LaporanPesertaMagangData _self;
-  final $Res Function(_LaporanPesertaMagangData) _then;
+  final _LogbookPesertaMagangData _self;
+  final $Res Function(_LogbookPesertaMagangData) _then;
 
-  /// Create a copy of LaporanPesertaMagangData
+  /// Create a copy of LogbookPesertaMagangData
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $Res call({
-    Object? idLaporan = null,
+    Object? idLogbook = null,
     Object? namaPeserta = null,
     Object? departemen = freezed,
     Object? email = null,
     Object? namaAktivitas = null,
+    Object? tanggalAktivitas = null,
     Object? urlLampiran = null,
     Object? validasiPembimbing = freezed,
     Object? catatanPembimbing = freezed,
   }) {
-    return _then(_LaporanPesertaMagangData(
-      idLaporan: null == idLaporan
-          ? _self.idLaporan
-          : idLaporan // ignore: cast_nullable_to_non_nullable
+    return _then(_LogbookPesertaMagangData(
+      idLogbook: null == idLogbook
+          ? _self.idLogbook
+          : idLogbook // ignore: cast_nullable_to_non_nullable
               as String,
       namaPeserta: null == namaPeserta
           ? _self.namaPeserta
@@ -319,6 +339,10 @@ class __$LaporanPesertaMagangDataCopyWithImpl<$Res>
       namaAktivitas: null == namaAktivitas
           ? _self.namaAktivitas
           : namaAktivitas // ignore: cast_nullable_to_non_nullable
+              as String,
+      tanggalAktivitas: null == tanggalAktivitas
+          ? _self.tanggalAktivitas
+          : tanggalAktivitas // ignore: cast_nullable_to_non_nullable
               as String,
       urlLampiran: null == urlLampiran
           ? _self.urlLampiran

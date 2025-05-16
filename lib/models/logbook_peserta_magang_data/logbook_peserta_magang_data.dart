@@ -1,22 +1,23 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'laporan_peserta_magang_data.freezed.dart';
-part 'laporan_peserta_magang_data.g.dart';
+part 'logbook_peserta_magang_data.freezed.dart';
+part 'logbook_peserta_magang_data.g.dart';
 
 @freezed
-abstract class LaporanPesertaMagangData with _$LaporanPesertaMagangData {
-  const factory LaporanPesertaMagangData({
-    @JsonKey(name: 'id_laporan') required String idLaporan,
+abstract class LogbookPesertaMagangData with _$LogbookPesertaMagangData {
+  const factory LogbookPesertaMagangData({
+    @JsonKey(name: 'id_logbook') required String idLogbook,
     @JsonKey(name: 'nama_peserta') required String namaPeserta,
     @JsonKey(name: 'departemen') String? departemen,
     @JsonKey(name: 'email') required String email,
     @JsonKey(name: 'nama_aktivitas') required String namaAktivitas,
+    @JsonKey(name: 'tanggal_aktivitas') required String tanggalAktivitas,
     @JsonKey(name: 'url_lampiran') required String urlLampiran,
     @JsonKey(name: 'validasi_pembimbing')
     String? validasiPembimbing, // Can be 'accepted', 'rejected' or NULL.
     @JsonKey(name: 'catatan_pembimbing') String? catatanPembimbing,
-  }) = _LaporanPesertaMagangData;
+  }) = _LogbookPesertaMagangData;
 
-  factory LaporanPesertaMagangData.fromJson(Map<String, dynamic> json) =>
-      _$LaporanPesertaMagangDataFromJson(json);
+  factory LogbookPesertaMagangData.fromJson(Map<String, dynamic> json) =>
+      _$LogbookPesertaMagangDataFromJson(json);
 }

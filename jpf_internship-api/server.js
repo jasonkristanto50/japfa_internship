@@ -57,3 +57,6 @@ app.use('/api/file_upload', file_uploadRouter);
 
 const emailRouter = require('./routes/email');
 app.use('/api/email', emailRouter);
+
+const logbookRouter = require('./routes/logbook');
+app.use('/api/logbook', logbookRouter);

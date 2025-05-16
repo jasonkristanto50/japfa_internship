@@ -94,14 +94,15 @@
 --     sisa_kuota INTEGER
 -- );  
 
--- DROP TABLE LAPORAN_PESERTA_MAGANG;
+-- DROP TABLE LOGBOOK_PESERTA_MAGANG;
 
--- CREATE TABLE LAPORAN_PESERTA_MAGANG (  
---     id_laporan VARCHAR PRIMARY KEY NOT NULL,  
+-- CREATE TABLE LOGBOOK_PESERTA_MAGANG (  
+--     id_logbook VARCHAR PRIMARY KEY NOT NULL,  
 --     nama_peserta VARCHAR(255) NOT NULL,
 --     departemen VARCHAR(255),  
 --     email VARCHAR(255) NOT NULL,
 --     nama_aktivitas VARCHAR(255) NOT NULL,
+--     tanggal_aktivitas VARCHAR(255) NOT NULL,
 --     url_lampiran VARCHAR(255) NOT NULL,
 --     validasi_pembimbing VARCHAR(255) DEFAULT NULL,
 --     catatan_pembimbing VARCHAR(255) DEFAULT NULL

@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 
 // Build the Japfa Logo Background
@@ -356,21 +357,104 @@ class ConfirmationDialog extends StatelessWidget {
   }
 }
 
-// Custom Alert Dialog
+// // Custom Alert Dialog
+// class CustomAlertDialog extends StatelessWidget {
+//   final String title;
+//   final String subTitle;
+//   final TextEditingController controller;
+//   final String label;
+//   final VoidCallback onSave;
+
+//   const CustomAlertDialog({
+//     super.key,
+//     required this.title,
+//     required this.subTitle,
+//     required this.controller,
+//     required this.label,
+//     required this.onSave,
+//   });
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return AlertDialog(
+//       backgroundColor: Colors.white,
+//       shape: RoundedRectangleBorder(
+//         borderRadius: BorderRadius.circular(16),
+//       ),
+//       title: Center(
+//         child: Text(title, style: bold24),
+//       ),
+//       content: SingleChildScrollView(
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             Center(
+//               child: Text(
+//                 subTitle.toUpperCase(),
+//                 style: regular20.copyWith(color: japfaOrange),
+//               ),
+//             ),
+//             const SizedBox(height: 16),
+//             _buildTextField(controller, label),
+//             const SizedBox(height: 16),
+//             Center(
+//                 child: RoundedRectangleButton(
+//               title: "Simpan",
+//               backgroundColor: japfaOrange,
+//               fontColor: Colors.white,
+//               onPressed: onSave,
+//             )),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget _buildTextField(TextEditingController controller, String label) {
+//     return Padding(
+//       padding: const EdgeInsets.symmetric(vertical: 8.0),
+//       child: TextField(
+//         controller: controller,
+//         decoration: InputDecoration(
+//           labelText: label,
+//           labelStyle: regular14.copyWith(color: Colors.black),
+//           border: OutlineInputBorder(
+//             borderRadius: BorderRadius.circular(8),
+//             borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),
+//           ),
+//           focusedBorder: OutlineInputBorder(
+//             borderRadius: BorderRadius.circular(8),
+//             borderSide: const BorderSide(color: Colors.orange, width: 2),
+//           ),
+//         ),
+//         keyboardType: TextInputType.number,
+//         style: const TextStyle(color: Colors.black),
+//         cursorColor: Colors.black,
+//       ),
+//     );
+//   }
+// }
+
+enum BuildFieldTypeController { text, number, date }
+
 class CustomAlertDialog extends StatelessWidget {
   final String title;
-  final String departmentName;
-  final TextEditingController controller;
-  final String label;
+  final String subTitle;
+  final List<TextEditingController> controllers;
+  final List<String> labels;
+  final List<BuildFieldTypeController> fieldTypes;
   final VoidCallback onSave;
+  final int numberOfField;
 
   const CustomAlertDialog({
     super.key,
     required this.title,
-    required this.departmentName,
-    required this.controller,
-    required this.label,
+    required this.subTitle,
+    required this.controllers,
+    required this.labels,
+    required this.fieldTypes,
     required this.onSave,
+    required this.numberOfField,
   });
 
   @override
@@ -383,30 +467,56 @@ class CustomAlertDialog extends StatelessWidget {
       title: Center(
         child: Text(title, style: bold24),
       ),
-      content: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Text(
-                departmentName.toUpperCase(),
-                style: regular20.copyWith(color: japfaOrange),
+      content: Container(
+        constraints: const BoxConstraints(maxHeight: 400),
+        child: SingleChildScrollView(
+          // Maintain only one scrollable wrapper
+          child: Column(
+            // Use a Column for building fields
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Text(
+                  subTitle.toUpperCase(),
+                  style: regular20.copyWith(color: japfaOrange),
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            _buildTextField(controller, label),
-            const SizedBox(height: 16),
-            Center(
+              const SizedBox(height: 16),
+              // Create fields directly in the Column
+              ...List.generate(numberOfField, (index) {
+                return _buildField(
+                  controllers[index],
+                  labels[index],
+                  fieldTypes[index],
+                  context,
+                );
+              }),
+              const SizedBox(height: 16),
+              Center(
                 child: RoundedRectangleButton(
-              title: "Simpan",
-              backgroundColor: japfaOrange,
-              fontColor: Colors.white,
-              onPressed: onSave,
-            )),
-          ],
+                  title: "Simpan",
+                  backgroundColor: japfaOrange,
+                  fontColor: Colors.white,
+                  onPressed: onSave,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  Widget _buildField(TextEditingController controller, String label,
+      BuildFieldTypeController fieldType, BuildContext context) {
+    switch (fieldType) {
+      case BuildFieldTypeController.text:
+        return _buildTextField(controller, label);
+      case BuildFieldTypeController.number:
+        return _buildNumberField(controller, label);
+      case BuildFieldTypeController.date:
+        return _buildDateField(controller, label, context);
+    }
   }
 
   Widget _buildTextField(TextEditingController controller, String label) {
@@ -426,9 +536,67 @@ class CustomAlertDialog extends StatelessWidget {
             borderSide: const BorderSide(color: Colors.orange, width: 2),
           ),
         ),
+        style: const TextStyle(color: Colors.black),
+        cursorColor: Colors.black,
+      ),
+    );
+  }
+
+  Widget _buildNumberField(TextEditingController controller, String label) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: regular14.copyWith(color: Colors.black),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.orange, width: 2),
+          ),
+        ),
         keyboardType: TextInputType.number,
         style: const TextStyle(color: Colors.black),
         cursorColor: Colors.black,
+      ),
+    );
+  }
+
+  Widget _buildDateField(
+      TextEditingController controller, String label, BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextField(
+        controller: controller,
+        readOnly: true, // Ensures only date picker opens
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: regular14.copyWith(color: Colors.black),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.orange, width: 2),
+          ),
+          suffixIcon: const Icon(Icons.calendar_today),
+        ),
+        onTap: () async {
+          DateTime? picked = await showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(2000),
+            lastDate: DateTime(2101),
+          );
+          if (picked != null) {
+            controller.text = DateFormat('dd-MM-yyyy').format(picked);
+          }
+        },
       ),
     );
   }

@@ -7,7 +7,6 @@ import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/models/logbook_peserta_magang_data/logbook_peserta_magang_data.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/components/widget_component.dart';
-import 'package:intl/intl.dart'; // For date formatting
 
 class LogBookPesertaDashboard extends ConsumerStatefulWidget {
   const LogBookPesertaDashboard({super.key});
@@ -147,7 +146,7 @@ class _LogBookPesertaDashboardState
                           height: 30,
                           width: 85,
                           rounded: 5,
-                          onPressed: () {}),
+                          onPressed: () => _showEditLogbookModal(data)),
                     ),
                   ]);
                 }).toList(),
@@ -167,76 +166,91 @@ class _LogBookPesertaDashboardState
     showDialog(
       context: context,
       builder: (ctx) {
-        return AlertDialog(
-          title: const Text('Tambah Log Book'),
-          content: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextField(
-                  controller: activityController,
-                  decoration: const InputDecoration(
-                    labelText: 'Aktivitas',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: dateController,
-                  readOnly: true, // Makes the TextField non-editable
-                  decoration: const InputDecoration(
-                    labelText: 'Tanggal Aktivitas',
-                    border: OutlineInputBorder(),
-                    suffixIcon:
-                        Icon(Icons.calendar_today), // Show calendar icon
-                  ),
-                  onTap: () async {
-                    DateTime? picked = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2101),
-                    );
-                    if (picked != null) {
-                      setState(() {
-                        dateController.text =
-                            DateFormat('dd-MM-yyyy').format(picked);
-                      });
-                    }
-                  },
-                ),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: urlController,
-                  decoration: const InputDecoration(
-                    labelText: 'URL Lampiran',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                addNewLogbook(
-                  activityName: activityController.text,
-                  tanggalActivity: dateController.text,
-                  url: urlController.text,
-                );
-                Navigator.of(ctx).pop();
-              },
-              child:
-                  const Text('SIMPAN', style: TextStyle(color: Colors.orange)),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(ctx).pop(),
-              child: const Text('CLOSE'),
-            ),
+        return CustomAlertDialog(
+          title: 'Tambah Log Book',
+          subTitle: 'Isi Formulir Berikut',
+          controllers: [activityController, dateController, urlController],
+          labels: const ['Aktivitas', 'Tanggal Aktivitas', 'URL Lampiran'],
+          fieldTypes: const [
+            BuildFieldTypeController.text,
+            BuildFieldTypeController.date,
+            BuildFieldTypeController.text,
           ],
+          numberOfField: 3,
+          onSave: () {
+            addNewLogbook(
+              activityName: activityController.text,
+              tanggalActivity: dateController.text,
+              url: urlController.text,
+            );
+            Navigator.of(ctx).pop();
+          },
         );
       },
     );
+  }
+
+  void _showEditLogbookModal(LogbookPesertaMagangData existingLogbook) {
+    final TextEditingController activityController =
+        TextEditingController(text: existingLogbook.namaAktivitas);
+    final TextEditingController dateController =
+        TextEditingController(text: existingLogbook.tanggalAktivitas);
+    final TextEditingController urlController =
+        TextEditingController(text: existingLogbook.urlLampiran);
+
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return CustomAlertDialog(
+          title: 'Edit Log Book',
+          subTitle: 'Update Formulir Berikut',
+          controllers: [activityController, dateController, urlController],
+          labels: const ['Aktivitas', 'Tanggal Aktivitas', 'URL Lampiran'],
+          fieldTypes: const [
+            BuildFieldTypeController.text,
+            BuildFieldTypeController.date,
+            BuildFieldTypeController.text,
+          ],
+          numberOfField: 3,
+          onSave: () {
+            updateLogbook(
+              idLogbook:
+                  existingLogbook.idLogbook, // Pass the existing logbook ID
+              activityName: activityController.text,
+              tanggalActivity: dateController.text,
+              url: urlController.text,
+            );
+            Navigator.of(ctx).pop();
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> updateLogbook({
+    required String idLogbook,
+    required String activityName,
+    required String tanggalActivity,
+    required String url,
+  }) async {
+    try {
+      // Create the updated logbook entry
+      final updatedLogbook = LogbookPesertaMagangData(
+        idLogbook: idLogbook,
+        namaPeserta: nama,
+        email: email,
+        departemen: departement,
+        namaAktivitas: activityName,
+        tanggalAktivitas: tanggalActivity,
+        urlLampiran: url,
+      );
+
+      await ApiService().updateLogbook(
+          updatedLogbook); // Ensure you implement this method in your API service
+      await fetchLogbooks(); // Refresh the list after updating
+    } catch (e) {
+      print('Error updating logbook: $e');
+    }
   }
 
   Future<void> fetchLogbooks() async {

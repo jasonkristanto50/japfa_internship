@@ -45,15 +45,15 @@ router.get('/count-logbooks', async (req, res) => {
     }
 });
 
-// Endpoint: Update aktivitas & tanggal by id
+// Endpoint: Update aktivitas, tanggal, and URL by id
 router.put('/update-logbook/:id', async (req, res) => {
     const { id } = req.params;
-    const { nama_aktivitas, tanggal } = req.body;
+    const { nama_aktivitas, tanggal, url } = req.body;
 
     try {
         await pool.query(
-            'UPDATE LOGBOOK_PESERTA_MAGANG SET nama_aktivitas = $1, tanggal = $2 WHERE id_logbook = $3',
-            [nama_aktivitas, tanggal, id]
+            'UPDATE LOGBOOK_PESERTA_MAGANG SET nama_aktivitas = $1, tanggal_aktivitas = $2, url_lampiran = $3 WHERE id_logbook = $4',
+            [nama_aktivitas, tanggal, url, id]
         );
         res.json({ message: 'Logbook updated successfully!' });
     } catch (err) {

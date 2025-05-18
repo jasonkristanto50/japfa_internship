@@ -158,9 +158,11 @@ class _LaporanPesertaMagangState extends State<LaporanPesertaMagang> {
       builder: (BuildContext context) {
         return CustomAlertDialog(
           title: 'Tambah URL Laporan',
-          departmentName: laporanType,
-          controller: urlController,
-          label: "File / URL Laporan",
+          subTitle: laporanType,
+          numberOfField: 1,
+          controllers: [urlController],
+          labels: const ["File / URL Laporan"],
+          fieldTypes: const [BuildFieldTypeController.text],
           onSave: () {
             String filePath = urlController.text;
             if (filePath.isNotEmpty) {

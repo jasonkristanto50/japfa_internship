@@ -376,6 +376,31 @@ class ApiService {
     }
   }
 
+  Future<void> updateLogbook(LogbookPesertaMagangData logbook) async {
+    final url =
+        'http://localhost:3000/api/logbook/update-logbook/${logbook.idLogbook}';
+
+    try {
+      final response = await _dio.put(
+        url,
+        data: {
+          'nama_aktivitas': logbook.namaAktivitas,
+          'tanggal': logbook.tanggalAktivitas,
+          'url': logbook.urlLampiran,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Logbook updated successfully');
+      } else {
+        throw Exception('Failed to update logbook: ${response.data}');
+      }
+    } catch (e) {
+      print('Error updating logbook: $e');
+      rethrow; // Optionally, rethrow the error for handling at a higher level
+    }
+  }
+
   // Method to fetch logbook data by email
   Future<List<LogbookPesertaMagangData>> fetchLogbookByEmail(
       String email) async {

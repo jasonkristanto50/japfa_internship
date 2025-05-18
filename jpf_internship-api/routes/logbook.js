@@ -34,6 +34,17 @@ router.post('/add-logbook', async (req, res) => {
     }
 });
 
+// Endpoint: Count total logbook entries
+router.get('/count-logbooks', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT COUNT(*) AS total FROM LOGBOOK_PESERTA_MAGANG');
+        res.status(200).json({ total: result.rows[0].total }); // Return total count
+    } catch (error) {
+        console.error('Error counting logbooks:', error);
+        res.status(500).json({ error: 'Failed to count logbooks', details: error.message });
+    }
+});
+
 // Endpoint: Update aktivitas & tanggal by id
 router.put('/update-logbook/:id', async (req, res) => {
     const { id } = req.params;

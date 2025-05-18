@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:japfa_internship/models/departemen_data/departemen_data.dart';
 import 'package:japfa_internship/models/kunjungan_studi_data/kunjungan_studi_data.dart';
+import 'package:japfa_internship/models/logbook_peserta_magang_data/logbook_peserta_magang_data.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
 
 class ApiService {
@@ -352,6 +353,61 @@ class ApiService {
       return data.map((json) => KunjunganStudiData.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load Kunjungan Studi data');
+    }
+  }
+
+  //////////////////////////////////////////////// LOGBOOK //////////////////////////////////
+
+  ///  // Method to add a new logbook
+  Future<void> addLogbook(LogbookPesertaMagangData logbook) async {
+    try {
+      final response = await _dio.post(
+          'http://localhost:3000/api/logbook/add-logbook',
+          data: logbook.toJson());
+
+      if (response.statusCode == 201) {
+        print('Logbook created successfully!');
+      } else {
+        throw Exception('Failed to create logbook: ${response.statusMessage}');
+      }
+    } catch (e) {
+      print('Error adding logbook: $e');
+      rethrow; // Re-throw the error for further handling
+    }
+  }
+
+  // Method to fetch logbook data by email
+  Future<List<LogbookPesertaMagangData>> fetchLogbookByEmail(
+      String email) async {
+    try {
+      final response = await _dio
+          .get('http://localhost:3000/api/logbook/fetch-by-email/$email');
+      if (response.statusCode == 200) {
+        return (response.data as List)
+            .map((item) => LogbookPesertaMagangData.fromJson(item))
+            .toList(); // Returning the fetched logbooks as a list of LogbookPesertaMagangData
+      } else {
+        throw Exception('Failed to fetch logbooks: ${response.statusMessage}');
+      }
+    } catch (e) {
+      print('Error fetching logbooks: $e');
+      rethrow; // Re-throw the error for further handling
+    }
+  }
+
+  // Method to get the count of logbook entries
+  Future<int?> countLogbooks() async {
+    try {
+      final response =
+          await _dio.get('http://localhost:3000/api/logbook/count-logbooks');
+      if (response.statusCode == 200) {
+        return response.data['total']; // Return total count
+      } else {
+        throw Exception('Failed to fetch logbook count');
+      }
+    } catch (e) {
+      print('Error getting logbook count: $e');
+      return null; // Return null if there's an error
     }
   }
 }

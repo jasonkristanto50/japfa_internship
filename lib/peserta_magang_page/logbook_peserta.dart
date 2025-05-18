@@ -1,51 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:japfa_internship/authentication/login_provider.dart';
+import 'package:japfa_internship/function_variable/api_service_function.dart';
+import 'package:japfa_internship/function_variable/variable.dart';
+import 'package:japfa_internship/models/logbook_peserta_magang_data/logbook_peserta_magang_data.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/components/widget_component.dart';
+import 'package:intl/intl.dart'; // For date formatting
 
-class LogBookPesertaDashboard extends StatefulWidget {
+class LogBookPesertaDashboard extends ConsumerStatefulWidget {
   const LogBookPesertaDashboard({super.key});
 
   @override
-  State<LogBookPesertaDashboard> createState() =>
+  _LogBookPesertaDashboardState createState() =>
       _LogBookPesertaDashboardState();
 }
 
-class _LogBookPesertaDashboardState extends State<LogBookPesertaDashboard> {
+class _LogBookPesertaDashboardState
+    extends ConsumerState<LogBookPesertaDashboard> {
   String searchQuery = "";
+  String nama = "";
+  String email = "";
+  String departement = "";
+  List<LogbookPesertaMagangData> logbookData = [];
 
-  // Dummy data for the logbook
-  List<Map<String, String>> logbookData = [
-    {
-      'no': '1',
-      'aktivitas': 'Presentasi dan Knowledge Sharing',
-      'tanggal_kegiatan': '29-11-2024',
-      'url': 'http://example.com/url1',
-      'status': 'Selesai',
-      'catatan_pembimbing': 'Catatan 1',
-    },
-    {
-      'no': '2',
-      'aktivitas': 'Bug fixing Aplikasi Messaging',
-      'tanggal_kegiatan': '28-11-2024',
-      'url': 'http://example.com/url2',
-      'status': 'Selesai',
-      'catatan_pembimbing': 'Catatan 2',
-    },
-    {
-      'no': '3',
-      'aktivitas': 'Demo aplikasi pada Mitra',
-      'tanggal_kegiatan': '25-11-2024',
-      'url': 'http://example.com/url3',
-      'status': 'Belum',
-      'catatan_pembimbing': 'Catatan 3',
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    final loginState = ref.read(loginProvider);
+    nama = loginState.name!;
+    email = loginState.email!;
+    departement = loginState.departemen!;
+    fetchLogbooks(); // Fetch logbooks on initialization
+  }
 
   @override
   Widget build(BuildContext context) {
+    // Filter logbook data based on search query
     final filteredLogData = logbookData.where((data) {
-      return data['aktivitas']!
+      return data.namaAktivitas
           .toLowerCase()
           .contains(searchQuery.toLowerCase());
     }).toList();
@@ -59,109 +53,107 @@ class _LogBookPesertaDashboardState extends State<LogBookPesertaDashboard> {
         decoration: buildJapfaLogoBackground(),
         child: Column(
           children: [
-            // Add Search Bar
-            Center(
-              child: CustomSearchBar(
-                widthValue: 1500.w,
-                onChanged: (value) {
-                  setState(() {
-                    searchQuery = value;
-                  });
-                },
-              ),
-            ),
+            // Add Search Bar and Add Button
+            _buildSearchAndAddLogBookButton(),
             const SizedBox(height: 24),
-            // Add Log Book Button
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: RoundedRectangleButton(
-                  title: "Tambah Log Book",
-                  backgroundColor: Colors.orange,
-                  height: 30,
-                  width: 150,
-                  rounded: 5,
-                  onPressed: () {
-                    _showAddLogBookModal();
-                  },
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24.0),
-                child: Center(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.1),
-                          spreadRadius: 1,
-                          blurRadius: 4,
-                          offset: const Offset(0, 1),
-                        ),
-                      ],
-                    ),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: DataTable(
-                        headingRowColor:
-                            WidgetStateProperty.all(Colors.orange[500]),
-                        headingTextStyle: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        border: TableBorder.all(color: Colors.grey, width: 1),
-                        columns: const [
-                          DataColumn(label: Text('No')),
-                          DataColumn(label: Text('Aktivitas')),
-                          DataColumn(label: Text('Tanggal Aktivitas')),
-                          DataColumn(label: Text('URL Lampiran')),
-                          DataColumn(label: Text('Validasi Pembimbing')),
-                          DataColumn(label: Text('Catatan Pembimbing')),
-                          DataColumn(label: Text('Action')),
-                        ],
-                        rows: filteredLogData.map<DataRow>((data) {
-                          return DataRow(cells: [
-                            DataCell(Text(data['no']!)),
-                            DataCell(Text(data['aktivitas']!)),
-                            DataCell(Text(data['tanggal_kegiatan']!)),
-                            DataCell(Text(data['url']!)),
-                            DataCell(
-                                Text(data['status'] == 'Selesai' ? '✓' : '✗')),
-                            DataCell(Text(data['catatan_pembimbing']!)),
-                            DataCell(Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.edit,
-                                      color: Colors.orange),
-                                  onPressed: () {
-                                    // Handle edit action
-                                  },
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.visibility,
-                                      color: Colors.orange),
-                                  onPressed: () {
-                                    // Handle view action
-                                  },
-                                ),
-                              ],
-                            )),
-                          ]);
-                        }).toList(),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            // Logbook Table
+            _buildLogbookTable(filteredLogData),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSearchAndAddLogBookButton() {
+    return Center(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CustomSearchBar(
+            onChanged: (value) {
+              setState(() {
+                searchQuery = value; // Update search query
+              });
+            },
+            widthValue: 1200.w,
+          ),
+          const SizedBox(width: 16),
+          // Button to add a new logbook
+          RoundedRectangleButton(
+            title: "Tambah Log Book",
+            backgroundColor: japfaOrange,
+            fontColor: Colors.white,
+            height: 40,
+            width: 200,
+            rounded: 5,
+            onPressed: () {
+              _showAddLogBookModal();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLogbookTable(filteredLogData) {
+    return Expanded(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(24.0),
+        child: Center(
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.1),
+                  spreadRadius: 1,
+                  blurRadius: 4,
+                  offset: const Offset(0, 1),
+                ),
+              ],
+            ),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: DataTable(
+                headingRowColor: WidgetStateProperty.all(Colors.orange[500]),
+                headingTextStyle: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+                border: TableBorder.all(color: Colors.grey, width: 1),
+                columns: const [
+                  DataColumn(label: Text('No')),
+                  DataColumn(label: Text('Aktivitas')),
+                  DataColumn(label: Text('Tanggal Aktivitas')),
+                  DataColumn(label: Text('URL Lampiran')),
+                  DataColumn(label: Text('Validasi Pembimbing')),
+                  DataColumn(label: Text('Catatan Pembimbing')),
+                  DataColumn(label: Text('Action')),
+                ],
+                rows: filteredLogData
+                    .map<DataRow>((LogbookPesertaMagangData data) {
+                  return DataRow(cells: [
+                    DataCell(Text(data.idLogbook)),
+                    DataCell(Text(data.namaAktivitas)),
+                    DataCell(Text(data.tanggalAktivitas)),
+                    DataCell(Text(data.urlLampiran)),
+                    DataCell(Text(data.validasiPembimbing ?? 'N/A')),
+                    DataCell(Text(data.catatanPembimbing ?? 'N/A')),
+                    DataCell(
+                      RoundedRectangleButton(
+                          title: 'EDIT',
+                          backgroundColor: lightBlue,
+                          height: 30,
+                          width: 85,
+                          rounded: 5,
+                          onPressed: () {}),
+                    ),
+                  ]);
+                }).toList(),
+              ),
+            ),
+          ),
         ),
       ),
     );
@@ -191,10 +183,27 @@ class _LogBookPesertaDashboardState extends State<LogBookPesertaDashboard> {
                 const SizedBox(height: 8),
                 TextField(
                   controller: dateController,
+                  readOnly: true, // Makes the TextField non-editable
                   decoration: const InputDecoration(
                     labelText: 'Tanggal Aktivitas',
                     border: OutlineInputBorder(),
+                    suffixIcon:
+                        Icon(Icons.calendar_today), // Show calendar icon
                   ),
+                  onTap: () async {
+                    DateTime? picked = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2101),
+                    );
+                    if (picked != null) {
+                      setState(() {
+                        dateController.text =
+                            DateFormat('dd-MM-yyyy').format(picked);
+                      });
+                    }
+                  },
                 ),
                 const SizedBox(height: 8),
                 TextField(
@@ -210,7 +219,11 @@ class _LogBookPesertaDashboardState extends State<LogBookPesertaDashboard> {
           actions: [
             TextButton(
               onPressed: () {
-                // Logic to add log book entry goes here
+                addNewLogbook(
+                  activityName: activityController.text,
+                  tanggalActivity: dateController.text,
+                  url: urlController.text,
+                );
                 Navigator.of(ctx).pop();
               },
               child:
@@ -224,5 +237,45 @@ class _LogBookPesertaDashboardState extends State<LogBookPesertaDashboard> {
         );
       },
     );
+  }
+
+  Future<void> fetchLogbooks() async {
+    try {
+      final logbooks = await ApiService().fetchLogbookByEmail(email);
+      setState(() {
+        logbookData = logbooks; // Store fetched data
+      });
+      print('Fetched logbooks: $logbooks'); // Log fetched data
+    } catch (e) {
+      print('Error fetching logbooks: $e'); // Log errors
+    }
+  }
+
+  Future<void> addNewLogbook({
+    required String activityName,
+    required String tanggalActivity,
+    required String url,
+  }) async {
+    try {
+      final logbookCount = await ApiService().countLogbooks();
+      String newIdLogbook =
+          'LG_${(logbookCount != null ? logbookCount + 1 : 1).toString().padLeft(3, '0')}';
+
+      // Create a new logbook entry
+      final newLogbook = LogbookPesertaMagangData(
+        idLogbook: newIdLogbook,
+        namaPeserta: nama,
+        email: email,
+        departemen: departement,
+        namaAktivitas: activityName,
+        tanggalAktivitas: tanggalActivity,
+        urlLampiran: url,
+      );
+
+      await ApiService().addLogbook(newLogbook);
+      await fetchLogbooks();
+    } catch (e) {
+      print('Error adding logbook: $e');
+    }
   }
 }

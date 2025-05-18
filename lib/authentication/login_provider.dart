@@ -138,7 +138,9 @@ class LoginNotifier extends StateNotifier<LoginState> {
               role: rolePesertaMagangValue,
               departemen: data['departemen'],
               statusMagang: data['status_magang']);
-        } else if (data['status_magang'] == statusMagangMenunggu) {
+        } else if (data['status_magang'] == statusMagangMenunggu ||
+            data['status_magang'] == statusMagangDiterima ||
+            data['status_magang'] == statusMagangDitolak) {
           state = LoginState(
               isLoading: false,
               isLoggedIn: true,

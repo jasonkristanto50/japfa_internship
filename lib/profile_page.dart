@@ -13,13 +13,10 @@ class ProfilePage extends ConsumerStatefulWidget {
 }
 
 class _ProfilePageState extends ConsumerState<ProfilePage> {
-  String userName = "Jason";
-  String userEmail = "jason@gmail.com";
-  String userRole = "Intern";
-
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _roleController = TextEditingController();
+  final TextEditingController _departmentController = TextEditingController();
 
   bool _isEditing = false; // Flag to check if we're in edit mode
 
@@ -27,9 +24,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   void initState() {
     super.initState();
     final loginState = ref.read(loginProvider);
-    _nameController.text = loginState.name!;
-    _emailController.text = loginState.email!;
-    _roleController.text = loginState.role!;
+    _nameController.text = loginState.name ?? '';
+    _emailController.text = loginState.email ?? '';
+    _roleController.text = loginState.role ?? '';
+    _departmentController.text = loginState.departemen ?? '';
   }
 
   @override
@@ -37,6 +35,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     _nameController.dispose();
     _emailController.dispose();
     _roleController.dispose();
+    _departmentController.dispose(); // Dispose new controller
     super.dispose();
   }
 
@@ -64,14 +63,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 ),
               ],
             ),
-            child: buildProfileContent(),
+            child: _buildProfileContent(),
           ),
         ),
       ),
     );
   }
 
-  Widget buildProfileContent() {
+  Widget _buildProfileContent() {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -81,14 +80,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 20),
-        buildInfoField('Name', _nameController),
+        _buildInfoField('Name', _nameController),
         const SizedBox(height: 15),
-        buildInfoField('Email', _emailController),
+        _buildInfoField('Email', _emailController),
         const SizedBox(height: 15),
-        buildInfoField('Role', _roleController),
+        _buildInfoField('Role', _roleController),
+        const SizedBox(height: 15),
+        _buildInfoField('Department', _departmentController),
         const SizedBox(height: 20),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween, // Aligns buttons
+          mainAxisAlignment: MainAxisAlignment.spaceBetween, // Align buttons
           children: [
             if (_isEditing) // Show the Cancel button only in edit mode
               Expanded(
@@ -99,10 +100,13 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   onPressed: () {
                     setState(() {
                       _isEditing = false; // Exit editing mode
-                      // Reset fields to original values
-                      _nameController.text = userName;
-                      _emailController.text = userEmail;
-                      _roleController.text = userRole;
+                      // Reset fields to original values with login state
+                      final loginState = ref.read(loginProvider);
+                      _nameController.text = loginState.name ?? '';
+                      _emailController.text = loginState.email ?? '';
+                      _roleController.text = loginState.role ?? '';
+                      _departmentController.text =
+                          loginState.departemen ?? ''; // Reset department
                     });
                   },
                 ),
@@ -117,9 +121,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   setState(() {
                     if (_isEditing) {
                       // Save changes
-                      userName = _nameController.text;
-                      userEmail = _emailController.text;
-                      userRole = _roleController.text;
                     }
                     _isEditing = !_isEditing; // Toggle editing mode
                   });
@@ -133,7 +134,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     );
   }
 
-  Widget buildInfoField(String label, TextEditingController controller) {
+  Widget _buildInfoField(String label, TextEditingController controller) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [

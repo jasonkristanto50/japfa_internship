@@ -77,7 +77,7 @@ router.get('/fetch-all-peserta-data', async (req, res) => {
     }  
 });  
 
-// Get Peserta Magang data by ID
+// Get Peserta Magang data by email
 router.get('/fetch-peserta-data/:email', async (req, res) => { 
     const{email} = req.params
     try {  
@@ -272,6 +272,28 @@ router.put('/update-status/:id', async (req, res) => {
         res.status(500).json({ error: 'Server error' });  
     }  
 });  
+
+// Update url_laporan_akhir by email
+router.put('/update-url-laporan-akhir-email/:email', async (req, res) => {
+    const { email } = req.params; // Email of the Peserta Magang to update
+    const { url_laporan_akhir } = req.body; // New URL value
+
+    try {
+        const result = await pool.query(
+            'UPDATE PESERTA_MAGANG SET url_laporan_akhir = $1 WHERE email = $2 RETURNING *',
+            [url_laporan_akhir, email]
+        );
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: 'Peserta Magang not found' });
+        }
+
+        res.status(200).json({ message: 'URL updated successfully!', data: result.rows[0] });
+    } catch (error) {
+        console.error('Error updating url_laporan_akhir:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
 
 // Update status and optional catatan_hr of Peserta Magang
 router.put('/update_status-catatan/:id', async (req, res) => {

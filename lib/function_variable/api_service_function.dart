@@ -93,7 +93,7 @@ class ApiService {
     }
   }
 
-  /// GET /fetch-peserta-data/:email
+  /// Get peserta magang data by EMAIL
   Future<PesertaMagangData> fetchPesertaMagangByEmail(String email) async {
     try {
       final encodedEmail = Uri.encodeComponent(email);
@@ -149,6 +149,31 @@ class ApiService {
     } catch (error) {
       print('Error updating password token: $error'); // Log the error
       throw Exception('Error updating password token: $error');
+    }
+  }
+
+  // Update URL Laporan Akhir
+  Future<void> updateUrlLaporanAkhir(
+      String email, String urlLaporanAkhir) async {
+    final url =
+        'http://localhost:3000/api/peserta_magang/update-url-laporan-akhir-email/$email';
+
+    try {
+      final response = await _dio.put(
+        url,
+        data: {
+          'url_laporan_akhir': urlLaporanAkhir,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('URL updated successfully');
+      } else {
+        throw Exception('Failed to update URL: ${response.data}');
+      }
+    } catch (e) {
+      print('Error updating URL: $e');
+      rethrow; // Optionally, rethrow the error for handling at a higher level
     }
   }
 
@@ -249,7 +274,9 @@ class ApiService {
     return res.statusCode == 200;
   }
 
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////  DEPARTEMEN   ///////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   Future<void> updateMaxKuotaDepartemen(String id, int maxKuota) async {
     try {
@@ -356,7 +383,9 @@ class ApiService {
     }
   }
 
+  ///////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////// LOGBOOK //////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////
 
   ///  // Method to add a new logbook
   Future<void> addLogbook(LogbookPesertaMagangData logbook) async {

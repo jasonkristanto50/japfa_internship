@@ -49,6 +49,9 @@ app.use('/api/peserta_magang', pesertaMagangRouter);
 const departemenRouter = require('./routes/departemen');  
 app.use('/api/departemen', departemenRouter);
 
+const kepalaDepartemenRouter = require('./routes/kepala_departemen');
+app.use('/api/kepala_departemen', kepalaDepartemenRouter);
+
 const loginRouter = require('./routes/login');  
 app.use('/api/login', loginRouter);
 

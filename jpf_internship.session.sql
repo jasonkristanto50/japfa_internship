@@ -42,30 +42,32 @@
 --     password_token VARCHAR(255)
 -- );
 
--- DROP TABLE PESERTA_MAGANG;
+DROP TABLE PESERTA_MAGANG;
 
--- CREATE TABLE PESERTA_MAGANG (  
---     id_magang VARCHAR PRIMARY KEY NOT NULL,  
---     nama VARCHAR(255) NOT NULL,
---     departemen VARCHAR(255),  
---     alamat VARCHAR(255) NOT NULL,  
---     no_telp VARCHAR(255) NOT NULL,  
---     email VARCHAR(255) NOT NULL,  
---     asal_universitas VARCHAR(255) NOT NULL,  
---     angkatan INTEGER NOT NULL,  
---     nilai_univ FLOAT NOT NULL,  
---     jurusan VARCHAR(255) NOT NULL,  
---     path_cv  VARCHAR(255) NOT NULL,
---     path_persetujuan_univ  VARCHAR(255) NOT NULL,
---     path_transkrip_nilai  VARCHAR(255) NOT NULL,
---     path_foto_diri VARCHAR(255) NOT NULL,
---     status_magang VARCHAR(50) NOT NULL,
---     password_token VARCHAR,
---     path_surat_penerimaan VARCHAR(255),
---     link_meet_interview VARCHAR(255),
---     catatan_hr VARCHAR(255),     
---     nilai_akhir_magang INTEGER  
--- );  
+CREATE TABLE PESERTA_MAGANG (  
+    id_magang VARCHAR PRIMARY KEY NOT NULL,  
+    nama VARCHAR(255) NOT NULL,
+    departemen VARCHAR(255),  
+    alamat VARCHAR(255) NOT NULL,  
+    no_telp VARCHAR(255) NOT NULL,  
+    email VARCHAR(255) NOT NULL,  
+    asal_universitas VARCHAR(255) NOT NULL,  
+    angkatan INTEGER NOT NULL,  
+    nilai_univ FLOAT NOT NULL,  
+    jurusan VARCHAR(255) NOT NULL,  
+    path_cv  VARCHAR(255) NOT NULL,
+    path_persetujuan_univ  VARCHAR(255) NOT NULL,
+    path_transkrip_nilai  VARCHAR(255) NOT NULL,
+    path_foto_diri VARCHAR(255) NOT NULL,
+    status_magang VARCHAR(50) NOT NULL,
+    password_token VARCHAR,
+    path_surat_penerimaan VARCHAR(255),
+    link_meet_interview VARCHAR(255),
+    catatan_hr VARCHAR(255),
+    nama_pembimbing VARCHAR(255),
+    url_laporan_akhir VARCHAR(255),     
+    nilai_akhir_magang INTEGER  
+);  
 
 -- Ada 5 Jenis Status Magang: 
 -- - On Process

@@ -79,6 +79,23 @@ router.patch('/validasi-logbook/:id', async (req, res) => {
     }
 });
 
+// Endpoint: Update catatan_pembimbing by id
+router.patch('/catatan-logbook/:id', async (req, res) => {
+    const { id } = req.params;
+    const { catatan_pembimbing } = req.body;
+
+    try {
+        await pool.query(
+            'UPDATE LOGBOOK_PESERTA_MAGANG SET catatan_pembimbing = $1 WHERE id_logbook = $2',
+            [catatan_pembimbing, id]
+        );
+        res.json({ message: 'Catatan updated successfully!' });
+    } catch (err) {
+        console.error('Error updating catatan:', err);
+        res.status(500).json({ error: 'Failed to update catatan', details: err.message });
+    }
+});
+
 // Endpoint: Delete logbook by id
 router.delete('/delete-logbook/:id', async (req, res) => {
     const { id } = req.params;

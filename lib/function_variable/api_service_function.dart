@@ -512,7 +512,9 @@ class ApiService {
 
   // Validasi logbook
   Future<void> updateLogbookValidation(
-      String idLogbook, bool validasiPembimbing) async {
+    String idLogbook,
+    bool validasiPembimbing,
+  ) async {
     try {
       await _dio.patch(
           'http://localhost:3000/api/logbook/validasi-logbook/$idLogbook',
@@ -524,6 +526,23 @@ class ApiService {
       print('Error updating validation: ${e.message}');
       // Handle errors appropriately (e.g., throw custom exception)
       throw Exception('Failed to update validation');
+    }
+  }
+
+  Future<void> updateCatatanPembimbing(
+    String idLogbook,
+    String catatanPembimbing,
+  ) async {
+    try {
+      await _dio.patch(
+          'http://localhost:3000/api/logbook/catatan-logbook/$idLogbook',
+          data: {
+            'catatan_pembimbing': catatanPembimbing,
+          });
+      print('Catatan updated successfully'); // Optional logging
+    } on DioException catch (e) {
+      print('Error updating catatan: ${e.message}');
+      throw Exception('Failed to update catatan');
     }
   }
 }

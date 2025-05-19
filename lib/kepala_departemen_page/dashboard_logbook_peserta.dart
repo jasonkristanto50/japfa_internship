@@ -137,7 +137,7 @@ class _DashboardLogbookPesertaState
                         ),
                       ),
                     ),
-                    DataCell(Text(data.catatanPembimbing ?? 'Tidak ada')),
+                    DataCell(Text(data.catatanPembimbing ?? "")),
                     DataCell(
                       Center(
                         // Center the button in the action column
@@ -165,7 +165,7 @@ class _DashboardLogbookPesertaState
                               width: 110,
                               rounded: 5,
                               onPressed: () {
-                                // Currently no function
+                                addCatatan(data.idLogbook);
                               },
                             ),
                           ],
@@ -201,16 +201,29 @@ class _DashboardLogbookPesertaState
     );
   }
 
-  void giveNote() async {
-    // TODO:
-    // await showCustomConfirmAcceptDialogWithNote(
-    //   context: context,
-    //   title: "Berikan catatan",
-    //   message: "",
-    //   withNote: true,
-    //   onAccept: () {}, // set catatan
-    //   onReject: () => Navigator.pop(context),
-    // );
+  void addCatatan(String idLogbook) async {
+    await showCustomConfirmAcceptDialogWithNote(
+      context: context,
+      title: "CATATAN PEMBIMBING",
+      message: "Berikan catatan",
+      withNote: true,
+      acceptText: "Kirim",
+      onAccept: (note) async {
+        await updateCatatan(idLogbook, note!);
+      },
+      rejectText: "Batal",
+      onReject: () {},
+    );
+  }
+
+  Future<void> updateCatatan(String idLogbook, String catatan) async {
+    try {
+      await ApiService().updateCatatanPembimbing(idLogbook, catatan);
+      // Optionally, refresh the data or show a success message
+      fetchLogbooks();
+    } catch (error) {
+      print('Failed to update validation: $error');
+    }
   }
 
   Future<void> updateValidation(String idLogbook, bool validasiValue) async {

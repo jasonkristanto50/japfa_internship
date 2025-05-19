@@ -14,6 +14,7 @@ class DepartmentCard extends ConsumerStatefulWidget {
   final String image;
   List<String> requirements;
   final bool isAdmin;
+  final bool isKepalaDept;
 
   DepartmentCard({
     required this.title,
@@ -23,6 +24,7 @@ class DepartmentCard extends ConsumerStatefulWidget {
     required this.image,
     required this.requirements,
     required this.isAdmin,
+    required this.isKepalaDept,
     super.key,
   });
 
@@ -136,12 +138,19 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
   void _showDepartmentModal(BuildContext context) {
     showDialog(
       context: context,
+      barrierDismissible: true, // Allow dismissal by tapping outside
       builder: (BuildContext dialogContext) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return Material(
-              color: Colors.transparent,
-              child: Center(
+        return GestureDetector(
+          onTap: () {
+            Navigator.of(context).pop(); // Dismiss the modal
+          },
+          child: Center(
+            child: GestureDetector(
+              onTap: () {
+                // Prevent the tap event from bubbling up to the outer GestureDetector
+              },
+              child: Material(
+                color: Colors.transparent,
                 child: Container(
                   width: widget.isAdmin ? 800 : 400,
                   height: widget.isAdmin ? 700 : 600,
@@ -157,22 +166,26 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
                       ),
                     ],
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildTitleName(),
-                      const SizedBox(height: 20),
-                      _buildImage(),
-                      const SizedBox(height: 10),
-                      _buildEditableDeskripsiAndSyarat(setState),
-                      const SizedBox(height: 16),
-                      _buildCancelSaveButton(setState),
-                    ],
+                  child: StatefulBuilder(
+                    builder: (BuildContext context, StateSetter setState) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildTitleName(),
+                          const SizedBox(height: 20),
+                          _buildImage(),
+                          const SizedBox(height: 10),
+                          _buildEditableDeskripsiAndSyarat(setState),
+                          const SizedBox(height: 16),
+                          _buildCancelSaveButton(setState),
+                        ],
+                      );
+                    },
                   ),
                 ),
               ),
-            );
-          },
+            ),
+          ),
         );
       },
     );
@@ -320,38 +333,45 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
       children: [
         // Cancel button
         RoundedRectangleButton(
-            title: "Cancel",
-            backgroundColor: Colors.white,
-            outlineColor: japfaOrange,
+          title: "Cancel",
+          backgroundColor: Colors.white,
+          outlineColor: japfaOrange,
+          width: 150,
+          height: 30,
+          style: regular16,
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        const Spacer(),
+        // Conditional button display
+        if (widget.isAdmin)
+          // Show "Save Changes" button if isAdmin
+          RoundedRectangleButton(
+            title: "Save Changes",
+            backgroundColor: japfaOrange,
             width: 150,
             height: 30,
             style: regular16,
             onPressed: () {
-              Navigator.of(context).pop();
-            }),
-        const Spacer(),
-        // Edit/Save button
-        widget.isAdmin
-            ? RoundedRectangleButton(
-                title: "Save Changes",
-                backgroundColor: japfaOrange,
-                width: 150,
-                height: 30,
-                style: regular16,
-                onPressed: () {
-                  saveChangesOnPressedFunction();
-                },
-              )
-            : RoundedRectangleButton(
-                title: "Apply",
-                backgroundColor: japfaOrange,
-                width: 150,
-                height: 30,
-                style: regular16,
-                onPressed: () {
-                  applyDaftarFunction();
-                },
-              ),
+              saveChangesOnPressedFunction();
+            },
+          )
+        else if (widget.isKepalaDept)
+          // Show nothing if Kepala Dept
+          const SizedBox.shrink()
+        else
+          // Show "Apply" button for other cases
+          RoundedRectangleButton(
+            title: "Apply",
+            backgroundColor: japfaOrange,
+            width: 150,
+            height: 30,
+            style: regular16,
+            onPressed: () {
+              applyDaftarFunction();
+            },
+          ),
       ],
     );
   }

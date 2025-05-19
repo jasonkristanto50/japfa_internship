@@ -5,6 +5,7 @@ import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/components/department_card.dart';
 import 'package:japfa_internship/authentication/login.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
+import 'package:japfa_internship/function_variable/string_value.dart';
 import 'package:japfa_internship/models/departemen_data/departemen_data.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
@@ -189,7 +190,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                 image: department[index].pathImage,
                 requirements:
                     department[index].syaratDepartemen ?? ['Tidak ada syarat'],
-                isAdmin: loginState.role == "admin",
+                isAdmin: loginState.role == roleAdminValue,
+                isKepalaDept: loginState.role == roleKepalaDeptValue,
               );
             },
           );

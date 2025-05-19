@@ -179,6 +179,23 @@ router.get('/fetch-data-by-pembimbing/:namaPembimbing', async (req, res) => {
     }
 });
 
+// Get Pembimbing data by email
+router.get('/fetch-pembimbing-by-email/:email', async (req, res) => { 
+    const { email } = req.params;
+
+    try {  
+        const result = await pool.query('SELECT nama_pembimbing FROM PESERTA_MAGANG WHERE email = $1', [email]);  
+        if (result.rows.length > 0) {
+            res.status(200).json(result.rows[0]);
+        } else {
+            res.status(404).json({ message: 'Pembimbing not found' });
+        }  
+    } catch (error) {  
+        console.error('Error fetching pembimbing:', error);  
+        res.status(500).json({ error: 'Server error' });  
+    }  
+}); 
+
 
 ///////////////////////////////////////////// UPDATE DATA ////////////////////////////////////////////////////////
 

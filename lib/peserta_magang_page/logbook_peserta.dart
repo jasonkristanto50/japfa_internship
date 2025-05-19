@@ -22,6 +22,7 @@ class _LogBookPesertaDashboardState
   String nama = "";
   String email = "";
   String departement = "";
+  String namaPembimbing = "";
   List<LogbookPesertaMagangData> logbookData = [];
 
   @override
@@ -32,6 +33,7 @@ class _LogBookPesertaDashboardState
     email = loginState.email!;
     departement = loginState.departemen!;
     fetchLogbooks(); // Fetch logbooks on initialization
+    getNamaPembimbing();
   }
 
   @override
@@ -54,11 +56,30 @@ class _LogBookPesertaDashboardState
           children: [
             // Add Search Bar and Add Button
             _buildSearchAndAddLogBookButton(),
-            const SizedBox(height: 24),
+            _buildNamaPembimbing(),
             // Logbook Table
             _buildLogbookTable(filteredLogData),
           ],
         ),
+      ),
+    );
+  }
+
+  // New method to build the header
+  Widget _buildNamaPembimbing() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(180, 0, 15, 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Nama Pembimbing: $namaPembimbing', style: bold28),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -262,6 +283,19 @@ class _LogBookPesertaDashboardState
       print('Fetched logbooks: $logbooks'); // Log fetched data
     } catch (e) {
       print('Error fetching logbooks: $e'); // Log errors
+    }
+  }
+
+  Future<void> getNamaPembimbing() async {
+    try {
+      final namaPembimbingFetched =
+          await ApiService().fetchPembimbingByEmail(email);
+      setState(() {
+        namaPembimbing = namaPembimbingFetched!; // Store fetched data
+      });
+      print('Fetched nama pembimbing : $namaPembimbingFetched');
+    } catch (e) {
+      print('Error fetching nama pembimbing : $e'); // Log errors
     }
   }
 

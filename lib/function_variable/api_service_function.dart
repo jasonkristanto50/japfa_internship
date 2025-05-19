@@ -315,6 +315,21 @@ class ApiService {
     }
   }
 
+  Future<String?> fetchPembimbingByEmail(String email) async {
+    try {
+      final response = await _dio.get(
+          'http://localhost:3000/api/peserta_magang/fetch-pembimbing-by-email/$email');
+      if (response.statusCode == 200) {
+        return response.data['nama_pembimbing'];
+      } else {
+        print('Error: ${response.data['nama_pembimbing']}');
+        return null; // or handle not found scenario
+      }
+    } catch (e) {
+      print('Error fetching pembimbing: $e');
+      return null; // Handle error appropriately
+    }
+  }
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////  DEPARTEMEN   ///////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

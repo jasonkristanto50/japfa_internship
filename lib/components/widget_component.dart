@@ -131,14 +131,14 @@ class CustomLoginDialog extends StatelessWidget {
 // Custom Dialog for Respond
 class CustomRespondDialog extends StatelessWidget {
   final String title;
-  final String message;
+  final String? message;
   final VoidCallback onAccept;
   final VoidCallback onReject;
 
   const CustomRespondDialog({
     super.key,
     required this.title,
-    required this.message,
+    this.message,
     required this.onAccept,
     required this.onReject,
   });
@@ -170,7 +170,7 @@ class CustomRespondDialog extends StatelessWidget {
             const SizedBox(height: 16),
             // Message
             Text(
-              message,
+              message ?? "",
               textAlign: TextAlign.center,
               style: regular16,
             ),

@@ -65,12 +65,12 @@ router.put('/update-logbook/:id', async (req, res) => {
 // Endpoint: Update validasi by id
 router.patch('/validasi-logbook/:id', async (req, res) => {
     const { id } = req.params;
-    const { validasi } = req.body;
+    const { validasi_pembimbing } = req.body;
 
     try {
         await pool.query(
-            'UPDATE LOGBOOK_PESERTA_MAGANG SET validasi = $1 WHERE id_logbook = $2',
-            [validasi, id]
+            'UPDATE LOGBOOK_PESERTA_MAGANG SET validasi_pembimbing = $1 WHERE id_logbook = $2',
+            [validasi_pembimbing, id]
         );
         res.json({ message: 'Validasi updated successfully!' });
     } catch (err) {

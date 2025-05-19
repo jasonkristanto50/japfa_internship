@@ -9,6 +9,7 @@ import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/string_value.dart';
 import 'package:japfa_internship/home_page.dart';
+import 'package:japfa_internship/kepala_departemen_page/dashboard_pembimbing_magang.dart';
 import 'package:japfa_internship/models/kunjungan_studi_data/kunjungan_studi_data.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
 import 'package:japfa_internship/pendaftar_submission_page/kunjungan_studi_detail_page.dart';
@@ -134,7 +135,10 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
                   ] else if (loginState.role == roleKepalaDeptValue) ...[
                     // KEPALA DEPARTEMEN Navbar
                     buildNavBarTab("Logbook", _navigateToLogbookPage),
-                    buildNavBarTab("Laporan", _navigateToLaporanPage),
+                    buildNavBarTab(
+                      "Data Peserta",
+                      _navigateToPembimbingDashboard,
+                    ),
                     buildNavBarTab("Departemen", _navigateToHomePageMagang)
                   ] else if (loginState.role == rolePendaftarValue) ...[
                     // PENDAFTAR
@@ -301,6 +305,7 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
     // Navigate to Detail Page
   }
 
+  // TODO: DELETE if unused
   void _navigateToPembimbingPage() {
     fadeNavigation(context,
         targetNavigation: const PembimbingPesertaDashboard(), time: 200);
@@ -326,5 +331,12 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
       ),
       (route) => false,
     );
+  }
+
+  // KEPALA DEPARTEMEN TAB
+
+  void _navigateToPembimbingDashboard() {
+    fadeNavigation(context,
+        targetNavigation: const DashboardPembimbingMagang(), time: 200);
   }
 }

@@ -135,8 +135,8 @@ class ApiService {
   Future<List<PesertaMagangData>> fetchDataByPembimbing(
       String namaPembimbing) async {
     try {
-      final response =
-          await _dio.get('/fetch-data-by-pembimbing/$namaPembimbing');
+      final response = await _dio.get(
+          'http://localhost:3000/api/peserta_magang/fetch-data-by-pembimbing/$namaPembimbing');
       final List<dynamic> data = response.data;
 
       return data.map((item) => PesertaMagangData.fromJson(item)).toList();
@@ -507,6 +507,23 @@ class ApiService {
     } catch (e) {
       print('Error getting logbook count: $e');
       return null; // Return null if there's an error
+    }
+  }
+
+  // Validasi logbook
+  Future<void> updateLogbookValidation(
+      String idLogbook, bool validasiPembimbing) async {
+    try {
+      await _dio.patch(
+          'http://localhost:3000/api/logbook/validasi-logbook/$idLogbook',
+          data: {
+            'validasi_pembimbing': validasiPembimbing,
+          });
+      print('Validasi updated successfully'); // Optional logging
+    } on DioException catch (e) {
+      print('Error updating validation: ${e.message}');
+      // Handle errors appropriately (e.g., throw custom exception)
+      throw Exception('Failed to update validation');
     }
   }
 }

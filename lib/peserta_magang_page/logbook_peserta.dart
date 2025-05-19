@@ -158,8 +158,24 @@ class _LogBookPesertaDashboardState
                     DataCell(Text(data.namaAktivitas)),
                     DataCell(Text(data.tanggalAktivitas)),
                     DataCell(Text(data.urlLampiran)),
-                    DataCell(Text(data.validasiPembimbing ?? 'N/A')),
-                    DataCell(Text(data.catatanPembimbing ?? 'N/A')),
+                    DataCell(
+                      Text(
+                        data.validasiPembimbing == 'true'
+                            ? 'Disetujui'
+                            : (data.validasiPembimbing == 'false'
+                                ? 'Ditolak'
+                                : 'Menunggu'),
+                        style: TextStyle(
+                          color: data.validasiPembimbing == 'true'
+                              ? Colors.green
+                              : (data.validasiPembimbing == 'false'
+                                  ? Colors.red
+                                  : Colors.black),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    DataCell(Text(data.catatanPembimbing ?? '')),
                     DataCell(
                       RoundedRectangleButton(
                           title: 'EDIT',

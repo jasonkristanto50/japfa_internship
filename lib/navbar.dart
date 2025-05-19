@@ -16,7 +16,6 @@ import 'package:japfa_internship/pendaftar_submission_page/kunjungan_studi_detai
 import 'package:japfa_internship/pendaftar_submission_page/timeline_interview.dart';
 import 'package:japfa_internship/peserta_magang_page/laporan_peserta_magang.dart';
 import 'package:japfa_internship/peserta_magang_page/logbook_peserta.dart';
-import 'package:japfa_internship/peserta_magang_page/pembimbing_peserta.dart';
 import 'package:japfa_internship/profile_page.dart';
 
 // ignore: must_be_immutable
@@ -125,16 +124,20 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
                       _navigateToDepartemenPendaftaranMagangPage,
                     ),
                     buildNavBarTab(
-                        'Kunjungan Studi', _navigateToAdminKunjunganStudiPage),
+                      'Kunjungan Studi',
+                      _navigateToAdminKunjunganStudiPage,
+                    ),
                   ] else if (loginState.role == rolePesertaMagangValue) ...[
                     // PESERTA MAGANG Navbar
-                    buildNavBarTab("Detail", _navigateToDetailPage),
-                    buildNavBarTab("Pembimbing", _navigateToPembimbingPage),
+                    buildNavBarTab("Detail Diri", _navigateToDetailPage),
                     buildNavBarTab("Logbook", _navigateToLogbookPage),
                     buildNavBarTab("Laporan", _navigateToLaporanPage),
                   ] else if (loginState.role == roleKepalaDeptValue) ...[
                     // KEPALA DEPARTEMEN Navbar
-                    buildNavBarTab("Logbook", _navigateToLogbookPage),
+                    buildNavBarTab(
+                      "Logbook",
+                      _navigateToLogbookPage,
+                    ),
                     buildNavBarTab(
                       "Data Peserta",
                       _navigateToPembimbingDashboard,
@@ -302,13 +305,11 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
 
   // PESERTA MAGANG TAB
   void _navigateToDetailPage() {
-    // Navigate to Detail Page
-  }
-
-  // TODO: DELETE if unused
-  void _navigateToPembimbingPage() {
-    fadeNavigation(context,
-        targetNavigation: const PembimbingPesertaDashboard(), time: 200);
+    fadeNavigation(
+      context,
+      targetNavigation: const PendaftaranMagangDetailPage(),
+      time: 200,
+    );
   }
 
   void _navigateToLogbookPage() {

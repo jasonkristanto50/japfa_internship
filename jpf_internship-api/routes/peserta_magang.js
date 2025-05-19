@@ -166,6 +166,19 @@ router.get('/count-approved-for-department/:departmentName', async (req, res) =>
     }  
 });  
 
+// Get Peserta Magang data by nama pembimbing
+router.get('/fetch-data-by-pembimbing/:namaPembimbing', async (req, res) => {
+    const { namaPembimbing } = req.params;
+
+    try {
+        const result = await pool.query('SELECT * FROM PESERTA_MAGANG WHERE nama_pembimbing = $1', [namaPembimbing]);
+        res.status(200).json(result.rows);
+    } catch (error) {
+        console.error('Error fetching data by pembimbing:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
 
 ///////////////////////////////////////////// UPDATE DATA ////////////////////////////////////////////////////////
 
@@ -321,6 +334,30 @@ router.put('/update_status-catatan/:id', async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
   });
+
+  // Update nama_pembimbing for Peserta Magang by ID  
+router.put('/update-nama-pembimbing/:id', async (req, res) => {  
+    const { id } = req.params;
+    const { nama_pembimbing } = req.body;
+
+    try {  
+        const result = await pool.query(
+            'UPDATE PESERTA_MAGANG SET nama_pembimbing = $1 WHERE id_magang = $2 RETURNING *',
+            [nama_pembimbing, id]
+        );
+
+        if (result.rowCount === 0) {  
+            return res.status(404).json({ error: 'Peserta Magang not found' });  
+        }
+
+        res.status(200).json({ message: 'Nama pembimbing updated successfully!', data: result.rows[0] });  
+    } catch (error) {  
+        console.error('Error updating nama pembimbing:', error);  
+        res.status(500).json({ error: 'Server error' });  
+    }  
+});
+
+/////////////////////////////////////////////// DELETE //////////////////////////////////////////////
 
 // Delete all Peserta Magang records  
 router.delete('/delete-all-peserta-data', async (req, res) => {  

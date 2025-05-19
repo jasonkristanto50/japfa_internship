@@ -113,12 +113,16 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
                   ),
                 ] else ...[
                   // Logged in => Check role
-                  if (loginState.role == "admin") ...[
+                  if (loginState.role == roleAdminValue) ...[
                     // ADMIN Navbar
                     buildNavBarTab(
-                        'Home Page Magang', _navigateToHomePageMagang),
-                    buildNavBarTab('Data Pendaftar Magang',
-                        _navigateToDepartemenPendaftaranMagangPage),
+                      'Home Page Magang',
+                      _navigateToHomePageMagang,
+                    ),
+                    buildNavBarTab(
+                      'Data Pendaftar Magang',
+                      _navigateToDepartemenPendaftaranMagangPage,
+                    ),
                     buildNavBarTab(
                         'Kunjungan Studi', _navigateToAdminKunjunganStudiPage),
                   ] else if (loginState.role == rolePesertaMagangValue) ...[
@@ -127,7 +131,7 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
                     buildNavBarTab("Pembimbing", _navigateToPembimbingPage),
                     buildNavBarTab("Logbook", _navigateToLogbookPage),
                     buildNavBarTab("Laporan", _navigateToLaporanPage),
-                  ] else if (loginState.role == "kepala departemen") ...[
+                  ] else if (loginState.role == roleKepalaDeptValue) ...[
                     // KEPALA DEPARTEMEN Navbar
                     buildNavBarTab("Logbook", _navigateToLogbookPage),
                     buildNavBarTab("Laporan", _navigateToLaporanPage),
@@ -135,9 +139,13 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
                   ] else if (loginState.role == rolePendaftarValue) ...[
                     // PENDAFTAR
                     buildNavBarTab(
-                        "Pengajuan Magang", _navigateToSubmissionData),
+                      "Pengajuan Magang",
+                      _navigateToSubmissionData,
+                    ),
                     buildNavBarTab(
-                        "Pengajuan Kunjungan", _navigateToKunjunganData),
+                      "Pengajuan Kunjungan",
+                      _navigateToKunjunganData,
+                    ),
                     buildNavBarTab("Timeline", _navigateToTimeLine),
                   ],
                   const SizedBox(width: 16),

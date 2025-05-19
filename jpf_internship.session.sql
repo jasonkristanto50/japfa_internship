@@ -114,8 +114,8 @@
 --     id_kepala_departemen VARCHAR NOT NULL PRIMARY KEY,    -- ID Kepala Departemen (PK)
 --     nama VARCHAR(100) NOT NULL,           -- Nama
 --     email VARCHAR(100) NOT NULL,          -- Email
---     departemen VARCHAR(20) NOT NULL,          -- Departemen
+--     departemen VARCHAR(255) NOT NULL,          -- Departemen
 --     password VARCHAR(15) NOT NULL,                  -- Password
---     role VARCHAR(15) NOT NULL,                 -- role : kepala departemen
+--     role VARCHAR(255) NOT NULL,                 -- role : kepala departemen
 --     status VARCHAR NOT NULL               -- status : aktif / tidak aktif
 -- );

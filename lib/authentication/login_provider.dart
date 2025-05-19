@@ -11,6 +11,7 @@ class LoginState {
   final String? role;
   final String? email;
   final String? departemen;
+  final String? statusAktif;
   final String? statusMagang;
   final String? statusKunjungan;
 
@@ -22,6 +23,7 @@ class LoginState {
       this.role,
       this.email,
       this.departemen,
+      this.statusAktif,
       this.statusMagang,
       this.statusKunjungan});
 
@@ -50,7 +52,6 @@ class LoginNotifier extends StateNotifier<LoginState> {
     required String email,
     required String password,
   }) async {
-    // TODO: buat akun untuk peserta
     if (email == 'peserta' && password == '123') {
       state = LoginState(
         isLoading: false,
@@ -71,8 +72,7 @@ class LoginNotifier extends StateNotifier<LoginState> {
     }
     state = state.copyWith(isLoading: true, errorMessage: null);
 
-    String url =
-        'http://localhost:3000/api/login/login-password'; // Update to your login endpoint
+    String url = 'http://localhost:3000/api/login/login-password';
 
     try {
       final response = await _dio.post(
@@ -89,7 +89,11 @@ class LoginNotifier extends StateNotifier<LoginState> {
           state = LoginState(
             isLoading: false,
             isLoggedIn: true,
+            name: data['nama'],
+            email: email,
+            departemen: data['departemen'],
             role: data['role'],
+            statusAktif: data['status_aktif'],
           );
         } else {
           state = state.copyWith(
@@ -117,8 +121,7 @@ class LoginNotifier extends StateNotifier<LoginState> {
   }) async {
     state = state.copyWith(isLoading: true, errorMessage: null);
 
-    String url =
-        'http://localhost:3000/api/login/login-token'; // Update to your token login endpoint
+    String url = 'http://localhost:3000/api/login/login-token';
 
     try {
       final response = await _dio.post(
@@ -131,24 +134,26 @@ class LoginNotifier extends StateNotifier<LoginState> {
         final data = response.data;
         if (data['status_magang'] == statusMagangBerlangsung) {
           state = LoginState(
-              isLoading: false,
-              isLoggedIn: true,
-              name: data['nama'],
-              email: email,
-              role: rolePesertaMagangValue,
-              departemen: data['departemen'],
-              statusMagang: data['status_magang']);
+            isLoading: false,
+            isLoggedIn: true,
+            name: data['nama'],
+            email: email,
+            role: rolePesertaMagangValue,
+            departemen: data['departemen'],
+            statusMagang: data['status_magang'],
+          );
         } else if (data['status_magang'] == statusMagangMenunggu ||
             data['status_magang'] == statusMagangDiterima ||
             data['status_magang'] == statusMagangDitolak) {
           state = LoginState(
-              isLoading: false,
-              isLoggedIn: true,
-              name: data['nama'],
-              email: email,
-              role: rolePendaftarValue,
-              departemen: data['departemen'],
-              statusMagang: data['status_magang']);
+            isLoading: false,
+            isLoggedIn: true,
+            name: data['nama'],
+            email: email,
+            role: rolePendaftarValue,
+            departemen: data['departemen'],
+            statusMagang: data['status_magang'],
+          );
         }
 
         if (data['status'] == statusKunjunganMenunggu) {

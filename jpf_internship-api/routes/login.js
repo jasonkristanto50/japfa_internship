@@ -24,8 +24,12 @@ router.post('/login-password', async (req, res) => {
 
         if (result.rows.length > 0) {  
             const admin = result.rows[0];  
-            return res.status(200).json({  
-                role: admin.role // Return role for admin  
+            return res.status(200).json({ 
+                nama: admin.nama,
+                email: admin.email,
+                departemen: admin.departemen,
+                role: admin.role,
+                status_aktif: admin.status
             });  
         }  
 
@@ -38,7 +42,24 @@ router.post('/login-password', async (req, res) => {
         if (result.rows.length > 0) {  
             const user = result.rows[0];  
             return res.status(200).json({  
-                role: user.role // Return role for pendaftar  
+                role: user.role
+            });  
+        }
+        
+        // Check in KEPALA_DEPARTEMEN table
+        result = await pool.query(  
+            'SELECT * FROM KEPALA_DEPARTEMEN WHERE email = $1 AND password = $2',  
+            [email, password]  
+        );  
+
+        if (result.rows.length > 0) {  
+            const user = result.rows[0];  
+            return res.status(200).json({ 
+                nama: user.nama,
+                email: user.email,
+                departemen: user.departemen,
+                role: user.role,
+                status_aktif: user.status 
             });  
         }  
 

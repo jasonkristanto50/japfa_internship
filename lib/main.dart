@@ -13,12 +13,16 @@ class Root extends StatelessWidget {
   const Root({super.key});
 
   // Full-HD desktop baseline ───────────────┐
-  static const _desktopDesign = Size(1920, 1080);
+  static const _desktopDesign =
+      Size(1920, 1080); // <── baseline for all .h / .w / .sp / .r
+
+  // Mobile baseline ──────────────────────┐
+  static const _mobileDesign = Size(375, 812); // iPhone 11/12/13/14 size
 
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: _desktopDesign, // <── baseline for all .h / .w / .sp / .r
+      designSize: _mobileDesign,
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (_, __) => const MyApp(),

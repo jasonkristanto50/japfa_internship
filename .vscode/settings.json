@@ -12,5 +12,6 @@
             "password": "admin",
             "connectionTimeout": 30
         }
-    ]
+    ],
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

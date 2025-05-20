@@ -357,84 +357,6 @@ class ConfirmationDialog extends StatelessWidget {
   }
 }
 
-// // Custom Alert Dialog
-// class CustomAlertDialog extends StatelessWidget {
-//   final String title;
-//   final String subTitle;
-//   final TextEditingController controller;
-//   final String label;
-//   final VoidCallback onSave;
-
-//   const CustomAlertDialog({
-//     super.key,
-//     required this.title,
-//     required this.subTitle,
-//     required this.controller,
-//     required this.label,
-//     required this.onSave,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return AlertDialog(
-//       backgroundColor: Colors.white,
-//       shape: RoundedRectangleBorder(
-//         borderRadius: BorderRadius.circular(16),
-//       ),
-//       title: Center(
-//         child: Text(title, style: bold24),
-//       ),
-//       content: SingleChildScrollView(
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Center(
-//               child: Text(
-//                 subTitle.toUpperCase(),
-//                 style: regular20.copyWith(color: japfaOrange),
-//               ),
-//             ),
-//             const SizedBox(height: 16),
-//             _buildTextField(controller, label),
-//             const SizedBox(height: 16),
-//             Center(
-//                 child: RoundedRectangleButton(
-//               title: "Simpan",
-//               backgroundColor: japfaOrange,
-//               fontColor: Colors.white,
-//               onPressed: onSave,
-//             )),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-
-//   Widget _buildTextField(TextEditingController controller, String label) {
-//     return Padding(
-//       padding: const EdgeInsets.symmetric(vertical: 8.0),
-//       child: TextField(
-//         controller: controller,
-//         decoration: InputDecoration(
-//           labelText: label,
-//           labelStyle: regular14.copyWith(color: Colors.black),
-//           border: OutlineInputBorder(
-//             borderRadius: BorderRadius.circular(8),
-//             borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),
-//           ),
-//           focusedBorder: OutlineInputBorder(
-//             borderRadius: BorderRadius.circular(8),
-//             borderSide: const BorderSide(color: Colors.orange, width: 2),
-//           ),
-//         ),
-//         keyboardType: TextInputType.number,
-//         style: const TextStyle(color: Colors.black),
-//         cursorColor: Colors.black,
-//       ),
-//     );
-//   }
-// }
-
 enum BuildFieldTypeController { text, number, date }
 
 class CustomAlertDialog extends StatelessWidget {
@@ -459,6 +381,8 @@ class CustomAlertDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isMobile = MediaQuery.of(context).size.width < 600;
+
     return AlertDialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
@@ -468,21 +392,23 @@ class CustomAlertDialog extends StatelessWidget {
         child: Text(title, style: bold24),
       ),
       content: Container(
-        constraints: const BoxConstraints(maxHeight: 400),
+        width: isMobile ? 300.w : 400.w, // Adjust width based on device
+        constraints: BoxConstraints(
+          maxHeight: isMobile ? 350 : 400, // Adjust height for mobile
+        ),
         child: SingleChildScrollView(
-          // Maintain only one scrollable wrapper
           child: Column(
-            // Use a Column for building fields
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
                 child: Text(
                   subTitle.toUpperCase(),
-                  style: regular20.copyWith(color: japfaOrange),
+                  style: isMobile
+                      ? regular14.copyWith(color: japfaOrange)
+                      : regular20.copyWith(color: japfaOrange),
                 ),
               ),
               const SizedBox(height: 16),
-              // Create fields directly in the Column
               ...List.generate(numberOfField, (index) {
                 return _buildField(
                   controllers[index],
@@ -572,7 +498,7 @@ class CustomAlertDialog extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextField(
         controller: controller,
-        readOnly: true, // Ensures only date picker opens
+        readOnly: true,
         decoration: InputDecoration(
           labelText: label,
           labelStyle: regular14.copyWith(color: Colors.black),

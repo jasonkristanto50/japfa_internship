@@ -24,6 +24,7 @@ class _LogBookPesertaDashboardState
   String departement = "";
   String namaPembimbing = "";
   List<LogbookPesertaMagangData> logbookData = [];
+  bool isMobile = false;
 
   @override
   void initState() {
@@ -38,6 +39,9 @@ class _LogBookPesertaDashboardState
 
   @override
   Widget build(BuildContext context) {
+    // Check if the current device is mobile
+    isMobile = MediaQuery.of(context).size.width < 600;
+
     // Filter logbook data based on search query
     final filteredLogData = logbookData.where((data) {
       return data.namaAktivitas
@@ -56,6 +60,7 @@ class _LogBookPesertaDashboardState
           children: [
             // Add Search Bar and Add Button
             _buildSearchAndAddLogBookButton(),
+            // Display the Pembimbing name
             _buildNamaPembimbing(),
             // Logbook Table
             _buildLogbookTable(filteredLogData),
@@ -65,10 +70,14 @@ class _LogBookPesertaDashboardState
     );
   }
 
-  // New method to build the header
   Widget _buildNamaPembimbing() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(180, 0, 15, 15),
+      padding: EdgeInsets.fromLTRB(
+        isMobile == true ? 30 : 180,
+        0,
+        15,
+        15,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,7 +85,10 @@ class _LogBookPesertaDashboardState
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Nama Pembimbing: $namaPembimbing', style: bold28),
+              Text(
+                'Nama Pembimbing: $namaPembimbing',
+                style: isMobile == true ? bold12 : bold28,
+              ),
             ],
           ),
         ],
@@ -95,16 +107,17 @@ class _LogBookPesertaDashboardState
                 searchQuery = value; // Update search query
               });
             },
-            widthValue: 1200.w,
+            labelSearchBar: "Cari",
+            widthValue: isMobile ? 200.w : 1200.w, // Adjust width for mobile
           ),
           const SizedBox(width: 16),
           // Button to add a new logbook
           RoundedRectangleButton(
-            title: "Tambah Log Book",
+            title: isMobile ? "Tambah" : "Tambah Log Book", // Conditional title
             backgroundColor: japfaOrange,
             fontColor: Colors.white,
             height: 40,
-            width: 200,
+            width: isMobile ? 100 : 200, // Adjust width for mobile
             rounded: 5,
             onPressed: () {
               _showAddLogBookModal();
@@ -178,10 +191,10 @@ class _LogBookPesertaDashboardState
                     DataCell(Text(data.catatanPembimbing ?? '')),
                     DataCell(
                       RoundedRectangleButton(
-                          title: 'EDIT',
+                          title: isMobile ? 'EDIT' : 'EDIT',
                           backgroundColor: lightBlue,
                           height: 30,
-                          width: 85,
+                          width: isMobile ? 70 : 85,
                           rounded: 5,
                           onPressed: () => _showEditLogbookModal(data)),
                     ),

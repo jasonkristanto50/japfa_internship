@@ -54,6 +54,7 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final loginState = ref.watch(loginProvider);
+    bool isMobile = MediaQuery.of(context).size.width < 600;
 
     return Container(
       decoration: const BoxDecoration(
@@ -87,135 +88,49 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
                   ),
                 ),
                 const Spacer(),
-                if (!loginState.isLoggedIn) ...[
-                  buildNavBarTab("My Submission", _navigateToSubmissionData),
-                  buildNavBarTab("Timeline", _navigateToTimeLine),
-                  const SizedBox(width: 10),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 16.0),
-                    child: TextButton(
-                      onPressed: onLoginPressed,
-                      style: TextButton.styleFrom(
-                        backgroundColor: Colors.orange,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                          vertical: 8.0,
-                        ),
-                      ),
-                      child: const Text(
-                        'Login',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
+                // For mobile, show the hamburger icon instead of tabs
+                if (isMobile) ...[
+                  if (loginState.isLoggedIn)
+                    IconButton(
+                      icon: const Icon(Icons.menu, color: Colors.white),
+                      onPressed: () => _showMenu(context, ref),
                     ),
-                  ),
                 ] else ...[
-                  // Logged in => Check role
-                  if (loginState.role == roleAdminValue) ...[
-                    // ADMIN Navbar
-                    buildNavBarTab(
-                      'Home Page Magang',
-                      _navigateToHomePageMagang,
-                    ),
-                    buildNavBarTab(
-                      'Data Pendaftar Magang',
-                      _navigateToDepartemenPendaftaranMagangPage,
-                    ),
-                    buildNavBarTab(
-                      'Kunjungan Studi',
-                      _navigateToAdminKunjunganStudiPage,
-                    ),
-                  ] else if (loginState.role == rolePesertaMagangValue) ...[
-                    // PESERTA MAGANG Navbar
-                    buildNavBarTab("Detail Diri", _navigateToDetailPage),
-                    buildNavBarTab("Logbook", _navigateToLogbookPage),
-                    buildNavBarTab("Laporan", _navigateToLaporanPage),
-                  ] else if (loginState.role == roleKepalaDeptValue) ...[
-                    // KEPALA DEPARTEMEN Navbar
-                    buildNavBarTab(
-                      "Logbook",
-                      _navigateToLogbookPage,
-                    ),
-                    buildNavBarTab(
-                      "Data Peserta",
-                      _navigateToPembimbingDashboard,
-                    ),
-                    buildNavBarTab("Departemen", _navigateToHomePageMagang)
-                  ] else if (loginState.role == rolePendaftarValue) ...[
-                    // PENDAFTAR
-                    buildNavBarTab(
-                      "Pengajuan Magang",
-                      _navigateToSubmissionData,
-                    ),
-                    buildNavBarTab(
-                      "Pengajuan Kunjungan",
-                      _navigateToKunjunganData,
-                    ),
+                  // For desktop, render navigation tabs based on login state
+                  if (!loginState.isLoggedIn) ...[
+                    buildNavBarTab("My Submission", _navigateToSubmissionData),
                     buildNavBarTab("Timeline", _navigateToTimeLine),
+                    buildLoginBotton(),
+                    const SizedBox(width: 10),
+                  ] else ...[
+                    // Logged in => Check role
+                    if (loginState.role == roleAdminValue) ...[
+                      buildNavBarTab(
+                          'Home Page Magang', _navigateToHomePageMagang),
+                      buildNavBarTab('Data Pendaftar Magang',
+                          _navigateToDepartemenPendaftaranMagangPage),
+                      buildNavBarTab('Kunjungan Studi',
+                          _navigateToAdminKunjunganStudiPage),
+                    ] else if (loginState.role == rolePesertaMagangValue) ...[
+                      buildNavBarTab("Detail Diri", _navigateToDetailPage),
+                      buildNavBarTab("Logbook", _navigateToLogbookPage),
+                      buildNavBarTab("Laporan", _navigateToLaporanPage),
+                    ] else if (loginState.role == roleKepalaDeptValue) ...[
+                      buildNavBarTab("Logbook", _navigateToLogbookPage),
+                      buildNavBarTab(
+                          "Data Peserta", _navigateToPembimbingDashboard),
+                      buildNavBarTab("Departemen", _navigateToHomePageMagang),
+                    ] else if (loginState.role == rolePendaftarValue) ...[
+                      buildNavBarTab(
+                          "Pengajuan Magang", _navigateToSubmissionData),
+                      buildNavBarTab(
+                          "Pengajuan Kunjungan", _navigateToKunjunganData),
+                      buildNavBarTab("Timeline", _navigateToTimeLine),
+                    ],
+                    const SizedBox(width: 16),
+                    // Profile Pop Up
+                    buildProfileIcon(ref),
                   ],
-                  const SizedBox(width: 16),
-
-                  // PROFILE Pop Up
-                  PopupMenuButton<String>(
-                    onSelected: (value) {
-                      if (value == 'logout') {
-                        _logOutFunction(context, ref);
-                      } else if (value == 'profile') {
-                        _navigateToProfilePage();
-                      }
-                    },
-                    icon: Container(
-                      width: 40,
-                      height: 40,
-                      margin: const EdgeInsets.only(right: 16.0),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Colors.white,
-                          width: 2,
-                        ),
-                      ),
-                      child: ClipOval(
-                        child: Image.asset(
-                          'assets/default_profile.png',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    offset: const Offset(-30, 50),
-                    itemBuilder: (BuildContext context) {
-                      return [
-                        const PopupMenuItem<String>(
-                          value: 'profile',
-                          child: SizedBox(
-                            width: 100,
-                            child: Row(
-                              children: [
-                                Icon(Icons.person, color: Colors.black),
-                                SizedBox(width: 10),
-                                Text('Profile')
-                              ],
-                            ),
-                          ),
-                        ),
-                        const PopupMenuItem<String>(
-                          value: 'logout',
-                          child: SizedBox(
-                            width: 100,
-                            child: Row(
-                              children: [
-                                Icon(Icons.logout, color: Colors.black),
-                                SizedBox(width: 10),
-                                Text('Log Out')
-                              ],
-                            ),
-                          ),
-                        ),
-                      ];
-                    },
-                  ),
                 ],
               ],
             ),
@@ -237,6 +152,204 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
         style: const TextStyle(
           color: Colors.white,
           fontSize: 16,
+        ),
+      ),
+    );
+  }
+
+  Widget buildProfileIcon(WidgetRef ref) {
+    return PopupMenuButton<String>(
+      onSelected: (value) {
+        if (value == 'logout') {
+          _logOutFunction(context, ref);
+        } else if (value == 'profile') {
+          _navigateToProfilePage();
+        }
+      },
+      icon: Container(
+        width: 40,
+        height: 40,
+        margin: const EdgeInsets.only(right: 16.0),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: Colors.white,
+            width: 2,
+          ),
+        ),
+        child: ClipOval(
+          child: Image.asset(
+            'assets/default_profile.png',
+            fit: BoxFit.cover,
+          ),
+        ),
+      ),
+      offset: const Offset(-30, 50),
+      itemBuilder: (BuildContext context) {
+        return [
+          const PopupMenuItem<String>(
+            value: 'profile',
+            child: SizedBox(
+              width: 100,
+              child: Row(
+                children: [
+                  Icon(Icons.person, color: Colors.black),
+                  SizedBox(width: 10),
+                  Text('Profile')
+                ],
+              ),
+            ),
+          ),
+          const PopupMenuItem<String>(
+            value: 'logout',
+            child: SizedBox(
+              width: 100,
+              child: Row(
+                children: [
+                  Icon(Icons.logout, color: Colors.black),
+                  SizedBox(width: 10),
+                  Text('Log Out')
+                ],
+              ),
+            ),
+          ),
+        ];
+      },
+    );
+  }
+
+  void _showMenu(BuildContext context, WidgetRef ref) {
+    final loginState = ref.watch(loginProvider);
+
+    List<PopupMenuEntry<String>> menuItems = [];
+
+    if (loginState.isLoggedIn) {
+      if (loginState.role == roleAdminValue) {
+        menuItems.add(const PopupMenuItem<String>(
+          value: 'home',
+          child: Text('Home Page Magang'),
+        ));
+        menuItems.add(const PopupMenuItem<String>(
+          value: 'dataPendaftar',
+          child: Text('Data Pendaftar Magang'),
+        ));
+        menuItems.add(const PopupMenuItem<String>(
+          value: 'kunjungan',
+          child: Text('Kunjungan Studi'),
+        ));
+      } else if (loginState.role == rolePesertaMagangValue) {
+        menuItems.add(const PopupMenuItem<String>(
+          value: 'detailDiri',
+          child: Text('Detail Diri'),
+        ));
+        menuItems.add(const PopupMenuItem<String>(
+          value: 'logbook',
+          child: Text('Logbook'),
+        ));
+        menuItems.add(const PopupMenuItem<String>(
+          value: 'laporan',
+          child: Text('Laporan'),
+        ));
+      } else if (loginState.role == roleKepalaDeptValue) {
+        menuItems.add(const PopupMenuItem<String>(
+          value: 'logbook',
+          child: Text('Logbook'),
+        ));
+        menuItems.add(const PopupMenuItem<String>(
+          value: 'dataPeserta',
+          child: Text('Data Peserta'),
+        ));
+        menuItems.add(const PopupMenuItem<String>(
+          value: 'departemen',
+          child: Text('Departemen'),
+        ));
+      } else if (loginState.role == rolePendaftarValue) {
+        menuItems.add(const PopupMenuItem<String>(
+          value: 'pengajuanMagang',
+          child: Text('Pengajuan Magang'),
+        ));
+        menuItems.add(const PopupMenuItem<String>(
+          value: 'pengajuanKunjungan',
+          child: Text('Pengajuan Kunjungan'),
+        ));
+        menuItems.add(const PopupMenuItem<String>(
+          value: 'timeline',
+          child: Text('Timeline'),
+        ));
+      }
+
+      menuItems.add(const PopupMenuItem<String>(
+        value: 'logout',
+        child: Text('Log Out'),
+      ));
+
+      showMenu(
+        context: context,
+        position: const RelativeRect.fromLTRB(100.0, 100.0, 100.0, 0.0),
+        items: menuItems,
+      ).then((value) {
+        if (value != null) {
+          switch (value) {
+            case 'home':
+              _navigateToHomePageMagang();
+              break;
+            case 'dataPendaftar':
+              _navigateToDepartemenPendaftaranMagangPage();
+              break;
+            case 'kunjungan':
+              _navigateToAdminKunjunganStudiPage();
+              break;
+            case 'detailDiri':
+              _navigateToDetailPage();
+              break;
+            case 'logbook':
+              _navigateToLogbookPage();
+              break;
+            case 'laporan':
+              _navigateToLaporanPage();
+              break;
+            case 'dataPeserta':
+              _navigateToPembimbingDashboard();
+              break;
+            case 'departemen':
+              _navigateToHomePageMagang();
+              break;
+            case 'pengajuanMagang':
+              _navigateToSubmissionData();
+              break;
+            case 'pengajuanKunjungan':
+              _navigateToKunjunganData();
+              break;
+            case 'timeline':
+              _navigateToTimeLine();
+              break;
+            case 'logout':
+              _logOutFunction(context, ref);
+              break;
+          }
+        }
+      });
+    }
+  }
+
+  Widget buildLoginBotton() {
+    return Padding(
+      padding: const EdgeInsets.only(right: 16.0),
+      child: TextButton(
+        onPressed: onLoginPressed,
+        style: TextButton.styleFrom(
+          backgroundColor: Colors.orange,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16.0,
+            vertical: 8.0,
+          ),
+        ),
+        child: const Text(
+          'Login',
+          style: TextStyle(color: Colors.white, fontSize: 16),
         ),
       ),
     );

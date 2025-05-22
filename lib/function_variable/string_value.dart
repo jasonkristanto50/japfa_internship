@@ -22,3 +22,6 @@ String statusMagangSelesai = 'Selesai';
 String statusKunjunganDiterima = 'Diterima';
 String statusKunjunganDitolak = 'Ditolak';
 String statusKunjunganMenunggu = 'Menunggu';
+
+String statusPembimbingAktif = "Aktif";
+String statusPembimbingTidakAktif = "Tidak Aktif";

@@ -19,6 +19,7 @@ class DepartemenMagangDashboard extends StatefulWidget {
 class _DepartemenMagangDashboardState extends State<DepartemenMagangDashboard> {
   List<DepartemenData> departemen = [];
   String searchQuery = "";
+  TextEditingController? namaDepartemen;
 
   @override
   void initState() {
@@ -184,31 +185,15 @@ class _DepartemenMagangDashboardState extends State<DepartemenMagangDashboard> {
   }
 
   void _addNewDepartment() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Add New Department'),
-          content: const Text(
-              'Fill out the information here...'), // Replace with your form
-          actions: [
-            TextButton(
-              onPressed: () {
-                // Handle save functionality
-                Navigator.of(context).pop();
-              },
-              child: const Text('Save'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-          ],
-        );
-      },
-    );
+    // showDialog(
+    //   context: context,
+    //   builder: (BuildContext context) {
+    //     return CustomAlertDialog(
+    //       title: "Tambah Departemen",
+    //       controllers: [],
+    //     );
+    //   },
+    // );
   }
 
   void _editTable(DepartemenData department) {

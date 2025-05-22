@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:japfa_internship/admin_page/departemen_magang_dashboard.dart';
 import 'package:japfa_internship/admin_page/kunjungan_studi_dashboard.dart';
 import 'package:japfa_internship/admin_page/pendaftaran_magang_detail_page.dart';
+import 'package:japfa_internship/admin_page/tambah_kepala_departemen.dart';
 import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/string_value.dart';
@@ -106,11 +107,21 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
                     // Logged in => Check role
                     if (loginState.role == roleAdminValue) ...[
                       buildNavBarTab(
-                          'Home Page Magang', _navigateToHomePageMagang),
-                      buildNavBarTab('Data Pendaftar Magang',
-                          _navigateToDepartemenPendaftaranMagangPage),
-                      buildNavBarTab('Kunjungan Studi',
-                          _navigateToAdminKunjunganStudiPage),
+                        'Data Pendaftar Magang',
+                        _navigateToDepartemenPendaftaranMagangPage,
+                      ),
+                      buildNavBarTab(
+                        'Kunjungan Studi',
+                        _navigateToAdminKunjunganStudiPage,
+                      ),
+                      buildNavBarTab(
+                        'Tambah Pembimbing',
+                        _navigateToTambahKepalaDept,
+                      ),
+                      buildNavBarTab(
+                        'Home Page Magang',
+                        _navigateToHomePageMagang,
+                      ),
                     ] else if (loginState.role == rolePesertaMagangValue) ...[
                       buildNavBarTab("Detail Diri", _navigateToDetailPage),
                       buildNavBarTab("Logbook", _navigateToLogbookPage),
@@ -405,6 +416,14 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
   void _navigateToDepartemenPendaftaranMagangPage() {
     fadeNavigation(context,
         targetNavigation: const DepartemenMagangDashboard(), time: 200);
+  }
+
+  void _navigateToTambahKepalaDept() {
+    fadeNavigation(
+      context,
+      targetNavigation: const TambahKepalaDepartemen(),
+      time: 200,
+    );
   }
 
   void _navigateToHomePageMagang() {

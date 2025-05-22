@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:japfa_internship/models/departemen_data/departemen_data.dart';
+import 'package:japfa_internship/models/kepala_departemen_data/kepala_departemen_data.dart';
 import 'package:japfa_internship/models/kunjungan_studi_data/kunjungan_studi_data.dart';
 import 'package:japfa_internship/models/logbook_peserta_magang_data/logbook_peserta_magang_data.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
@@ -558,6 +559,60 @@ class ApiService {
     } on DioException catch (e) {
       print('Error updating catatan: ${e.message}');
       throw Exception('Failed to update catatan');
+    }
+  }
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////// LOGBOOK ///////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // Function to create a new kepala departemen
+  Future<void> addKepalaDepartemen(KepalaDepartemenData data) async {
+    try {
+      final response = await _dio.post(
+          'http://localhost:3000/api/kepala_departemen/add-new-kepala-departemen',
+          data: data.toJson());
+      if (response.statusCode == 201) {
+        print('Kepala Departemen created successfully!');
+      } else {
+        throw Exception('Failed to create Kepala Departemen');
+      }
+    } catch (error) {
+      print('Error creating kepala departemen: $error');
+      rethrow; // Rethrow error for further handling if needed
+    }
+  }
+
+  Future<List<KepalaDepartemenData>> fetchAllKepalaDepartemen() async {
+    try {
+      final response = await _dio.get(
+          'http://localhost:3000/api/kepala_departemen/fetch-all-kepala-departemen');
+      if (response.statusCode == 200) {
+        // Parse the JSON response to a list of KepalaDepartemen instances
+        final List<dynamic> data = response.data;
+        return data.map((item) => KepalaDepartemenData.fromJson(item)).toList();
+      } else {
+        throw Exception('Failed to load kepala departemen');
+      }
+    } catch (error) {
+      print('Error fetching kepala departemen: $error');
+      rethrow; // Rethrow the error for further handling if needed
+    }
+  }
+
+  // Function to fetch the count of kepala departemen
+  Future<int> fetchKepalaDepartemenCount() async {
+    try {
+      final response = await _dio.get(
+          'http://localhost:3000/api/kepala_departemen/count-jumlah-kepala-departemen');
+      if (response.statusCode == 200) {
+        return response.data['count']; // Return the count
+      } else {
+        throw Exception('Failed to fetch count');
+      }
+    } catch (error) {
+      print('Error fetching count: $error');
+      rethrow; // Rethrow error for further handling if needed
     }
   }
 }

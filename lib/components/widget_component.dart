@@ -361,7 +361,7 @@ enum BuildFieldTypeController { text, number, date }
 
 class CustomAlertDialog extends StatelessWidget {
   final String title;
-  final String subTitle;
+  final String? subTitle;
   final List<TextEditingController> controllers;
   final List<String> labels;
   final List<BuildFieldTypeController> fieldTypes;
@@ -371,7 +371,7 @@ class CustomAlertDialog extends StatelessWidget {
   const CustomAlertDialog({
     super.key,
     required this.title,
-    required this.subTitle,
+    this.subTitle,
     required this.controllers,
     required this.labels,
     required this.fieldTypes,
@@ -402,7 +402,7 @@ class CustomAlertDialog extends StatelessWidget {
             children: [
               Center(
                 child: Text(
-                  subTitle.toUpperCase(),
+                  subTitle != null ? subTitle!.toUpperCase() : "",
                   style: isMobile
                       ? regular14.copyWith(color: japfaOrange)
                       : regular20.copyWith(color: japfaOrange),

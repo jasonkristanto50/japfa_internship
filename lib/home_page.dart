@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/components/department_card.dart';
-import 'package:japfa_internship/authentication/login.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
 import 'package:japfa_internship/function_variable/string_value.dart';
 import 'package:japfa_internship/models/departemen_data/departemen_data.dart';
@@ -30,7 +29,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
         context: context,
         title: appName,
         titleOnPressed: _scrollToTop,
-        onLoginPressed: _navigateToLogin,
       ),
       body: Container(
         decoration: buildJapfaLogoBackground(),
@@ -217,12 +215,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
       850, // Adjust this value to match the position of the Card section
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
-    );
-  }
-
-  void _navigateToLogin() {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => const LoginScreen()),
     );
   }
 

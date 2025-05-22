@@ -6,6 +6,7 @@ import 'package:japfa_internship/admin_page/departemen_magang_dashboard.dart';
 import 'package:japfa_internship/admin_page/kunjungan_studi_dashboard.dart';
 import 'package:japfa_internship/admin_page/pendaftaran_magang_detail_page.dart';
 import 'package:japfa_internship/admin_page/tambah_kepala_departemen.dart';
+import 'package:japfa_internship/authentication/login.dart';
 import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/string_value.dart';
@@ -101,8 +102,8 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
                   if (!loginState.isLoggedIn) ...[
                     buildNavBarTab("My Submission", _navigateToSubmissionData),
                     buildNavBarTab("Timeline", _navigateToTimeLine),
-                    buildLoginBotton(),
                     const SizedBox(width: 10),
+                    buildLoginBotton(),
                   ] else ...[
                     // Logged in => Check role
                     if (loginState.role == roleAdminValue) ...[
@@ -351,7 +352,7 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
     return Padding(
       padding: const EdgeInsets.only(right: 16.0),
       child: TextButton(
-        onPressed: onLoginPressed,
+        onPressed: onLoginPressed ?? _navigateToLogin,
         style: TextButton.styleFrom(
           backgroundColor: Colors.orange,
           shape: RoundedRectangleBorder(
@@ -367,6 +368,12 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
           style: TextStyle(color: Colors.white, fontSize: 16),
         ),
       ),
+    );
+  }
+
+  void _navigateToLogin() {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
     );
   }
 

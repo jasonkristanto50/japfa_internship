@@ -127,10 +127,14 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
                       buildNavBarTab("Logbook", _navigateToLogbookPage),
                       buildNavBarTab("Laporan", _navigateToLaporanPage),
                     ] else if (loginState.role == roleKepalaDeptValue) ...[
-                      buildNavBarTab("Logbook", _navigateToLogbookPage),
                       buildNavBarTab(
-                          "Data Peserta", _navigateToPembimbingDashboard),
-                      buildNavBarTab("Departemen", _navigateToHomePageMagang),
+                        "Data Peserta",
+                        _navigateToPembimbingDashboard,
+                      ),
+                      buildNavBarTab(
+                        "Departemen",
+                        _navigateToHomePageMagang,
+                      ),
                     ] else if (loginState.role == rolePendaftarValue) ...[
                       buildNavBarTab(
                           "Pengajuan Magang", _navigateToSubmissionData),

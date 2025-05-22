@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:japfa_internship/admin_page/departemen_magang_dashboard.dart';
+import 'package:japfa_internship/kepala_departemen_page/dashboard_pembimbing_magang.dart';
 import 'package:japfa_internship/peserta_magang_page/logbook_peserta.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/home_page.dart';
@@ -245,7 +246,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => const LogBookPesertaDashboard(),
+              builder: (context) => const DashboardPembimbingMagang(),
             ),
           );
           break;

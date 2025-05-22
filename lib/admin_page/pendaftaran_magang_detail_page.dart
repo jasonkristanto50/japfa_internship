@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:http/retry.dart';
 import 'package:japfa_internship/authentication/login.dart';
 import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/components/widget_component.dart';
@@ -24,6 +26,8 @@ class _PendaftaranMagangDetailPageState
     extends ConsumerState<PendaftaranMagangDetailPage> {
   PesertaMagangData? peserta;
   bool _loading = false;
+  late bool isAdmin;
+  TextEditingController linkMeetController = TextEditingController();
 
   @override
   void initState() {
@@ -31,6 +35,12 @@ class _PendaftaranMagangDetailPageState
     peserta = widget.peserta;
 
     final login = ref.read(loginProvider);
+    if (login.role == roleAdminValue) {
+      isAdmin = true;
+    } else {
+      isAdmin = false;
+    }
+
     if (peserta == null && login.email != null) {
       _fetchByEmail(login.email!);
     }
@@ -46,12 +56,12 @@ class _PendaftaranMagangDetailPageState
       ),
       body: Container(
         decoration: buildJapfaLogoBackground(),
-        child: _body(),
+        child: _buildBodyByRole(),
       ),
     );
   }
 
-  Widget _body() {
+  Widget _buildBodyByRole() {
     if (_loading) return const Center(child: CircularProgressIndicator());
     final login = ref.read(loginProvider);
     if (login.isLoggedIn == false) {
@@ -89,7 +99,7 @@ class _PendaftaranMagangDetailPageState
             const SizedBox(height: 20),
             _mainContent(),
             const SizedBox(height: 30),
-            _actionButtons(),
+            _buildRejectAcceptButton(),
           ],
         ),
       ),
@@ -107,24 +117,64 @@ class _PendaftaranMagangDetailPageState
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  buildDataInfoField(label: 'Nama', value: peserta!.nama),
-                  buildDataInfoField(label: 'No. Telp', value: peserta!.noTelp),
-                  buildDataInfoField(label: 'Email', value: peserta!.email),
                   buildDataInfoField(
-                      label: 'Universitas', value: peserta!.asalUniversitas),
-                  buildDataInfoField(label: 'Jurusan', value: peserta!.jurusan),
+                    label: 'Nama',
+                    value: peserta!.nama,
+                  ),
                   buildDataInfoField(
-                      label: 'Angkatan', value: peserta!.angkatan.toString()),
+                    label: 'No. Telp',
+                    value: peserta!.noTelp,
+                  ),
                   buildDataInfoField(
-                      label: 'IPK', value: peserta!.nilaiUniv.toString()),
+                    label: 'Email',
+                    value: peserta!.email,
+                  ),
+                  buildDataInfoField(
+                    label: 'Universitas',
+                    value: peserta!.asalUniversitas,
+                  ),
+                  buildDataInfoField(
+                    label: 'Jurusan',
+                    value: peserta!.jurusan,
+                  ),
+                  buildDataInfoField(
+                    label: 'Angkatan',
+                    value: peserta!.angkatan.toString(),
+                  ),
+                  buildDataInfoField(
+                    label: 'IPK',
+                    value: peserta!.nilaiUniv.toString(),
+                  ),
                 ],
               ),
             ),
           ),
-          const SizedBox(width: 50),
-          _fileAndStatus(),
-          const SizedBox(width: 50),
-          _foto(),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 40),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        _fileAndStatus(),
+                        const SizedBox(width: 40),
+                        _foto(),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    buildDataInfoField(
+                      label: "Link Wawancara",
+                      value: peserta!.linkMeetInterview ?? "BELUM ADA LINK",
+                      peringatan:
+                          peserta!.linkMeetInterview == null ? true : false,
+                    ),
+                    _buildAddLinkButton(),
+                  ],
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );
@@ -162,7 +212,22 @@ class _PendaftaranMagangDetailPageState
     );
   }
 
-  Widget _actionButtons() {
+  Widget _buildAddLinkButton() {
+    return isAdmin
+        ? RoundedRectangleButton(
+            title: peserta!.linkMeetInterview == null
+                ? "Tambah Link"
+                : "Edit Link",
+            height: 50.h,
+            rounded: 8,
+            fontColor: Colors.white,
+            backgroundColor: japfaOrange,
+            onPressed: () => _showDialogAddLink(),
+          )
+        : const SizedBox();
+  }
+
+  Widget _buildRejectAcceptButton() {
     final loginState = ref.watch(loginProvider);
     if (loginState.role == roleAdminValue) {
       return Row(
@@ -179,7 +244,7 @@ class _PendaftaranMagangDetailPageState
           const SizedBox(width: 20),
           RoundedRectangleButton(
             title: 'Accept',
-            backgroundColor: japfaOrange,
+            backgroundColor: Colors.green,
             fontColor: Colors.white,
             width: 100,
             height: 40,
@@ -270,5 +335,45 @@ class _PendaftaranMagangDetailPageState
     fadeNavigation(context,
         targetNavigation: PendaftaranMagangDetailPage(peserta: peserta),
         time: 0);
+  }
+
+  void _showDialogAddLink() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CustomAlertDialog(
+          title:
+              peserta!.linkMeetInterview == null ? "Tambah Link" : "Edit Link",
+          numberOfField: 1,
+          controllers: [linkMeetController],
+          labels: const ["Link Wawancara"],
+          fieldTypes: const [BuildFieldTypeController.text],
+          onSave: () => _saveLink(),
+        );
+      },
+    );
+  }
+
+  void _saveLink() async {
+    final String linkMeet = linkMeetController.text.trim();
+    // Assuming that you have the ID of 'peserta' available as 'peserta.idMagang'
+    final String id =
+        peserta?.idMagang ?? ''; // Get the ID from the selected participant
+
+    if (id.isNotEmpty && linkMeet.isNotEmpty) {
+      await ApiService().updateLinkMeet(id, linkMeet);
+      // Clear the controller after saving
+      linkMeetController.clear();
+      Navigator.of(context).pop(); // Close the dialog after saving
+    } else {
+      // Show an error message if fields are empty
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('ID and Link Wawancara are required.')),
+      );
+    }
+
+    setState(() {
+      peserta = peserta!.copyWith(linkMeetInterview: linkMeet);
+    });
   }
 }

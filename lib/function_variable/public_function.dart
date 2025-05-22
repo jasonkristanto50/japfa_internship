@@ -72,6 +72,7 @@ Widget buildFileButton(String title, VoidCallback onPressed) {
 Widget buildDataInfoField(
     {required String label,
     required String value,
+    bool peringatan = false,
     double verticalPadding = 10}) {
   return Padding(
     padding: EdgeInsets.symmetric(vertical: verticalPadding),
@@ -89,11 +90,20 @@ Widget buildDataInfoField(
           child: Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              border: Border.all(color: japfaOrange),
+              border: Border.all(
+                color: peringatan == false ? japfaOrange : Colors.red,
+              ),
               borderRadius: BorderRadius.circular(5),
               color: Colors.white,
             ),
-            child: Text(value, style: regular16),
+            child: Text(
+              value,
+              style: peringatan == false
+                  ? regular16
+                  : regular16.copyWith(
+                      color: Colors.red,
+                    ),
+            ),
           ),
         ),
       ],

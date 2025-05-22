@@ -297,22 +297,34 @@ class ApiService {
     return res.statusCode == 200;
   }
 
-  // Update the nama_pembimbing for a specific Peserta Magang by ID
-  Future<void> updateNamaPembimbing(
-      String idMagang, String namaPembimbing) async {
+  // Update Peserta Magang LINK WAWANCARA by ID
+  Future<void> updateLinkMeet(String id, String newLink) async {
     try {
-      final response =
-          await _dio.put('/update-nama-pembimbing/$idMagang', data: {
-        'nama_pembimbing': namaPembimbing,
-      });
+      final response = await _dio.put(
+        'http://localhost:3000/api/peserta_magang/update-link-meet/$id',
+        data: {
+          'link_meet_interview': newLink,
+        },
+      );
 
       if (response.statusCode == 200) {
-        print('Nama pembimbing updated successfully: ${response.data}');
+        // Handle success, e.g., update local data or notify user
+        print('Link updated successfully: ${response.data}');
+      } else {
+        throw Exception('Failed to update link: ${response.data}');
       }
     } on DioException catch (e) {
-      print('Error updating nama pembimbing: ${e.message}');
-      // Handle errors appropriately (e.g. throw custom exception)
-      throw Exception('Failed to update nama pembimbing');
+      // Handle Dio errors
+      if (e.response != null) {
+        print('Error: ${e.response?.data}');
+      } else {
+        print('Error: ${e.message}');
+      }
+      rethrow; // Rethrow or handle as needed
+    } catch (e) {
+      // Handle other errors
+      print('Error: ${e.toString()}');
+      rethrow;
     }
   }
 

@@ -303,6 +303,31 @@ router.put('/update-status/:id', async (req, res) => {
     }  
 });  
 
+// Update Peserta Magang LINK WAWANCARA by ID  
+router.put('/update-link-meet/:id', async (req, res) => {  
+    const { id } = req.params;  // ID of the Peserta Magang to update  
+    const { link_meet_interview } = req.body;  // New status value  
+
+    try {  
+        const result = await pool.query(  
+            'UPDATE PESERTA_MAGANG SET link_meet_interview = $1 WHERE id_magang = $2 RETURNING *',  
+            [  
+                link_meet_interview,  
+                id,  
+            ]  
+        );  
+
+        if (result.rowCount === 0) {  
+            return res.status(404).json({ error: 'Peserta Magang not found' });  
+        }  
+
+        res.status(200).json({ message: 'Peserta Magang status updated successfully!', data: result.rows[0] });  
+    } catch (error) {  
+        console.error('Error updating Peserta Magang status:', error);  
+        res.status(500).json({ error: 'Server error' });  
+    }  
+}); 
+
 // Update url_laporan_akhir by email
 router.put('/update-url-laporan-akhir-email/:email', async (req, res) => {
     const { email } = req.params; // Email of the Peserta Magang to update

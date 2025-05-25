@@ -51,7 +51,7 @@ router.get('/fetch-skill-by-email/:email', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM SKILL_PESERTA_MAGANG WHERE email = $1', [email]);
         if (result.rows.length > 0) {
-            res.status(200).json(result.rows); // Return the found skill(s) as JSON
+            res.status(200).json(result.rows[0]); // Return the first skill entry found
         } else {
             res.status(404).json({ error: 'No skills found for this email!' });
         }
@@ -61,6 +61,18 @@ router.get('/fetch-skill-by-email/:email', async (req, res) => {
     }
 });
 
+
+// Endpoint: Count all skills
+router.get('/count-skills', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT COUNT(*) FROM SKILL_PESERTA_MAGANG');
+        const count = parseInt(result.rows[0].count);
+        res.status(200).json({ count: count });
+    } catch (error) {
+        console.error('Error counting skills:', error);
+        res.status(500).json({ error: 'Failed to count skills', details: error.message });
+    }
+});
 
 // Endpoint: Update a skill by email
 router.put('/update-skill-by-email/:email', async (req, res) => {

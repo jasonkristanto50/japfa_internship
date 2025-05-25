@@ -16,7 +16,7 @@ class SubmissionIntern extends StatefulWidget {
 
 class _SubmissionInternState extends State<SubmissionIntern> {
   bool _visible = false;
-  int _currentPage = 0; // Track the current page
+  int _currentPage = 0;
 
   // Controllers for the inputs
   final TextEditingController nameController = TextEditingController();

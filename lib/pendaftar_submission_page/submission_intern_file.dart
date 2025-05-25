@@ -8,6 +8,7 @@ import 'package:japfa_internship/function_variable/string_value.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/home_page.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
+import 'package:japfa_internship/models/skill_peserta_magang_data/skill_peserta_magang_data.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/pendaftar_submission_page/submission_intern_text.dart';
 
@@ -123,35 +124,7 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.arrow_back),
-                          onPressed: () {
-                            fadeNavigation(
-                              context,
-                              targetNavigation: SubmissionIntern(
-                                departmentName: widget.departmentName,
-                              ),
-                            );
-                          },
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                        ),
-                        const Expanded(
-                          child: Center(
-                            child: Text(
-                              'Kirim Dokumen',
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    _buildTitle(),
                     _buildSubmissionFileForm(),
                   ],
                 ),
@@ -163,77 +136,36 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
     );
   }
 
-  // Method to submit the form
-  void _submitFormPesertaMagang() async {
-    if (cvFileName != null &&
-        campusApprovalFileName != null &&
-        transcriptFileName != null) {
-      try {
-        // Set the file path
-        cvFilePath = await ApiService().uploadFileToServer(
-          cvFile!,
-          cvFileName!,
-        );
-        campusApprovalFilePath = await ApiService().uploadFileToServer(
-          campusApprovalFile!,
-          campusApprovalFileName!,
-        );
-        transcriptFilePath = await ApiService().uploadFileToServer(
-          transcriptFile!,
-          transcriptFileName!,
-        );
-        fotoDiriFilePath = await ApiService().uploadFileToServer(
-          fotoDiriFile!,
-          fotoDiriFileName!,
-        );
-        // Fetch the count of peserta magang
-        int count =
-            await ApiService().pesertaMagangService.countPesertaMagang();
-
-        // Construct the idMagang
-        String idMagang = 'PDFT_MG_0$count';
-
-        // Generate password token
-        String passwordTokenValue = generateRandomPassword(7);
-
-        // Create the PesertaMagangData object
-        PesertaMagangData pesertaMagang = PesertaMagangData(
-          idMagang: idMagang,
-          nama: widget.name,
-          departemen: widget.departmentName,
-          alamat: widget.address,
-          noTelp: widget.phoneNumber,
-          email: widget.email,
-          asalUniversitas: widget.university,
-          angkatan: widget.generation,
-          nilaiUniv: widget.score,
-          jurusan: widget.major,
-          pathCv: cvFilePath!,
-          pathPersetujuanUniv: campusApprovalFilePath!,
-          pathTranskripNilai: transcriptFilePath!,
-          pathFotoDiri: fotoDiriFilePath!,
-          statusMagang: 'On Process',
-          passwordToken: passwordTokenValue,
-          nilaiAkhirMagang: null,
-        );
-
-        // Submit the form
-        await ApiService()
-            .pesertaMagangService
-            .submitPesertaMagang(pesertaMagang);
-
-        // Send Email contain passwordToken to user
-        await ApiService().sendEmail(
-          widget.email,
-          widget.name,
-          passwordTokenValue,
-        );
-      } catch (error) {
-        showSnackBar(context, 'An error occurred while submitting the form');
-      }
-    } else {
-      showSnackBar(context, 'All files must be uploaded');
-    }
+  Widget _buildTitle() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            fadeNavigation(
+              context,
+              targetNavigation: SubmissionIntern(
+                departmentName: widget.departmentName,
+              ),
+            );
+          },
+          padding: EdgeInsets.zero,
+          constraints: const BoxConstraints(),
+        ),
+        const Expanded(
+          child: Center(
+            child: Text(
+              'Kirim Dokumen',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   // BUILD WIDGET
@@ -342,7 +274,7 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
     return true;
   }
 
-// Function to update file data based on the field
+  // Function to update file data based on the field
   void updateFileData(String field, String? fileName, Uint8List fileBytes) {
     if (field == labelCV) {
       cvFileName = fileName;
@@ -356,6 +288,133 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
     } else if (field == labelFotoDiri) {
       fotoDiriFileName = fileName;
       fotoDiriFile = fileBytes;
+    }
+  }
+
+  // Method to submit skill data
+  void _submitSkillData() async {
+    try {
+      // Get the count to generate unique ID
+      int skillCount = await ApiService().skillService.countSkills();
+      String idSkillValue =
+          'SKILL_MG_${(skillCount + 1).toString().padLeft(3, '0')}';
+
+      // Count non-null projects
+      int projectCount = 0;
+      List<String> projectList = [];
+
+      if (widget.projectDetail1 != null && widget.projectDetail1!.isNotEmpty) {
+        projectCount++;
+        projectList.add(widget.projectDetail1!);
+      }
+      if (widget.projectDetail2 != null && widget.projectDetail2!.isNotEmpty) {
+        projectCount++;
+        projectList.add(widget.projectDetail2!);
+      }
+      if (widget.projectDetail3 != null && widget.projectDetail3!.isNotEmpty) {
+        projectCount++;
+        projectList.add(widget.projectDetail3!);
+      }
+
+      // Create the SkillPesertaMagangData object
+      SkillPesertaMagangData skillData = SkillPesertaMagangData(
+        idSkill: idSkillValue,
+        namaPeserta: widget.name,
+        departemen: widget.departmentName,
+        email: widget.email,
+        komunikasi: widget.likertKomunikasi.toString(),
+        kreativitas: widget.likertKreativitas.toString(),
+        tanggungJawab: widget.likertTanggungJawab.toString(),
+        kerjaSama: widget.likertKerjaSama.toString(),
+        skillTeknis: widget.likertTeknis.toString(),
+        banyakProyek: projectCount,
+        listProyek: projectList, // Now it's List<String> as expected
+        urlLampiran: widget.urlProject ?? '',
+      );
+
+      // Call the SkillService to add the skill
+      await ApiService().skillService.addSkill(skillData);
+
+      print('Skill data submitted successfully');
+    } catch (error) {
+      print('Error submitting skill data: $error');
+      showSnackBar(context, 'Error submitting skill data');
+    }
+  }
+
+  // Method to submit the form
+  void _submitFormPesertaMagang() async {
+    if (cvFileName != null &&
+        campusApprovalFileName != null &&
+        transcriptFileName != null) {
+      try {
+        // Set the file path
+        cvFilePath = await ApiService().uploadFileToServer(
+          cvFile!,
+          cvFileName!,
+        );
+        campusApprovalFilePath = await ApiService().uploadFileToServer(
+          campusApprovalFile!,
+          campusApprovalFileName!,
+        );
+        transcriptFilePath = await ApiService().uploadFileToServer(
+          transcriptFile!,
+          transcriptFileName!,
+        );
+        fotoDiriFilePath = await ApiService().uploadFileToServer(
+          fotoDiriFile!,
+          fotoDiriFileName!,
+        );
+        // Fetch the count of peserta magang
+        int count =
+            await ApiService().pesertaMagangService.countPesertaMagang();
+
+        // Construct the idMagang
+        String idMagang = 'PDFT_MG_0$count';
+
+        // Generate password token
+        String passwordTokenValue = generateRandomPassword(7);
+
+        // Create the PesertaMagangData object
+        PesertaMagangData pesertaMagang = PesertaMagangData(
+          idMagang: idMagang,
+          nama: widget.name,
+          departemen: widget.departmentName,
+          alamat: widget.address,
+          noTelp: widget.phoneNumber,
+          email: widget.email,
+          asalUniversitas: widget.university,
+          angkatan: widget.generation,
+          nilaiUniv: widget.score,
+          jurusan: widget.major,
+          pathCv: cvFilePath!,
+          pathPersetujuanUniv: campusApprovalFilePath!,
+          pathTranskripNilai: transcriptFilePath!,
+          pathFotoDiri: fotoDiriFilePath!,
+          statusMagang: 'On Process',
+          passwordToken: passwordTokenValue,
+          nilaiAkhirMagang: null,
+        );
+
+        // Submit the form
+        await ApiService()
+            .pesertaMagangService
+            .submitPesertaMagang(pesertaMagang);
+
+        // Add skill & project to database skill_peserta_magang
+        _submitSkillData();
+
+        // Send Email contain passwordToken to user
+        await ApiService().sendEmail(
+          widget.email,
+          widget.name,
+          passwordTokenValue,
+        );
+      } catch (error) {
+        showSnackBar(context, 'An error occurred while submitting the form');
+      }
+    } else {
+      showSnackBar(context, 'All files must be uploaded');
     }
   }
 }

@@ -10,6 +10,7 @@ import 'package:japfa_internship/function_variable/string_value.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/home_page.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
+import 'package:japfa_internship/models/skill_peserta_magang_data/skill_peserta_magang_data.dart';
 import 'package:japfa_internship/navbar.dart';
 
 class PendaftaranMagangDetailPage extends ConsumerStatefulWidget {
@@ -24,6 +25,8 @@ class PendaftaranMagangDetailPage extends ConsumerStatefulWidget {
 class _PendaftaranMagangDetailPageState
     extends ConsumerState<PendaftaranMagangDetailPage> {
   PesertaMagangData? peserta;
+  SkillPesertaMagangData? skill;
+  int _currentPage = 1;
   bool _loading = false;
   late bool isAdmin;
   TextEditingController linkMeetController = TextEditingController();
@@ -32,16 +35,16 @@ class _PendaftaranMagangDetailPageState
   void initState() {
     super.initState();
     peserta = widget.peserta;
-
     final login = ref.read(loginProvider);
     if (login.role == roleAdminValue) {
       isAdmin = true;
     } else {
       isAdmin = false;
     }
+    _fetchSkillByEmail(peserta!.email);
 
     if (peserta == null && login.email != null) {
-      _fetchByEmail(login.email!);
+      _fetchPesertaSkillByEmail(login.email!);
     }
   }
 
@@ -82,7 +85,7 @@ class _PendaftaranMagangDetailPageState
     return Center(
       child: Container(
         width: 1000,
-        height: 600,
+        height: 675,
         padding: const EdgeInsets.all(25),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -94,9 +97,19 @@ class _PendaftaranMagangDetailPageState
         ),
         child: Column(
           children: [
-            Text('Detail Peserta', style: bold24.copyWith(color: japfaOrange)),
-            const SizedBox(height: 20),
-            _buildTextFields(),
+            if (_currentPage == 1) ...[
+              Text('Data Peserta', style: bold28.copyWith(color: japfaOrange)),
+              const SizedBox(height: 10),
+              _buildDataDiriSkillButton(),
+              const SizedBox(height: 20),
+              _buildDataPesertaPage(),
+            ] else ...[
+              Text('Skill Peserta', style: bold28.copyWith(color: japfaOrange)),
+              const SizedBox(height: 10),
+              _buildDataDiriSkillButton(),
+              const SizedBox(height: 20),
+              _buildSkillPage(),
+            ],
             const SizedBox(height: 30),
             _buildRejectAcceptButton(),
           ],
@@ -105,7 +118,44 @@ class _PendaftaranMagangDetailPageState
     );
   }
 
-  Widget _buildTextFields() {
+  Widget _buildDataDiriSkillButton() {
+    return Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          RoundedRectangleButton(
+            title: "Data Diri",
+            style: bold14,
+            width: 120.w,
+            height: 40.h,
+            fontColor: Colors.white,
+            backgroundColor: _currentPage == 1 ? japfaOrange : Colors.grey,
+            onPressed: () {
+              setState(() {
+                _currentPage = 1;
+              });
+            },
+          ),
+          const SizedBox(width: 10),
+          RoundedRectangleButton(
+            title: "Skill Diri",
+            style: bold14,
+            width: 120.w,
+            height: 40.h,
+            fontColor: Colors.white,
+            backgroundColor: _currentPage == 2 ? japfaOrange : Colors.grey,
+            onPressed: () {
+              setState(() {
+                _currentPage = 2;
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDataPesertaPage() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Row(
@@ -119,7 +169,6 @@ class _PendaftaranMagangDetailPageState
                   buildDataInfoField(
                     label: 'Nama',
                     value: peserta!.nama,
-                    verticalPadding: 1,
                   ),
                   buildDataInfoField(
                     label: 'No. Telp',
@@ -170,6 +219,95 @@ class _PendaftaranMagangDetailPageState
                           peserta!.linkMeetInterview == null ? true : false,
                     ),
                     _buildAddLinkButton(),
+                  ],
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSkillPage() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  buildDataInfoField(
+                    label: 'Komunikasi',
+                    value: likertStringValue(skill!.komunikasi),
+                    verticalPadding: 5,
+                  ),
+                  buildDataInfoField(
+                    label: 'Kreativitas',
+                    value: likertStringValue(skill!.kreativitas),
+                    verticalPadding: 5,
+                  ),
+                  buildDataInfoField(
+                    label: 'Tanggung Jawab',
+                    value: likertStringValue(skill!.tanggungJawab),
+                    verticalPadding: 5,
+                  ),
+                  buildDataInfoField(
+                    label: 'Kerja Sama',
+                    value: likertStringValue(skill!.kerjaSama),
+                    verticalPadding: 5,
+                  ),
+                  buildDataInfoField(
+                    label: 'Skill Teknis',
+                    value: likertStringValue(skill!.skillTeknis),
+                    verticalPadding: 5,
+                  ),
+                  // Add list of projects here
+                  const SizedBox(height: 10), // Spacing
+                  Text('Proyek:', style: bold20),
+
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: skill!.banyakProyek,
+                    itemBuilder: (context, index) {
+                      // Check if the project exists in the list
+                      if (index < skill!.listProyek.length) {
+                        final project = skill!.listProyek[index];
+                        return buildDataInfoField(
+                          label: 'Proyek ${index + 1}',
+                          value: project,
+                          verticalPadding: 5,
+                        );
+                      }
+                      return Container(); // Return an empty container if out of range
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 40),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        _fileAndStatus(),
+                        const SizedBox(width: 40),
+                        _foto(),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    buildDataInfoField(
+                      label: "Link Lampiran",
+                      value: skill!.urlLampiran,
+                    ),
                   ],
                 ),
               ),
@@ -257,14 +395,34 @@ class _PendaftaranMagangDetailPageState
     }
   }
 
-  Future<void> _fetchByEmail(String email) async {
+  Future<void> _fetchPesertaSkillByEmail(String email) async {
     setState(() => _loading = true);
     try {
       // TODO
-      final data = await ApiService()
+      final dataPeserta = await ApiService()
           .pesertaMagangService
           .fetchPesertaMagangByEmail(email);
-      setState(() => peserta = data);
+
+      final dataSkill =
+          await ApiService().skillService.fetchSkillByEmail(email);
+      setState(() {
+        peserta = dataPeserta;
+        skill = dataSkill;
+      });
+    } finally {
+      setState(() => _loading = false);
+    }
+  }
+
+  Future<void> _fetchSkillByEmail(String email) async {
+    setState(() => _loading = true);
+    try {
+      // TODO
+      final dataSkill =
+          await ApiService().skillService.fetchSkillByEmail(email);
+      setState(() {
+        skill = dataSkill;
+      });
     } finally {
       setState(() => _loading = false);
     }

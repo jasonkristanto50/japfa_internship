@@ -676,14 +676,54 @@ class SkillService {
     }
   }
 
-  // Function to fetch skill by email
-  Future<void> fetchSkillByEmail(String email) async {
+// Function to fetch skill by email
+  Future<SkillPesertaMagangData> fetchSkillByEmail(String email) async {
     try {
       final response =
           await _dio.get('$baseUrlSkill/fetch-skill-by-email/$email');
-      print('Fetched skill: ${response.data}');
+
+      if (response.statusCode == 200) {
+        final body = response.data;
+
+        // Check if the response body is a map and parse it
+        if (body is Map<String, dynamic>) {
+          return SkillPesertaMagangData.fromJson(body);
+        }
+
+        // If the response is a list, handle the first object in the list
+        if (body is List &&
+            body.isNotEmpty &&
+            body.first is Map<String, dynamic>) {
+          return SkillPesertaMagangData.fromJson(
+              body.first as Map<String, dynamic>);
+        }
+
+        throw Exception('No valid skill data found');
+      } else {
+        throw Exception('Failed to fetch skill data');
+      }
     } catch (e) {
       print('Error fetching skill by email: $e');
+      throw Exception('Error fetching skill by email: $e');
+    }
+  }
+
+  // Function to count all skills
+  Future<int> countSkills() async {
+    try {
+      final response = await _dio.get('$baseUrlSkill/count-skills');
+
+      if (response.statusCode == 200) {
+        final count = response.data['count'] as int;
+        print('Total skills count: $count');
+        return count;
+      } else {
+        print('Failed to count skills: ${response.statusCode}');
+        return 0;
+      }
+    } catch (e) {
+      print('Error counting skills: $e');
+      return 0;
     }
   }
 

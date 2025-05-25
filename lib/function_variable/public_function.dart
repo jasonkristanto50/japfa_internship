@@ -69,11 +69,13 @@ Widget buildFileButton(String title, VoidCallback onPressed) {
   );
 }
 
-Widget buildDataInfoField(
-    {required String label,
-    required String value,
-    bool peringatan = false,
-    double verticalPadding = 10}) {
+Widget buildDataInfoField({
+  required String label,
+  required String value,
+  double heightValue = 40,
+  bool peringatan = false,
+  double verticalPadding = 10,
+}) {
   return Padding(
     padding: EdgeInsets.symmetric(vertical: verticalPadding),
     child: Row(
@@ -81,13 +83,14 @@ Widget buildDataInfoField(
         Expanded(
           child: Text(
             '$label:',
-            style: bold16,
+            style: bold18,
           ),
         ),
         const SizedBox(width: 10),
         Expanded(
           flex: 2,
           child: Container(
+            height: heightValue,
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               border: Border.all(
@@ -531,8 +534,11 @@ String generateRandomPassword(int length) {
 }
 
 // Show Confirmation Dialog
-Future<void> showConfirmationDialog(BuildContext context,
-    {required String title, required String message}) {
+Future<void> showConfirmationDialog(
+  BuildContext context, {
+  required String title,
+  required String message,
+}) {
   return showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -542,4 +548,21 @@ Future<void> showConfirmationDialog(BuildContext context,
       );
     },
   );
+}
+
+String likertStringValue(String likertValue) {
+  switch (likertValue) {
+    case '1':
+      return "Sangat Kurang";
+    case '2':
+      return "Kurang";
+    case '3':
+      return "Cukup";
+    case '4':
+      return "Bagus";
+    case '5':
+      return "Sangat Bagus";
+    default:
+      return "Invalid value";
+  }
 }

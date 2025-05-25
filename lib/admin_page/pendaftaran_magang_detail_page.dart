@@ -96,7 +96,7 @@ class _PendaftaranMagangDetailPageState
           children: [
             Text('Detail Peserta', style: bold24.copyWith(color: japfaOrange)),
             const SizedBox(height: 20),
-            _mainContent(),
+            _buildTextFields(),
             const SizedBox(height: 30),
             _buildRejectAcceptButton(),
           ],
@@ -105,7 +105,7 @@ class _PendaftaranMagangDetailPageState
     );
   }
 
-  Widget _mainContent() {
+  Widget _buildTextFields() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Row(
@@ -119,6 +119,7 @@ class _PendaftaranMagangDetailPageState
                   buildDataInfoField(
                     label: 'Nama',
                     value: peserta!.nama,
+                    verticalPadding: 1,
                   ),
                   buildDataInfoField(
                     label: 'No. Telp',
@@ -260,7 +261,9 @@ class _PendaftaranMagangDetailPageState
     setState(() => _loading = true);
     try {
       // TODO
-      final data = await ApiService().fetchPesertaMagangByEmail(email);
+      final data = await ApiService()
+          .pesertaMagangService
+          .fetchPesertaMagangByEmail(email);
       setState(() => peserta = data);
     } finally {
       setState(() => _loading = false);
@@ -303,7 +306,9 @@ class _PendaftaranMagangDetailPageState
   }
 
   Future<void> _updateStatus(String id, String status) async {
-    final upd = await ApiService().updatePesertaMagangStatus(id, status);
+    final upd = await ApiService()
+        .pesertaMagangService
+        .updatePesertaMagangStatus(id, status);
     if (upd != null) {
       setState(() => peserta = upd);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -321,11 +326,11 @@ class _PendaftaranMagangDetailPageState
       );
     });
     try {
-      await ApiService().updatePesertaMagangStatusWithNote(
-        idMagang: p.idMagang,
-        status: peserta!.statusMagang,
-        catatanHr: note,
-      );
+      await ApiService().pesertaMagangService.updatePesertaMagangStatusWithNote(
+            idMagang: p.idMagang,
+            status: peserta!.statusMagang,
+            catatanHr: note,
+          );
     } catch (_) {
       setState(() {
         peserta = p.copyWith(statusMagang: 'Pending', catatanHr: null);
@@ -360,7 +365,7 @@ class _PendaftaranMagangDetailPageState
         peserta?.idMagang ?? ''; // Get the ID from the selected participant
 
     if (id.isNotEmpty && linkMeet.isNotEmpty) {
-      await ApiService().updateLinkMeet(id, linkMeet);
+      await ApiService().pesertaMagangService.updateLinkMeet(id, linkMeet);
       // Clear the controller after saving
       linkMeetController.clear();
       Navigator.of(context).pop(); // Close the dialog after saving

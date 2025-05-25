@@ -149,8 +149,9 @@ class _DashboardPembimbingMagangState
 
   Future<void> _fetchPesertaMagangDataByPembimbing() async {
     try {
-      List<PesertaMagangData> data =
-          await ApiService().fetchDataByPembimbing(namaPembimbing);
+      List<PesertaMagangData> data = await ApiService()
+          .pesertaMagangService
+          .fetchDataByPembimbing(namaPembimbing);
       setState(() {
         pesertaMagangList = data;
       });

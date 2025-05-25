@@ -186,7 +186,9 @@ class _TambahKepalaDepartemenState extends State<TambahKepalaDepartemen> {
 
   void _addKepalaDepartemen() async {
     try {
-      final count = await ApiService().fetchKepalaDepartemenCount();
+      final count = await ApiService()
+          .kepalaDepartemenService
+          .fetchKepalaDepartemenCount();
       final idKepalaDepartemen = 'KP_${count.toString().padLeft(2, '0')}';
 
       final kepalaDepartemen = KepalaDepartemenData(
@@ -199,7 +201,9 @@ class _TambahKepalaDepartemenState extends State<TambahKepalaDepartemen> {
         status: statusPembimbingAktif,
       );
 
-      await ApiService().addKepalaDepartemen(kepalaDepartemen);
+      await ApiService()
+          .kepalaDepartemenService
+          .addKepalaDepartemen(kepalaDepartemen);
       // Optionally show success message
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Kepala Departemen added successfully!')));
@@ -215,7 +219,7 @@ class _TambahKepalaDepartemenState extends State<TambahKepalaDepartemen> {
     try {
       // Fetch all departments
       List<KepalaDepartemenData> fetchedKepalaDept =
-          await ApiService().fetchAllKepalaDepartemen();
+          await ApiService().kepalaDepartemenService.fetchAllKepalaDepartemen();
 
       setState(() {
         kepalaDepartemenList = fetchedKepalaDept;

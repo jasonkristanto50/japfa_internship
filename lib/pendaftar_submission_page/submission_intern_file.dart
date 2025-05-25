@@ -22,6 +22,18 @@ class SubmissionInternFile extends StatefulWidget {
   final double score;
   final String major;
 
+  // Added fields for Likert values and optional project details
+  final double likertKomunikasi;
+  final double likertKreativitas;
+  final double likertTanggungJawab;
+  final double likertKerjaSama;
+  final double likertTeknis;
+
+  final String? projectDetail1;
+  final String? projectDetail2;
+  final String? projectDetail3;
+  final String? urlProject;
+
   const SubmissionInternFile({
     super.key,
     required this.departmentName,
@@ -33,6 +45,15 @@ class SubmissionInternFile extends StatefulWidget {
     required this.generation,
     required this.score,
     required this.major,
+    required this.likertKomunikasi,
+    required this.likertKreativitas,
+    required this.likertTanggungJawab,
+    required this.likertKerjaSama,
+    required this.likertTeknis,
+    this.projectDetail1,
+    this.projectDetail2,
+    this.projectDetail3,
+    this.urlProject,
   });
 
   @override
@@ -118,12 +139,15 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
                         ),
-                        const SizedBox(width: 65),
-                        const Text(
-                          'Submission Page',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
+                        const Expanded(
+                          child: Center(
+                            child: Text(
+                              'Kirim Dokumen',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
                       ],
@@ -163,7 +187,8 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
           fotoDiriFileName!,
         );
         // Fetch the count of peserta magang
-        int count = await ApiService().countPesertaMagang();
+        int count =
+            await ApiService().pesertaMagangService.countPesertaMagang();
 
         // Construct the idMagang
         String idMagang = 'PDFT_MG_0$count';
@@ -193,7 +218,9 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
         );
 
         // Submit the form
-        await ApiService().submitPesertaMagang(pesertaMagang);
+        await ApiService()
+            .pesertaMagangService
+            .submitPesertaMagang(pesertaMagang);
 
         // Send Email contain passwordToken to user
         await ApiService().sendEmail(

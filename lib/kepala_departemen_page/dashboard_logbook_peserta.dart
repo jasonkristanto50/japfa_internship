@@ -218,7 +218,9 @@ class _DashboardLogbookPesertaState
 
   Future<void> updateCatatan(String idLogbook, String catatan) async {
     try {
-      await ApiService().updateCatatanPembimbing(idLogbook, catatan);
+      await ApiService()
+          .logbookService
+          .updateCatatanPembimbing(idLogbook, catatan);
       // Optionally, refresh the data or show a success message
       fetchLogbooks();
     } catch (error) {
@@ -230,6 +232,7 @@ class _DashboardLogbookPesertaState
     bool newValidationStatus = validasiValue;
     try {
       await ApiService()
+          .logbookService
           .updateLogbookValidation(idLogbook, newValidationStatus);
       // Optionally, refresh the data or show a success message
       fetchLogbooks();
@@ -241,7 +244,8 @@ class _DashboardLogbookPesertaState
 
   Future<void> fetchLogbooks() async {
     try {
-      final logbooks = await ApiService().fetchLogbookByEmail(widget.email);
+      final logbooks =
+          await ApiService().logbookService.fetchLogbookByEmail(widget.email);
       setState(() {
         logbookData = logbooks; // Store fetched data
       });

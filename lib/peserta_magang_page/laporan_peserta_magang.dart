@@ -154,8 +154,9 @@ class _LaporanPesertaMagangState extends ConsumerState<LaporanPesertaMagang> {
 
   Future<void> _fetchPesertaData() async {
     try {
-      PesertaMagangData pesertaData =
-          await ApiService().fetchPesertaMagangByEmail(email);
+      PesertaMagangData pesertaData = await ApiService()
+          .pesertaMagangService
+          .fetchPesertaMagangByEmail(email);
 
       setState(() {
         // Assuming url_lampiran is a property of PesertaMagangData
@@ -228,7 +229,9 @@ class _LaporanPesertaMagangState extends ConsumerState<LaporanPesertaMagang> {
           onSave: () async {
             String newUrl = urlController.text;
             if (newUrl.isNotEmpty) {
-              await ApiService().updateUrlLaporanAkhir(email, newUrl);
+              await ApiService()
+                  .pesertaMagangService
+                  .updateUrlLaporanAkhir(email, newUrl);
 
               setState(() {
                 laporanData[laporanType]?['url'] =

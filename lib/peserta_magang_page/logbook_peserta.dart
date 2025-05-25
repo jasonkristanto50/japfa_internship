@@ -318,7 +318,7 @@ class _LogBookPesertaDashboardState
   Future<void> getNamaPembimbing() async {
     try {
       final namaPembimbingFetched =
-          await ApiService().fetchPembimbingByEmail(email);
+          await ApiService().pesertaMagangService.fetchPembimbingByEmail(email);
       setState(() {
         namaPembimbing = namaPembimbingFetched!; // Store fetched data
       });

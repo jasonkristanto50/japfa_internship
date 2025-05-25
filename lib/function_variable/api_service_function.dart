@@ -5,14 +5,27 @@ import 'package:japfa_internship/models/kepala_departemen_data/kepala_departemen
 import 'package:japfa_internship/models/kunjungan_studi_data/kunjungan_studi_data.dart';
 import 'package:japfa_internship/models/logbook_peserta_magang_data/logbook_peserta_magang_data.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
+import 'package:japfa_internship/models/skill_peserta_magang_data/skill_peserta_magang_data.dart';
 
 class ApiService {
   final Dio _dio = Dio();
 
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////// SEND EMAIL ////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  final DepartemenService departemenService;
+  final PesertaMagangService pesertaMagangService;
+  final KunjunganStudiService kunjunganStudiService;
+  final KepalaDepartemenService kepalaDepartemenService;
+  final LogbookService logbookService;
+  final SkillService skillService;
 
+  ApiService()
+      : departemenService = DepartemenService(Dio()),
+        pesertaMagangService = PesertaMagangService(Dio()),
+        kunjunganStudiService = KunjunganStudiService(Dio()),
+        kepalaDepartemenService = KepalaDepartemenService(Dio()),
+        logbookService = LogbookService(Dio()),
+        skillService = SkillService(Dio());
+
+  // SEND EMAIL
   Future<void> sendEmail(String email, String name, String pin) async {
     try {
       final response = await _dio.post(
@@ -35,9 +48,7 @@ class ApiService {
     }
   }
 
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////// UPLOAD FILE ////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // UPLOAD FILE
   Future<String> uploadFileToServer(
       Uint8List fileBytes, String fileName) async {
     final formData = FormData.fromMap({
@@ -60,10 +71,12 @@ class ApiService {
       throw Exception('An error occurred while uploading the file: $e');
     }
   }
+}
 
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////// PESERTA MAGANG  ////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+class PesertaMagangService {
+  final Dio _dio;
+
+  PesertaMagangService(this._dio);
 
   // Submit peserta magang
   Future<void> submitPesertaMagang(PesertaMagangData data) async {
@@ -343,9 +356,12 @@ class ApiService {
       return null; // Handle error appropriately
     }
   }
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////  DEPARTEMEN   ///////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+}
+
+class DepartemenService {
+  final Dio _dio;
+
+  DepartemenService(this._dio);
 
   Future<void> updateMaxKuotaDepartemen(String id, int maxKuota) async {
     try {
@@ -422,10 +438,12 @@ class ApiService {
       rethrow; // Rethrow the exception for handling in the widget
     }
   }
+}
 
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////// KUNJUNGAN STUDI /////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+class KunjunganStudiService {
+  final Dio _dio;
+
+  KunjunganStudiService(this._dio);
 
   // Submit kunjungan studi
   Future<Response> submitKunjunganStudi(
@@ -455,10 +473,68 @@ class ApiService {
       throw Exception('Failed to load Kunjungan Studi data');
     }
   }
+}
 
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////// LOGBOOK ///////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+class KepalaDepartemenService {
+  final Dio _dio;
+
+  KepalaDepartemenService(this._dio);
+
+  // Function to create a new kepala departemen
+  Future<void> addKepalaDepartemen(KepalaDepartemenData data) async {
+    try {
+      final response = await _dio.post(
+          'http://localhost:3000/api/kepala_departemen/add-new-kepala-departemen',
+          data: data.toJson());
+      if (response.statusCode == 201) {
+        print('Kepala Departemen created successfully!');
+      } else {
+        throw Exception('Failed to create Kepala Departemen');
+      }
+    } catch (error) {
+      print('Error creating kepala departemen: $error');
+      rethrow; // Rethrow error for further handling if needed
+    }
+  }
+
+  Future<List<KepalaDepartemenData>> fetchAllKepalaDepartemen() async {
+    try {
+      final response = await _dio.get(
+          'http://localhost:3000/api/kepala_departemen/fetch-all-kepala-departemen');
+      if (response.statusCode == 200) {
+        // Parse the JSON response to a list of KepalaDepartemen instances
+        final List<dynamic> data = response.data;
+        return data.map((item) => KepalaDepartemenData.fromJson(item)).toList();
+      } else {
+        throw Exception('Failed to load kepala departemen');
+      }
+    } catch (error) {
+      print('Error fetching kepala departemen: $error');
+      rethrow; // Rethrow the error for further handling if needed
+    }
+  }
+
+  // Function to fetch the count of kepala departemen
+  Future<int> fetchKepalaDepartemenCount() async {
+    try {
+      final response = await _dio.get(
+          'http://localhost:3000/api/kepala_departemen/count-jumlah-kepala-departemen');
+      if (response.statusCode == 200) {
+        return response.data['count']; // Return the count
+      } else {
+        throw Exception('Failed to fetch count');
+      }
+    } catch (error) {
+      print('Error fetching count: $error');
+      rethrow; // Rethrow error for further handling if needed
+    }
+  }
+}
+
+class LogbookService {
+  final Dio _dio;
+
+  LogbookService(this._dio);
 
   ///  // Method to add a new logbook
   Future<void> addLogbook(LogbookPesertaMagangData logbook) async {
@@ -573,58 +649,81 @@ class ApiService {
       throw Exception('Failed to update catatan');
     }
   }
+}
 
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////// LOGBOOK ///////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+class SkillService {
+  final Dio _dio;
 
-  // Function to create a new kepala departemen
-  Future<void> addKepalaDepartemen(KepalaDepartemenData data) async {
+  SkillService(this._dio);
+
+  // Function to add a new skill
+  Future<void> addSkill(SkillPesertaMagangData skill) async {
     try {
       final response = await _dio.post(
-          'http://localhost:3000/api/kepala_departemen/add-new-kepala-departemen',
-          data: data.toJson());
-      if (response.statusCode == 201) {
-        print('Kepala Departemen created successfully!');
-      } else {
-        throw Exception('Failed to create Kepala Departemen');
-      }
-    } catch (error) {
-      print('Error creating kepala departemen: $error');
-      rethrow; // Rethrow error for further handling if needed
+        'http://localhost:3000/api/skill_peserta/add-skill',
+        data: skill.toJson(), // Convert to JSON
+      );
+      print('Skill added successfully: ${response.data}');
+    } catch (e) {
+      print('Error adding skill: $e');
     }
   }
 
-  Future<List<KepalaDepartemenData>> fetchAllKepalaDepartemen() async {
+  // Function to fetch all skills
+  Future<void> fetchAllSkills() async {
     try {
-      final response = await _dio.get(
-          'http://localhost:3000/api/kepala_departemen/fetch-all-kepala-departemen');
-      if (response.statusCode == 200) {
-        // Parse the JSON response to a list of KepalaDepartemen instances
-        final List<dynamic> data = response.data;
-        return data.map((item) => KepalaDepartemenData.fromJson(item)).toList();
-      } else {
-        throw Exception('Failed to load kepala departemen');
-      }
-    } catch (error) {
-      print('Error fetching kepala departemen: $error');
-      rethrow; // Rethrow the error for further handling if needed
+      final response = await _dio
+          .get('http://localhost:3000/api/skill_peserta/fetch-all-skills');
+      print('Fetched skills: ${response.data}');
+    } catch (e) {
+      print('Error fetching skills: $e');
     }
   }
 
-  // Function to fetch the count of kepala departemen
-  Future<int> fetchKepalaDepartemenCount() async {
+  // Function to fetch skill by email
+  Future<void> fetchSkillByEmail(String email) async {
     try {
       final response = await _dio.get(
-          'http://localhost:3000/api/kepala_departemen/count-jumlah-kepala-departemen');
-      if (response.statusCode == 200) {
-        return response.data['count']; // Return the count
-      } else {
-        throw Exception('Failed to fetch count');
-      }
-    } catch (error) {
-      print('Error fetching count: $error');
-      rethrow; // Rethrow error for further handling if needed
+          'http://localhost:3000/api/skill_peserta/fetch-skill-by-email/$email');
+      print('Fetched skill: ${response.data}');
+    } catch (e) {
+      print('Error fetching skill by email: $e');
+    }
+  }
+
+  // Function to update a skill by email
+  Future<void> updateSkillByEmail(
+      String email, SkillPesertaMagangData skill) async {
+    try {
+      final response = await _dio.put(
+        'http://localhost:3000/api/skill_peserta/update-skill-by-email/$email',
+        data: skill.toJson(),
+      );
+      print('Skill updated successfully: ${response.data}');
+    } catch (e) {
+      print('Error updating skill: $e');
+    }
+  }
+
+  // Function to delete all skills
+  Future<void> deleteAllSkills() async {
+    try {
+      final response = await _dio
+          .delete('http://localhost:3000/api/skill_peserta/delete-all-skills');
+      print('All skills deleted: ${response.data}');
+    } catch (e) {
+      print('Error deleting all skills: $e');
+    }
+  }
+
+  // Function to delete a skill by ID
+  Future<void> deleteSkillById(String idSkill) async {
+    try {
+      final response = await _dio.delete(
+          'http://localhost:3000/api/skill_peserta/delete-skill/$idSkill');
+      print('Skill deleted successfully: ${response.data}');
+    } catch (e) {
+      print('Error deleting skill: $e');
     }
   }
 }

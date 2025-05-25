@@ -77,7 +77,7 @@ class _EditDepartmentModalState extends State<EditDepartmentModal> {
       int newSisaKuota = newMaxKuota - departmentNowApproved;
 
       // Call the API method to update max kuota
-      await ApiService().updateMaxKuotaDepartemen(
+      await ApiService().departemenService.updateMaxKuotaDepartemen(
           widget.department.idDepartemen, newMaxKuota);
 
       // Create a new instance of DepartemenData with the updated maxKuota

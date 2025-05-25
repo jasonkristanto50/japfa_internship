@@ -152,8 +152,9 @@ class _KunjunganStudiDetailPageState
   Future<void> _fetchKunjunganDataByEmail(String email) async {
     setState(() => _loading = true); // Start loading
     try {
-      final kunjunganDataList =
-          await ApiService().fetchKunjunganDataByEmail(email);
+      final kunjunganDataList = await ApiService()
+          .kunjunganStudiService
+          .fetchKunjunganDataByEmail(email);
       // Assuming you only need the first entry since it's based on email
       if (kunjunganDataList.isNotEmpty) {
         setState(() {

@@ -63,3 +63,6 @@ app.use('/api/email', emailRouter);
 
 const logbookRouter = require('./routes/logbook');
 app.use('/api/logbook', logbookRouter);
+
+const skillPesertaRouter = require('./routes/skill_peserta');
+app.use('/api/skill_peserta', skillPesertaRouter);

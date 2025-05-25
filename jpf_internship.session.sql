@@ -23,6 +23,33 @@
 --     status VARCHAR NOT NULL               -- status : aktif / tidak aktif
 -- );
 
+-- DROP TABLE DEPARTEMEN;
+
+-- CREATE TABLE DEPARTEMEN (  
+--     id_departemen VARCHAR PRIMARY KEY NOT NULL,  
+--     nama_departemen VARCHAR(255) NOT NULL,
+--     deskripsi VARCHAR(255),  
+--     syarat_departemen TEXT[],
+--     path_image  VARCHAR NOT NULL,
+--     max_kuota INTEGER,  
+--     jumlah_pengajuan INTEGER,  
+--     jumlah_approved INTEGER,  
+--     jumlah_on_boarding INTEGER,  
+--     sisa_kuota INTEGER
+-- );  
+
+-- DROP TABLE KEPALA_DEPARTEMEN;
+
+-- CREATE TABLE KEPALA_DEPARTEMEN (
+--     id_kepala_departemen VARCHAR NOT NULL PRIMARY KEY,    -- ID Kepala Departemen (PK)
+--     nama VARCHAR(100) NOT NULL,           -- Nama
+--     email VARCHAR(100) NOT NULL,          -- Email
+--     departemen VARCHAR(255) NOT NULL,          -- Departemen
+--     password VARCHAR(15) NOT NULL,                  -- Password
+--     role VARCHAR(255) NOT NULL,                 -- role : kepala departemen
+--     status VARCHAR NOT NULL               -- status : aktif / tidak aktif
+-- );
+
 -- DROP TABLE KUNJUNGAN_STUDI;
 
 -- CREATE TABLE KUNJUNGAN_STUDI (
@@ -78,22 +105,6 @@
 -- - Tidak jadi
 
 
-
--- DROP TABLE DEPARTEMEN;
-
--- CREATE TABLE DEPARTEMEN (  
---     id_departemen VARCHAR PRIMARY KEY NOT NULL,  
---     nama_departemen VARCHAR(255) NOT NULL,
---     deskripsi VARCHAR(255),  
---     syarat_departemen TEXT[],
---     path_image  VARCHAR NOT NULL,
---     max_kuota INTEGER,  
---     jumlah_pengajuan INTEGER,  
---     jumlah_approved INTEGER,  
---     jumlah_on_boarding INTEGER,  
---     sisa_kuota INTEGER
--- );  
-
 -- DROP TABLE LOGBOOK_PESERTA_MAGANG;
 
 -- CREATE TABLE LOGBOOK_PESERTA_MAGANG (  
@@ -106,16 +117,21 @@
 --     url_lampiran VARCHAR(255) NOT NULL,
 --     validasi_pembimbing VARCHAR(255) DEFAULT NULL,
 --     catatan_pembimbing VARCHAR(255) DEFAULT NULL
--- );  
+-- );
 
--- DROP TABLE KEPALA_DEPARTEMEN;
+-- DROP TABLE SKILL_PESERTA_MAGANG;
 
--- CREATE TABLE KEPALA_DEPARTEMEN (
---     id_kepala_departemen VARCHAR NOT NULL PRIMARY KEY,    -- ID Kepala Departemen (PK)
---     nama VARCHAR(100) NOT NULL,           -- Nama
---     email VARCHAR(100) NOT NULL,          -- Email
---     departemen VARCHAR(255) NOT NULL,          -- Departemen
---     password VARCHAR(15) NOT NULL,                  -- Password
---     role VARCHAR(255) NOT NULL,                 -- role : kepala departemen
---     status VARCHAR NOT NULL               -- status : aktif / tidak aktif
+-- CREATE TABLE SKILL_PESERTA_MAGANG (  
+--     id_skill VARCHAR PRIMARY KEY NOT NULL,  
+--     nama_peserta VARCHAR(255) NOT NULL,
+--     departemen VARCHAR(255),  
+--     email VARCHAR(255) NOT NULL,
+--     komunikasi VARCHAR(255),
+--     kreativitas VARCHAR(255),
+--     tanggung_jawab VARCHAR(255),
+--     kerja_sama VARCHAR(255),
+--     skill_teknis VARCHAR(255),
+--     banyak_proyek INTEGER,
+--     list_proyek TEXT[],
+--     url_lampiran VARCHAR(255)
 -- );

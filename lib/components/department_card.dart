@@ -399,11 +399,11 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
 
     try {
       final updatedDepartemenData =
-          await ApiService().updateDepartemenDeskripsiSyarat(
-        widget.title,
-        newDeskripsi,
-        newSyarat,
-      );
+          await ApiService().departemenService.updateDepartemenDeskripsiSyarat(
+                widget.title,
+                newDeskripsi,
+                newSyarat,
+              );
 
       // Save the updated values locally
       setState(() {

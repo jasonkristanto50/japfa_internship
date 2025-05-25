@@ -146,7 +146,7 @@ class _PendaftaranMagangDepartemenState
   Future<void> _fetchPesertaMagangData() async {
     try {
       List<PesertaMagangData> data =
-          await ApiService().fetchPesertaMagangData();
+          await ApiService().pesertaMagangService.fetchPesertaMagangData();
       setState(() {
         pesertaMagangList = data;
       });

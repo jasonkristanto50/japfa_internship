@@ -61,7 +61,7 @@ class _DepartemenMagangDashboardState extends State<DepartemenMagangDashboard> {
       // Fetch all departments
       // TODO: update kuota tersisa
       List<DepartemenData> fetchedDepartemen =
-          await ApiService().fetchDepartemenDataUpdateCount();
+          await ApiService().departemenService.fetchDepartemenDataUpdateCount();
 
       setState(() {
         departemen = fetchedDepartemen;

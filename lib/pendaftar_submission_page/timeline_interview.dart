@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:japfa_internship/authentication/login.dart';
+import 'package:japfa_internship/authentication/login_provider.dart';
+import 'package:japfa_internship/components/widget_component.dart';
+import 'package:japfa_internship/function_variable/public_function.dart';
+import 'package:japfa_internship/function_variable/string_value.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
+import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
+import 'package:japfa_internship/function_variable/api_service_function.dart';
 
 enum InterviewState {
   wait,
@@ -9,71 +17,124 @@ enum InterviewState {
   reviewed,
 }
 
-class TimelineInterview extends StatefulWidget {
+class TimelineInterview extends ConsumerStatefulWidget {
   const TimelineInterview({super.key});
 
   @override
   _TimelineInterviewState createState() => _TimelineInterviewState();
 }
 
-class _TimelineInterviewState extends State<TimelineInterview> {
-  bool _visible = false;
-  InterviewState currentState = InterviewState.wait; // INITIAL STATE
+class _TimelineInterviewState extends ConsumerState<TimelineInterview> {
+  InterviewState currentState = InterviewState.wait;
+  PesertaMagangData? peserta;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(milliseconds: 300), () {
-      setState(() {
-        _visible = true;
-      });
-    });
+    _fetchPesertaData(); // Fetch the participant data and set the current state
+  }
+
+  Future<void> _fetchPesertaData() async {
+    final login = ref.read(loginProvider);
+
+    if (login.isLoggedIn) {
+      // Fetch data only if the user is logged in
+      try {
+        // Replace with appropriate email or ID for the participant
+        peserta = await ApiService()
+            .pesertaMagangService
+            .fetchPesertaMagangByEmail(login.email!);
+        if (peserta != null) {
+          // You could set the state based on the peserta status here
+          // For example, based on their status, you might want to change the currentState.
+          currentState = _determineInterviewState(peserta!);
+        }
+      } catch (e) {
+        // Handle errors appropriately
+        print('Error fetching data: $e');
+      }
+    }
+  }
+
+  InterviewState _determineInterviewState(PesertaMagangData peserta) {
+    if (peserta.statusMagang == statusMagangMenunggu) {
+      return InterviewState.interview;
+      // } else if (peserta.statusMagang == statusMagangSekarang) {
+      //   return InterviewState.reviewing;
+    } else if (peserta.statusMagang == statusMagangDiterima) {
+      return InterviewState.reviewed;
+    } else {
+      return InterviewState.wait;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final login = ref.read(loginProvider);
+
     return Scaffold(
       appBar: Navbar(
         context: context,
         title: appName,
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white, // Fallback background color
-          image: DecorationImage(
-            image: AssetImage(
-                'assets/japfa_logo_background.png'), // Background image
-            fit: BoxFit.cover, // Image cover
-          ),
-        ),
+        decoration: buildJapfaLogoBackground(),
         child: Center(
-          child: AnimatedOpacity(
-            opacity: _visible ? 1.0 : 0.0,
-            duration: const Duration(milliseconds: 500), // Fade-in duration
-            child: Container(
-              width: 1000,
-              height: 600,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 10,
-                    offset: Offset(0, 5),
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisAlignment:
-                    MainAxisAlignment.start, // Align items to the start
-                children: _buildContent(currentState),
-              ),
+          child: Container(
+            width: 1000,
+            height: 600,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 10,
+                  offset: Offset(0, 5),
+                ),
+              ],
             ),
+            child: login.isLoggedIn
+                ? (peserta == null
+                    ? _noDataWidget()
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: _buildContent(currentState),
+                      ))
+                : _loginPromptWidget(),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _noDataWidget() {
+    return const Center(
+      child: Text(
+        'Tidak ada pengajuan magang.',
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+  Widget _loginPromptWidget() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text(
+          'Silakan login untuk melihat timeline wawancara.',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 20),
+        ElevatedButton(
+          onPressed: () {
+            // Navigate to login screen
+            fadeNavigation(context, targetNavigation: const LoginScreen());
+          },
+          child: const Text('Login'),
+        ),
+      ],
     );
   }
 

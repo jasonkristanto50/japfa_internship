@@ -400,7 +400,9 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
 
     try {
       // Submit the data
-      final response = await ApiService().submitKunjunganStudi(kunjunganStudi);
+      final response = await ApiService()
+          .kunjunganStudiService
+          .submitKunjunganStudi(kunjunganStudi);
 
       // Send Email contain passwordToken to user
       await ApiService().sendEmail(

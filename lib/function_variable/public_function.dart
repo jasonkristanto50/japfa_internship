@@ -111,6 +111,27 @@ Widget buildDataInfoField(
   );
 }
 
+Widget buildLikertScale(
+  String text,
+  double likertValue,
+  ValueChanged<double> onChanged,
+) {
+  return Column(
+    children: [
+      Text(text, style: regular20),
+      Slider(
+        activeColor: japfaOrange,
+        value: likertValue,
+        min: 1.0,
+        max: 5.0,
+        divisions: 4,
+        label: likertValue.round().toString(),
+        onChanged: onChanged,
+      ),
+    ],
+  );
+}
+
 Future<String?> showCustomConfirmRejectDialogWithNote({
   required BuildContext context,
   required String title,

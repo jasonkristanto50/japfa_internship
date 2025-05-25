@@ -295,7 +295,7 @@ class _LogBookPesertaDashboardState
         urlLampiran: url,
       );
 
-      await ApiService().updateLogbook(
+      await ApiService().logbookService.updateLogbook(
           updatedLogbook); // Ensure you implement this method in your API service
       await fetchLogbooks(); // Refresh the list after updating
     } catch (e) {
@@ -305,7 +305,8 @@ class _LogBookPesertaDashboardState
 
   Future<void> fetchLogbooks() async {
     try {
-      final logbooks = await ApiService().fetchLogbookByEmail(email);
+      final logbooks =
+          await ApiService().logbookService.fetchLogbookByEmail(email);
       setState(() {
         logbookData = logbooks; // Store fetched data
       });
@@ -334,9 +335,9 @@ class _LogBookPesertaDashboardState
     required String url,
   }) async {
     try {
-      final logbookCount = await ApiService().countLogbooks();
-      String newIdLogbook =
-          'LG_${(logbookCount != null ? logbookCount + 1 : 1).toString().padLeft(3, '0')}';
+      final logbookCount = await ApiService().logbookService.countLogbooks();
+      print(logbookCount);
+      String newIdLogbook = 'LG_0${(logbookCount! + 1).toString()}';
 
       // Create a new logbook entry
       final newLogbook = LogbookPesertaMagangData(
@@ -349,7 +350,7 @@ class _LogBookPesertaDashboardState
         urlLampiran: url,
       );
 
-      await ApiService().addLogbook(newLogbook);
+      await ApiService().logbookService.addLogbook(newLogbook);
       await fetchLogbooks();
     } catch (e) {
       print('Error adding logbook: $e');

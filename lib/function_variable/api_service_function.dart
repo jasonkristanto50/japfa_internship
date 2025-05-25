@@ -1,11 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/models/departemen_data/departemen_data.dart';
 import 'package:japfa_internship/models/kepala_departemen_data/kepala_departemen_data.dart';
 import 'package:japfa_internship/models/kunjungan_studi_data/kunjungan_studi_data.dart';
 import 'package:japfa_internship/models/logbook_peserta_magang_data/logbook_peserta_magang_data.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
 import 'package:japfa_internship/models/skill_peserta_magang_data/skill_peserta_magang_data.dart';
+
+String baseUrlApi = '$baseUrl/api';
 
 class ApiService {
   final Dio _dio = Dio();
@@ -29,7 +32,7 @@ class ApiService {
   Future<void> sendEmail(String email, String name, String pin) async {
     try {
       final response = await _dio.post(
-        'http://localhost:3000/api/email/send-email',
+        '$baseUrlApi/email/send-email',
         data: {
           'email': email,
           'name': name,
@@ -57,7 +60,7 @@ class ApiService {
 
     try {
       final response = await Dio().post(
-        'http://localhost:3000/api/file_upload/upload-file',
+        '$baseUrlApi/file_upload/upload-file',
         data: formData,
       );
 
@@ -73,8 +76,92 @@ class ApiService {
   }
 }
 
+class DepartemenService {
+  final Dio _dio;
+  final baseUrlDepartemen = '$baseUrlApi/departemen';
+
+  DepartemenService(this._dio);
+
+  Future<void> updateMaxKuotaDepartemen(String id, int maxKuota) async {
+    try {
+      final response = await Dio().put(
+        '$baseUrlDepartemen/update-max-kuota/$id',
+        data: {'max_kuota': maxKuota},
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to update max kuota');
+      }
+    } catch (e) {
+      print('Error updating max kuota: $e');
+      rethrow;
+    }
+  }
+
+  Future<List<DepartemenData>> fetchDepartemen() async {
+    try {
+      final response =
+          await _dio.get('$baseUrlDepartemen/fetch-all-departemen');
+      if (response.statusCode == 200) {
+        List data = response.data;
+        return data.map((json) => DepartemenData.fromJson(json)).toList();
+      } else {
+        throw Exception('Failed to load departments');
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // Fetch all department data with count data updated
+  Future<List<DepartemenData>> fetchDepartemenDataUpdateCount() async {
+    try {
+      final response = await _dio
+          .get('$baseUrlDepartemen/fetch-all-departemen-data-updated');
+
+      if (response.statusCode == 200) {
+        List<DepartemenData> departemenList = (response.data as List)
+            .map((item) => DepartemenData.fromJson(item))
+            .toList();
+
+        return departemenList; // Return the updated list from the server
+      } else {
+        throw Exception('Failed to load departments');
+      }
+    } catch (e) {
+      print('Error fetching departments: $e');
+      rethrow; // Rethrow the exception for handling in the widget
+    }
+  }
+
+  // Function to update deskripsi and syarat for a department
+  Future<DepartemenData> updateDepartemenDeskripsiSyarat(String departmentName,
+      String deskripsi, List<String> syaratDepartemen) async {
+    try {
+      final response = await _dio.put(
+        '$baseUrlDepartemen/update-deskripsi-syarat/$departmentName',
+        data: {
+          'deskripsi': deskripsi,
+          'syarat_departemen': syaratDepartemen,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // Map the response data to the DepartemenData object
+        return DepartemenData.fromJson(response.data['data']);
+      } else {
+        throw Exception('Failed to update department');
+      }
+    } catch (e) {
+      print('Error updating department: $e');
+      rethrow; // Rethrow the exception for handling in the widget
+    }
+  }
+}
+
 class PesertaMagangService {
   final Dio _dio;
+  final baseUrlPesertaMagang = '$baseUrlApi/peserta_magang';
 
   PesertaMagangService(this._dio);
 
@@ -83,7 +170,7 @@ class PesertaMagangService {
     try {
       // Replace the URL with your actual endpoint
       final response = await _dio.post(
-        'http://localhost:3000/api/peserta_magang/submit-peserta-magang',
+        '$baseUrlPesertaMagang/submit-peserta-magang',
         data: data.toJson(),
       );
 
@@ -99,8 +186,8 @@ class PesertaMagangService {
 
   Future<List<PesertaMagangData>> fetchPesertaMagangData() async {
     try {
-      final response = await _dio.get(
-          'http://localhost:3000/api/peserta_magang/fetch-all-peserta-data');
+      final response =
+          await _dio.get('$baseUrlPesertaMagang/fetch-all-peserta-data');
       if (response.statusCode == 200) {
         List<dynamic> data = response.data; // Adjust based on your API response
         return data.map((item) => PesertaMagangData.fromJson(item)).toList();
@@ -119,7 +206,7 @@ class PesertaMagangService {
       final encodedEmail = Uri.encodeComponent(email);
 
       final response = await _dio.get(
-        'http://localhost:3000/api/peserta_magang/fetch-peserta-data/$encodedEmail',
+        '$baseUrlPesertaMagang/fetch-peserta-data/$encodedEmail',
       );
 
       if (response.statusCode == 200) {
@@ -150,7 +237,7 @@ class PesertaMagangService {
       String namaPembimbing) async {
     try {
       final response = await _dio.get(
-          'http://localhost:3000/api/peserta_magang/fetch-data-by-pembimbing/$namaPembimbing');
+          '$baseUrlPesertaMagang/fetch-data-by-pembimbing/$namaPembimbing');
       final List<dynamic> data = response.data;
 
       return data.map((item) => PesertaMagangData.fromJson(item)).toList();
@@ -172,7 +259,7 @@ class PesertaMagangService {
       }
 
       final response = await _dio.put(
-        'http://localhost:3000/api/peserta_magang/update-password-token/$email',
+        '$baseUrlPesertaMagang/update-password-token/$email',
         data: {'password_token': passwordToken},
       );
 
@@ -191,8 +278,7 @@ class PesertaMagangService {
   // Update URL Laporan Akhir
   Future<void> updateUrlLaporanAkhir(
       String email, String urlLaporanAkhir) async {
-    final url =
-        'http://localhost:3000/api/peserta_magang/update-url-laporan-akhir-email/$email';
+    final url = '$baseUrlPesertaMagang/update-url-laporan-akhir-email/$email';
 
     try {
       final response = await _dio.put(
@@ -215,8 +301,7 @@ class PesertaMagangService {
 
   Future<int> countPesertaMagang() async {
     try {
-      final response =
-          await _dio.get('http://localhost:3000/api/peserta_magang/count');
+      final response = await _dio.get('$baseUrlPesertaMagang/count');
       if (response.statusCode == 200) {
         return response.data['count']; // Adjust according to your API response
       } else {
@@ -232,7 +317,7 @@ class PesertaMagangService {
   Future<int> fetchPengajuanCount(String departmentName) async {
     try {
       final response = await _dio.get(
-          'http://localhost:3000/api/peserta_magang/count-pengajuan-for-department/$departmentName');
+          '$baseUrlPesertaMagang/count-pengajuan-for-department/$departmentName');
       if (response.statusCode == 200) {
         return response.data['data']['total_count'];
       } else {
@@ -248,7 +333,7 @@ class PesertaMagangService {
   Future<int> fetchApprovedCount(String departmentName) async {
     try {
       final response = await _dio.get(
-          'http://localhost:3000/api/peserta_magang/count-approved-for-department/$departmentName');
+          '$baseUrlPesertaMagang/count-approved-for-department/$departmentName');
       if (response.statusCode == 200) {
         return response.data['data']['total_approved'];
       } else {
@@ -262,8 +347,7 @@ class PesertaMagangService {
 
   Future<PesertaMagangData?> updatePesertaMagangStatus(
       String idMagang, String newStatus) async {
-    final url =
-        'http://localhost:3000/api/peserta_magang/update-status/$idMagang';
+    final url = '$baseUrlPesertaMagang/update-status/$idMagang';
 
     try {
       final response = await _dio.put(
@@ -303,7 +387,7 @@ class PesertaMagangService {
     };
 
     final Response res = await _dio.put(
-      'http://localhost:3000/api/peserta_magang/update_status-catatan/$idMagang',
+      '$baseUrlPesertaMagang/update_status-catatan/$idMagang',
       data: payload,
     );
 
@@ -314,7 +398,7 @@ class PesertaMagangService {
   Future<void> updateLinkMeet(String id, String newLink) async {
     try {
       final response = await _dio.put(
-        'http://localhost:3000/api/peserta_magang/update-link-meet/$id',
+        '$baseUrlPesertaMagang/update-link-meet/$id',
         data: {
           'link_meet_interview': newLink,
         },
@@ -343,8 +427,8 @@ class PesertaMagangService {
 
   Future<String?> fetchPembimbingByEmail(String email) async {
     try {
-      final response = await _dio.get(
-          'http://localhost:3000/api/peserta_magang/fetch-pembimbing-by-email/$email');
+      final response = await _dio
+          .get('$baseUrlPesertaMagang/fetch-pembimbing-by-email/$email');
       if (response.statusCode == 200) {
         return response.data['nama_pembimbing'];
       } else {
@@ -358,98 +442,16 @@ class PesertaMagangService {
   }
 }
 
-class DepartemenService {
-  final Dio _dio;
-
-  DepartemenService(this._dio);
-
-  Future<void> updateMaxKuotaDepartemen(String id, int maxKuota) async {
-    try {
-      final response = await Dio().put(
-        'http://localhost:3000/api/departemen/update-max-kuota/$id',
-        data: {'max_kuota': maxKuota},
-      );
-
-      if (response.statusCode != 200) {
-        throw Exception('Failed to update max kuota');
-      }
-    } catch (e) {
-      print('Error updating max kuota: $e');
-      rethrow;
-    }
-  }
-
-  Future<List<DepartemenData>> fetchDepartemen() async {
-    try {
-      final response = await _dio
-          .get('http://localhost:3000/api/departemen/fetch-all-departemen');
-      if (response.statusCode == 200) {
-        List data = response.data;
-        return data.map((json) => DepartemenData.fromJson(json)).toList();
-      } else {
-        throw Exception('Failed to load departments');
-      }
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  // Fetch all department data with count data updated
-  Future<List<DepartemenData>> fetchDepartemenDataUpdateCount() async {
-    try {
-      final response = await _dio.get(
-          'http://localhost:3000/api/departemen/fetch-all-departemen-data-updated');
-
-      if (response.statusCode == 200) {
-        List<DepartemenData> departemenList = (response.data as List)
-            .map((item) => DepartemenData.fromJson(item))
-            .toList();
-
-        return departemenList; // Return the updated list from the server
-      } else {
-        throw Exception('Failed to load departments');
-      }
-    } catch (e) {
-      print('Error fetching departments: $e');
-      rethrow; // Rethrow the exception for handling in the widget
-    }
-  }
-
-  // Function to update deskripsi and syarat for a department
-  Future<DepartemenData> updateDepartemenDeskripsiSyarat(String departmentName,
-      String deskripsi, List<String> syaratDepartemen) async {
-    try {
-      final response = await _dio.put(
-        'http://localhost:3000/api/departemen/update-deskripsi-syarat/$departmentName',
-        data: {
-          'deskripsi': deskripsi,
-          'syarat_departemen': syaratDepartemen,
-        },
-      );
-
-      if (response.statusCode == 200) {
-        // Map the response data to the DepartemenData object
-        return DepartemenData.fromJson(response.data['data']);
-      } else {
-        throw Exception('Failed to update department');
-      }
-    } catch (e) {
-      print('Error updating department: $e');
-      rethrow; // Rethrow the exception for handling in the widget
-    }
-  }
-}
-
 class KunjunganStudiService {
   final Dio _dio;
+  final baseUrlKunjunganStudi = '$baseUrlApi/kunjungan_studi';
 
   KunjunganStudiService(this._dio);
 
   // Submit kunjungan studi
   Future<Response> submitKunjunganStudi(
       KunjunganStudiData kunjunganStudi) async {
-    const String url =
-        'http://localhost:3000/api/kunjungan_studi/submit-kunjungan-studi';
+    String url = '$baseUrlKunjunganStudi/submit-kunjungan-studi';
 
     return await Dio().post(
       url,
@@ -462,8 +464,8 @@ class KunjunganStudiService {
   Future<List<KunjunganStudiData>> fetchKunjunganDataByEmail(
     String email,
   ) async {
-    final response = await _dio.get(
-        'http://localhost:3000/api/kunjungan_studi/fetch-kunjungan-data/$email');
+    final response =
+        await _dio.get('$baseUrlKunjunganStudi/fetch-kunjungan-data/$email');
 
     if (response.statusCode == 200) {
       // Assuming that the response is a list of kunjungan studi data
@@ -477,6 +479,7 @@ class KunjunganStudiService {
 
 class KepalaDepartemenService {
   final Dio _dio;
+  final baseUrlKepalaDepartemen = '$baseUrlApi/kepala_departemen';
 
   KepalaDepartemenService(this._dio);
 
@@ -484,7 +487,7 @@ class KepalaDepartemenService {
   Future<void> addKepalaDepartemen(KepalaDepartemenData data) async {
     try {
       final response = await _dio.post(
-          'http://localhost:3000/api/kepala_departemen/add-new-kepala-departemen',
+          '$baseUrlKepalaDepartemen/add-new-kepala-departemen',
           data: data.toJson());
       if (response.statusCode == 201) {
         print('Kepala Departemen created successfully!');
@@ -499,8 +502,8 @@ class KepalaDepartemenService {
 
   Future<List<KepalaDepartemenData>> fetchAllKepalaDepartemen() async {
     try {
-      final response = await _dio.get(
-          'http://localhost:3000/api/kepala_departemen/fetch-all-kepala-departemen');
+      final response = await _dio
+          .get('$baseUrlKepalaDepartemen/fetch-all-kepala-departemen');
       if (response.statusCode == 200) {
         // Parse the JSON response to a list of KepalaDepartemen instances
         final List<dynamic> data = response.data;
@@ -517,8 +520,8 @@ class KepalaDepartemenService {
   // Function to fetch the count of kepala departemen
   Future<int> fetchKepalaDepartemenCount() async {
     try {
-      final response = await _dio.get(
-          'http://localhost:3000/api/kepala_departemen/count-jumlah-kepala-departemen');
+      final response = await _dio
+          .get('$baseUrlKepalaDepartemen/count-jumlah-kepala-departemen');
       if (response.statusCode == 200) {
         return response.data['count']; // Return the count
       } else {
@@ -533,14 +536,14 @@ class KepalaDepartemenService {
 
 class LogbookService {
   final Dio _dio;
+  final baseUrlLogbook = '$baseUrlApi/logbook';
 
   LogbookService(this._dio);
 
   ///  // Method to add a new logbook
   Future<void> addLogbook(LogbookPesertaMagangData logbook) async {
     try {
-      final response = await _dio.post(
-          'http://localhost:3000/api/logbook/add-logbook',
+      final response = await _dio.post('$baseUrlLogbook/add-logbook',
           data: logbook.toJson());
 
       if (response.statusCode == 201) {
@@ -555,8 +558,7 @@ class LogbookService {
   }
 
   Future<void> updateLogbook(LogbookPesertaMagangData logbook) async {
-    final url =
-        'http://localhost:3000/api/logbook/update-logbook/${logbook.idLogbook}';
+    final url = '$baseUrlLogbook/update-logbook/${logbook.idLogbook}';
 
     try {
       final response = await _dio.put(
@@ -583,8 +585,7 @@ class LogbookService {
   Future<List<LogbookPesertaMagangData>> fetchLogbookByEmail(
       String email) async {
     try {
-      final response = await _dio
-          .get('http://localhost:3000/api/logbook/fetch-by-email/$email');
+      final response = await _dio.get('$baseUrlLogbook/fetch-by-email/$email');
       if (response.statusCode == 200) {
         return (response.data as List)
             .map((item) => LogbookPesertaMagangData.fromJson(item))
@@ -601,10 +602,9 @@ class LogbookService {
   // Method to get the count of logbook entries
   Future<int?> countLogbooks() async {
     try {
-      final response =
-          await _dio.get('http://localhost:3000/api/logbook/count-logbooks');
+      final response = await _dio.get('$baseUrlLogbook/count-logbooks');
       if (response.statusCode == 200) {
-        return response.data['total']; // Return total count
+        return int.tryParse(response.data['total']) ?? 0; // Return total count
       } else {
         throw Exception('Failed to fetch logbook count');
       }
@@ -620,11 +620,9 @@ class LogbookService {
     bool validasiPembimbing,
   ) async {
     try {
-      await _dio.patch(
-          'http://localhost:3000/api/logbook/validasi-logbook/$idLogbook',
-          data: {
-            'validasi_pembimbing': validasiPembimbing,
-          });
+      await _dio.patch('$baseUrlLogbook/validasi-logbook/$idLogbook', data: {
+        'validasi_pembimbing': validasiPembimbing,
+      });
       print('Validasi updated successfully'); // Optional logging
     } on DioException catch (e) {
       print('Error updating validation: ${e.message}');
@@ -638,11 +636,9 @@ class LogbookService {
     String catatanPembimbing,
   ) async {
     try {
-      await _dio.patch(
-          'http://localhost:3000/api/logbook/catatan-logbook/$idLogbook',
-          data: {
-            'catatan_pembimbing': catatanPembimbing,
-          });
+      await _dio.patch('$baseUrlLogbook/catatan-logbook/$idLogbook', data: {
+        'catatan_pembimbing': catatanPembimbing,
+      });
       print('Catatan updated successfully'); // Optional logging
     } on DioException catch (e) {
       print('Error updating catatan: ${e.message}');
@@ -653,6 +649,7 @@ class LogbookService {
 
 class SkillService {
   final Dio _dio;
+  final baseUrlSkill = '$baseUrlApi/skill_peserta';
 
   SkillService(this._dio);
 
@@ -660,7 +657,7 @@ class SkillService {
   Future<void> addSkill(SkillPesertaMagangData skill) async {
     try {
       final response = await _dio.post(
-        'http://localhost:3000/api/skill_peserta/add-skill',
+        '$baseUrlSkill/add-skill',
         data: skill.toJson(), // Convert to JSON
       );
       print('Skill added successfully: ${response.data}');
@@ -672,8 +669,7 @@ class SkillService {
   // Function to fetch all skills
   Future<void> fetchAllSkills() async {
     try {
-      final response = await _dio
-          .get('http://localhost:3000/api/skill_peserta/fetch-all-skills');
+      final response = await _dio.get('$baseUrlSkill/fetch-all-skills');
       print('Fetched skills: ${response.data}');
     } catch (e) {
       print('Error fetching skills: $e');
@@ -683,8 +679,8 @@ class SkillService {
   // Function to fetch skill by email
   Future<void> fetchSkillByEmail(String email) async {
     try {
-      final response = await _dio.get(
-          'http://localhost:3000/api/skill_peserta/fetch-skill-by-email/$email');
+      final response =
+          await _dio.get('$baseUrlSkill/fetch-skill-by-email/$email');
       print('Fetched skill: ${response.data}');
     } catch (e) {
       print('Error fetching skill by email: $e');
@@ -696,7 +692,7 @@ class SkillService {
       String email, SkillPesertaMagangData skill) async {
     try {
       final response = await _dio.put(
-        'http://localhost:3000/api/skill_peserta/update-skill-by-email/$email',
+        '$baseUrlSkill/update-skill-by-email/$email',
         data: skill.toJson(),
       );
       print('Skill updated successfully: ${response.data}');
@@ -708,8 +704,7 @@ class SkillService {
   // Function to delete all skills
   Future<void> deleteAllSkills() async {
     try {
-      final response = await _dio
-          .delete('http://localhost:3000/api/skill_peserta/delete-all-skills');
+      final response = await _dio.delete('$baseUrlSkill/delete-all-skills');
       print('All skills deleted: ${response.data}');
     } catch (e) {
       print('Error deleting all skills: $e');
@@ -719,8 +714,7 @@ class SkillService {
   // Function to delete a skill by ID
   Future<void> deleteSkillById(String idSkill) async {
     try {
-      final response = await _dio.delete(
-          'http://localhost:3000/api/skill_peserta/delete-skill/$idSkill');
+      final response = await _dio.delete('$baseUrlSkill/delete-skill/$idSkill');
       print('Skill deleted successfully: ${response.data}');
     } catch (e) {
       print('Error deleting skill: $e');

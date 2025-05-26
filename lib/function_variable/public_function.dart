@@ -135,6 +135,41 @@ Widget buildLikertScale(
   );
 }
 
+// Field dropdown
+Widget buildDropDownField(
+  String label,
+  String? selectedValue,
+  List<Map<String, String>> options,
+  ValueChanged<String?> onChanged,
+) {
+  return Container(
+    decoration: BoxDecoration(
+      border: Border.all(color: const Color.fromARGB(255, 48, 48, 48)),
+      borderRadius: BorderRadius.circular(5),
+    ),
+    child: DropdownButtonFormField<String>(
+      value: selectedValue,
+      decoration: InputDecoration(
+        labelText: label,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+        border: InputBorder.none,
+      ),
+      icon: const Icon(Icons.arrow_drop_down),
+      isExpanded: true,
+      items: options.map((option) {
+        return DropdownMenuItem<String>(
+          value: option['value'],
+          child: Text(option['name']!),
+        );
+      }).toList(),
+      onChanged: onChanged,
+      dropdownColor: Colors.white,
+      isDense: true,
+      itemHeight: 50,
+    ),
+  );
+}
+
 Future<String?> showCustomConfirmRejectDialogWithNote({
   required BuildContext context,
   required String title,
@@ -339,6 +374,7 @@ Future<String?> showCustomConfirmAcceptDialogWithNote({
   );
 }
 
+// Enum for field types
 enum FieldType {
   name,
   school,
@@ -350,7 +386,9 @@ enum FieldType {
   jurusan,
   password,
   confirmPassword,
-  elseMustFill
+  universityDropdown,
+  jurusanDropdown,
+  elseMustFill,
 }
 
 // Global validation function
@@ -358,6 +396,7 @@ bool validateField({
   required TextEditingController controller,
   required String fieldName,
   required FieldType fieldType,
+  String? selectedValue, // Added parameter for selected dropdown value
   BuildContext? context,
 }) {
   // Validate based on field type (name, email, phone, etc.)
@@ -367,8 +406,8 @@ bool validateField({
         showSnackBar(context, '$fieldName tidak boleh kosong');
         return false;
       }
-      // Name must alphabet
-      if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(controller.text)) {
+      // Name must be alphabet
+      if (!RegExp(r'^[a-zA-Z\s]+').hasMatch(controller.text)) {
         showSnackBar(context, '$fieldName hanya boleh mengandung huruf');
         return false;
       }
@@ -392,7 +431,7 @@ bool validateField({
 
     case FieldType.phone:
       if (controller.text.isEmpty ||
-          !RegExp(r'^\d+$').hasMatch(controller.text)) {
+          !RegExp(r'^\d+').hasMatch(controller.text)) {
         showSnackBar(context, '$fieldName harus diisi dan harus angka');
         return false;
       }
@@ -400,7 +439,7 @@ bool validateField({
 
     case FieldType.jumlahAnakKunjungan:
       if (controller.text.isEmpty ||
-          !RegExp(r'^\d+$').hasMatch(controller.text)) {
+          !RegExp(r'^\d+').hasMatch(controller.text)) {
         showSnackBar(context, '$fieldName harus diisi dan harus angka');
         return false;
       }
@@ -411,15 +450,15 @@ bool validateField({
             '$fieldName tidak boleh lebih dari $jumlahMaksimalPeserta');
         return false;
       }
+      break;
 
     case FieldType.angkatan:
       if (controller.text.isEmpty) {
         showSnackBar(context, '$fieldName tidak boleh kosong');
         return false;
       }
-      // Optionally, validate angkatan if needed
-      // For example: validate it as a number and within a specific range
-      if (!RegExp(r'^\d+$').hasMatch(controller.text)) {
+      // Validate angkatan if needed
+      if (!RegExp(r'^\d+').hasMatch(controller.text)) {
         showSnackBar(context, '$fieldName harus berupa angka');
         return false;
       }
@@ -430,7 +469,6 @@ bool validateField({
         showSnackBar(context, '$fieldName tidak boleh kosong');
         return false;
       }
-      // Validate that the score is a number between 0 and 100
       double score = double.parse(controller.text);
       if (score < 0 || score > 100) {
         showSnackBar(context, '$fieldName harus diantara 0 dan 100');
@@ -458,9 +496,24 @@ bool validateField({
         return false;
       }
       break;
+
     case FieldType.elseMustFill:
       if (controller.text.isEmpty) {
         showSnackBar(context, '$fieldName tidak boleh kosong');
+        return false;
+      }
+      break;
+
+    case FieldType.universityDropdown:
+      if (selectedValue == null || selectedValue.isEmpty) {
+        showSnackBar(context, '$fieldName harus dipilih');
+        return false;
+      }
+      break;
+
+    case FieldType.jurusanDropdown:
+      if (selectedValue == null || selectedValue.isEmpty) {
+        showSnackBar(context, '$fieldName harus dipilih');
         return false;
       }
       break;

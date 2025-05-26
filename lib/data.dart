@@ -1,371 +1,92 @@
-List<Map<String, String>> cards = [
+final List<Map<String, String>> universities = [
   {
-    'title': 'HR & GA',
-    'description':
-        'Departemen ini bertanggung jawab atas manajemen sumber daya manusia dan administrasi umum.',
-    'image': 'assets/department_card/human_resource&general_affair_crop.png',
+    'value': 'Universitas Petra',
+    'name': 'Universitas Petra',
+    'akreditasi': 'A'
   },
   {
-    'title': 'Information Technology (IT)',
-    'description':
-        'Departemen ini menangani infrastruktur teknologi informasi dan pengembangan perangkat lunak.',
-    'image': 'assets/department_card/information_technology.png',
+    'value': 'Universitas Ubaya',
+    'name': 'Universitas Ubaya',
+    'akreditasi': 'A'
   },
   {
-    'title': 'Koperasi Karyawan',
-    'description':
-        'Departemen ini menyediakan layanan koperasi untuk kesejahteraan karyawan dan fasilitas pinjaman.',
-    'image': 'assets/department_card/koperasi_karyawan.png',
+    'value': 'Universitas Indonesia',
+    'name': 'Universitas Indonesia',
+    'akreditasi': 'A'
   },
   {
-    'title': 'Pet Food - PIB',
-    'description':
-        'Departemen ini fokus pada produksi dan distribusi makanan hewan berkualitas.',
-    'image': 'assets/department_card/pet_food.png',
+    'value': 'Institut Teknologi Bandung',
+    'name': 'Institut Teknologi Bandung',
+    'akreditasi': 'A'
   },
   {
-    'title': 'Sales & Marketing',
-    'description':
-        'Departemen ini bertugas untuk memasarkan produk dan meningkatkan penjualan.',
-    'image': 'assets/department_card/sales_marketing.png',
+    'value': 'Universitas Gadjah Mada',
+    'name': 'Universitas Gadjah Mada',
+    'akreditasi': 'A'
   },
   {
-    'title': 'Silo & Dryer',
-    'description':
-        'Departemen ini bertanggung jawab atas penyimpanan dan pengeringan bahan baku.',
-    'image': 'assets/department_card/silo_dryer.png',
+    'value': 'Universitas Airlangga',
+    'name': 'Universitas Airlangga',
+    'akreditasi': 'A'
   },
   {
-    'title': 'Teknik',
-    'description':
-        'Departemen ini mengelola aspek teknik dan pemeliharaan mesin serta infrastruktur.',
-    'image': 'assets/department_card/teknisi.png',
+    'value': 'Universitas Padjadjaran',
+    'name': 'Universitas Padjadjaran',
+    'akreditasi': 'B'
   },
   {
-    'title': 'Warehouse',
-    'description':
-        'Departemen ini bertugas untuk pengelolaan gudang dan logistik bahan baku dan produk jadi.',
-    'image': 'assets/department_card/warehouse.png',
-  },
-];
-
-final List<String> departments = [
-  'HR & GA',
-  'Information Technology',
-  'Koperasi Karyawan',
-  'Pet Food - PIB',
-  'Produksi',
-  'QC & Lab',
-  'Sales & Marketing',
-  'Silo & Dryer',
-  'Teknik',
-  'Warehouse',
-];
-
-// ADMIN role data
-final List<Map<String, dynamic>> pengajuanDepartemen = [
-  {
-    'department': 'HR&GA',
-    'maxQuota': 10,
-    'totalApplications': 36,
-    'approved': 4,
-    'onboarding': 2,
-    'remainingQuota': 6,
+    'value': 'Universitas Hasanuddin',
+    'name': 'Universitas Hasanuddin',
+    'akreditasi': 'B'
   },
   {
-    'department': 'IT',
-    'maxQuota': 10,
-    'totalApplications': 36,
-    'approved': 4,
-    'onboarding': 2,
-    'remainingQuota': 6,
+    'value': 'Universitas Diponegoro',
+    'name': 'Universitas Diponegoro',
+    'akreditasi': 'B'
   },
   {
-    'department': 'Koperasi Karyawan',
-    'maxQuota': 10,
-    'totalApplications': 36,
-    'approved': 4,
-    'onboarding': 2,
-    'remainingQuota': 6,
+    'value': 'Universitas Brawijaya',
+    'name': 'Universitas Brawijaya',
+    'akreditasi': 'B'
   },
   {
-    'department': 'Pet Food - PIB',
-    'maxQuota': 12,
-    'totalApplications': 40,
-    'approved': 6,
-    'onboarding': 3,
-    'remainingQuota': 6,
+    'value': 'Universitas Negeri Yogyakarta',
+    'name': 'Universitas Negeri Yogyakarta',
+    'akreditasi': 'B'
   },
   {
-    'department': 'Produksi',
-    'maxQuota': 8,
-    'totalApplications': 25,
-    'approved': 3,
-    'onboarding': 1,
-    'remainingQuota': 4,
+    'value': 'Universitas Sriwijaya',
+    'name': 'Universitas Sriwijaya',
+    'akreditasi': 'C'
   },
   {
-    'department': 'QC & Lab',
-    'maxQuota': 15,
-    'totalApplications': 50,
-    'approved': 8,
-    'onboarding': 5,
-    'remainingQuota': 7,
+    'value': 'Universitas Sumatera Utara',
+    'name': 'Universitas Sumatera Utara',
+    'akreditasi': 'C'
   },
   {
-    'department': 'Sales & Marketing',
-    'maxQuota': 9,
-    'totalApplications': 30,
-    'approved': 5,
-    'onboarding': 2,
-    'remainingQuota': 4,
+    'value': 'Universitas Pelita Harapan',
+    'name': 'Universitas Pelita Harapan',
+    'akreditasi': 'C'
   },
   {
-    'department': 'Silo & Dryer',
-    'maxQuota': 7,
-    'totalApplications': 22,
-    'approved': 4,
-    'onboarding': 2,
-    'remainingQuota': 3,
-  },
-  {
-    'department': 'Teknik',
-    'maxQuota': 12,
-    'totalApplications': 28,
-    'approved': 7,
-    'onboarding': 3,
-    'remainingQuota': 5,
-  },
-  {
-    'department': 'Warehouse',
-    'maxQuota': 14,
-    'totalApplications': 45,
-    'approved': 6,
-    'onboarding': 3,
-    'remainingQuota': 8,
+    'value': 'Universitas Kristen Satya Wacana',
+    'name': 'Universitas Kristen Satya Wacana',
+    'akreditasi': 'C'
   },
 ];
 
-final List<Map<String, dynamic>> kunjunganData = [
-  {
-    'nama': 'Bambang',
-    'no telp': '081234567890',
-    'asal universitas': 'Universitas Petra',
-    'jumlah': 20,
-    'tanggal kegiatan': '10/05/2023',
-    'status': 'Selesai',
-  },
-  {
-    'nama': 'Sumarno',
-    'no telp': '082345678901',
-    'asal universitas': 'Universitas Ciputra',
-    'jumlah': 15,
-    'tanggal kegiatan': '15/06/2023',
-    'status': 'Diterima',
-  },
-  {
-    'nama': 'Charlie',
-    'no telp': '083456789012',
-    'asal universitas': 'Universitas ITS',
-    'jumlah': 10,
-    'tanggal kegiatan': '20/07/2023',
-    'status': 'Menunggu',
-  },
-  {
-    'nama': 'Susi',
-    'no telp': '084567890123',
-    'asal universitas': 'Universitas Brawijaya',
-    'jumlah': 25,
-    'tanggal kegiatan': '05/08/2023',
-    'status': 'Ditolak',
-  },
-];
-
-final List<Map<String, dynamic>> detailPengajuanData = [
-  {
-    'nama': 'Andi Sutrisno',
-    'departemen': 'HR&GA',
-    'universitas': 'Universitas Indonesia',
-    'jurusan': 'Manajemen',
-    'angkatan': '2022',
-    'ipk': '3.5',
-    'cv': 'assets/cv_andi_sutrisno.pdf',
-    'dokumen_persetujuan': 'assets/dokumen_persetujuan_andi.pdf',
-    'transkrip_nilai': 'assets/transkrip_nilai_andi.pdf',
-    'email': 'andi.sutrisno@example.com',
-    'no_telp': '081234567890',
-    'alamat': 'Jl. Melati No. 5, Jakarta',
-  },
-  {
-    'nama': 'Budi Santoso',
-    'departemen': 'IT',
-    'universitas': 'Universitas Gadjah Mada',
-    'jurusan': 'Sistem Informasi',
-    'angkatan': '2023',
-    'ipk': '3.8',
-    'cv': 'assets/cv_budi_santoso.pdf',
-    'dokumen_persetujuan': 'assets/dokumen_persetujuan_budi.pdf',
-    'transkrip_nilai': 'assets/transkrip_nilai_budi.pdf',
-    'email': 'budi.santoso@example.com',
-    'no_telp': '082345678901',
-    'alamat': 'Jl. Kenanga No. 10, Yogyakarta',
-  },
-  {
-    'nama': 'Cici Rahmawati',
-    'departemen': 'Koperasi Karyawan',
-    'universitas': 'Universitas Airlangga',
-    'jurusan': 'Ekonomi',
-    'angkatan': '2021',
-    'ipk': '3.6',
-    'cv': 'assets/cv_cici_rahmawati.pdf',
-    'dokumen_persetujuan': 'assets/dokumen_persetujuan_cici.pdf',
-    'transkrip_nilai': 'assets/transkrip_nilai_cici.pdf',
-    'email': 'cici.rahmawati@example.com',
-    'no_telp': '083456789012',
-    'alamat': 'Jl. Mawar No. 15, Surabaya',
-  },
-  {
-    'nama': 'Dodi Pranata',
-    'departemen': 'Pet Food - PIB',
-    'universitas': 'Univ. Diponegoro',
-    'jurusan': 'Ilmu Komunikasi',
-    'angkatan': '2022',
-    'ipk': '3.4',
-    'cv': 'assets/cv_dodi_pranata.pdf',
-    'dokumen_persetujuan': 'assets/dokumen_persetujuan_dodi.pdf',
-    'transkrip_nilai': 'assets/transkrip_nilai_dodi.pdf',
-    'email': 'dodi.pranata@example.com',
-    'no_telp': '084567890123',
-    'alamat': 'Jl. Kamboja No. 20, Semarang',
-  },
-  {
-    'nama': 'Eka Putri',
-    'departemen': 'Produksi',
-    'universitas': 'Universitas Sebelas Maret',
-    'jurusan': 'Teknik Industri',
-    'angkatan': '2022',
-    'ipk': '3.7',
-    'cv': 'assets/cv_eka_putri.pdf',
-    'dokumen_persetujuan': 'assets/dokumen_persetujuan_eka.pdf',
-    'transkrip_nilai': 'assets/transkrip_nilai_eka.pdf',
-    'email': 'eka.putri@example.com',
-    'no_telp': '085678901234',
-    'alamat': 'Jl. Anggrek No. 30, Solo',
-  },
-  {
-    'nama': 'Fajar Rahman',
-    'departemen': 'QC & Lab',
-    'universitas': 'Universitas Brawijaya',
-    'jurusan': 'Biologi',
-    'angkatan': '2023',
-    'ipk': '3.9',
-    'cv': 'assets/cv_fajar_rahman.pdf',
-    'dokumen_persetujuan': 'assets/dokumen_persetujuan_fajar.pdf',
-    'transkrip_nilai': 'assets/transkrip_nilai_fajar.pdf',
-    'email': 'fajar.rahman@example.com',
-    'no_telp': '086789012345',
-    'alamat': 'Jl. Cempaka No. 50, Malang',
-  },
-  {
-    'nama': 'Gina Safitri',
-    'departemen': 'Sales & Marketing',
-    'universitas': 'Universitas Padjadjaran',
-    'jurusan': 'Manajemen Pemasaran',
-    'angkatan': '2022',
-    'ipk': '3.6',
-    'cv': 'assets/cv_gina_safitri.pdf',
-    'dokumen_persetujuan': 'assets/dokumen_persetujuan_gina.pdf',
-    'transkrip_nilai': 'assets/transkrip_nilai_gina.pdf',
-    'email': 'gina.safitri@example.com',
-    'no_telp': '087890123456',
-    'alamat': 'Jl. Asoka No. 15, Bandung',
-  },
-  {
-    'nama': 'Hendra Setiawan',
-    'departemen': 'Silo & Dryer',
-    'universitas': 'Universitas Hasanuddin',
-    'jurusan': 'Teknik Mesin',
-    'angkatan': '2023',
-    'ipk': '3.5',
-    'cv': 'assets/cv_hendra_setiawan.pdf',
-    'dokumen_persetujuan': 'assets/dokumen_persetujuan_hendra.pdf',
-    'transkrip_nilai': 'assets/transkrip_nilai_hendra.pdf',
-    'email': 'hendra.setiawan@example.com',
-    'no_telp': '088901234567',
-    'alamat': 'Jl. Melati No. 25, Makassar',
-  },
-  {
-    'nama': 'Indah Sari',
-    'departemen': 'Teknik',
-    'universitas': 'Universitas Gajah Mada',
-    'jurusan': 'Teknik Sipil',
-    'angkatan': '2022',
-    'ipk': '3.8',
-    'cv': 'assets/cv_indah_sari.pdf',
-    'dokumen_persetujuan': 'assets/dokumen_persetujuan_indah.pdf',
-    'transkrip_nilai': 'assets/transkrip_nilai_indah.pdf',
-    'email': 'indah.sari@example.com',
-    'no_telp': '089012345678',
-    'alamat': 'Jl. Manggis No. 35, Yogyakarta',
-  },
-  {
-    'nama': 'Joko Nugroho',
-    'departemen': 'Warehouse',
-    'universitas': 'Universitas Pembangunan Nasional',
-    'jurusan': 'Logistik',
-    'angkatan': '2023',
-    'ipk': '3.4',
-    'cv': 'assets/cv_joko_nugroho.pdf',
-    'dokumen_persetujuan': 'assets/dokumen_persetujuan_joko.pdf',
-    'transkrip_nilai': 'assets/transkrip_nilai_joko.pdf',
-    'email': 'joko.nugroho@example.com',
-    'no_telp': '090123456789',
-    'alamat': 'Jl. Durian No. 20, Jakarta',
-  },
-];
-
-// PESERTA MAGANG role data
-final List<Map<String, dynamic>> logbookData = [
-  {
-    'no': 1,
-    'aktivitas': 'Presentasi dan Knowledge Sharing',
-    'tanggal_kegiatan': '29-11-2024',
-    'url': 'http://example.com/url1',
-    'status': 'Selesai', // Instead of validasi
-    'catatan_pembimbing': 'Catatan 1',
-  },
-  {
-    'no': 2,
-    'aktivitas': 'Bug fixing Aplikasi Messaging',
-    'tanggal_kegiatan': '28-11-2024',
-    'url': 'http://example.com/url2',
-    'status': 'Selesai',
-    'catatan_pembimbing': 'Catatan 2',
-  },
-  {
-    'no': 3,
-    'aktivitas': 'Demo aplikasi pada Mitra',
-    'tanggal_kegiatan': '25-11-2024',
-    'url': 'http://example.com/url3',
-    'status': 'Mengunggu', // Different status
-    'catatan_pembimbing': 'Catatan 3',
-  },
-  {
-    'no': 4,
-    'aktivitas': 'Pengujian Aplikasi',
-    'tanggal_kegiatan': '26-11-2024',
-    'url': 'http://example.com/url4',
-    'status': 'Belum Selesai',
-    'catatan_pembimbing': 'Catatan 4',
-  },
-  {
-    'no': 5,
-    'aktivitas': 'Pengembangan Fitur Baru',
-    'tanggal_kegiatan': '30-11-2024',
-    'url': 'http://example.com/url5',
-    'status': 'Selesai',
-    'catatan_pembimbing': 'Catatan 5',
-  },
+final List<Map<String, String>> majors = [
+  {'value': 'Teknik Informatika', 'name': 'Teknik Informatika'},
+  {'value': 'Sistem Informasi', 'name': 'Sistem Informasi'},
+  {'value': 'Manajemen', 'name': 'Manajemen'},
+  {'value': 'Akuntansi', 'name': 'Akuntansi'},
+  {'value': 'Ilmu Komunikasi', 'name': 'Ilmu Komunikasi'},
+  {'value': 'Hukum', 'name': 'Hukum'},
+  {'value': 'Teknik Sipil', 'name': 'Teknik Sipil'},
+  {'value': 'Pendidikan', 'name': 'Pendidikan'},
+  {'value': 'Psikologi', 'name': 'Psikologi'},
+  {'value': 'Kedokteran', 'name': 'Kedokteran'}
 ];
 
 final List<Map<String, dynamic>> pembimbingPesertaData = [

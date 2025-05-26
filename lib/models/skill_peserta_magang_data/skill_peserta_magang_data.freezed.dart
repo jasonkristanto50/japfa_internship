@@ -23,6 +23,14 @@ mixin _$SkillPesertaMagangData {
   String get departemen;
   @JsonKey(name: 'email')
   String get email;
+  @JsonKey(name: 'asal_universitas')
+  String get asalUniversitas;
+  @JsonKey(name: 'nilai_univ')
+  double get nilaiUniv;
+  @JsonKey(name: 'akreditasi_universitas')
+  String get akreditasiUniversitas;
+  @JsonKey(name: 'jurusan')
+  String get jurusan;
   @JsonKey(name: 'komunikasi')
   String get komunikasi;
   @JsonKey(name: 'kreativitas')
@@ -62,6 +70,13 @@ mixin _$SkillPesertaMagangData {
             (identical(other.departemen, departemen) ||
                 other.departemen == departemen) &&
             (identical(other.email, email) || other.email == email) &&
+            (identical(other.asalUniversitas, asalUniversitas) ||
+                other.asalUniversitas == asalUniversitas) &&
+            (identical(other.nilaiUniv, nilaiUniv) ||
+                other.nilaiUniv == nilaiUniv) &&
+            (identical(other.akreditasiUniversitas, akreditasiUniversitas) ||
+                other.akreditasiUniversitas == akreditasiUniversitas) &&
+            (identical(other.jurusan, jurusan) || other.jurusan == jurusan) &&
             (identical(other.komunikasi, komunikasi) ||
                 other.komunikasi == komunikasi) &&
             (identical(other.kreativitas, kreativitas) ||
@@ -88,6 +103,10 @@ mixin _$SkillPesertaMagangData {
       namaPeserta,
       departemen,
       email,
+      asalUniversitas,
+      nilaiUniv,
+      akreditasiUniversitas,
+      jurusan,
       komunikasi,
       kreativitas,
       tanggungJawab,
@@ -99,7 +118,7 @@ mixin _$SkillPesertaMagangData {
 
   @override
   String toString() {
-    return 'SkillPesertaMagangData(idSkill: $idSkill, namaPeserta: $namaPeserta, departemen: $departemen, email: $email, komunikasi: $komunikasi, kreativitas: $kreativitas, tanggungJawab: $tanggungJawab, kerjaSama: $kerjaSama, skillTeknis: $skillTeknis, banyakProyek: $banyakProyek, listProyek: $listProyek, urlLampiran: $urlLampiran)';
+    return 'SkillPesertaMagangData(idSkill: $idSkill, namaPeserta: $namaPeserta, departemen: $departemen, email: $email, asalUniversitas: $asalUniversitas, nilaiUniv: $nilaiUniv, akreditasiUniversitas: $akreditasiUniversitas, jurusan: $jurusan, komunikasi: $komunikasi, kreativitas: $kreativitas, tanggungJawab: $tanggungJawab, kerjaSama: $kerjaSama, skillTeknis: $skillTeknis, banyakProyek: $banyakProyek, listProyek: $listProyek, urlLampiran: $urlLampiran)';
   }
 }
 
@@ -114,6 +133,10 @@ abstract mixin class $SkillPesertaMagangDataCopyWith<$Res> {
       @JsonKey(name: 'nama_peserta') String namaPeserta,
       @JsonKey(name: 'departemen') String departemen,
       @JsonKey(name: 'email') String email,
+      @JsonKey(name: 'asal_universitas') String asalUniversitas,
+      @JsonKey(name: 'nilai_univ') double nilaiUniv,
+      @JsonKey(name: 'akreditasi_universitas') String akreditasiUniversitas,
+      @JsonKey(name: 'jurusan') String jurusan,
       @JsonKey(name: 'komunikasi') String komunikasi,
       @JsonKey(name: 'kreativitas') String kreativitas,
       @JsonKey(name: 'tanggung_jawab') String tanggungJawab,
@@ -141,6 +164,10 @@ class _$SkillPesertaMagangDataCopyWithImpl<$Res>
     Object? namaPeserta = null,
     Object? departemen = null,
     Object? email = null,
+    Object? asalUniversitas = null,
+    Object? nilaiUniv = null,
+    Object? akreditasiUniversitas = null,
+    Object? jurusan = null,
     Object? komunikasi = null,
     Object? kreativitas = null,
     Object? tanggungJawab = null,
@@ -166,6 +193,22 @@ class _$SkillPesertaMagangDataCopyWithImpl<$Res>
       email: null == email
           ? _self.email
           : email // ignore: cast_nullable_to_non_nullable
+              as String,
+      asalUniversitas: null == asalUniversitas
+          ? _self.asalUniversitas
+          : asalUniversitas // ignore: cast_nullable_to_non_nullable
+              as String,
+      nilaiUniv: null == nilaiUniv
+          ? _self.nilaiUniv
+          : nilaiUniv // ignore: cast_nullable_to_non_nullable
+              as double,
+      akreditasiUniversitas: null == akreditasiUniversitas
+          ? _self.akreditasiUniversitas
+          : akreditasiUniversitas // ignore: cast_nullable_to_non_nullable
+              as String,
+      jurusan: null == jurusan
+          ? _self.jurusan
+          : jurusan // ignore: cast_nullable_to_non_nullable
               as String,
       komunikasi: null == komunikasi
           ? _self.komunikasi
@@ -211,6 +254,11 @@ class _SkillPesertaMagangData implements SkillPesertaMagangData {
       @JsonKey(name: 'nama_peserta') required this.namaPeserta,
       @JsonKey(name: 'departemen') required this.departemen,
       @JsonKey(name: 'email') required this.email,
+      @JsonKey(name: 'asal_universitas') required this.asalUniversitas,
+      @JsonKey(name: 'nilai_univ') required this.nilaiUniv,
+      @JsonKey(name: 'akreditasi_universitas')
+      required this.akreditasiUniversitas,
+      @JsonKey(name: 'jurusan') required this.jurusan,
       @JsonKey(name: 'komunikasi') required this.komunikasi,
       @JsonKey(name: 'kreativitas') required this.kreativitas,
       @JsonKey(name: 'tanggung_jawab') required this.tanggungJawab,
@@ -235,6 +283,18 @@ class _SkillPesertaMagangData implements SkillPesertaMagangData {
   @override
   @JsonKey(name: 'email')
   final String email;
+  @override
+  @JsonKey(name: 'asal_universitas')
+  final String asalUniversitas;
+  @override
+  @JsonKey(name: 'nilai_univ')
+  final double nilaiUniv;
+  @override
+  @JsonKey(name: 'akreditasi_universitas')
+  final String akreditasiUniversitas;
+  @override
+  @JsonKey(name: 'jurusan')
+  final String jurusan;
   @override
   @JsonKey(name: 'komunikasi')
   final String komunikasi;
@@ -293,6 +353,13 @@ class _SkillPesertaMagangData implements SkillPesertaMagangData {
             (identical(other.departemen, departemen) ||
                 other.departemen == departemen) &&
             (identical(other.email, email) || other.email == email) &&
+            (identical(other.asalUniversitas, asalUniversitas) ||
+                other.asalUniversitas == asalUniversitas) &&
+            (identical(other.nilaiUniv, nilaiUniv) ||
+                other.nilaiUniv == nilaiUniv) &&
+            (identical(other.akreditasiUniversitas, akreditasiUniversitas) ||
+                other.akreditasiUniversitas == akreditasiUniversitas) &&
+            (identical(other.jurusan, jurusan) || other.jurusan == jurusan) &&
             (identical(other.komunikasi, komunikasi) ||
                 other.komunikasi == komunikasi) &&
             (identical(other.kreativitas, kreativitas) ||
@@ -319,6 +386,10 @@ class _SkillPesertaMagangData implements SkillPesertaMagangData {
       namaPeserta,
       departemen,
       email,
+      asalUniversitas,
+      nilaiUniv,
+      akreditasiUniversitas,
+      jurusan,
       komunikasi,
       kreativitas,
       tanggungJawab,
@@ -330,7 +401,7 @@ class _SkillPesertaMagangData implements SkillPesertaMagangData {
 
   @override
   String toString() {
-    return 'SkillPesertaMagangData(idSkill: $idSkill, namaPeserta: $namaPeserta, departemen: $departemen, email: $email, komunikasi: $komunikasi, kreativitas: $kreativitas, tanggungJawab: $tanggungJawab, kerjaSama: $kerjaSama, skillTeknis: $skillTeknis, banyakProyek: $banyakProyek, listProyek: $listProyek, urlLampiran: $urlLampiran)';
+    return 'SkillPesertaMagangData(idSkill: $idSkill, namaPeserta: $namaPeserta, departemen: $departemen, email: $email, asalUniversitas: $asalUniversitas, nilaiUniv: $nilaiUniv, akreditasiUniversitas: $akreditasiUniversitas, jurusan: $jurusan, komunikasi: $komunikasi, kreativitas: $kreativitas, tanggungJawab: $tanggungJawab, kerjaSama: $kerjaSama, skillTeknis: $skillTeknis, banyakProyek: $banyakProyek, listProyek: $listProyek, urlLampiran: $urlLampiran)';
   }
 }
 
@@ -347,6 +418,10 @@ abstract mixin class _$SkillPesertaMagangDataCopyWith<$Res>
       @JsonKey(name: 'nama_peserta') String namaPeserta,
       @JsonKey(name: 'departemen') String departemen,
       @JsonKey(name: 'email') String email,
+      @JsonKey(name: 'asal_universitas') String asalUniversitas,
+      @JsonKey(name: 'nilai_univ') double nilaiUniv,
+      @JsonKey(name: 'akreditasi_universitas') String akreditasiUniversitas,
+      @JsonKey(name: 'jurusan') String jurusan,
       @JsonKey(name: 'komunikasi') String komunikasi,
       @JsonKey(name: 'kreativitas') String kreativitas,
       @JsonKey(name: 'tanggung_jawab') String tanggungJawab,
@@ -374,6 +449,10 @@ class __$SkillPesertaMagangDataCopyWithImpl<$Res>
     Object? namaPeserta = null,
     Object? departemen = null,
     Object? email = null,
+    Object? asalUniversitas = null,
+    Object? nilaiUniv = null,
+    Object? akreditasiUniversitas = null,
+    Object? jurusan = null,
     Object? komunikasi = null,
     Object? kreativitas = null,
     Object? tanggungJawab = null,
@@ -399,6 +478,22 @@ class __$SkillPesertaMagangDataCopyWithImpl<$Res>
       email: null == email
           ? _self.email
           : email // ignore: cast_nullable_to_non_nullable
+              as String,
+      asalUniversitas: null == asalUniversitas
+          ? _self.asalUniversitas
+          : asalUniversitas // ignore: cast_nullable_to_non_nullable
+              as String,
+      nilaiUniv: null == nilaiUniv
+          ? _self.nilaiUniv
+          : nilaiUniv // ignore: cast_nullable_to_non_nullable
+              as double,
+      akreditasiUniversitas: null == akreditasiUniversitas
+          ? _self.akreditasiUniversitas
+          : akreditasiUniversitas // ignore: cast_nullable_to_non_nullable
+              as String,
+      jurusan: null == jurusan
+          ? _self.jurusan
+          : jurusan // ignore: cast_nullable_to_non_nullable
               as String,
       komunikasi: null == komunikasi
           ? _self.komunikasi

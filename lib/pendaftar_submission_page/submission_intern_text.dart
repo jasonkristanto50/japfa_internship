@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:japfa_internship/data.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/pendaftar_submission_page/submission_intern_file.dart';
@@ -34,6 +35,10 @@ class _SubmissionInternState extends State<SubmissionIntern> {
   final TextEditingController projectDetail3Controller =
       TextEditingController();
   final TextEditingController urlController = TextEditingController();
+
+  String? selectedUniversity;
+  String? akreditasiUniversitas;
+  String? selectedMajor;
 
   double likertKomunikasiValue = 1.0;
   double likertKreativitasValue = 1.0;
@@ -105,109 +110,6 @@ class _SubmissionInternState extends State<SubmissionIntern> {
     );
   }
 
-  // Method for building the RoundedRectangleButton
-  Widget _buildRoundedButton() {
-    return RoundedRectangleButton(
-      title: "Selanjutnya",
-      backgroundColor: japfaOrange,
-      fontColor: Colors.white,
-      onPressed: () {
-        if (validateTextFields(context)) {
-          if (_currentPage == 0) {
-            setState(() {
-              _currentPage = 1; // Go to the next page
-            });
-          } else if (_currentPage == 1) {
-            setState(() {
-              _currentPage = 2; // Go to project submission page
-            });
-          } else if (_currentPage == 2) {
-            // Final submission action for Project Submission Page
-            int? generation = int.tryParse(generationController.text);
-            double? score = double.tryParse(scoreController.text);
-            fadeNavigation(context,
-                targetNavigation: SubmissionInternFile(
-                  departmentName: widget.departmentName,
-                  name: nameController.text,
-                  address: addressController.text,
-                  phoneNumber: phoneNumberController.text,
-                  email: emailController.text,
-                  university: universityController.text,
-                  generation: generation ?? 0,
-                  score: score ?? 0,
-                  major: majorController.text,
-                  likertKomunikasi: likertKomunikasiValue,
-                  likertKreativitas: likertKreativitasValue,
-                  likertTanggungJawab: likertTanggungJawabValue,
-                  likertKerjaSama: likertKerjaSamaValue,
-                  likertTeknis: likertTeknisValue,
-                  projectDetail1: projectDetail1Controller.text,
-                  projectDetail2: projectDetail2Controller.text,
-                  projectDetail3: projectDetail3Controller.text,
-                  urlProject: urlController.text,
-                ));
-          }
-        }
-      },
-    );
-  }
-
-  // Validate form TEXT fields
-  bool validateTextFields(BuildContext context) {
-    // Validate for the first page
-    if (_currentPage == 0) {
-      // Return false if any field validation fails
-      return validateField(
-              controller: nameController,
-              fieldName: "Nama",
-              fieldType: FieldType.name,
-              context: context) &&
-          validateField(
-              controller: addressController,
-              fieldName: "Alamat",
-              fieldType: FieldType.elseMustFill,
-              context: context) &&
-          validateField(
-              controller: phoneNumberController,
-              fieldName: "No Telepon",
-              fieldType: FieldType.phone,
-              context: context) &&
-          validateField(
-              controller: emailController,
-              fieldName: "Email",
-              fieldType: FieldType.email,
-              context: context) &&
-          validateField(
-              controller: universityController,
-              fieldName: "Asal Universitas",
-              fieldType: FieldType.school,
-              context: context) &&
-          validateField(
-              controller: generationController,
-              fieldName: "Angkatan",
-              fieldType: FieldType.angkatan,
-              context: context) &&
-          validateField(
-              controller: scoreController,
-              fieldName: "Nilai",
-              fieldType: FieldType.score,
-              context: context) &&
-          validateField(
-              controller: majorController,
-              fieldName: "Jurusan",
-              fieldType: FieldType.jurusan,
-              context: context);
-    }
-
-    // Validator for project submission
-    if (_currentPage == 2) {
-      // Validation for project details (optional)
-      return true; // Optional fields can be left blank, so just return true
-    }
-
-    return true; // Default true for pages without validation
-  }
-
   // Build Title
   Widget _buildTitle() {
     return Row(
@@ -266,13 +168,38 @@ class _SubmissionInternState extends State<SubmissionIntern> {
         const SizedBox(height: 20),
         buildTextField('Email', emailController),
         const SizedBox(height: 15),
-        buildTextField('Universitas/Sekolah', universityController),
+        buildDropDownField(
+          'Universitas/Sekolah',
+          selectedUniversity,
+          universities, // universities list
+          (value) {
+            setState(() {
+              selectedUniversity = value!;
+              final selectedUniversityData = universities.firstWhere(
+                (univ) => univ['value'] == selectedUniversity,
+                orElse: () => {'akreditasi': ''},
+              );
+              akreditasiUniversitas =
+                  selectedUniversityData['akreditasi'] ?? '';
+              print('Akreditas : $akreditasiUniversitas');
+            });
+          },
+        ),
         const SizedBox(height: 15),
         buildTextField('Angkatan / Kelas', generationController),
         const SizedBox(height: 15),
         buildTextField('Nilai', scoreController),
         const SizedBox(height: 15),
-        buildTextField('Jurusan', majorController),
+        buildDropDownField(
+          'Jurusan',
+          selectedMajor,
+          majors, // jurusan list
+          (value) {
+            setState(() {
+              selectedMajor = value!;
+            });
+          },
+        ),
       ],
     );
   }
@@ -350,5 +277,111 @@ class _SubmissionInternState extends State<SubmissionIntern> {
         buildTextField('URL Lampiran', urlController),
       ],
     );
+  }
+
+  // Method for building the RoundedRectangleButton
+  Widget _buildRoundedButton() {
+    return RoundedRectangleButton(
+      title: "Selanjutnya",
+      backgroundColor: japfaOrange,
+      fontColor: Colors.white,
+      onPressed: () {
+        if (validateTextFields(context)) {
+          if (_currentPage == 0) {
+            setState(() {
+              _currentPage = 1; // Go to the next page
+            });
+          } else if (_currentPage == 1) {
+            setState(() {
+              _currentPage = 2; // Go to project submission page
+            });
+          } else if (_currentPage == 2) {
+            // Final submission action for Project Submission Page
+            int? generation = int.tryParse(generationController.text);
+            double? score = double.tryParse(scoreController.text);
+            fadeNavigation(context,
+                targetNavigation: SubmissionInternFile(
+                  departmentName: widget.departmentName,
+                  name: nameController.text,
+                  address: addressController.text,
+                  phoneNumber: phoneNumberController.text,
+                  email: emailController.text,
+                  university: selectedUniversity!,
+                  akreditasiUniversitas: akreditasiUniversitas!,
+                  generation: generation ?? 0,
+                  score: score ?? 0,
+                  major: selectedMajor!,
+                  likertKomunikasi: likertKomunikasiValue,
+                  likertKreativitas: likertKreativitasValue,
+                  likertTanggungJawab: likertTanggungJawabValue,
+                  likertKerjaSama: likertKerjaSamaValue,
+                  likertTeknis: likertTeknisValue,
+                  projectDetail1: projectDetail1Controller.text,
+                  projectDetail2: projectDetail2Controller.text,
+                  projectDetail3: projectDetail3Controller.text,
+                  urlProject: urlController.text,
+                ));
+          }
+        }
+      },
+    );
+  }
+
+  // Validate form TEXT fields
+  bool validateTextFields(BuildContext context) {
+    // Validate for the first page
+    if (_currentPage == 0) {
+      // Return false if any field validation fails
+      return validateField(
+              controller: nameController,
+              fieldName: "Nama",
+              fieldType: FieldType.name,
+              context: context) &&
+          validateField(
+              controller: addressController,
+              fieldName: "Alamat",
+              fieldType: FieldType.elseMustFill,
+              context: context) &&
+          validateField(
+              controller: phoneNumberController,
+              fieldName: "No Telepon",
+              fieldType: FieldType.phone,
+              context: context) &&
+          validateField(
+              controller: emailController,
+              fieldName: "Email",
+              fieldType: FieldType.email,
+              context: context) &&
+          validateField(
+              controller: universityController,
+              selectedValue: selectedUniversity,
+              fieldName: "Asal Universitas",
+              fieldType: FieldType.universityDropdown,
+              context: context) &&
+          validateField(
+              controller: generationController,
+              fieldName: "Angkatan",
+              fieldType: FieldType.angkatan,
+              context: context) &&
+          validateField(
+              controller: scoreController,
+              fieldName: "Nilai",
+              fieldType: FieldType.score,
+              context: context) &&
+          validateField(
+              controller: majorController,
+              selectedValue: selectedMajor,
+              fieldName: "Jurusan",
+              fieldType: FieldType.jurusanDropdown,
+              context: context);
+    }
+
+    // Validator for project submission
+    if (_currentPage == 2) {
+      // Validation for project details (optional)
+      return true; // Optional fields can be left blank, so just return true
+    }
+
+    return true; // Default true for pages without validation
   }
 }

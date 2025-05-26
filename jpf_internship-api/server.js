@@ -9,6 +9,9 @@ const multer = require('multer'); // Import multer
 const path = require('path'); // Import path module  
 require('dotenv').config(); // For environment variables
 
+// Import fuzzy
+const fuzzyLogic = require('./fuzzy_logic/fuzzy_logic');
+
 const app = express();  
 const port = process.env.PORT || 3000;  
 

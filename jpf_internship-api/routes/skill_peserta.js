@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();  
 const { Pool } = require('pg');  
 require('dotenv').config();
+const fuzzyLogic = require('../fuzzy_logic/fuzzy_logic');
 
 // Create a new instance of Pool for database queries  
 const pool = new Pool({  
@@ -12,15 +13,104 @@ const pool = new Pool({
     port: process.env.DB_PORT || 5432,  
 });
 
-// Endpoint: Add a new skill
+
+router.post('/fuzzy-scale', async (req, res) => {
+    const { 
+        komunikasi, 
+        banyak_proyek, 
+        nilai_univ,
+        akreditasi_universitas,
+        jurusan,
+    } = req.body;
+
+    try {
+        // Fuzzy evaluations
+        const fsSoftSkills = fuzzyLogic.fuzzyScale(komunikasi, 'softskills');
+        const fsProjects = fuzzyLogic.fuzzyScale(banyak_proyek, 'projects');
+        const fsIPK = fuzzyLogic.fuzzyScale(nilai_univ, 'ipk');
+        const fsUniversitas = fuzzyLogic.fuzzyScale(akreditasi_universitas, 'universitas');
+        const fsJurusan = fuzzyLogic.fuzzyScale(jurusan, 'jurusan'); 
+
+        // Scores and weights
+        const scores = {
+            softskills: fsSoftSkills,
+            projects: fsProjects,
+            ipk: fsIPK,
+            universitas: fsUniversitas,
+            jurusan: fsJurusan,
+
+        };
+
+        const weights = {
+            softskills: 0.4,
+            projects: 0.3,
+            ipk: 0.2,
+            asalUniversitas: 0.05,
+            jurusan: 0.05,
+        };
+
+        // Calculate overall fuzziness score
+        const overallScore = fuzzyLogic.calculateOverallScore(scores, weights);
+
+        res.status(201).json({ 
+            message: 'Fuzzy scores calculated successfully!',
+            scores: {
+                softskills: fsSoftSkills,
+                projects: fsProjects,
+                ipk: fsIPK,
+                universitas: fsUniversitas,
+                jurusan: fsJurusan,
+            },
+            overallScore: overallScore
+        });
+    } catch (error) {
+        console.error('Error:', error.message);
+        res.status(500).json({ error: 'Calculation error', details: error.message });
+    }
+});
+
 router.post('/add-skill', async (req, res) => {  
-    const { id_skill, nama_peserta, departemen, email, komunikasi, kreativitas, tanggung_jawab, kerja_sama, skill_teknis, banyak_proyek, list_proyek, url_lampiran } = req.body;  
+    const { 
+        id_skill, 
+        nama_peserta, 
+        departemen, 
+        email, 
+        asal_universitas,
+        nilai_univ,
+        akreditasi_universitas,
+        jurusan,
+        komunikasi, 
+        kreativitas, 
+        tanggung_jawab, 
+        kerja_sama, 
+        skill_teknis, 
+        banyak_proyek, 
+        list_proyek, 
+        url_lampiran    
+    } = req.body;  
 
     try {  
         console.log('Received data:', req.body);  
         await pool.query(  
-            'INSERT INTO SKILL_PESERTA_MAGANG (id_skill, nama_peserta, departemen, email, komunikasi, kreativitas, tanggung_jawab, kerja_sama, skill_teknis, banyak_proyek, list_proyek, url_lampiran) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)',  
-            [id_skill, nama_peserta, departemen, email, komunikasi, kreativitas, tanggung_jawab, kerja_sama, skill_teknis, banyak_proyek, list_proyek, url_lampiran]  
+            'INSERT INTO SKILL_PESERTA_MAGANG (id_skill, nama_peserta, departemen, email, asal_universitas, nilai_univ, akreditasi_universitas, jurusan, komunikasi, kreativitas, tanggung_jawab, kerja_sama, skill_teknis, banyak_proyek, list_proyek, url_lampiran) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)',  
+            [ 
+                id_skill, 
+                nama_peserta, 
+                departemen, 
+                email, 
+                asal_universitas,
+                nilai_univ,
+                akreditasi_universitas,
+                jurusan,
+                komunikasi, 
+                kreativitas, 
+                tanggung_jawab, 
+                kerja_sama, 
+                skill_teknis, 
+                banyak_proyek, 
+                list_proyek, 
+                url_lampiran 
+            ]  
         );  
         res.status(201).json({ message: 'Skill added successfully!' });  
     } catch (err) {  
@@ -32,8 +122,7 @@ router.post('/add-skill', async (req, res) => {
         });  
         res.status(500).json({ error: 'Server error', details: err.message });  
     }  
-});  
-
+});
 // Endpoint: Fetch all skills
 router.get('/fetch-all-skills', async (req, res) => {
     try {

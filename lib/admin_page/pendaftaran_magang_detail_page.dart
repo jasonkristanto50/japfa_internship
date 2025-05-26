@@ -41,10 +41,11 @@ class _PendaftaranMagangDetailPageState
     } else {
       isAdmin = false;
     }
-    _fetchSkillByEmail(peserta!.email);
 
     if (peserta == null && login.email != null) {
       _fetchPesertaSkillByEmail(login.email!);
+    } else if (peserta != null) {
+      _fetchSkillByEmail(peserta!.email);
     }
   }
 
@@ -265,27 +266,9 @@ class _PendaftaranMagangDetailPageState
                     value: likertStringValue(skill!.skillTeknis),
                     verticalPadding: 5,
                   ),
-                  // Add list of projects here
-                  const SizedBox(height: 10), // Spacing
+                  const SizedBox(height: 10),
                   Text('Proyek:', style: bold20),
-
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: skill!.banyakProyek,
-                    itemBuilder: (context, index) {
-                      // Check if the project exists in the list
-                      if (index < skill!.listProyek.length) {
-                        final project = skill!.listProyek[index];
-                        return buildDataInfoField(
-                          label: 'Proyek ${index + 1}',
-                          value: project,
-                          verticalPadding: 5,
-                        );
-                      }
-                      return Container(); // Return an empty container if out of range
-                    },
-                  ),
+                  _buildProyekField(),
                 ],
               ),
             ),
@@ -393,6 +376,43 @@ class _PendaftaranMagangDetailPageState
     } else {
       return const SizedBox();
     }
+  }
+
+  Widget _buildProyekField() {
+    return Column(
+      children: [
+        // Check if there are any projects
+        if (skill!.banyakProyek == 0) ...[
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 5), // Add vertical padding
+            child: Text(
+              'Tidak ada proyek',
+              style: TextStyle(
+                  fontSize: 16,
+                  fontStyle: FontStyle.italic), // Adjust style as needed
+            ),
+          ),
+        ] else ...[
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: skill!.banyakProyek,
+            itemBuilder: (context, index) {
+              // Check if the project exists in the list
+              if (index < skill!.listProyek.length) {
+                final project = skill!.listProyek[index];
+                return buildDataInfoField(
+                  label: 'Proyek ${index + 1}',
+                  value: project,
+                  verticalPadding: 5,
+                );
+              }
+              return Container(); // Return an empty container if out of range
+            },
+          ),
+        ]
+      ],
+    );
   }
 
   Future<void> _fetchPesertaSkillByEmail(String email) async {

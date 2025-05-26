@@ -19,6 +19,7 @@ class SubmissionInternFile extends StatefulWidget {
   final String phoneNumber;
   final String email;
   final String university;
+  final String akreditasiUniversitas;
   final int generation;
   final double score;
   final String major;
@@ -43,6 +44,7 @@ class SubmissionInternFile extends StatefulWidget {
     required this.phoneNumber,
     required this.email,
     required this.university,
+    required this.akreditasiUniversitas,
     required this.generation,
     required this.score,
     required this.major,
@@ -322,13 +324,17 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
         namaPeserta: widget.name,
         departemen: widget.departmentName,
         email: widget.email,
+        asalUniversitas: widget.university,
+        akreditasiUniversitas: widget.akreditasiUniversitas,
+        nilaiUniv: widget.score,
+        jurusan: widget.major,
         komunikasi: widget.likertKomunikasi.toString(),
         kreativitas: widget.likertKreativitas.toString(),
         tanggungJawab: widget.likertTanggungJawab.toString(),
         kerjaSama: widget.likertKerjaSama.toString(),
         skillTeknis: widget.likertTeknis.toString(),
         banyakProyek: projectCount,
-        listProyek: projectList, // Now it's List<String> as expected
+        listProyek: projectList,
         urlLampiran: widget.urlProject ?? '',
       );
 

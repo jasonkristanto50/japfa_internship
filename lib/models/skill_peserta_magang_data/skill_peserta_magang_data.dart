@@ -10,6 +10,11 @@ abstract class SkillPesertaMagangData with _$SkillPesertaMagangData {
     @JsonKey(name: 'nama_peserta') required String namaPeserta,
     @JsonKey(name: 'departemen') required String departemen,
     @JsonKey(name: 'email') required String email,
+    @JsonKey(name: 'asal_universitas') required String asalUniversitas,
+    @JsonKey(name: 'nilai_univ') required double nilaiUniv,
+    @JsonKey(name: 'akreditasi_universitas')
+    required String akreditasiUniversitas,
+    @JsonKey(name: 'jurusan') required String jurusan,
     @JsonKey(name: 'komunikasi') required String komunikasi,
     @JsonKey(name: 'kreativitas') required String kreativitas,
     @JsonKey(name: 'tanggung_jawab') required String tanggungJawab,

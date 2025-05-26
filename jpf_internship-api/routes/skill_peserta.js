@@ -13,10 +13,10 @@ const pool = new Pool({
     port: process.env.DB_PORT || 5432,  
 });
 
-
+// Fuzzy Logic
 router.post('/fuzzy-scale', async (req, res) => {
     const { 
-        komunikasi, 
+        total_softskill, 
         banyak_proyek, 
         nilai_univ,
         akreditasi_universitas,
@@ -25,7 +25,7 @@ router.post('/fuzzy-scale', async (req, res) => {
 
     try {
         // Fuzzy evaluations
-        const fsSoftSkills = fuzzyLogic.fuzzyScale(komunikasi, 'softskills');
+        const fsSoftSkills = fuzzyLogic.fuzzyScale(total_softskill, 'softskills');
         const fsProjects = fuzzyLogic.fuzzyScale(banyak_proyek, 'projects');
         const fsIPK = fuzzyLogic.fuzzyScale(nilai_univ, 'ipk');
         const fsUniversitas = fuzzyLogic.fuzzyScale(akreditasi_universitas, 'universitas');
@@ -69,6 +69,7 @@ router.post('/fuzzy-scale', async (req, res) => {
     }
 });
 
+// Endpoint: Add new skill
 router.post('/add-skill', async (req, res) => {  
     const { 
         id_skill, 
@@ -76,40 +77,44 @@ router.post('/add-skill', async (req, res) => {
         departemen, 
         email, 
         asal_universitas,
-        nilai_univ,
         akreditasi_universitas,
         jurusan,
+        nilai_univ,
         komunikasi, 
         kreativitas, 
         tanggung_jawab, 
         kerja_sama, 
         skill_teknis, 
+        total_softskill,
         banyak_proyek, 
         list_proyek, 
-        url_lampiran    
+        url_lampiran,
+        fuzzy_score
     } = req.body;  
 
     try {  
         console.log('Received data:', req.body);  
         await pool.query(  
-            'INSERT INTO SKILL_PESERTA_MAGANG (id_skill, nama_peserta, departemen, email, asal_universitas, nilai_univ, akreditasi_universitas, jurusan, komunikasi, kreativitas, tanggung_jawab, kerja_sama, skill_teknis, banyak_proyek, list_proyek, url_lampiran) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)',  
+            'INSERT INTO SKILL_PESERTA_MAGANG (id_skill, nama_peserta, departemen, email, asal_universitas, akreditasi_universitas, jurusan, nilai_univ, komunikasi, kreativitas, tanggung_jawab, kerja_sama, skill_teknis, total_softskill, banyak_proyek, list_proyek, url_lampiran, fuzzy_score) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)',  
             [ 
                 id_skill, 
                 nama_peserta, 
                 departemen, 
                 email, 
                 asal_universitas,
-                nilai_univ,
                 akreditasi_universitas,
                 jurusan,
+                nilai_univ,
                 komunikasi, 
                 kreativitas, 
                 tanggung_jawab, 
                 kerja_sama, 
                 skill_teknis, 
+                total_softskill,
                 banyak_proyek, 
                 list_proyek, 
-                url_lampiran 
+                url_lampiran,
+                fuzzy_score
             ]  
         );  
         res.status(201).json({ message: 'Skill added successfully!' });  
@@ -123,6 +128,7 @@ router.post('/add-skill', async (req, res) => {
         res.status(500).json({ error: 'Server error', details: err.message });  
     }  
 });
+
 // Endpoint: Fetch all skills
 router.get('/fetch-all-skills', async (req, res) => {
     try {

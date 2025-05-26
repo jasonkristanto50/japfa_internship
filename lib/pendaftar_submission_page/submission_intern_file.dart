@@ -302,21 +302,21 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
           'SKILL_MG_${(skillCount + 1).toString().padLeft(3, '0')}';
 
       // Count non-null projects
-      int projectCount = 0;
       List<String> projectList = [];
+      int projectCount = _checkProject(projectList);
 
-      if (widget.projectDetail1 != null && widget.projectDetail1!.isNotEmpty) {
-        projectCount++;
-        projectList.add(widget.projectDetail1!);
-      }
-      if (widget.projectDetail2 != null && widget.projectDetail2!.isNotEmpty) {
-        projectCount++;
-        projectList.add(widget.projectDetail2!);
-      }
-      if (widget.projectDetail3 != null && widget.projectDetail3!.isNotEmpty) {
-        projectCount++;
-        projectList.add(widget.projectDetail3!);
-      }
+      int totalSoftskillValue = calculateTotalSoftskills();
+
+      // Access the overall score
+      final fuzzyResponse =
+          await ApiService().skillService.calculateFuzzyScores(
+                totalSoftskill: totalSoftskillValue,
+                banyakProyek: projectCount,
+                nilaiUniv: widget.score,
+                akreditasiUniversitas: widget.akreditasiUniversitas,
+                jurusan: widget.major,
+              );
+      final double overallFuzzyScore = fuzzyResponse['overallScore'];
 
       // Create the SkillPesertaMagangData object
       SkillPesertaMagangData skillData = SkillPesertaMagangData(
@@ -333,9 +333,11 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
         tanggungJawab: widget.likertTanggungJawab.toString(),
         kerjaSama: widget.likertKerjaSama.toString(),
         skillTeknis: widget.likertTeknis.toString(),
+        totalSoftskill: totalSoftskillValue,
         banyakProyek: projectCount,
         listProyek: projectList,
         urlLampiran: widget.urlProject ?? '',
+        fuzzyScore: overallFuzzyScore,
       );
 
       // Call the SkillService to add the skill
@@ -422,5 +424,38 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
     } else {
       showSnackBar(context, 'All files must be uploaded');
     }
+  }
+
+  int _checkProject(List<String> projectList) {
+    int projectCount = 0;
+    if (widget.projectDetail1 != null && widget.projectDetail1!.isNotEmpty) {
+      projectCount++;
+      projectList.add(widget.projectDetail1!);
+    }
+    if (widget.projectDetail2 != null && widget.projectDetail2!.isNotEmpty) {
+      projectCount++;
+      projectList.add(widget.projectDetail2!);
+    }
+    if (widget.projectDetail3 != null && widget.projectDetail3!.isNotEmpty) {
+      projectCount++;
+      projectList.add(widget.projectDetail3!);
+    }
+    return projectCount;
+  }
+
+  // Method to calculate total soft skills
+  int calculateTotalSoftskills() {
+    int komunikasiValue = widget.likertKomunikasi.round();
+    int kreativitasValue = widget.likertKreativitas.round();
+    int tanggungJawabValue = widget.likertTanggungJawab.round();
+    int kerjaSamaValue = widget.likertKerjaSama.round();
+    int skillTeknisValue = widget.likertTeknis.round();
+
+    int totalSoftskill = komunikasiValue +
+        kreativitasValue +
+        tanggungJawabValue +
+        kerjaSamaValue +
+        skillTeknisValue;
+    return totalSoftskill;
   }
 }

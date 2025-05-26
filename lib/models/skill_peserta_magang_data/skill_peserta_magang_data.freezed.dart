@@ -41,12 +41,16 @@ mixin _$SkillPesertaMagangData {
   String get kerjaSama;
   @JsonKey(name: 'skill_teknis')
   String get skillTeknis;
+  @JsonKey(name: 'total_softskill')
+  int get totalSoftskill;
   @JsonKey(name: 'banyak_proyek')
   int get banyakProyek;
   @JsonKey(name: 'list_proyek')
   List<String> get listProyek;
   @JsonKey(name: 'url_lampiran')
   String get urlLampiran;
+  @JsonKey(name: 'fuzzy_score')
+  double get fuzzyScore;
 
   /// Create a copy of SkillPesertaMagangData
   /// with the given fields replaced by the non-null parameter values.
@@ -87,12 +91,16 @@ mixin _$SkillPesertaMagangData {
                 other.kerjaSama == kerjaSama) &&
             (identical(other.skillTeknis, skillTeknis) ||
                 other.skillTeknis == skillTeknis) &&
+            (identical(other.totalSoftskill, totalSoftskill) ||
+                other.totalSoftskill == totalSoftskill) &&
             (identical(other.banyakProyek, banyakProyek) ||
                 other.banyakProyek == banyakProyek) &&
             const DeepCollectionEquality()
                 .equals(other.listProyek, listProyek) &&
             (identical(other.urlLampiran, urlLampiran) ||
-                other.urlLampiran == urlLampiran));
+                other.urlLampiran == urlLampiran) &&
+            (identical(other.fuzzyScore, fuzzyScore) ||
+                other.fuzzyScore == fuzzyScore));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -112,13 +120,15 @@ mixin _$SkillPesertaMagangData {
       tanggungJawab,
       kerjaSama,
       skillTeknis,
+      totalSoftskill,
       banyakProyek,
       const DeepCollectionEquality().hash(listProyek),
-      urlLampiran);
+      urlLampiran,
+      fuzzyScore);
 
   @override
   String toString() {
-    return 'SkillPesertaMagangData(idSkill: $idSkill, namaPeserta: $namaPeserta, departemen: $departemen, email: $email, asalUniversitas: $asalUniversitas, nilaiUniv: $nilaiUniv, akreditasiUniversitas: $akreditasiUniversitas, jurusan: $jurusan, komunikasi: $komunikasi, kreativitas: $kreativitas, tanggungJawab: $tanggungJawab, kerjaSama: $kerjaSama, skillTeknis: $skillTeknis, banyakProyek: $banyakProyek, listProyek: $listProyek, urlLampiran: $urlLampiran)';
+    return 'SkillPesertaMagangData(idSkill: $idSkill, namaPeserta: $namaPeserta, departemen: $departemen, email: $email, asalUniversitas: $asalUniversitas, nilaiUniv: $nilaiUniv, akreditasiUniversitas: $akreditasiUniversitas, jurusan: $jurusan, komunikasi: $komunikasi, kreativitas: $kreativitas, tanggungJawab: $tanggungJawab, kerjaSama: $kerjaSama, skillTeknis: $skillTeknis, totalSoftskill: $totalSoftskill, banyakProyek: $banyakProyek, listProyek: $listProyek, urlLampiran: $urlLampiran, fuzzyScore: $fuzzyScore)';
   }
 }
 
@@ -142,9 +152,11 @@ abstract mixin class $SkillPesertaMagangDataCopyWith<$Res> {
       @JsonKey(name: 'tanggung_jawab') String tanggungJawab,
       @JsonKey(name: 'kerja_sama') String kerjaSama,
       @JsonKey(name: 'skill_teknis') String skillTeknis,
+      @JsonKey(name: 'total_softskill') int totalSoftskill,
       @JsonKey(name: 'banyak_proyek') int banyakProyek,
       @JsonKey(name: 'list_proyek') List<String> listProyek,
-      @JsonKey(name: 'url_lampiran') String urlLampiran});
+      @JsonKey(name: 'url_lampiran') String urlLampiran,
+      @JsonKey(name: 'fuzzy_score') double fuzzyScore});
 }
 
 /// @nodoc
@@ -173,9 +185,11 @@ class _$SkillPesertaMagangDataCopyWithImpl<$Res>
     Object? tanggungJawab = null,
     Object? kerjaSama = null,
     Object? skillTeknis = null,
+    Object? totalSoftskill = null,
     Object? banyakProyek = null,
     Object? listProyek = null,
     Object? urlLampiran = null,
+    Object? fuzzyScore = null,
   }) {
     return _then(_self.copyWith(
       idSkill: null == idSkill
@@ -230,6 +244,10 @@ class _$SkillPesertaMagangDataCopyWithImpl<$Res>
           ? _self.skillTeknis
           : skillTeknis // ignore: cast_nullable_to_non_nullable
               as String,
+      totalSoftskill: null == totalSoftskill
+          ? _self.totalSoftskill
+          : totalSoftskill // ignore: cast_nullable_to_non_nullable
+              as int,
       banyakProyek: null == banyakProyek
           ? _self.banyakProyek
           : banyakProyek // ignore: cast_nullable_to_non_nullable
@@ -242,6 +260,10 @@ class _$SkillPesertaMagangDataCopyWithImpl<$Res>
           ? _self.urlLampiran
           : urlLampiran // ignore: cast_nullable_to_non_nullable
               as String,
+      fuzzyScore: null == fuzzyScore
+          ? _self.fuzzyScore
+          : fuzzyScore // ignore: cast_nullable_to_non_nullable
+              as double,
     ));
   }
 }
@@ -264,9 +286,11 @@ class _SkillPesertaMagangData implements SkillPesertaMagangData {
       @JsonKey(name: 'tanggung_jawab') required this.tanggungJawab,
       @JsonKey(name: 'kerja_sama') required this.kerjaSama,
       @JsonKey(name: 'skill_teknis') required this.skillTeknis,
+      @JsonKey(name: 'total_softskill') required this.totalSoftskill,
       @JsonKey(name: 'banyak_proyek') required this.banyakProyek,
       @JsonKey(name: 'list_proyek') required final List<String> listProyek,
-      @JsonKey(name: 'url_lampiran') required this.urlLampiran})
+      @JsonKey(name: 'url_lampiran') required this.urlLampiran,
+      @JsonKey(name: 'fuzzy_score') required this.fuzzyScore})
       : _listProyek = listProyek;
   factory _SkillPesertaMagangData.fromJson(Map<String, dynamic> json) =>
       _$SkillPesertaMagangDataFromJson(json);
@@ -311,6 +335,9 @@ class _SkillPesertaMagangData implements SkillPesertaMagangData {
   @JsonKey(name: 'skill_teknis')
   final String skillTeknis;
   @override
+  @JsonKey(name: 'total_softskill')
+  final int totalSoftskill;
+  @override
   @JsonKey(name: 'banyak_proyek')
   final int banyakProyek;
   final List<String> _listProyek;
@@ -325,6 +352,9 @@ class _SkillPesertaMagangData implements SkillPesertaMagangData {
   @override
   @JsonKey(name: 'url_lampiran')
   final String urlLampiran;
+  @override
+  @JsonKey(name: 'fuzzy_score')
+  final double fuzzyScore;
 
   /// Create a copy of SkillPesertaMagangData
   /// with the given fields replaced by the non-null parameter values.
@@ -370,12 +400,16 @@ class _SkillPesertaMagangData implements SkillPesertaMagangData {
                 other.kerjaSama == kerjaSama) &&
             (identical(other.skillTeknis, skillTeknis) ||
                 other.skillTeknis == skillTeknis) &&
+            (identical(other.totalSoftskill, totalSoftskill) ||
+                other.totalSoftskill == totalSoftskill) &&
             (identical(other.banyakProyek, banyakProyek) ||
                 other.banyakProyek == banyakProyek) &&
             const DeepCollectionEquality()
                 .equals(other._listProyek, _listProyek) &&
             (identical(other.urlLampiran, urlLampiran) ||
-                other.urlLampiran == urlLampiran));
+                other.urlLampiran == urlLampiran) &&
+            (identical(other.fuzzyScore, fuzzyScore) ||
+                other.fuzzyScore == fuzzyScore));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -395,13 +429,15 @@ class _SkillPesertaMagangData implements SkillPesertaMagangData {
       tanggungJawab,
       kerjaSama,
       skillTeknis,
+      totalSoftskill,
       banyakProyek,
       const DeepCollectionEquality().hash(_listProyek),
-      urlLampiran);
+      urlLampiran,
+      fuzzyScore);
 
   @override
   String toString() {
-    return 'SkillPesertaMagangData(idSkill: $idSkill, namaPeserta: $namaPeserta, departemen: $departemen, email: $email, asalUniversitas: $asalUniversitas, nilaiUniv: $nilaiUniv, akreditasiUniversitas: $akreditasiUniversitas, jurusan: $jurusan, komunikasi: $komunikasi, kreativitas: $kreativitas, tanggungJawab: $tanggungJawab, kerjaSama: $kerjaSama, skillTeknis: $skillTeknis, banyakProyek: $banyakProyek, listProyek: $listProyek, urlLampiran: $urlLampiran)';
+    return 'SkillPesertaMagangData(idSkill: $idSkill, namaPeserta: $namaPeserta, departemen: $departemen, email: $email, asalUniversitas: $asalUniversitas, nilaiUniv: $nilaiUniv, akreditasiUniversitas: $akreditasiUniversitas, jurusan: $jurusan, komunikasi: $komunikasi, kreativitas: $kreativitas, tanggungJawab: $tanggungJawab, kerjaSama: $kerjaSama, skillTeknis: $skillTeknis, totalSoftskill: $totalSoftskill, banyakProyek: $banyakProyek, listProyek: $listProyek, urlLampiran: $urlLampiran, fuzzyScore: $fuzzyScore)';
   }
 }
 
@@ -427,9 +463,11 @@ abstract mixin class _$SkillPesertaMagangDataCopyWith<$Res>
       @JsonKey(name: 'tanggung_jawab') String tanggungJawab,
       @JsonKey(name: 'kerja_sama') String kerjaSama,
       @JsonKey(name: 'skill_teknis') String skillTeknis,
+      @JsonKey(name: 'total_softskill') int totalSoftskill,
       @JsonKey(name: 'banyak_proyek') int banyakProyek,
       @JsonKey(name: 'list_proyek') List<String> listProyek,
-      @JsonKey(name: 'url_lampiran') String urlLampiran});
+      @JsonKey(name: 'url_lampiran') String urlLampiran,
+      @JsonKey(name: 'fuzzy_score') double fuzzyScore});
 }
 
 /// @nodoc
@@ -458,9 +496,11 @@ class __$SkillPesertaMagangDataCopyWithImpl<$Res>
     Object? tanggungJawab = null,
     Object? kerjaSama = null,
     Object? skillTeknis = null,
+    Object? totalSoftskill = null,
     Object? banyakProyek = null,
     Object? listProyek = null,
     Object? urlLampiran = null,
+    Object? fuzzyScore = null,
   }) {
     return _then(_SkillPesertaMagangData(
       idSkill: null == idSkill
@@ -515,6 +555,10 @@ class __$SkillPesertaMagangDataCopyWithImpl<$Res>
           ? _self.skillTeknis
           : skillTeknis // ignore: cast_nullable_to_non_nullable
               as String,
+      totalSoftskill: null == totalSoftskill
+          ? _self.totalSoftskill
+          : totalSoftskill // ignore: cast_nullable_to_non_nullable
+              as int,
       banyakProyek: null == banyakProyek
           ? _self.banyakProyek
           : banyakProyek // ignore: cast_nullable_to_non_nullable
@@ -527,6 +571,10 @@ class __$SkillPesertaMagangDataCopyWithImpl<$Res>
           ? _self.urlLampiran
           : urlLampiran // ignore: cast_nullable_to_non_nullable
               as String,
+      fuzzyScore: null == fuzzyScore
+          ? _self.fuzzyScore
+          : fuzzyScore // ignore: cast_nullable_to_non_nullable
+              as double,
     ));
   }
 }

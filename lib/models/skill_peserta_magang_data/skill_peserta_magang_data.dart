@@ -20,9 +20,11 @@ abstract class SkillPesertaMagangData with _$SkillPesertaMagangData {
     @JsonKey(name: 'tanggung_jawab') required String tanggungJawab,
     @JsonKey(name: 'kerja_sama') required String kerjaSama,
     @JsonKey(name: 'skill_teknis') required String skillTeknis,
+    @JsonKey(name: 'total_softskill') required int totalSoftskill,
     @JsonKey(name: 'banyak_proyek') required int banyakProyek,
     @JsonKey(name: 'list_proyek') required List<String> listProyek,
     @JsonKey(name: 'url_lampiran') required String urlLampiran,
+    @JsonKey(name: 'fuzzy_score') required double fuzzyScore,
   }) = _SkillPesertaMagangData;
 
   factory SkillPesertaMagangData.fromJson(Map<String, dynamic> json) =>

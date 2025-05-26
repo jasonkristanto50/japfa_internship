@@ -135,7 +135,9 @@ CREATE TABLE SKILL_PESERTA_MAGANG (
     tanggung_jawab VARCHAR(255),
     kerja_sama VARCHAR(255),
     skill_teknis VARCHAR(255),
+    total_softskill INTEGER,
     banyak_proyek INTEGER,
     list_proyek TEXT[],
-    url_lampiran VARCHAR(255)
+    url_lampiran VARCHAR(255),
+    fuzzy_score FLOAT
 );

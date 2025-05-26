@@ -22,11 +22,13 @@ _SkillPesertaMagangData _$SkillPesertaMagangDataFromJson(
       tanggungJawab: json['tanggung_jawab'] as String,
       kerjaSama: json['kerja_sama'] as String,
       skillTeknis: json['skill_teknis'] as String,
+      totalSoftskill: (json['total_softskill'] as num).toInt(),
       banyakProyek: (json['banyak_proyek'] as num).toInt(),
       listProyek: (json['list_proyek'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
       urlLampiran: json['url_lampiran'] as String,
+      fuzzyScore: (json['fuzzy_score'] as num).toDouble(),
     );
 
 Map<String, dynamic> _$SkillPesertaMagangDataToJson(
@@ -45,7 +47,9 @@ Map<String, dynamic> _$SkillPesertaMagangDataToJson(
       'tanggung_jawab': instance.tanggungJawab,
       'kerja_sama': instance.kerjaSama,
       'skill_teknis': instance.skillTeknis,
+      'total_softskill': instance.totalSoftskill,
       'banyak_proyek': instance.banyakProyek,
       'list_proyek': instance.listProyek,
       'url_lampiran': instance.urlLampiran,
+      'fuzzy_score': instance.fuzzyScore,
     };

@@ -653,6 +653,37 @@ class SkillService {
 
   SkillService(this._dio);
 
+  // FUZZY LOGIC ----------------------------------------------------------------------------------
+  Future<Map<String, dynamic>> calculateFuzzyScores({
+    required int totalSoftskill,
+    required int banyakProyek,
+    required double nilaiUniv,
+    required String akreditasiUniversitas,
+    required String jurusan,
+  }) async {
+    try {
+      final response = await _dio.post('$baseUrlSkill/fuzzy-scale', data: {
+        'total_softskill': totalSoftskill,
+        'banyak_proyek': banyakProyek,
+        'nilai_univ': nilaiUniv,
+        'akreditasi_universitas': akreditasiUniversitas,
+        'jurusan': jurusan,
+      });
+
+      // Return the response data
+      return response.data;
+    } on DioException catch (e) {
+      // Handle error and return informative message
+      if (e.response != null) {
+        print('Error: ${e.response?.data}');
+        throw Exception('Error: ${e.response?.data['error']}');
+      } else {
+        print('Error: ${e.message}');
+        throw Exception('Error: ${e.message}');
+      }
+    }
+  }
+
   // Function to add a new skill
   Future<void> addSkill(SkillPesertaMagangData skill) async {
     try {

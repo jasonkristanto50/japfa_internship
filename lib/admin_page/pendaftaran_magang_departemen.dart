@@ -48,20 +48,40 @@ class _PendaftaranMagangDepartemenState
         child: Column(
           children: [
             // Add Search Bar
-            Center(
-              child: CustomSearchBar(
-                widthValue: 1500.w,
-                onChanged: (value) {
-                  setState(() {
-                    searchQuery = value;
-                  });
-                },
-              ),
-            ),
+            _buildSearchAndFuzzyRecommendationButton(),
             _buildPesertaMagangDataTable(filteredPesertaData),
             const SizedBox(height: 24),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildSearchAndFuzzyRecommendationButton() {
+    return // Add Custom Search Bar
+        Center(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CustomSearchBar(
+            onChanged: (value) {
+              setState(() {
+                searchQuery = value; // Update search query
+              });
+            },
+            widthValue: 1200.w,
+          ),
+          // Button to add a new department
+          RoundedRectangleButton(
+            title: "Rekomendasi",
+            backgroundColor: Colors.white,
+            outlineColor: japfaOrange,
+            height: 40,
+            width: 200,
+            rounded: 5,
+            onPressed: () {},
+          ),
+        ],
       ),
     );
   }

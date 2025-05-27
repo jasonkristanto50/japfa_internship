@@ -24,7 +24,6 @@ class _PendaftaranMagangDepartemenState
   String searchQuery = "";
   List<PesertaMagangData> pesertaMagangList = [];
   List<PesertaMagangData> filteredPesertaData = [];
-  int _currentPage = 0;
   String? currentStatus;
 
   @override
@@ -86,45 +85,79 @@ class _PendaftaranMagangDepartemenState
     );
   }
 
-  // Build buttons to filter by status
+// Build buttons to filter by status
   Widget _buildGroupByStatusButton() {
     return Center(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           RoundedRectangleButton(
+            title: "Semua",
+            style: bold14,
+            width: 120.w,
+            height: 40.h,
+            fontColor: currentStatus == null ? japfaOrange : Colors.white,
+            backgroundColor: currentStatus == null ? Colors.white : Colors.grey,
+            outlineColor:
+                currentStatus == null ? japfaOrange : Colors.transparent,
+            onPressed: () {
+              _filterByStatus(null); // No status = All
+            },
+          ),
+          const SizedBox(width: 10),
+          RoundedRectangleButton(
             title: "Proses",
             style: bold14,
             width: 120.w,
             height: 40.h,
             fontColor: Colors.white,
-            backgroundColor: _currentPage == 1 ? japfaOrange : Colors.grey,
+            backgroundColor: currentStatus == statusMagangMenunggu
+                ? japfaOrange
+                : Colors.grey,
             onPressed: () {
-              _filterByStatus(statusMagangMenunggu); // Filter by "On Process"
+              _filterByStatus(statusMagangMenunggu); // Filter by "Menunggu"
             },
           ),
           const SizedBox(width: 10),
           RoundedRectangleButton(
-            title: statusMagangDiterima,
+            title: "Diterima",
             style: bold14,
             width: 120.w,
             height: 40.h,
             fontColor: Colors.white,
-            backgroundColor: _currentPage == 2 ? Colors.green : Colors.grey,
+            backgroundColor: currentStatus == statusMagangDiterima
+                ? Colors.green
+                : Colors.grey,
             onPressed: () {
-              _filterByStatus(statusMagangDiterima); // Filter by "Accepted"
+              _filterByStatus(statusMagangDiterima); // Filter by "Diterima"
             },
           ),
           const SizedBox(width: 10),
           RoundedRectangleButton(
-            title: statusMagangDitolak,
+            title: "Berlangsung",
+            style: bold14,
+            width: 150.w,
+            height: 40.h,
+            fontColor: Colors.white,
+            backgroundColor: currentStatus == statusMagangBerlangsung
+                ? Colors.blue
+                : Colors.grey,
+            onPressed: () {
+              _filterByStatus(
+                  statusMagangBerlangsung); // Filter by "Sedang Berlangsung"
+            },
+          ),
+          const SizedBox(width: 10),
+          RoundedRectangleButton(
+            title: "Ditolak",
             style: bold14,
             width: 120.w,
             height: 40.h,
             fontColor: Colors.white,
-            backgroundColor: _currentPage == 3 ? Colors.red : Colors.grey,
+            backgroundColor:
+                currentStatus == statusMagangDitolak ? Colors.red : Colors.grey,
             onPressed: () {
-              _filterByStatus(statusMagangDitolak); // Filter by "Rejected"
+              _filterByStatus(statusMagangDitolak); // Filter by "Ditolak"
             },
           ),
         ],
@@ -278,15 +311,10 @@ class _PendaftaranMagangDepartemenState
     });
   }
 
-  void _filterByStatus(String status) {
+  void _filterByStatus(String? status) {
     setState(() {
       currentStatus = status;
       _updateFilteredPesertaData();
-      _currentPage = status == statusMagangMenunggu
-          ? 1
-          : status == statusMagangDiterima
-              ? 2
-              : 3;
     });
   }
 

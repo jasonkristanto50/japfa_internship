@@ -6,6 +6,7 @@ import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/string_value.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/kepala_departemen_page/dashboard_pembimbing_magang.dart';
+import 'package:japfa_internship/models/departemen_data/departemen_data.dart';
 import 'package:japfa_internship/models/kepala_departemen_data/kepala_departemen_data.dart';
 import 'package:japfa_internship/navbar.dart';
 
@@ -192,7 +193,8 @@ class _TambahKepalaDepartemenState extends State<TambahKepalaDepartemen> {
     );
   }
 
-  void _showDialogAddKepalaDepartemen() {
+  void _showDialogAddKepalaDepartemen() async {
+    List<String> namaDepartemen = await fetchDepartemenNames();
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -215,9 +217,10 @@ class _TambahKepalaDepartemenState extends State<TambahKepalaDepartemen> {
           fieldTypes: const [
             BuildFieldTypeController.text,
             BuildFieldTypeController.text,
-            BuildFieldTypeController.text,
+            BuildFieldTypeController.dropdown,
             BuildFieldTypeController.text
           ],
+          dropdownOptions: namaDepartemen,
           onSave: () => _addKepalaDepartemen(),
         );
       },
@@ -309,6 +312,22 @@ class _TambahKepalaDepartemenState extends State<TambahKepalaDepartemen> {
       });
     } catch (e) {
       print("Error fetching  kepala departemen: $e");
+    }
+  }
+
+  Future<List<String>> fetchDepartemenNames() async {
+    try {
+      // Fetch all departemen data
+      List<DepartemenData> departemenList =
+          await ApiService().departemenService.fetchDepartemen();
+
+      // Extract the names and return them as a list of strings
+      return departemenList
+          .map((departemen) => departemen.namaDepartemen)
+          .toList();
+    } catch (error) {
+      print('Error fetching department names: $error');
+      rethrow; // Rethrow the error for further handling if needed
     }
   }
 }

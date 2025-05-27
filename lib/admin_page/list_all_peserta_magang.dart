@@ -121,6 +121,21 @@ class _ListAllPesertaMagangState extends State<ListAllPesertaMagang> {
             },
           ),
           const SizedBox(width: 10),
+          // Button for "Diterima"
+          RoundedRectangleButton(
+            title: statusMagangDiterima, // Assuming this variable is defined
+            style: bold14,
+            width: 120.w,
+            height: 40.h,
+            fontColor: Colors.white,
+            backgroundColor: currentStatus == statusMagangDiterima
+                ? Colors.green
+                : Colors.grey,
+            onPressed: () {
+              _filterByStatus(statusMagangDiterima); // Filter by "Accepted"
+            },
+          ),
+          const SizedBox(width: 10),
           // Button for "Sedang Berlangsung"
           RoundedRectangleButton(
             title: "Berlangsung",
@@ -134,21 +149,6 @@ class _ListAllPesertaMagangState extends State<ListAllPesertaMagang> {
             onPressed: () {
               _filterByStatus(
                   statusMagangBerlangsung); // Filter by "Sedang Berlangsung"
-            },
-          ),
-          const SizedBox(width: 10),
-          // Button for "Diterima"
-          RoundedRectangleButton(
-            title: statusMagangDiterima, // Assuming this variable is defined
-            style: bold14,
-            width: 120.w,
-            height: 40.h,
-            fontColor: Colors.white,
-            backgroundColor: currentStatus == statusMagangDiterima
-                ? Colors.green
-                : Colors.grey,
-            onPressed: () {
-              _filterByStatus(statusMagangDiterima); // Filter by "Accepted"
             },
           ),
           const SizedBox(width: 10),

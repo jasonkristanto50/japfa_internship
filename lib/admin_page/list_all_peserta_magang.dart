@@ -1,3 +1,7 @@
+import 'dart:io';
+import 'dart:html' as html;
+import 'package:excel/excel.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:japfa_internship/admin_page/pendaftaran_magang_detail_page.dart';
@@ -9,6 +13,8 @@ import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.
 import 'package:japfa_internship/models/skill_peserta_magang_data/skill_peserta_magang_data.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/components/widget_component.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class ListAllPesertaMagang extends StatefulWidget {
   const ListAllPesertaMagang({super.key});
@@ -44,7 +50,7 @@ class _ListAllPesertaMagangState extends State<ListAllPesertaMagang> {
         decoration: buildJapfaLogoBackground(),
         child: Column(
           children: [
-            _buildSearchAndFuzzyRecommendationButton(),
+            _buildSearchAndDownloadExcel(),
             _buildGroupByStatusButton(),
             _buildPesertaMagangDataTable(filteredPesertaData),
             const SizedBox(height: 24),
@@ -55,7 +61,7 @@ class _ListAllPesertaMagangState extends State<ListAllPesertaMagang> {
   }
 
   // Build search bar and recommendation button
-  Widget _buildSearchAndFuzzyRecommendationButton() {
+  Widget _buildSearchAndDownloadExcel() {
     return Center(
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -69,13 +75,13 @@ class _ListAllPesertaMagangState extends State<ListAllPesertaMagang> {
             widthValue: 1200.w,
           ),
           RoundedRectangleButton(
-            title: "Rekomendasi",
+            title: "Download",
             backgroundColor: Colors.white,
-            outlineColor: japfaOrange,
+            outlineColor: Colors.green,
             height: 40,
             width: 200,
             rounded: 5,
-            onPressed: () => _sortPesertaByFuzzyScore(),
+            onPressed: () => _downloadExcel(),
           ),
         ],
       ),
@@ -83,7 +89,6 @@ class _ListAllPesertaMagangState extends State<ListAllPesertaMagang> {
   }
 
   // Build buttons to filter by status
-// Build buttons to filter by status
   Widget _buildGroupByStatusButton() {
     return Center(
       child: Row(
@@ -353,5 +358,82 @@ class _ListAllPesertaMagangState extends State<ListAllPesertaMagang> {
         ),
       ),
     );
+  }
+
+  // Method to download Excel
+  void _downloadExcel() async {
+    try {
+      // Create an Excel document
+      var excel = Excel.createExcel();
+      Sheet sheet = excel['Data Peserta Magang'];
+
+// Add headers
+      sheet.appendRow([
+        TextCellValue('Nama'),
+        TextCellValue('No. Telp'),
+        TextCellValue('Email'),
+        TextCellValue('Universitas'),
+        TextCellValue('Jurusan'),
+        TextCellValue('Departemen'),
+        TextCellValue('Status'),
+        TextCellValue('Angkatan'),
+        TextCellValue('Alamat'),
+        TextCellValue('Nilai'),
+        TextCellValue('Catatan HR'),
+        TextCellValue('Pembimbing'),
+        TextCellValue('Nilai Akhir Magang'),
+      ]);
+
+// Populate the data
+      for (var peserta in pesertaMagangList) {
+        sheet.appendRow([
+          TextCellValue(peserta.nama),
+          TextCellValue(peserta.noTelp),
+          TextCellValue(peserta.email),
+          TextCellValue(peserta.asalUniversitas),
+          TextCellValue(peserta.jurusan),
+          TextCellValue(peserta.departemen ?? "-"),
+          TextCellValue(peserta.statusMagang),
+          TextCellValue(peserta.angkatan.toString()),
+          TextCellValue(peserta.alamat),
+          TextCellValue(peserta.nilaiUniv.toString()),
+          TextCellValue(peserta.catatanHr ?? "-"),
+          TextCellValue(peserta.namaPembimbing ?? "-"),
+          TextCellValue(peserta.nilaiAkhirMagang?.toString() ?? "-"),
+        ]);
+      }
+
+      // Check if we are running on the web
+      if (kIsWeb) {
+        // Save as Excel file blob for web
+        final bytes = excel.encode()!;
+        final blob = html.Blob([
+          bytes
+        ], 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+        // Create a link element
+        final url = html.Url.createObjectUrlFromBlob(blob);
+        final anchor = html.AnchorElement(href: url)
+          ..setAttribute('download', 'peserta_magang.xlsx')
+          ..click();
+
+        // Clean up
+        html.Url.revokeObjectUrl(url);
+        showSnackBar(context, "Excel file downloaded.");
+      } else {
+        // For mobile platforms, you can directly save it
+        Directory? directory = await getExternalStorageDirectory();
+        String filePath = '${directory!.path}/peserta_magang.xlsx';
+
+        // Save the Excel file
+        File(filePath).writeAsBytesSync(excel.encode()!);
+        showSnackBar(context, "Excel file downloaded: $filePath",
+            backgroundColor: Colors.green);
+      }
+    } catch (e) {
+      print("Error during Excel download: $e");
+      showSnackBar(context, "Error during download: $e",
+          backgroundColor: Colors.red);
+    }
   }
 }

@@ -307,7 +307,8 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
       title: "Berikan Respon",
       message: "Mau menerima / menolak kunjungan ?",
       withNote: true,
-      onAccept: () {
+      // Accepted actually
+      onCancel: () {
         _handleResponse(kunjungan, true);
       },
       // Note hanya dikirim ke pengaju saat ditolak

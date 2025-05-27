@@ -697,13 +697,24 @@ class SkillService {
     }
   }
 
-  // Function to fetch all skills
-  Future<void> fetchAllSkills() async {
+// Function to fetch all skills
+  Future<List<SkillPesertaMagangData>> fetchAllSkills() async {
     try {
       final response = await _dio.get('$baseUrlSkill/fetch-all-skills');
-      print('Fetched skills: ${response.data}');
+
+      // Assuming the response data is a list of objects
+      List<dynamic> data = response.data;
+
+      // Parse the data into a list of SkillPesertaMagangData objects
+      List<SkillPesertaMagangData> skills =
+          data.map((item) => SkillPesertaMagangData.fromJson(item)).toList();
+
+      print(
+          'Fetched skills: ${skills.map((skill) => skill.namaPeserta).toList()}');
+      return skills; // Return the list of skills
     } catch (e) {
       print('Error fetching skills: $e');
+      return []; // Return an empty list in case of an error
     }
   }
 

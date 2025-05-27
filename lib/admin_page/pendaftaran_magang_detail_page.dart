@@ -15,7 +15,8 @@ import 'package:japfa_internship/navbar.dart';
 
 class PendaftaranMagangDetailPage extends ConsumerStatefulWidget {
   final PesertaMagangData? peserta;
-  const PendaftaranMagangDetailPage({super.key, this.peserta});
+  final VoidCallback? onUpdate;
+  const PendaftaranMagangDetailPage({super.key, this.peserta, this.onUpdate});
 
   @override
   ConsumerState<PendaftaranMagangDetailPage> createState() =>
@@ -312,7 +313,12 @@ class _PendaftaranMagangDetailPageState
             () => launchURLImagePath(peserta!.pathTranskripNilai)),
         const SizedBox(height: 10),
         Text('STATUS:', style: bold14),
-        Text(peserta!.statusMagang, style: bold16.copyWith(color: japfaOrange)),
+        Text(
+          peserta!.statusMagang,
+          style: bold16.copyWith(
+            color: getStatusMagangColor(peserta!.statusMagang),
+          ),
+        ),
         const SizedBox(height: 10),
         Text('NOTE:', style: regular14),
         Text(peserta!.catatanHr ?? 'Tidak ada catatan'),
@@ -454,7 +460,6 @@ class _PendaftaranMagangDetailPageState
       title: 'Konfirmasi Terima ?',
       message: 'Berikan Konfirmasi',
       withNote: false,
-      rejectText: 'Batal',
       onAccept: (note) {
         if (note == null) {
           _updateStatus(peserta.idMagang, statusMagangDiterima);
@@ -462,7 +467,7 @@ class _PendaftaranMagangDetailPageState
           _updateStatusWithNote(peserta, true, note);
         }
       },
-      onReject: () {},
+      onCancel: () {},
     );
   }
 
@@ -472,7 +477,7 @@ class _PendaftaranMagangDetailPageState
       title: 'Konfirmasi Ditolak ?',
       message: 'Berikan Konfirmasi',
       withNote: true,
-      onAccept: () {},
+      onCancel: () {},
       onReject: (note) {
         if (note == null) {
           _updateStatus(peserta.idMagang, statusMagangDitolak);
@@ -492,6 +497,9 @@ class _PendaftaranMagangDetailPageState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Peserta updated: ${upd.nama}')),
       );
+      if (widget.onUpdate != null) {
+        widget.onUpdate!();
+      }
     }
   }
 
@@ -509,14 +517,14 @@ class _PendaftaranMagangDetailPageState
             status: peserta!.statusMagang,
             catatanHr: note,
           );
+      if (widget.onUpdate != null) {
+        widget.onUpdate!();
+      }
     } catch (_) {
       setState(() {
         peserta = p.copyWith(statusMagang: 'Pending', catatanHr: null);
       });
     }
-    fadeNavigation(context,
-        targetNavigation: PendaftaranMagangDetailPage(peserta: peserta),
-        time: 0);
   }
 
   void _showDialogAddLink() {

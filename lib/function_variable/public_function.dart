@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:japfa_internship/components/widget_component.dart';
+import 'package:japfa_internship/function_variable/string_value.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -175,9 +176,11 @@ Future<String?> showCustomConfirmRejectDialogWithNote({
   required String title,
   required String message,
   required bool withNote,
-  String? acceptText,
+  String? cancelText,
   String? rejectText,
-  required VoidCallback onAccept,
+  Color? cancelColor,
+  Color? rejectColor,
+  required VoidCallback onCancel,
   required Function(String? note) onReject,
 }) {
   final TextEditingController noteController = TextEditingController();
@@ -224,6 +227,25 @@ Future<String?> showCustomConfirmRejectDialogWithNote({
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  // cancel Button
+                  ElevatedButton(
+                    onPressed: () {
+                      onCancel();
+                      noteController.clear();
+                      Navigator.of(context).pop(); // Tidak mengirim note
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: cancelColor ?? Colors.grey,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Text(cancelText ?? 'Batal'),
+                  ),
+                  const SizedBox(width: 16),
                   // Reject Button
                   ElevatedButton(
                     onPressed: () {
@@ -243,25 +265,6 @@ Future<String?> showCustomConfirmRejectDialogWithNote({
                     ),
                     child: Text(rejectText ?? "Ditolak"),
                   ),
-                  const SizedBox(width: 16),
-                  // Accept Button
-                  ElevatedButton(
-                    onPressed: () {
-                      onAccept();
-                      noteController.clear();
-                      Navigator.of(context).pop(); // Tidak mengirim note
-                    },
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.green,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 30, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: Text(acceptText ?? 'Diterima'),
-                  ),
                 ],
               ),
             ],
@@ -278,9 +281,11 @@ Future<String?> showCustomConfirmAcceptDialogWithNote({
   required String message,
   required bool withNote,
   String? acceptText,
-  String? rejectText,
+  String? cancelText,
+  Color? acceptColor,
+  Color? cancelColor,
   required Function(String? note) onAccept,
-  required VoidCallback onReject,
+  required VoidCallback onCancel,
 }) {
   final TextEditingController noteController = TextEditingController();
 
@@ -326,23 +331,23 @@ Future<String?> showCustomConfirmAcceptDialogWithNote({
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Reject Button
+                  // Cancel Button
                   ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pop();
-                      onReject();
+                      onCancel();
                       noteController.clear();
                     },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
-                      backgroundColor: Colors.red,
+                      backgroundColor: cancelColor ?? Colors.grey,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 30, vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: Text(rejectText ?? "Ditolak"),
+                    child: Text(cancelText ?? "Batal"),
                   ),
                   const SizedBox(width: 16),
                   // Accept Button
@@ -355,7 +360,7 @@ Future<String?> showCustomConfirmAcceptDialogWithNote({
                     },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
-                      backgroundColor: Colors.green,
+                      backgroundColor: acceptColor ?? Colors.green,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 30, vertical: 12),
                       shape: RoundedRectangleBorder(
@@ -617,5 +622,18 @@ String likertStringValue(String likertValue) {
       return "Sangat Bagus";
     default:
       return "Invalid value";
+  }
+}
+
+// Method to get color based on status
+Color getStatusMagangColor(String status) {
+  if (status == statusMagangMenunggu) {
+    return japfaOrange;
+  } else if (status == statusMagangDitolak) {
+    return Colors.red;
+  } else if (status == statusMagangDiterima) {
+    return Colors.green;
+  } else {
+    return Colors.grey;
   }
 }

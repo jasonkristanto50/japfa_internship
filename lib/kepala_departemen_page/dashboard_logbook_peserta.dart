@@ -211,8 +211,7 @@ class _DashboardLogbookPesertaState
       onAccept: (note) async {
         await updateCatatan(idLogbook, note!);
       },
-      rejectText: "Batal",
-      onReject: () {},
+      onCancel: () {},
     );
   }
 

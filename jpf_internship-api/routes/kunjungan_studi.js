@@ -124,6 +124,37 @@ router.put('/update_status/:id', async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
   });
+
+// Update only the path_file_respon_japfa of Kunjungan Studi
+router.put('/update_path_file_respon_japfa/:id', async (req, res) => {
+    const { id } = req.params; 
+    const { path_file_respon_japfa } = req.body; // New field for the file path
+
+    try {
+        // Prepare the query to update only the path_file_respon_japfa
+        const query = `
+          UPDATE KUNJUNGAN_STUDI 
+          SET 
+            path_file_respon_japfa = $1
+          WHERE id_kunjungan_studi = $2 
+          RETURNING *
+        `;
+
+        // Prepare parameters for the query
+        const params = [path_file_respon_japfa, id];
+  
+        const result = await pool.query(query, params);
+  
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: 'Kunjungan Studi not found' });
+        }
+  
+        res.status(200).json({ message: 'Path file response updated successfully!', data: result.rows[0] });
+    } catch (error) {
+        console.error('Error updating path_file_respon_japfa:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
   
 
 // Delete all Kunjungan Studi records

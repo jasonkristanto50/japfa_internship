@@ -5,8 +5,13 @@ import 'package:japfa_internship/function_variable/variable.dart'; // Make sure 
 
 class FileUploading {
   // Build a file upload field with delete functionality
-  Widget buildFileField(String label, String? fileName, Function pickFile,
-      Function removeFile, Function openFilePreview) {
+  Widget buildFileField(
+    String label,
+    String? fileName,
+    Function pickFile,
+    Function removeFile,
+    Function openFilePreview,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -37,21 +42,27 @@ class FileUploading {
                         const SizedBox(width: 5),
                         SizedBox(
                           width: 200,
-                          child: Text(getFileNameWithEllipsis(fileName),
-                              style: regular16),
+                          child: Text(
+                            getFileNameWithEllipsis(fileName),
+                            style: regular16,
+                          ),
                         ),
                       ],
                     ),
                     Row(
                       children: [
                         IconButton(
-                          icon: const Icon(Icons.remove_circle_outline,
-                              color: Colors.red),
+                          icon: const Icon(
+                            Icons.remove_circle_outline,
+                            color: Colors.red,
+                          ),
                           onPressed: () => removeFile(),
                         ),
                         IconButton(
-                          icon: const Icon(Icons.remove_red_eye,
-                              color: Colors.blue),
+                          icon: const Icon(
+                            Icons.remove_red_eye,
+                            color: Colors.blue,
+                          ),
                           onPressed: () => openFilePreview(),
                         ),
                       ],
@@ -74,8 +85,12 @@ class FileUploading {
   }
 
   // Method to pick a file using file_picker
-  Future<void> pickFile(Function setState, String field, bool isFoto,
-      Function updateFileData) async {
+  Future<void> pickFile(
+    Function setState,
+    String field,
+    bool isFoto,
+    Function updateFileData,
+  ) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions:

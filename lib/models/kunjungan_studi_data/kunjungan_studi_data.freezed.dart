@@ -35,6 +35,8 @@ mixin _$KunjunganStudiData {
   String get pathPersetujuanInstansi;
   @JsonKey(name: 'status')
   String get status;
+  @JsonKey(name: 'path_file_respon_japfa')
+  String? get pathFileResponJapfa;
   @JsonKey(name: 'catatan_hr')
   String? get catatanHr;
   @JsonKey(name: 'password_token')
@@ -74,6 +76,8 @@ mixin _$KunjunganStudiData {
                     other.pathPersetujuanInstansi, pathPersetujuanInstansi) ||
                 other.pathPersetujuanInstansi == pathPersetujuanInstansi) &&
             (identical(other.status, status) || other.status == status) &&
+            (identical(other.pathFileResponJapfa, pathFileResponJapfa) ||
+                other.pathFileResponJapfa == pathFileResponJapfa) &&
             (identical(other.catatanHr, catatanHr) ||
                 other.catatanHr == catatanHr) &&
             (identical(other.passwordToken, passwordToken) ||
@@ -94,12 +98,13 @@ mixin _$KunjunganStudiData {
       jamKegiatan,
       pathPersetujuanInstansi,
       status,
+      pathFileResponJapfa,
       catatanHr,
       passwordToken);
 
   @override
   String toString() {
-    return 'KunjunganStudiData(idKunjunganStudi: $idKunjunganStudi, namaPerwakilan: $namaPerwakilan, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, jumlahPeserta: $jumlahPeserta, tanggalKegiatan: $tanggalKegiatan, jamKegiatan: $jamKegiatan, pathPersetujuanInstansi: $pathPersetujuanInstansi, status: $status, catatanHr: $catatanHr, passwordToken: $passwordToken)';
+    return 'KunjunganStudiData(idKunjunganStudi: $idKunjunganStudi, namaPerwakilan: $namaPerwakilan, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, jumlahPeserta: $jumlahPeserta, tanggalKegiatan: $tanggalKegiatan, jamKegiatan: $jamKegiatan, pathPersetujuanInstansi: $pathPersetujuanInstansi, status: $status, pathFileResponJapfa: $pathFileResponJapfa, catatanHr: $catatanHr, passwordToken: $passwordToken)';
   }
 }
 
@@ -121,6 +126,7 @@ abstract mixin class $KunjunganStudiDataCopyWith<$Res> {
       @JsonKey(name: 'path_persetujuan_instansi')
       String pathPersetujuanInstansi,
       @JsonKey(name: 'status') String status,
+      @JsonKey(name: 'path_file_respon_japfa') String? pathFileResponJapfa,
       @JsonKey(name: 'catatan_hr') String? catatanHr,
       @JsonKey(name: 'password_token') String? passwordToken});
 }
@@ -148,6 +154,7 @@ class _$KunjunganStudiDataCopyWithImpl<$Res>
     Object? jamKegiatan = null,
     Object? pathPersetujuanInstansi = null,
     Object? status = null,
+    Object? pathFileResponJapfa = freezed,
     Object? catatanHr = freezed,
     Object? passwordToken = freezed,
   }) {
@@ -192,6 +199,10 @@ class _$KunjunganStudiDataCopyWithImpl<$Res>
           ? _self.status
           : status // ignore: cast_nullable_to_non_nullable
               as String,
+      pathFileResponJapfa: freezed == pathFileResponJapfa
+          ? _self.pathFileResponJapfa
+          : pathFileResponJapfa // ignore: cast_nullable_to_non_nullable
+              as String?,
       catatanHr: freezed == catatanHr
           ? _self.catatanHr
           : catatanHr // ignore: cast_nullable_to_non_nullable
@@ -219,6 +230,7 @@ class _KunjunganStudiData implements KunjunganStudiData {
       @JsonKey(name: 'path_persetujuan_instansi')
       required this.pathPersetujuanInstansi,
       @JsonKey(name: 'status') required this.status,
+      @JsonKey(name: 'path_file_respon_japfa') this.pathFileResponJapfa,
       @JsonKey(name: 'catatan_hr') this.catatanHr,
       @JsonKey(name: 'password_token') this.passwordToken});
   factory _KunjunganStudiData.fromJson(Map<String, dynamic> json) =>
@@ -254,6 +266,9 @@ class _KunjunganStudiData implements KunjunganStudiData {
   @override
   @JsonKey(name: 'status')
   final String status;
+  @override
+  @JsonKey(name: 'path_file_respon_japfa')
+  final String? pathFileResponJapfa;
   @override
   @JsonKey(name: 'catatan_hr')
   final String? catatanHr;
@@ -299,6 +314,8 @@ class _KunjunganStudiData implements KunjunganStudiData {
                     other.pathPersetujuanInstansi, pathPersetujuanInstansi) ||
                 other.pathPersetujuanInstansi == pathPersetujuanInstansi) &&
             (identical(other.status, status) || other.status == status) &&
+            (identical(other.pathFileResponJapfa, pathFileResponJapfa) ||
+                other.pathFileResponJapfa == pathFileResponJapfa) &&
             (identical(other.catatanHr, catatanHr) ||
                 other.catatanHr == catatanHr) &&
             (identical(other.passwordToken, passwordToken) ||
@@ -319,12 +336,13 @@ class _KunjunganStudiData implements KunjunganStudiData {
       jamKegiatan,
       pathPersetujuanInstansi,
       status,
+      pathFileResponJapfa,
       catatanHr,
       passwordToken);
 
   @override
   String toString() {
-    return 'KunjunganStudiData(idKunjunganStudi: $idKunjunganStudi, namaPerwakilan: $namaPerwakilan, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, jumlahPeserta: $jumlahPeserta, tanggalKegiatan: $tanggalKegiatan, jamKegiatan: $jamKegiatan, pathPersetujuanInstansi: $pathPersetujuanInstansi, status: $status, catatanHr: $catatanHr, passwordToken: $passwordToken)';
+    return 'KunjunganStudiData(idKunjunganStudi: $idKunjunganStudi, namaPerwakilan: $namaPerwakilan, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, jumlahPeserta: $jumlahPeserta, tanggalKegiatan: $tanggalKegiatan, jamKegiatan: $jamKegiatan, pathPersetujuanInstansi: $pathPersetujuanInstansi, status: $status, pathFileResponJapfa: $pathFileResponJapfa, catatanHr: $catatanHr, passwordToken: $passwordToken)';
   }
 }
 
@@ -348,6 +366,7 @@ abstract mixin class _$KunjunganStudiDataCopyWith<$Res>
       @JsonKey(name: 'path_persetujuan_instansi')
       String pathPersetujuanInstansi,
       @JsonKey(name: 'status') String status,
+      @JsonKey(name: 'path_file_respon_japfa') String? pathFileResponJapfa,
       @JsonKey(name: 'catatan_hr') String? catatanHr,
       @JsonKey(name: 'password_token') String? passwordToken});
 }
@@ -375,6 +394,7 @@ class __$KunjunganStudiDataCopyWithImpl<$Res>
     Object? jamKegiatan = null,
     Object? pathPersetujuanInstansi = null,
     Object? status = null,
+    Object? pathFileResponJapfa = freezed,
     Object? catatanHr = freezed,
     Object? passwordToken = freezed,
   }) {
@@ -419,6 +439,10 @@ class __$KunjunganStudiDataCopyWithImpl<$Res>
           ? _self.status
           : status // ignore: cast_nullable_to_non_nullable
               as String,
+      pathFileResponJapfa: freezed == pathFileResponJapfa
+          ? _self.pathFileResponJapfa
+          : pathFileResponJapfa // ignore: cast_nullable_to_non_nullable
+              as String?,
       catatanHr: freezed == catatanHr
           ? _self.catatanHr
           : catatanHr // ignore: cast_nullable_to_non_nullable

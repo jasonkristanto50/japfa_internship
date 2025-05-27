@@ -139,7 +139,7 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
                   },
                 ),
                 const SizedBox(height: 15),
-                buildTextField('Jumlah Anak', studentCountController),
+                buildTextField('Jumlah Peserta', studentCountController),
                 const SizedBox(height: 15),
                 buildTextField('No Telepon', phoneController),
                 const SizedBox(height: 15),

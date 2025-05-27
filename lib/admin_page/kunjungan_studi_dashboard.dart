@@ -1,6 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:japfa_internship/function_variable/api_service_function.dart';
+import 'package:japfa_internship/function_variable/file_uploading.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/string_value.dart';
 import 'package:japfa_internship/models/kunjungan_studi_data/kunjungan_studi_data.dart';
@@ -19,6 +22,7 @@ class KunjunganStudiDashboard extends StatefulWidget {
 class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
   String searchQuery = "";
   List<KunjunganStudiData> kunjunganList = [];
+  String pathFileResponJapfa = '-';
 
   @override
   void initState() {
@@ -102,8 +106,7 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
                   DataColumn(label: Text('Tanggal')),
                   DataColumn(label: Text('Jam Kegiatan')),
                   DataColumn(label: Text('Nama Perwakilan')),
-                  DataColumn(label: Text('Email')),
-                  DataColumn(label: Text('Jumlah Anak')),
+                  DataColumn(label: Text('Peserta')),
                   DataColumn(label: Text('Status')),
                   DataColumn(label: Text('Aksi')),
                 ],
@@ -129,10 +132,6 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
                       )),
                       DataCell(Text(
                         kunjungan.namaPerwakilan,
-                        textAlign: TextAlign.center,
-                      )),
-                      DataCell(Text(
-                        kunjungan.email,
                         textAlign: TextAlign.center,
                       )),
                       DataCell(Text(
@@ -166,6 +165,27 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
                                 width: 100,
                                 rounded: 5,
                                 onPressed: () => _showDetail(kunjungan),
+                              ),
+                              SizedBox(width: 8.w),
+                              RoundedRectangleButton(
+                                title: "BIAYA",
+                                style: regular16,
+                                backgroundColor: lightOrange,
+                                height: 30,
+                                width: 100,
+                                rounded: 5,
+                                onPressed: () {},
+                              ),
+                              SizedBox(width: 8.w),
+                              RoundedRectangleButton(
+                                title: "UPLOAD",
+                                style: regular16,
+                                backgroundColor: lightOrange,
+                                height: 30,
+                                width: 100,
+                                rounded: 5,
+                                onPressed: () =>
+                                    _showDialogUploadFileRespon(kunjungan),
                               ),
                               SizedBox(width: 8.w),
                               RoundedRectangleButton(
@@ -387,6 +407,86 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
         kunjungan = kunjungan.copyWith(
             status: 'Pending', catatanHr: null); // Clear the note on error
       });
+    }
+  }
+
+  void _showDialogUploadFileRespon(KunjunganStudiData kunjungan) async {
+    String? uploadedFileName;
+    Uint8List? uploadedFileBytes;
+
+    // Use CustomAlertDialog for file upload
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CustomAlertDialog(
+          title: "Upload File",
+          subTitle: "Select a file to upload",
+          numberOfField: 1,
+          controllers: [
+            TextEditingController(text: uploadedFileName)
+          ], // Adding a TextEditingController to display the file name
+          labels: const ["Select File"],
+          fieldTypes: const [BuildFieldTypeController.file],
+          onSave: () async {
+            if (uploadedFileName != null && uploadedFileBytes != null) {
+              // Call the upload file function
+              await _uploadFile(uploadedFileName!, uploadedFileBytes!);
+
+              // Call the API function to update the file path in the database
+              await updateFileResponJapfa(
+                kunjungan.idKunjunganStudi,
+                pathFileResponJapfa, // Use the uploaded file name
+              );
+
+              Navigator.of(context).pop(); // Close the dialog
+            } else {
+              showSnackBar(context, 'Please select a file to upload');
+            }
+          },
+        );
+      },
+    );
+
+    // Open the file picker after the dialog is shown
+    String fieldIdentifier = "file"; // Unique identifier for the file
+    await FileUploading().pickFile(
+      setState,
+      fieldIdentifier,
+      false, // Set to true if it's an image, false otherwise
+      (field, fileName, fileBytes) {
+        setState(() {
+          uploadedFileName = fileName;
+          uploadedFileBytes = fileBytes;
+        });
+      },
+    );
+  }
+
+  Future<void> _uploadFile(String fileName, Uint8List fileBytes) async {
+    try {
+      // Here you replace the URL with your actual endpoint for file uploads
+      final uploadFilePath =
+          await ApiService().uploadFileToServer(fileBytes, fileName);
+
+      setState(() {
+        pathFileResponJapfa = uploadFilePath;
+      });
+      print("FILE PATH : $pathFileResponJapfa");
+    } catch (e) {
+      print('Error uploading file: $e');
+      showSnackBar(context, 'Error uploading file.');
+    }
+  }
+
+  Future<void> updateFileResponJapfa(
+      String id, String pathFileResponJapfa) async {
+    try {
+      await ApiService()
+          .kunjunganStudiService
+          .updatePathFileResponJapfa(id, pathFileResponJapfa);
+    } catch (error) {
+      print('Error while updating file response: $error');
+      // You could handle further logic here, like showing a snackbar or alert
     }
   }
 }

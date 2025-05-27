@@ -502,6 +502,30 @@ class KunjunganStudiService {
       throw Exception('Failed to load Kunjungan Studi data');
     }
   }
+
+  // Method to update the path_file_respon_japfa
+  Future<void> updatePathFileResponJapfa(
+      String id, String pathFileResponJapfa) async {
+    try {
+      final response = await _dio.put(
+        '$baseUrlKunjunganStudi/update_path_file_respon_japfa/$id',
+        data: {
+          'path_file_respon_japfa': pathFileResponJapfa,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // Handle success
+        print('File response updated successfully: ${response.data}');
+      } else {
+        // Handle error
+        print('Failed to update file response: ${response.data}');
+      }
+    } catch (e) {
+      print('Error updating file response: $e');
+      rethrow; // Rethrow the exception for further handling
+    }
+  }
 }
 
 class KepalaDepartemenService {

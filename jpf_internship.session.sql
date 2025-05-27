@@ -63,6 +63,7 @@
 --     jam_kegiatan VARCHAR(20) NOT NULL,
 --     path_persetujuan_instansi VARCHAR(255) NOT NULL,
 --     status VARCHAR NOT NULL,                    -- Menunggu / diterima / ditolak
+--     path_file_respon_japfa VARCHAR(255),
 --     catatan_hr VARCHAR(255),                 
 --     password_token VARCHAR(255)
 -- );

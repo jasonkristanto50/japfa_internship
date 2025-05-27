@@ -1,8 +1,10 @@
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:japfa_internship/function_variable/file_uploading.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 
 // Build the Japfa Logo Background
@@ -357,9 +359,9 @@ class ConfirmationDialog extends StatelessWidget {
   }
 }
 
-enum BuildFieldTypeController { text, number, date, dropdown }
+enum BuildFieldTypeController { text, number, date, dropdown, file }
 
-class CustomAlertDialog extends StatelessWidget {
+class CustomAlertDialog extends StatefulWidget {
   final String title;
   final String? subTitle;
   final List<TextEditingController> controllers;
@@ -368,18 +370,27 @@ class CustomAlertDialog extends StatelessWidget {
   final VoidCallback onSave;
   final int numberOfField;
   final List<String>? dropdownOptions;
+  final Map<String, Uint8List?>? fileBytesMap;
 
-  const CustomAlertDialog({
-    super.key,
-    required this.title,
-    this.subTitle,
-    required this.controllers,
-    required this.labels,
-    required this.fieldTypes,
-    required this.onSave,
-    required this.numberOfField,
-    this.dropdownOptions,
-  });
+  const CustomAlertDialog(
+      {super.key,
+      required this.title,
+      this.subTitle,
+      required this.controllers,
+      required this.labels,
+      required this.fieldTypes,
+      required this.onSave,
+      required this.numberOfField,
+      this.dropdownOptions,
+      this.fileBytesMap});
+
+  @override
+  _CustomAlertDialogState createState() => _CustomAlertDialogState();
+}
+
+class _CustomAlertDialogState extends State<CustomAlertDialog> {
+  String? uploadedFileName;
+  final FileUploading fileUploading = FileUploading();
 
   @override
   Widget build(BuildContext context) {
@@ -391,7 +402,7 @@ class CustomAlertDialog extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
       ),
       title: Center(
-        child: Text(title, style: bold24),
+        child: Text(widget.title, style: bold24),
       ),
       content: Container(
         width: isMobile ? 300.w : 400.w, // Adjust width based on device
@@ -404,20 +415,21 @@ class CustomAlertDialog extends StatelessWidget {
             children: [
               Center(
                 child: Text(
-                  subTitle != null ? subTitle!.toUpperCase() : "",
+                  widget.subTitle != null ? widget.subTitle!.toUpperCase() : "",
                   style: isMobile
                       ? regular14.copyWith(color: japfaOrange)
                       : regular20.copyWith(color: japfaOrange),
                 ),
               ),
               const SizedBox(height: 16),
-              ...List.generate(numberOfField, (index) {
+              ...List.generate(widget.numberOfField, (index) {
                 return _buildField(
-                  controllers[index],
-                  labels[index],
-                  fieldTypes[index],
+                  widget.controllers[index],
+                  widget.labels[index],
+                  widget.fieldTypes[index],
                   context,
-                  options: dropdownOptions,
+                  index,
+                  options: widget.dropdownOptions,
                 );
               }),
               const SizedBox(height: 16),
@@ -426,7 +438,7 @@ class CustomAlertDialog extends StatelessWidget {
                   title: "Simpan",
                   backgroundColor: japfaOrange,
                   fontColor: Colors.white,
-                  onPressed: onSave,
+                  onPressed: widget.onSave,
                 ),
               ),
             ],
@@ -437,7 +449,7 @@ class CustomAlertDialog extends StatelessWidget {
   }
 
   Widget _buildField(TextEditingController controller, String label,
-      BuildFieldTypeController fieldType, BuildContext context,
+      BuildFieldTypeController fieldType, BuildContext context, int index,
       {List<String>? options}) {
     switch (fieldType) {
       case BuildFieldTypeController.text:
@@ -448,6 +460,8 @@ class CustomAlertDialog extends StatelessWidget {
         return _buildDateField(controller, label, context);
       case BuildFieldTypeController.dropdown:
         return _buildDropdownField(controller, label, options!);
+      case BuildFieldTypeController.file:
+        return _buildFileUploadField(label, index);
     }
   }
 
@@ -563,6 +577,33 @@ class CustomAlertDialog extends StatelessWidget {
         isExpanded: true,
         dropdownColor: Colors.white,
       ),
+    );
+  }
+
+  // Updated method to build file upload fields
+  Widget _buildFileUploadField(String label, int index) {
+    return FileUploading().buildFileField(
+      label,
+      widget.fileBytesMap?[label]
+          ?.toString(), // Use the file name or other identifier
+      () => FileUploading().pickFile(
+        setState,
+        label,
+        label == 'Foto Diri', // Change this condition based on your needs
+        (field, fileName, fileBytes) {
+          setState(() {
+            widget.fileBytesMap?[label] = fileBytes; // Store the file bytes
+          });
+        },
+      ),
+      () => FileUploading().removeFile(setState, label, (field, _, __) {
+        setState(() {
+          widget.fileBytesMap?[label] = null; // Reset the file bytes
+        });
+      }),
+      () {
+        // Handle file preview if necessary
+      },
     );
   }
 }

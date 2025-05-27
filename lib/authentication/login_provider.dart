@@ -156,9 +156,11 @@ class LoginNotifier extends StateNotifier<LoginState> {
           );
         }
 
+        // TODO: Check apakah selesai juga dapat akses masuk
         if (data['status'] == statusKunjunganMenunggu ||
             data['status'] == statusKunjunganDiterima ||
-            data['status'] == statusKunjunganDitolak) {
+            data['status'] == statusKunjunganDitolak ||
+            data['status'] == statusKunjunganSelesai) {
           state = LoginState(
               isLoading: false,
               isLoggedIn: true,

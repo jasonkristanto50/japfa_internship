@@ -4,6 +4,7 @@ import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/components/widget_component.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
+import 'package:japfa_internship/function_variable/string_value.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/models/kunjungan_studi_data/kunjungan_studi_data.dart';
 import 'package:japfa_internship/navbar.dart';
@@ -131,11 +132,6 @@ class _KunjunganStudiDetailPageState
                     verticalPadding: 5,
                   ),
                   buildDataInfoField(
-                    label: 'Status',
-                    value: kunjunganData!.status,
-                    verticalPadding: 5,
-                  ),
-                  buildDataInfoField(
                     label: 'Catatan HR',
                     value: kunjunganData!.catatanHr ?? 'Tidak ada catatan',
                     verticalPadding: 5,
@@ -144,8 +140,57 @@ class _KunjunganStudiDetailPageState
               ),
             ),
           ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 40),
+                child: Column(
+                  children: [_buildFileUpload()],
+                ),
+              ),
+            ),
+          )
         ],
       ),
+    );
+  }
+
+  Widget _buildFileUpload() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        buildFileButton(
+          'File Persetujuan Instansi',
+          () => launchURLImagePath(kunjunganData!.pathPersetujuanInstansi),
+        ),
+        if (kunjunganData!.pathFileResponJapfa != null) ...[
+          buildFileButton(
+            'File Respon Japfa',
+            () => launchURLImagePath(kunjunganData!.pathFileResponJapfa!),
+          ),
+        ] else ...[
+          Text(
+            "File Respon Belum Diberikan",
+            style: bold16,
+          )
+        ],
+        const SizedBox(height: 10),
+        Text('STATUS:', style: bold14),
+        Text(
+          kunjunganData!.status,
+          style: bold18.copyWith(
+            color: getStatusKunjunganColor(kunjunganData!.status),
+          ),
+        ),
+        if (kunjunganData!.status == statusKunjunganSelesai) ...[
+          const SizedBox(height: 20),
+          buildFileButton(
+            "Silahkan Isi Link Review ",
+            backgroundColor: lightBlue,
+            () => launchFullURLImagePath(fullPath: 'https://google.com'),
+          )
+        ]
+      ],
     );
   }
 

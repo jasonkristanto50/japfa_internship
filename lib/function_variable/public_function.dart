@@ -47,7 +47,8 @@ Widget buildTextField(
   );
 }
 
-Widget buildFileButton(String title, VoidCallback onPressed) {
+Widget buildFileButton(String title, VoidCallback onPressed,
+    {Color? backgroundColor}) {
   return Padding(
     padding: const EdgeInsets.only(bottom: 10),
     child: Column(
@@ -59,7 +60,7 @@ Widget buildFileButton(String title, VoidCallback onPressed) {
           title: "Tampilkan",
           style: regular14,
           fontColor: Colors.white,
-          backgroundColor: japfaOrange,
+          backgroundColor: backgroundColor ?? japfaOrange,
           width: 150,
           height: 35,
           rounded: 5,
@@ -585,6 +586,16 @@ void launchURLImagePath(String path) async {
   }
 }
 
+// Launch Image URL
+void launchFullURLImagePath({required String fullPath}) async {
+  final Uri finalPath = Uri.parse(fullPath);
+  if (await canLaunchUrl(finalPath)) {
+    await launchUrl(finalPath);
+  } else {
+    throw 'Could not launch $fullPath';
+  }
+}
+
 String generateRandomPassword(int length) {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   final Random random = Random();
@@ -626,23 +637,6 @@ String likertStringValue(String likertValue) {
   }
 }
 
-// Method to get color based on status
-Color getStatusMagangColor(String status) {
-  if (status == statusMagangMenunggu) {
-    return japfaOrange;
-  } else if (status == statusMagangDitolak) {
-    return Colors.red;
-  } else if (status == statusMagangDiterima) {
-    return Colors.green;
-  } else if (status == statusMagangBerlangsung) {
-    return Colors.blue;
-  } else if (status == statusMagangSelesai) {
-    return Colors.black;
-  } else {
-    return Colors.grey;
-  }
-}
-
 String getValidationStatus(String? validasiPembimbing) {
   if (validasiPembimbing == 'true') {
     return 'Disetujui';
@@ -660,5 +654,36 @@ Color getValidationColor(String? validasiPembimbing) {
     return Colors.red;
   } else {
     return Colors.black;
+  }
+}
+
+// Method to get color based on status
+Color getStatusMagangColor(String status) {
+  if (status == statusMagangMenunggu) {
+    return japfaOrange;
+  } else if (status == statusMagangDitolak) {
+    return Colors.red;
+  } else if (status == statusMagangDiterima) {
+    return Colors.green;
+  } else if (status == statusMagangBerlangsung) {
+    return Colors.blue;
+  } else if (status == statusMagangSelesai) {
+    return Colors.black;
+  } else {
+    return Colors.grey;
+  }
+}
+
+Color getStatusKunjunganColor(String status) {
+  if (status == statusKunjunganMenunggu) {
+    return japfaOrange;
+  } else if (status == statusKunjunganDitolak) {
+    return Colors.red;
+  } else if (status == statusKunjunganDiterima) {
+    return Colors.green;
+  } else if (status == statusKunjunganSelesai) {
+    return Colors.blue;
+  } else {
+    return Colors.grey;
   }
 }

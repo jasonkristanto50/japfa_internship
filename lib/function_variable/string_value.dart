@@ -23,6 +23,7 @@ String statusMagangTidakLanjut = 'Tidak Lanjut';
 String statusKunjunganDiterima = 'Diterima';
 String statusKunjunganDitolak = 'Ditolak';
 String statusKunjunganMenunggu = 'Menunggu';
+String statusKunjunganSelesai = 'Selesai';
 
 String statusPembimbingAktif = "Aktif";
 String statusPembimbingTidakAktif = "Tidak Aktif";

@@ -183,6 +183,7 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
 
   Widget buildProfileIcon(WidgetRef ref) {
     return PopupMenuButton<String>(
+      color: Colors.white,
       onSelected: (value) {
         if (value == 'logout') {
           _logOutFunction(context, ref);

@@ -429,7 +429,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                   widget.fieldTypes[index],
                   context,
                   index,
-                  widget.viewValue![index],
+                  viewValue: widget.viewValue?[index],
                   options: widget.dropdownOptions,
                 );
               }),
@@ -450,13 +450,14 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
   }
 
   Widget _buildField(
-      TextEditingController controller,
-      String label,
-      BuildFieldTypeController fieldType,
-      BuildContext context,
-      int index,
-      String viewValue,
-      {List<String>? options}) {
+    TextEditingController controller,
+    String label,
+    BuildFieldTypeController fieldType,
+    BuildContext context,
+    int index, {
+    List<String>? options,
+    String? viewValue,
+  }) {
     switch (fieldType) {
       case BuildFieldTypeController.text:
         return _buildTextField(controller, label);
@@ -467,7 +468,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
       case BuildFieldTypeController.dropdown:
         return _buildDropdownField(controller, label, options!);
       case BuildFieldTypeController.viewOnly:
-        return _buildViewOnlyField(viewValue, label);
+        return _buildViewOnlyField(viewValue!, label);
     }
   }
 

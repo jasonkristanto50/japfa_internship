@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:japfa_internship/components/widget_component.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
+import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/pendaftar_submission_page/submission_intern_text.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 
@@ -361,7 +362,8 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
           // Show nothing if Kepala Dept
           const SizedBox.shrink()
         else
-          // Show "Apply" button for other cases
+        // Show "Apply" button for other cases
+        if (widget.sisaKuota > 0) ...[
           RoundedRectangleButton(
             title: "Apply",
             backgroundColor: japfaOrange,
@@ -372,6 +374,22 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
               applyDaftarFunction();
             },
           ),
+        ] else ...[
+          RoundedRectangleButton(
+            title: "Apply",
+            backgroundColor: Colors.grey,
+            width: 150,
+            height: 30,
+            style: regular16,
+            onPressed: () {
+              showSnackBar(
+                context,
+                "Kuota sudah habis",
+                backgroundColor: japfaOrange,
+              );
+            },
+          ),
+        ]
       ],
     );
   }

@@ -184,30 +184,42 @@ class _PendaftaranMagangDetailPageState
                   buildDataInfoField(
                     label: 'Nama',
                     value: peserta!.nama,
+                    verticalPadding: 7,
                   ),
                   buildDataInfoField(
                     label: 'No. Telp',
                     value: peserta!.noTelp,
+                    verticalPadding: 7,
                   ),
                   buildDataInfoField(
                     label: 'Email',
                     value: peserta!.email,
+                    verticalPadding: 7,
                   ),
                   buildDataInfoField(
                     label: 'Universitas',
                     value: peserta!.asalUniversitas,
+                    verticalPadding: 7,
                   ),
                   buildDataInfoField(
                     label: 'Jurusan',
                     value: peserta!.jurusan,
+                    verticalPadding: 7,
                   ),
                   buildDataInfoField(
                     label: 'Angkatan',
                     value: peserta!.angkatan.toString(),
+                    verticalPadding: 7,
                   ),
                   buildDataInfoField(
                     label: 'IPK',
                     value: peserta!.nilaiUniv.toString(),
+                    verticalPadding: 7,
+                  ),
+                  buildDataInfoField(
+                    label: 'Nama Pembimbing',
+                    value: peserta!.namaPembimbing ?? "-",
+                    verticalPadding: 7,
                   ),
                 ],
               ),
@@ -226,7 +238,7 @@ class _PendaftaranMagangDetailPageState
                         _foto(),
                       ],
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 20),
                     buildDataInfoField(
                       label: "Link Wawancara",
                       value: peserta!.linkMeetInterview ?? "BELUM ADA LINK",
@@ -820,6 +832,7 @@ class _PendaftaranMagangDetailPageState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Nama Pembimbing updated: $namaPembimbing')),
       );
+      _fetchPesertaAndSkillByEmail(peserta!.email);
     } catch (error) {
       print('Error updating nama pembimbing: $error');
       ScaffoldMessenger.of(context).showSnackBar(

@@ -251,7 +251,8 @@ class _PendaftaranMagangDepartemenState
         // Refresh the display with sorted list
         pesertaMagangList = pesertaMagangList;
       });
-      showSnackBar(context, "Data telah diurutkan berdasar rekomendasi");
+      showSnackBar(context, "Data telah diurutkan berdasar rekomendasi",
+          backgroundColor: Colors.grey);
     } catch (e) {
       print('Error sorting data: $e');
     }

@@ -36,6 +36,7 @@ class _PendaftaranMagangDetailPageState
   void initState() {
     super.initState();
     peserta = widget.peserta;
+
     final login = ref.read(loginProvider);
     if (login.role == roleAdminValue) {
       isAdmin = true;
@@ -44,7 +45,7 @@ class _PendaftaranMagangDetailPageState
     }
 
     if (peserta == null && login.email != null) {
-      _fetchPesertaSkillByEmail(login.email!);
+      _fetchPesertaAndSkillByEmail(login.email!);
     } else if (peserta != null) {
       _fetchSkillByEmail(peserta!.email);
     }
@@ -113,7 +114,11 @@ class _PendaftaranMagangDetailPageState
               _buildSkillPage(),
             ],
             const SizedBox(height: 30),
-            _buildRejectAcceptButton(),
+            if (peserta!.statusMagang == statusMagangMenunggu) ...[
+              _buildRejectAcceptButton(),
+            ] else ...[
+              _buildStatusUpdateButton()
+            ]
           ],
         ),
       ),
@@ -354,36 +359,6 @@ class _PendaftaranMagangDetailPageState
         : const SizedBox();
   }
 
-  Widget _buildRejectAcceptButton() {
-    final loginState = ref.watch(loginProvider);
-    if (loginState.role == roleAdminValue) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          RoundedRectangleButton(
-            title: 'Reject',
-            backgroundColor: Colors.red,
-            fontColor: Colors.white,
-            width: 100,
-            height: 40,
-            onPressed: () => _confirmReject(peserta!),
-          ),
-          const SizedBox(width: 20),
-          RoundedRectangleButton(
-            title: 'Accept',
-            backgroundColor: Colors.green,
-            fontColor: Colors.white,
-            width: 100,
-            height: 40,
-            onPressed: () => _confirmAccept(peserta!),
-          ),
-        ],
-      );
-    } else {
-      return const SizedBox();
-    }
-  }
-
   Widget _buildProyekField() {
     return Column(
       children: [
@@ -421,7 +396,86 @@ class _PendaftaranMagangDetailPageState
     );
   }
 
-  Future<void> _fetchPesertaSkillByEmail(String email) async {
+  Widget _buildRejectAcceptButton() {
+    final loginState = ref.watch(loginProvider);
+    if (loginState.role == roleAdminValue) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          RoundedRectangleButton(
+            title: 'Tolak',
+            backgroundColor: Colors.red,
+            fontColor: Colors.white,
+            width: 100,
+            height: 40,
+            onPressed: () => _confirmReject(peserta!),
+          ),
+          const SizedBox(width: 20),
+          RoundedRectangleButton(
+            title: 'Terima',
+            backgroundColor: Colors.green,
+            fontColor: Colors.white,
+            width: 100,
+            height: 40,
+            onPressed: () => _confirmAccept(peserta!),
+          ),
+        ],
+      );
+    } else {
+      return const SizedBox();
+    }
+  }
+
+  Widget _buildStatusUpdateButton() {
+    final loginState = ref.watch(loginProvider);
+    if (loginState.role != roleAdminValue) {
+      return const SizedBox();
+    }
+
+    if (peserta!.statusMagang == statusMagangDitolak) {
+      return RoundedRectangleButton(
+        title: 'Menunggu',
+        backgroundColor: japfaOrange,
+        fontColor: Colors.white,
+        width: 120,
+        height: 40,
+        onPressed: () => _updateStatus(peserta!.idMagang, statusMagangMenunggu),
+      );
+    } else if (peserta!.statusMagang == statusMagangDiterima) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          RoundedRectangleButton(
+            title: 'Menunggu',
+            backgroundColor: japfaOrange,
+            fontColor: Colors.white,
+            style: bold16,
+            width: 120,
+            height: 40,
+            onPressed: () =>
+                _updateStatus(peserta!.idMagang, statusMagangMenunggu),
+          ),
+          const SizedBox(width: 20),
+          RoundedRectangleButton(
+            title: 'Berlangsung',
+            backgroundColor: lightBlue,
+            fontColor: Colors.black54,
+            style: bold16,
+            width: 130,
+            height: 40,
+            onPressed: () =>
+                _updateStatus(peserta!.idMagang, statusMagangBerlangsung),
+          ),
+        ],
+      );
+    } else {
+      return const SizedBox();
+    }
+  }
+
+  // VOID FUNCTIONS ------------
+
+  Future<void> _fetchPesertaAndSkillByEmail(String email) async {
     setState(() => _loading = true);
     try {
       // TODO
@@ -435,6 +489,9 @@ class _PendaftaranMagangDetailPageState
         peserta = dataPeserta;
         skill = dataSkill;
       });
+    } catch (error) {
+      // Handle error here (e.g., show a message)
+      print('Error fetching pengajuan data: $error');
     } finally {
       setState(() => _loading = false);
     }

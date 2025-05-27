@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:japfa_internship/data.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
 import 'package:japfa_internship/function_variable/file_uploading.dart';
 import 'package:japfa_internship/function_variable/string_value.dart';
@@ -32,6 +33,8 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
   final TextEditingController studentCountController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
+
+  String? selectedUniversity;
 
   // Second form controllers
   DateTime? selectedDate;
@@ -125,7 +128,16 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
                 const SizedBox(height: 20),
                 buildTextField('Nama Perwakilan', nameController),
                 const SizedBox(height: 15),
-                buildTextField('Asal Universitas', universityController),
+                buildDropDownField(
+                  'Universitas/Sekolah',
+                  selectedUniversity,
+                  universities,
+                  (value) {
+                    setState(() {
+                      selectedUniversity = value!;
+                    });
+                  },
+                ),
                 const SizedBox(height: 15),
                 buildTextField('Jumlah Anak', studentCountController),
                 const SizedBox(height: 15),
@@ -306,7 +318,8 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
     if (!validateField(
         controller: universityController,
         fieldName: "Asal Universitas",
-        fieldType: FieldType.school,
+        fieldType: FieldType.universityDropdown,
+        selectedValue: selectedUniversity,
         context: context)) {
       return false;
     }
@@ -364,7 +377,7 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
   // Submit Kunjungan Studi Data
   Future<void> _submitKunjunganStudiData() async {
     final String nama = nameController.text;
-    final String asalUniversitas = universityController.text;
+    final String asalUniversitas = selectedUniversity!;
     final String jumlahPeserta = studentCountController.text;
     final String noTelepon = phoneController.text;
     final String email = emailController.text.trim();
@@ -412,7 +425,8 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
       );
 
       if (response.statusCode == 201) {
-        showSnackBar(context, pengajuanSuksesValue);
+        showSnackBar(context, pengajuanSuksesValue,
+            backgroundColor: Colors.green);
         fadeNavigation(context, targetNavigation: const MyHomePage());
         showConfirmationDialog(
           context,

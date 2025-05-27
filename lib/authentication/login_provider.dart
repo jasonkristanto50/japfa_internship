@@ -156,7 +156,9 @@ class LoginNotifier extends StateNotifier<LoginState> {
           );
         }
 
-        if (data['status'] == statusKunjunganMenunggu) {
+        if (data['status'] == statusKunjunganMenunggu ||
+            data['status'] == statusKunjunganDiterima ||
+            data['status'] == statusKunjunganDitolak) {
           state = LoginState(
               isLoading: false,
               isLoggedIn: true,

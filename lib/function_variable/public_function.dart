@@ -564,11 +564,12 @@ Future<File?> validateFileUpload(BuildContext context) async {
 }
 
 // Helper function to show snack bar
-void showSnackBar(BuildContext? context, String message) {
+void showSnackBar(BuildContext? context, String message,
+    {Color? backgroundColor = Colors.red}) {
   if (context != null) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(message),
-      backgroundColor: Colors.red,
+      backgroundColor: backgroundColor,
     ));
   }
 }
@@ -633,6 +634,10 @@ Color getStatusMagangColor(String status) {
     return Colors.red;
   } else if (status == statusMagangDiterima) {
     return Colors.green;
+  } else if (status == statusMagangBerlangsung) {
+    return Colors.blue;
+  } else if (status == statusMagangSelesai) {
+    return Colors.black;
   } else {
     return Colors.grey;
   }

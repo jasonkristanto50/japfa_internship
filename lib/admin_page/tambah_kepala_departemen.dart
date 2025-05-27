@@ -123,6 +123,7 @@ class _TambahKepalaDepartemenState extends State<TambahKepalaDepartemen> {
                 DataColumn(label: Text('Departemen')),
                 DataColumn(label: Text('Role')),
                 DataColumn(label: Text('Status')),
+                DataColumn(label: Text('Aksi')),
               ],
               rows: filteredData.map((kepala) {
                 return DataRow(
@@ -136,9 +137,23 @@ class _TambahKepalaDepartemenState extends State<TambahKepalaDepartemen> {
                       Text(
                         kepala.status,
                         style: TextStyle(
-                          color: kepala.status == 'Active'
+                          color: kepala.status == statusPembimbingAktif
                               ? Colors.green
                               : Colors.red,
+                        ),
+                      ),
+                    ),
+                    DataCell(
+                      Align(
+                        alignment: Alignment.center,
+                        child: RoundedRectangleButton(
+                          title: "HAPUS",
+                          backgroundColor:
+                              const Color.fromARGB(255, 152, 209, 255),
+                          height: 30,
+                          width: 100,
+                          rounded: 5,
+                          onPressed: () {},
                         ),
                       ),
                     ),

@@ -223,7 +223,12 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
                   () => FileUploading().pickFile(
                       setState, labelFieldPersetujuan, false, updateFileData),
                   () => FileUploading().removeFile(
-                      setState, labelFieldPersetujuan, updateFileData),
+                    setState,
+                    labelFieldPersetujuan,
+                    (field, _, __) {
+                      deleteFileData();
+                    },
+                  ),
                   () => {},
                 ),
                 const SizedBox(height: 20),
@@ -372,6 +377,11 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
   void updateFileData(String field, String? fileName, Uint8List fileBytes) {
     persetujuanInstansiFileName = fileName;
     persetujuanInstansiFile = fileBytes;
+  }
+
+  void deleteFileData() {
+    persetujuanInstansiFileName = null;
+    persetujuanInstansiFile = null;
   }
 
   // Submit Kunjungan Studi Data

@@ -180,8 +180,10 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
           campusApprovalFileName,
           () => FileUploading()
               .pickFile(setState, labelPersetujuanUniv, false, updateFileData),
-          () => FileUploading()
-              .removeFile(setState, labelPersetujuanUniv, updateFileData),
+          () => FileUploading().removeFile(setState, labelPersetujuanUniv,
+              (field, _, __) {
+            deleteFileData(field);
+          }),
           () => {},
         ),
         const SizedBox(height: 15),
@@ -190,7 +192,9 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
           cvFileName,
           () => FileUploading()
               .pickFile(setState, labelCV, false, updateFileData),
-          () => FileUploading().removeFile(setState, labelCV, updateFileData),
+          () => FileUploading().removeFile(setState, labelCV, (field, _, __) {
+            deleteFileData(field);
+          }),
           () => {},
         ),
         const SizedBox(height: 15),
@@ -199,8 +203,10 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
           transcriptFileName,
           () => FileUploading()
               .pickFile(setState, labelTranskripNilai, false, updateFileData),
-          () => FileUploading()
-              .removeFile(setState, labelTranskripNilai, updateFileData),
+          () => FileUploading().removeFile(setState, labelTranskripNilai,
+              (field, _, __) {
+            deleteFileData(field);
+          }),
           () => {},
         ),
         const SizedBox(height: 15),
@@ -209,8 +215,10 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
           fotoDiriFileName,
           () => FileUploading()
               .pickFile(setState, labelFotoDiri, true, updateFileData),
-          () => FileUploading()
-              .removeFile(setState, labelFotoDiri, updateFileData),
+          () => FileUploading().removeFile(setState, labelFotoDiri,
+              (field, _, __) {
+            deleteFileData(field);
+          }),
           () => {},
         ),
         const SizedBox(height: 20),
@@ -290,6 +298,23 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
     } else if (field == labelFotoDiri) {
       fotoDiriFileName = fileName;
       fotoDiriFile = fileBytes;
+    }
+  }
+
+  // Function to update file data based on the field
+  void deleteFileData(String field) {
+    if (field == labelCV) {
+      cvFileName = null;
+      cvFile = null;
+    } else if (field == labelPersetujuanUniv) {
+      campusApprovalFileName = null;
+      campusApprovalFile = null;
+    } else if (field == labelTranskripNilai) {
+      transcriptFileName = null;
+      transcriptFile = null;
+    } else if (field == labelFotoDiri) {
+      fotoDiriFileName = null;
+      fotoDiriFile = null;
     }
   }
 

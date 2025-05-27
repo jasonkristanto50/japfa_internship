@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
+import 'package:japfa_internship/function_variable/string_value.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/models/logbook_peserta_magang_data/logbook_peserta_magang_data.dart';
 import 'package:japfa_internship/navbar.dart';
@@ -21,11 +23,18 @@ class _DashboardLogbookPesertaState
     extends ConsumerState<DashboardLogbookPeserta> {
   String searchQuery = "";
   List<LogbookPesertaMagangData> logbookData = [];
+  late bool isAdmin;
 
   @override
   void initState() {
     super.initState();
     fetchLogbooks();
+    final login = ref.read(loginProvider);
+    if (login.role == roleAdminValue) {
+      isAdmin = true;
+    } else {
+      isAdmin = false;
+    }
   }
 
   @override
@@ -98,19 +107,16 @@ class _DashboardLogbookPesertaState
                   fontWeight: FontWeight.bold,
                 ),
                 border: TableBorder.all(color: Colors.grey, width: 1),
-                columns: const [
-                  DataColumn(label: Text('No')),
-                  DataColumn(label: Text('Nama Peserta')),
-                  DataColumn(label: Text('Aktivitas')),
-                  DataColumn(label: Text('Tanggal Aktivitas')),
-                  DataColumn(label: Text('URL Lampiran')),
-                  DataColumn(label: Text('Validasi')),
-                  DataColumn(label: Text('Catatan')),
-                  DataColumn(
-                    label: Center(
-                      child: Text('Aksi'),
-                    ),
-                  ),
+                columns: [
+                  const DataColumn(label: Text('No')),
+                  const DataColumn(label: Text('Nama Peserta')),
+                  const DataColumn(label: Text('Aktivitas')),
+                  const DataColumn(label: Text('Tanggal Aktivitas')),
+                  const DataColumn(label: Text('URL Lampiran')),
+                  const DataColumn(label: Text('Validasi')),
+                  const DataColumn(label: Text('Catatan')),
+                  // Not admin = kepala
+                  if (!isAdmin) const DataColumn(label: Text('Aksi')),
                 ],
                 rows: filteredLogData
                     .map<DataRow>((LogbookPesertaMagangData data) {
@@ -122,56 +128,50 @@ class _DashboardLogbookPesertaState
                     DataCell(Text(data.urlLampiran)),
                     DataCell(
                       Text(
-                        data.validasiPembimbing == 'true'
-                            ? 'Disetujui'
-                            : (data.validasiPembimbing == 'false'
-                                ? 'Ditolak'
-                                : 'Menunggu'),
+                        getValidationStatus(data.validasiPembimbing),
                         style: TextStyle(
-                          color: data.validasiPembimbing == 'true'
-                              ? Colors.green
-                              : (data.validasiPembimbing == 'false'
-                                  ? Colors.red
-                                  : Colors.black),
+                          color: getValidationColor(data.validasiPembimbing),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                     DataCell(Text(data.catatanPembimbing ?? "")),
-                    DataCell(
-                      Center(
-                        // Center the button in the action column
-                        child: Row(
-                          children: [
-                            RoundedRectangleButton(
-                              title: 'VALIDASI',
-                              style: regular16,
-                              backgroundColor: lightBlue,
-                              height: 30,
-                              width: 110,
-                              rounded: 5,
-                              onPressed: () {
-                                showValidationConfirmation(data.idLogbook);
-                              },
-                            ),
-                            const SizedBox(
-                              width: 15,
-                            ),
-                            RoundedRectangleButton(
-                              title: 'CATATAN',
-                              style: regular16,
-                              backgroundColor: lightOrange,
-                              height: 30,
-                              width: 110,
-                              rounded: 5,
-                              onPressed: () {
-                                addCatatan(data.idLogbook);
-                              },
-                            ),
-                          ],
+                    // Not admin = kepala
+                    if (!isAdmin)
+                      DataCell(
+                        Center(
+                          // Center the button in the action column
+                          child: Row(
+                            children: [
+                              RoundedRectangleButton(
+                                title: 'VALIDASI',
+                                style: regular16,
+                                backgroundColor: lightBlue,
+                                height: 30,
+                                width: 110,
+                                rounded: 5,
+                                onPressed: () {
+                                  showValidationConfirmation(data.idLogbook);
+                                },
+                              ),
+                              const SizedBox(
+                                width: 15,
+                              ),
+                              RoundedRectangleButton(
+                                title: 'CATATAN',
+                                style: regular16,
+                                backgroundColor: lightOrange,
+                                height: 30,
+                                width: 110,
+                                rounded: 5,
+                                onPressed: () {
+                                  addCatatan(data.idLogbook);
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
                   ]);
                 }).toList(),
               ),

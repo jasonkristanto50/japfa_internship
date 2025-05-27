@@ -5,12 +5,14 @@ import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/kepala_departemen_page/dashboard_logbook_peserta.dart';
+import 'package:japfa_internship/models/kepala_departemen_data/kepala_departemen_data.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
 import 'package:japfa_internship/components/widget_component.dart';
 import 'package:japfa_internship/navbar.dart';
 
 class DashboardPembimbingMagang extends ConsumerStatefulWidget {
-  const DashboardPembimbingMagang({super.key});
+  final KepalaDepartemenData? kepalaDepartemen;
+  const DashboardPembimbingMagang({super.key, this.kepalaDepartemen});
 
   @override
   _DashboardPembimbingMagangState createState() =>
@@ -26,9 +28,14 @@ class _DashboardPembimbingMagangState
   @override
   void initState() {
     super.initState();
+
     // Get the login state and set the namaPembimbing
     final loginState = ref.read(loginProvider);
-    namaPembimbing = loginState.name!;
+    if (widget.kepalaDepartemen != null) {
+      namaPembimbing = widget.kepalaDepartemen!.nama;
+    } else {
+      namaPembimbing = loginState.name!;
+    }
     _fetchPesertaMagangDataByPembimbing();
   }
 
@@ -131,8 +138,7 @@ class _DashboardPembimbingMagangState
                           width: 150,
                           rounded: 5,
                           onPressed: () {
-                            _viewLogbook(
-                                peserta.email); // Dummy function for UI only
+                            _viewLogbook(peserta.email);
                           },
                         ),
                       ),
@@ -164,6 +170,7 @@ class _DashboardPembimbingMagangState
     fadeNavigation(
       context,
       targetNavigation: DashboardLogbookPeserta(email: email),
+      time: 200,
     );
   }
 }

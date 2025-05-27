@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:japfa_internship/components/widget_component.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
+import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/string_value.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
+import 'package:japfa_internship/kepala_departemen_page/dashboard_pembimbing_magang.dart';
 import 'package:japfa_internship/models/kepala_departemen_data/kepala_departemen_data.dart';
 import 'package:japfa_internship/navbar.dart';
 
@@ -146,14 +148,37 @@ class _TambahKepalaDepartemenState extends State<TambahKepalaDepartemen> {
                     DataCell(
                       Align(
                         alignment: Alignment.center,
-                        child: RoundedRectangleButton(
-                          title: "HAPUS",
-                          backgroundColor:
-                              const Color.fromARGB(255, 152, 209, 255),
-                          height: 30,
-                          width: 100,
-                          rounded: 5,
-                          onPressed: () {},
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            RoundedRectangleButton(
+                              title: "LIST",
+                              style: regular16,
+                              backgroundColor: lightOrange,
+                              height: 30,
+                              width: 100,
+                              rounded: 5,
+                              onPressed: () {
+                                fadeNavigation(
+                                  context,
+                                  targetNavigation: DashboardPembimbingMagang(
+                                    kepalaDepartemen: kepala,
+                                  ),
+                                  time: 200,
+                                );
+                              },
+                            ),
+                            SizedBox(width: 8.w),
+                            RoundedRectangleButton(
+                              title: "STATUS",
+                              style: regular16,
+                              backgroundColor: lightBlue,
+                              height: 30,
+                              width: 100,
+                              rounded: 5,
+                              onPressed: () => _showStatusModal(kepala),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -222,6 +247,49 @@ class _TambahKepalaDepartemenState extends State<TambahKepalaDepartemen> {
       // Optionally show success message
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Kepala Departemen added successfully!')));
+      _fetchKepalaDept();
+    } catch (error) {
+      // Handle the error: show error message
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Error: $error')));
+    }
+  }
+
+  void _showStatusModal(KepalaDepartemenData kepala) async {
+    await showCustomConfirmAcceptDialogWithNote(
+      context: context,
+      title: "Ubah Status",
+      message: "Aktif / Tidak Aktif",
+      withNote: false,
+      acceptText: "Aktif",
+      acceptColor: Colors.green,
+      cancelText: "Tidak Aktif",
+      cancelColor: Colors.red,
+      // Aktif
+      onAccept: (note) {
+        _changeKepalaStatus(
+            kepala.idKepalaDepartemenData, statusPembimbingAktif);
+      },
+      // Tidak Aktif
+      onCancel: () {
+        _changeKepalaStatus(
+            kepala.idKepalaDepartemenData, statusPembimbingTidakAktif);
+      },
+    );
+    setState(() {});
+  }
+
+  void _changeKepalaStatus(String id, String newStatus) async {
+    try {
+      await ApiService()
+          .kepalaDepartemenService
+          .updateKepalaDepartemenStatus(id, newStatus);
+
+      // Optionally show success message
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Kepala Departemen status updated successfully!')));
+
+      // Refresh the list after updating status
       _fetchKepalaDept();
     } catch (error) {
       // Handle the error: show error message

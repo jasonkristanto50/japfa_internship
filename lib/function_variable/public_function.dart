@@ -299,8 +299,8 @@ Future<String?> showCustomConfirmAcceptDialogWithNote({
         ),
         elevation: 5.0,
         child: Container(
-          width: 350,
-          height: 350,
+          width: withNote ? 350 : 300,
+          height: withNote ? 350 : 170,
           padding: const EdgeInsets.all(24.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -640,5 +640,25 @@ Color getStatusMagangColor(String status) {
     return Colors.black;
   } else {
     return Colors.grey;
+  }
+}
+
+String getValidationStatus(String? validasiPembimbing) {
+  if (validasiPembimbing == 'true') {
+    return 'Disetujui';
+  } else if (validasiPembimbing == 'false') {
+    return 'Ditolak';
+  } else {
+    return 'Menunggu';
+  }
+}
+
+Color getValidationColor(String? validasiPembimbing) {
+  if (validasiPembimbing == 'true') {
+    return Colors.green;
+  } else if (validasiPembimbing == 'false') {
+    return Colors.red;
+  } else {
+    return Colors.black;
   }
 }

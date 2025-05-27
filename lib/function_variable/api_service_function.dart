@@ -532,6 +532,28 @@ class KepalaDepartemenService {
       rethrow; // Rethrow error for further handling if needed
     }
   }
+
+  // Endpoint to update kepala departemen status
+  Future<void> updateKepalaDepartemenStatus(String id, String status) async {
+    try {
+      final response = await _dio.put(
+        '$baseUrlKepalaDepartemen/update-status/$id',
+        data: {'status': status},
+      );
+
+      if (response.statusCode == 200) {
+        print('Status updated successfully: ${response.data}');
+      } else {
+        throw Exception('Failed to update status: ${response.data}');
+      }
+    } on DioException catch (e) {
+      print('Dio error: ${e.response?.data ?? e.message}');
+      throw Exception('Error updating status');
+    } catch (e) {
+      print('Unexpected error: $e');
+      throw Exception('Error updating status');
+    }
+  }
 }
 
 class LogbookService {

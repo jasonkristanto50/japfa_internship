@@ -4,27 +4,23 @@ import 'package:japfa_internship/admin_page/pendaftaran_magang_detail_page.dart'
 import 'package:japfa_internship/function_variable/api_service_function.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/string_value.dart';
+import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
 import 'package:japfa_internship/models/skill_peserta_magang_data/skill_peserta_magang_data.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/components/widget_component.dart';
-import 'package:japfa_internship/function_variable/variable.dart';
 
-class PendaftaranMagangDepartemen extends StatefulWidget {
-  const PendaftaranMagangDepartemen({super.key, required this.departmentName});
-  final String departmentName;
+class ListAllPesertaMagang extends StatefulWidget {
+  const ListAllPesertaMagang({super.key});
 
   @override
-  State<PendaftaranMagangDepartemen> createState() =>
-      _PendaftaranMagangDepartemenState();
+  State<ListAllPesertaMagang> createState() => _ListAllPesertaMagangState();
 }
 
-class _PendaftaranMagangDepartemenState
-    extends State<PendaftaranMagangDepartemen> {
+class _ListAllPesertaMagangState extends State<ListAllPesertaMagang> {
   String searchQuery = "";
   List<PesertaMagangData> pesertaMagangList = [];
   List<PesertaMagangData> filteredPesertaData = [];
-  int _currentPage = 0;
   String? currentStatus;
 
   @override
@@ -40,7 +36,7 @@ class _PendaftaranMagangDepartemenState
     return Scaffold(
       appBar: Navbar(
         context: context,
-        title: '$appName - ${widget.departmentName}',
+        title: '$appName - All Peserta Magang',
         titleOnPressed: () {},
         showBackButton: true,
       ),
@@ -87,44 +83,114 @@ class _PendaftaranMagangDepartemenState
   }
 
   // Build buttons to filter by status
+// Build buttons to filter by status
   Widget _buildGroupByStatusButton() {
     return Center(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          // Button for "Semua"
+          RoundedRectangleButton(
+            title: "Semua",
+            style: bold14,
+            width: 120.w,
+            height: 40.h,
+            fontColor: currentStatus == null ? japfaOrange : Colors.white,
+            backgroundColor: currentStatus == null ? Colors.white : Colors.grey,
+            outlineColor:
+                currentStatus == null ? japfaOrange : Colors.transparent,
+            onPressed: () {
+              _filterByStatus(null); // Clear filter
+            },
+          ),
+          const SizedBox(width: 10),
+          // Button for "On Process"
           RoundedRectangleButton(
             title: "Proses",
             style: bold14,
             width: 120.w,
             height: 40.h,
             fontColor: Colors.white,
-            backgroundColor: _currentPage == 1 ? japfaOrange : Colors.grey,
+            backgroundColor: currentStatus == statusMagangMenunggu
+                ? japfaOrange
+                : Colors.grey,
             onPressed: () {
               _filterByStatus(statusMagangMenunggu); // Filter by "On Process"
             },
           ),
           const SizedBox(width: 10),
+          // Button for "Sedang Berlangsung"
           RoundedRectangleButton(
-            title: statusMagangDiterima,
+            title: "Berlangsung",
+            style: bold14,
+            width: 150.w,
+            height: 40.h,
+            fontColor: Colors.white,
+            backgroundColor: currentStatus == statusMagangBerlangsung
+                ? Colors.blue
+                : Colors.grey,
+            onPressed: () {
+              _filterByStatus(
+                  statusMagangBerlangsung); // Filter by "Sedang Berlangsung"
+            },
+          ),
+          const SizedBox(width: 10),
+          // Button for "Diterima"
+          RoundedRectangleButton(
+            title: statusMagangDiterima, // Assuming this variable is defined
             style: bold14,
             width: 120.w,
             height: 40.h,
             fontColor: Colors.white,
-            backgroundColor: _currentPage == 2 ? Colors.green : Colors.grey,
+            backgroundColor: currentStatus == statusMagangDiterima
+                ? Colors.green
+                : Colors.grey,
             onPressed: () {
               _filterByStatus(statusMagangDiterima); // Filter by "Accepted"
             },
           ),
           const SizedBox(width: 10),
+          // Button for "Selesai"
           RoundedRectangleButton(
-            title: statusMagangDitolak,
+            title: "Selesai",
             style: bold14,
             width: 120.w,
             height: 40.h,
             fontColor: Colors.white,
-            backgroundColor: _currentPage == 3 ? Colors.red : Colors.grey,
+            backgroundColor:
+                currentStatus == statusMagangSelesai ? darkGrey : Colors.grey,
+            onPressed: () {
+              _filterByStatus(statusMagangSelesai); // Filter by "Finished"
+            },
+          ),
+          const SizedBox(width: 10),
+          // Button for "Ditolak"
+          RoundedRectangleButton(
+            title: statusMagangDitolak, // Assuming this variable is defined
+            style: bold14,
+            width: 120.w,
+            height: 40.h,
+            fontColor: Colors.white,
+            backgroundColor:
+                currentStatus == statusMagangDitolak ? Colors.red : Colors.grey,
             onPressed: () {
               _filterByStatus(statusMagangDitolak); // Filter by "Rejected"
+            },
+          ),
+          const SizedBox(width: 10),
+          // Button for "Tidak Lanjut"
+          RoundedRectangleButton(
+            title: "Tidak Lanjut",
+            style: bold14,
+            width: 150.w,
+            height: 40.h,
+            fontColor: Colors.white,
+            backgroundColor: currentStatus == statusMagangTidakLanjut
+                ? darkGrey
+                : Colors.grey,
+            onPressed: () {
+              _filterByStatus(
+                  statusMagangTidakLanjut); // Filter by "Not Continued"
             },
           ),
         ],
@@ -165,8 +231,7 @@ class _PendaftaranMagangDepartemenState
                 DataColumn(label: Text('Email')),
                 DataColumn(label: Text('Universitas')),
                 DataColumn(label: Text('Jurusan')),
-                DataColumn(label: Text('Angkatan')),
-                DataColumn(label: Text('IPK')),
+                DataColumn(label: Text('Departemen')),
                 DataColumn(label: Text('Status')),
                 DataColumn(label: Text('Aksi')),
               ],
@@ -180,10 +245,7 @@ class _PendaftaranMagangDepartemenState
                         textAlign: TextAlign.center)),
                     DataCell(
                         Text(peserta.jurusan, textAlign: TextAlign.center)),
-                    DataCell(Text(peserta.angkatan.toString(),
-                        textAlign: TextAlign.center)),
-                    DataCell(Text(peserta.nilaiUniv.toString(),
-                        textAlign: TextAlign.center)),
+                    DataCell(Text(peserta.departemen ?? "-")),
                     DataCell(
                       Text(
                         peserta.statusMagang,
@@ -262,31 +324,23 @@ class _PendaftaranMagangDepartemenState
   void _updateFilteredPesertaData() {
     setState(() {
       filteredPesertaData = pesertaMagangList.where((peserta) {
-        bool matchesDepartment = peserta.departemen == widget.departmentName;
         bool matchesSearchQuery =
             peserta.nama.toLowerCase().contains(searchQuery.toLowerCase());
 
         // If a status is selected, check for that status
         if (currentStatus != null) {
-          return matchesDepartment &&
-              matchesSearchQuery &&
-              peserta.statusMagang == currentStatus;
+          return matchesSearchQuery && peserta.statusMagang == currentStatus;
         }
 
-        return matchesDepartment && matchesSearchQuery;
+        return matchesSearchQuery;
       }).toList();
     });
   }
 
-  void _filterByStatus(String status) {
+  void _filterByStatus(String? status) {
     setState(() {
       currentStatus = status;
       _updateFilteredPesertaData();
-      _currentPage = status == statusMagangMenunggu
-          ? 1
-          : status == statusMagangDiterima
-              ? 2
-              : 3;
     });
   }
 

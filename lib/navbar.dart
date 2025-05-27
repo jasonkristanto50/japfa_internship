@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:japfa_internship/admin_page/departemen_magang_dashboard.dart';
 import 'package:japfa_internship/admin_page/kunjungan_studi_dashboard.dart';
+import 'package:japfa_internship/admin_page/list_all_peserta_magang.dart';
 import 'package:japfa_internship/admin_page/pendaftaran_magang_detail_page.dart';
 import 'package:japfa_internship/admin_page/tambah_kepala_departemen.dart';
 import 'package:japfa_internship/authentication/login.dart';
@@ -107,6 +108,10 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
                   ] else ...[
                     // Logged in => Check role
                     if (loginState.role == roleAdminValue) ...[
+                      buildNavBarTab(
+                        "Semua Peserta Magang",
+                        _navigateToListAllPesertaMagang,
+                      ),
                       buildNavBarTab(
                         'Data Pendaftar Magang',
                         _navigateToDepartemenPendaftaranMagangPage,
@@ -423,10 +428,21 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
     fadeNavigation(context, targetNavigation: const TimelineInterview());
   }
 
-  // ADMIN HR/GA TAB
+  // ADMIN HR/GA TAB ---------------------------------------------------
   void _navigateToDepartemenPendaftaranMagangPage() {
-    fadeNavigation(context,
-        targetNavigation: const DepartemenMagangDashboard(), time: 200);
+    fadeNavigation(
+      context,
+      targetNavigation: const DepartemenMagangDashboard(),
+      time: 200,
+    );
+  }
+
+  void _navigateToListAllPesertaMagang() {
+    fadeNavigation(
+      context,
+      targetNavigation: const ListAllPesertaMagang(),
+      time: 200,
+    );
   }
 
   void _navigateToTambahKepalaDept() {

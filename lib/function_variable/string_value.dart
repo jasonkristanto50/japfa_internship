@@ -18,6 +18,7 @@ String statusMagangDitolak = 'Ditolak';
 String statusMagangMenunggu = 'On Process';
 String statusMagangBerlangsung = 'Sedang Berlangsung';
 String statusMagangSelesai = 'Selesai';
+String statusMagangTidakLanjut = 'Tidak Lanjut';
 
 String statusKunjunganDiterima = 'Diterima';
 String statusKunjunganDitolak = 'Ditolak';

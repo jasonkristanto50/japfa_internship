@@ -94,15 +94,13 @@
 --     nilai_akhir_magang INTEGER  
 -- );  
 
--- Ada 5 Jenis Status Magang: 
+-- Ada 6 Jenis Status Magang: 
 -- - On Process
 -- - Sedang Berlangsung
 -- - Diterima
 -- - Selesai
 -- - Ditolak
--- 
--- - Tidak dilanjutkan
--- - Tidak jadi
+-- - Tidak Lanjut
 
 
 -- DROP TABLE LOGBOOK_PESERTA_MAGANG;
@@ -119,25 +117,25 @@
 --     catatan_pembimbing VARCHAR(255) DEFAULT NULL
 -- );
 
-DROP TABLE SKILL_PESERTA_MAGANG;
+-- DROP TABLE SKILL_PESERTA_MAGANG;
 
-CREATE TABLE SKILL_PESERTA_MAGANG (  
-    id_skill VARCHAR PRIMARY KEY NOT NULL,  
-    nama_peserta VARCHAR(255) NOT NULL,
-    departemen VARCHAR(255),  
-    email VARCHAR(255) NOT NULL,
-    asal_universitas VARCHAR(255),
-    nilai_univ FLOAT,
-    akreditasi_universitas CHAR,
-    jurusan VARCHAR(255),
-    komunikasi VARCHAR(255),
-    kreativitas VARCHAR(255),
-    tanggung_jawab VARCHAR(255),
-    kerja_sama VARCHAR(255),
-    skill_teknis VARCHAR(255),
-    total_softskill INTEGER,
-    banyak_proyek INTEGER,
-    list_proyek TEXT[],
-    url_lampiran VARCHAR(255),
-    fuzzy_score FLOAT
-);
+-- CREATE TABLE SKILL_PESERTA_MAGANG (  
+--     id_skill VARCHAR PRIMARY KEY NOT NULL,  
+--     nama_peserta VARCHAR(255) NOT NULL,
+--     departemen VARCHAR(255),  
+--     email VARCHAR(255) NOT NULL,
+--     asal_universitas VARCHAR(255),
+--     nilai_univ FLOAT,
+--     akreditasi_universitas CHAR,
+--     jurusan VARCHAR(255),
+--     komunikasi VARCHAR(255),
+--     kreativitas VARCHAR(255),
+--     tanggung_jawab VARCHAR(255),
+--     kerja_sama VARCHAR(255),
+--     skill_teknis VARCHAR(255),
+--     total_softskill INTEGER,
+--     banyak_proyek INTEGER,
+--     list_proyek TEXT[],
+--     url_lampiran VARCHAR(255),
+--     fuzzy_score FLOAT
+-- );

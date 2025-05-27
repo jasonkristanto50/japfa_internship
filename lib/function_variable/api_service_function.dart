@@ -440,6 +440,33 @@ class PesertaMagangService {
       return null; // Handle error appropriately
     }
   }
+
+  // Set Pembimbing to Peserta
+  Future<void> updateNamaPembimbing(String id, String namaPembimbing) async {
+    try {
+      final response = await _dio.put(
+        '$baseUrlPesertaMagang/update-nama-pembimbing/$id',
+        data: {
+          'nama_pembimbing': namaPembimbing,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Nama pembimbing updated successfully: ${response.data}');
+      } else {
+        print('Failed to update nama pembimbing: ${response.data}');
+      }
+    } on DioException catch (e) {
+      // Handle Dio error
+      print('Error updating nama pembimbing: ${e.message}');
+      if (e.response != null) {
+        print('Response data: ${e.response?.data}');
+      }
+    } catch (e) {
+      // Handle any other errors
+      print('Unexpected error: $e');
+    }
+  }
 }
 
 class KunjunganStudiService {

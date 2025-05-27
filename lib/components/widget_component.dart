@@ -357,7 +357,7 @@ class ConfirmationDialog extends StatelessWidget {
   }
 }
 
-enum BuildFieldTypeController { text, number, date }
+enum BuildFieldTypeController { text, number, date, dropdown }
 
 class CustomAlertDialog extends StatelessWidget {
   final String title;
@@ -367,6 +367,7 @@ class CustomAlertDialog extends StatelessWidget {
   final List<BuildFieldTypeController> fieldTypes;
   final VoidCallback onSave;
   final int numberOfField;
+  final List<String>? dropdownOptions;
 
   const CustomAlertDialog({
     super.key,
@@ -377,6 +378,7 @@ class CustomAlertDialog extends StatelessWidget {
     required this.fieldTypes,
     required this.onSave,
     required this.numberOfField,
+    this.dropdownOptions,
   });
 
   @override
@@ -415,6 +417,7 @@ class CustomAlertDialog extends StatelessWidget {
                   labels[index],
                   fieldTypes[index],
                   context,
+                  options: dropdownOptions,
                 );
               }),
               const SizedBox(height: 16),
@@ -434,7 +437,8 @@ class CustomAlertDialog extends StatelessWidget {
   }
 
   Widget _buildField(TextEditingController controller, String label,
-      BuildFieldTypeController fieldType, BuildContext context) {
+      BuildFieldTypeController fieldType, BuildContext context,
+      {List<String>? options}) {
     switch (fieldType) {
       case BuildFieldTypeController.text:
         return _buildTextField(controller, label);
@@ -442,6 +446,8 @@ class CustomAlertDialog extends StatelessWidget {
         return _buildNumberField(controller, label);
       case BuildFieldTypeController.date:
         return _buildDateField(controller, label, context);
+      case BuildFieldTypeController.dropdown:
+        return _buildDropdownField(controller, label, options!);
     }
   }
 
@@ -523,6 +529,39 @@ class CustomAlertDialog extends StatelessWidget {
             controller.text = DateFormat('dd-MM-yyyy').format(picked);
           }
         },
+      ),
+    );
+  }
+
+  Widget _buildDropdownField(
+      TextEditingController controller, String label, List<String> options) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: DropdownButtonFormField<String>(
+        value: controller.text.isNotEmpty ? controller.text : null,
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: regular14.copyWith(color: Colors.black),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.orange, width: 2),
+          ),
+        ),
+        items: options.map((String option) {
+          return DropdownMenuItem<String>(
+            value: option,
+            child: Text(option),
+          );
+        }).toList(),
+        onChanged: (String? newValue) {
+          controller.text = newValue ?? "";
+        },
+        isExpanded: true,
+        dropdownColor: Colors.white,
       ),
     );
   }

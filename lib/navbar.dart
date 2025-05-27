@@ -99,10 +99,13 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
                       onPressed: () => _showMenu(context, ref),
                     ),
                 ] else ...[
-                  // For desktop, render navigation tabs based on login state
+                  // Website & Desktop
+                  // If NOT LOGIN
                   if (!loginState.isLoggedIn) ...[
-                    buildNavBarTab("My Submission", _navigateToSubmissionData),
-                    buildNavBarTab("Timeline", _navigateToTimeLine),
+                    buildNavBarTab(
+                      "Lihat Pengajuan",
+                      _navigateToSubmissionData,
+                    ),
                     const SizedBox(width: 10),
                     buildLoginBotton(),
                   ] else ...[

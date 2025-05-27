@@ -377,7 +377,7 @@ router.put('/update_status-catatan/:id', async (req, res) => {
     }
   });
 
-  // Update nama_pembimbing for Peserta Magang by ID  
+// Update nama_pembimbing for Peserta Magang by ID  
 router.put('/update-nama-pembimbing/:id', async (req, res) => {  
     const { id } = req.params;
     const { nama_pembimbing } = req.body;

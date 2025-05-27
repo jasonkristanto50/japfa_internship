@@ -161,7 +161,7 @@ class _DepartemenMagangDashboardState extends State<DepartemenMagangDashboard> {
                               height: 30,
                               width: 85,
                               rounded: 5,
-                              onPressed: () => _editTable(d),
+                              onPressed: () => _editMaxKuota(d),
                             ),
                             const SizedBox(width: 8),
                             RoundedRectangleButton(
@@ -196,7 +196,7 @@ class _DepartemenMagangDashboardState extends State<DepartemenMagangDashboard> {
     // );
   }
 
-  void _editTable(DepartemenData department) {
+  void _editMaxKuota(DepartemenData department) {
     showDialog(
       context: context,
       builder: (BuildContext context) {

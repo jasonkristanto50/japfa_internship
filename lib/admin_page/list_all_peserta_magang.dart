@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'dart:html' as html;
+// import 'dart:html' as html; // uncomment if ran in chrome
 import 'package:excel/excel.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -10,11 +10,9 @@ import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/string_value.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
-import 'package:japfa_internship/models/skill_peserta_magang_data/skill_peserta_magang_data.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/components/widget_component.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class ListAllPesertaMagang extends StatefulWidget {
   const ListAllPesertaMagang({super.key});
@@ -42,9 +40,8 @@ class _ListAllPesertaMagangState extends State<ListAllPesertaMagang> {
     return Scaffold(
       appBar: Navbar(
         context: context,
-        title: '$appName - All Peserta Magang',
+        title: appName,
         titleOnPressed: () {},
-        showBackButton: true,
       ),
       body: Container(
         decoration: buildJapfaLogoBackground(),
@@ -298,33 +295,6 @@ class _ListAllPesertaMagangState extends State<ListAllPesertaMagang> {
     }
   }
 
-  void _sortPesertaByFuzzyScore() async {
-    try {
-      List<SkillPesertaMagangData> skillDataList =
-          await ApiService().skillService.fetchAllSkills();
-
-      Map<String, double> emailToFuzzyScoreMap = {
-        for (var skill in skillDataList) skill.email: skill.fuzzyScore,
-      };
-
-      pesertaMagangList.sort((a, b) {
-        double scoreA = emailToFuzzyScoreMap[a.email] ?? 0;
-        double scoreB = emailToFuzzyScoreMap[b.email] ?? 0;
-
-        return scoreB.compareTo(scoreA);
-      });
-
-      setState(() {
-        // Refresh the display with sorted list
-        pesertaMagangList = pesertaMagangList;
-      });
-      showSnackBar(context, "Data telah diurutkan berdasar rekomendasi",
-          backgroundColor: Colors.grey);
-    } catch (e) {
-      print('Error sorting data: $e');
-    }
-  }
-
   // Method to update the filtered data based on search query and status
   void _updateFilteredPesertaData() {
     setState(() {
@@ -360,80 +330,80 @@ class _ListAllPesertaMagangState extends State<ListAllPesertaMagang> {
     );
   }
 
+  void _downloadExcel() {} // TODO: DUMMY comment only for testing in windows
+
   // Method to download Excel
-  void _downloadExcel() async {
-    try {
-      // Create an Excel document
-      var excel = Excel.createExcel();
-      Sheet sheet = excel['Data Peserta Magang'];
+  // void _downloadExcel() async {
+  //   try {
+  //     // Create an Excel document
+  //     var excel = Excel.createExcel();
+  //     Sheet sheet = excel['Data Peserta Magang'];
 
-// Add headers
-      sheet.appendRow([
-        TextCellValue('Nama'),
-        TextCellValue('No. Telp'),
-        TextCellValue('Email'),
-        TextCellValue('Universitas'),
-        TextCellValue('Jurusan'),
-        TextCellValue('Departemen'),
-        TextCellValue('Status'),
-        TextCellValue('Angkatan'),
-        TextCellValue('Alamat'),
-        TextCellValue('Nilai'),
-        TextCellValue('Catatan HR'),
-        TextCellValue('Pembimbing'),
-        TextCellValue('Nilai Akhir Magang'),
-      ]);
+  //     // Column name
+  //     sheet.appendRow([
+  //       TextCellValue('Nama'),
+  //       TextCellValue('No. Telp'),
+  //       TextCellValue('Email'),
+  //       TextCellValue('Universitas'),
+  //       TextCellValue('Jurusan'),
+  //       TextCellValue('Departemen'),
+  //       TextCellValue('Status'),
+  //       TextCellValue('Angkatan'),
+  //       TextCellValue('Alamat'),
+  //       TextCellValue('Nilai'),
+  //       TextCellValue('Catatan HR'),
+  //       TextCellValue('Pembimbing'),
+  //       TextCellValue('Nilai Akhir Magang'),
+  //     ]);
 
-// Populate the data
-      for (var peserta in pesertaMagangList) {
-        sheet.appendRow([
-          TextCellValue(peserta.nama),
-          TextCellValue(peserta.noTelp),
-          TextCellValue(peserta.email),
-          TextCellValue(peserta.asalUniversitas),
-          TextCellValue(peserta.jurusan),
-          TextCellValue(peserta.departemen ?? "-"),
-          TextCellValue(peserta.statusMagang),
-          TextCellValue(peserta.angkatan.toString()),
-          TextCellValue(peserta.alamat),
-          TextCellValue(peserta.nilaiUniv.toString()),
-          TextCellValue(peserta.catatanHr ?? "-"),
-          TextCellValue(peserta.namaPembimbing ?? "-"),
-          TextCellValue(peserta.nilaiAkhirMagang?.toString() ?? "-"),
-        ]);
-      }
+  //     // Data value
+  //     for (var peserta in pesertaMagangList) {
+  //       sheet.appendRow([
+  //         TextCellValue(peserta.nama),
+  //         TextCellValue(peserta.noTelp),
+  //         TextCellValue(peserta.email),
+  //         TextCellValue(peserta.asalUniversitas),
+  //         TextCellValue(peserta.jurusan),
+  //         TextCellValue(peserta.departemen ?? "-"),
+  //         TextCellValue(peserta.statusMagang),
+  //         TextCellValue(peserta.angkatan.toString()),
+  //         TextCellValue(peserta.alamat),
+  //         TextCellValue(peserta.nilaiUniv.toString()),
+  //         TextCellValue(peserta.catatanHr ?? "-"),
+  //         TextCellValue(peserta.namaPembimbing ?? "-"),
+  //         TextCellValue(peserta.nilaiAkhirMagang?.toString() ?? "-"),
+  //       ]);
+  //     }
 
-      // Check if we are running on the web
-      if (kIsWeb) {
-        // Save as Excel file blob for web
-        final bytes = excel.encode()!;
-        final blob = html.Blob([
-          bytes
-        ], 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+  //     // Download if using web
+  //     if (kIsWeb) {
+  //       final bytes = excel.encode()!;
+  //       final blob = html.Blob([
+  //         bytes
+  //       ], 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 
-        // Create a link element
-        final url = html.Url.createObjectUrlFromBlob(blob);
-        final anchor = html.AnchorElement(href: url)
-          ..setAttribute('download', 'peserta_magang.xlsx')
-          ..click();
+  //       // Create a link element
+  //       final url = html.Url.createObjectUrlFromBlob(blob);
+  //       html.AnchorElement(href: url)
+  //         ..setAttribute('download', 'peserta_magang.xlsx')
+  //         ..click();
 
-        // Clean up
-        html.Url.revokeObjectUrl(url);
-        showSnackBar(context, "Excel file downloaded.");
-      } else {
-        // For mobile platforms, you can directly save it
-        Directory? directory = await getExternalStorageDirectory();
-        String filePath = '${directory!.path}/peserta_magang.xlsx';
+  //       html.Url.revokeObjectUrl(url);
+  //       showSnackBar(context, "Excel file downloaded.",
+  //           backgroundColor: Colors.green);
+  //     } else {
+  //       // For mobile platforms, you can directly save it
+  //       Directory? directory = await getExternalStorageDirectory();
+  //       String filePath = '${directory!.path}/peserta_magang.xlsx';
 
-        // Save the Excel file
-        File(filePath).writeAsBytesSync(excel.encode()!);
-        showSnackBar(context, "Excel file downloaded: $filePath",
-            backgroundColor: Colors.green);
-      }
-    } catch (e) {
-      print("Error during Excel download: $e");
-      showSnackBar(context, "Error during download: $e",
-          backgroundColor: Colors.red);
-    }
-  }
+  //       // Save the Excel file
+  //       File(filePath).writeAsBytesSync(excel.encode()!);
+  //       showSnackBar(context, "Excel file downloaded: $filePath",
+  //           backgroundColor: Colors.green);
+  //     }
+  //   } catch (e) {
+  //     showSnackBar(context, "Error during download: $e",
+  //         backgroundColor: Colors.red);
+  //   }
+  // }
 }

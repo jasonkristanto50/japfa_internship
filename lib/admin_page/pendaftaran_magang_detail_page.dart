@@ -9,6 +9,7 @@ import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/string_value.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/home_page.dart';
+import 'package:japfa_internship/models/kepala_departemen_data/kepala_departemen_data.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
 import 'package:japfa_internship/models/skill_peserta_magang_data/skill_peserta_magang_data.dart';
 import 'package:japfa_internship/navbar.dart';
@@ -61,12 +62,12 @@ class _PendaftaranMagangDetailPageState
       ),
       body: Container(
         decoration: buildJapfaLogoBackground(),
-        child: _buildBodyByRole(),
+        child: _buildMainBodyByRole(),
       ),
     );
   }
 
-  Widget _buildBodyByRole() {
+  Widget _buildMainBodyByRole() {
     if (_loading) return const Center(child: CircularProgressIndicator());
     final login = ref.read(loginProvider);
     if (login.isLoggedIn == false) {
@@ -116,14 +117,19 @@ class _PendaftaranMagangDetailPageState
             const SizedBox(height: 30),
             if (peserta!.statusMagang == statusMagangMenunggu) ...[
               _buildRejectAcceptButton(),
-            ] else ...[
-              _buildStatusUpdateButton()
+            ] else if (peserta!.statusMagang == statusMagangDiterima ||
+                peserta!.statusMagang == statusMagangDitolak) ...[
+              _buildButtonForDiterimaOrDitolak()
+            ] else if (peserta!.statusMagang == statusMagangBerlangsung) ...[
+              _buildTidakLanjutAndSelesaiButton()
             ]
           ],
         ),
       ),
     );
   }
+
+  // WIDGET Functions
 
   Widget _buildDataDiriSkillButton() {
     return Center(
@@ -320,12 +326,12 @@ class _PendaftaranMagangDetailPageState
         Text('STATUS:', style: bold14),
         Text(
           peserta!.statusMagang,
-          style: bold16.copyWith(
+          style: bold18.copyWith(
             color: getStatusMagangColor(peserta!.statusMagang),
           ),
         ),
         const SizedBox(height: 10),
-        Text('NOTE:', style: regular14),
+        Text('NOTE:', style: bold14),
         Text(peserta!.catatanHr ?? 'Tidak ada catatan'),
       ],
     );
@@ -426,7 +432,7 @@ class _PendaftaranMagangDetailPageState
     }
   }
 
-  Widget _buildStatusUpdateButton() {
+  Widget _buildButtonForDiterimaOrDitolak() {
     final loginState = ref.watch(loginProvider);
     if (loginState.role != roleAdminValue) {
       return const SizedBox();
@@ -455,7 +461,18 @@ class _PendaftaranMagangDetailPageState
             onPressed: () =>
                 _updateStatus(peserta!.idMagang, statusMagangMenunggu),
           ),
-          const SizedBox(width: 20),
+          const SizedBox(width: 10),
+          RoundedRectangleButton(
+            title: 'Set Pembimbing',
+            backgroundColor: Colors.white,
+            fontColor: japfaOrange,
+            outlineColor: japfaOrange,
+            style: bold16,
+            width: 150,
+            height: 40,
+            onPressed: () => _showSetPembimbingModal(peserta!),
+          ),
+          const SizedBox(width: 10),
           RoundedRectangleButton(
             title: 'Berlangsung',
             backgroundColor: lightBlue,
@@ -473,7 +490,47 @@ class _PendaftaranMagangDetailPageState
     }
   }
 
+  Widget _buildTidakLanjutAndSelesaiButton() {
+    final loginState = ref.watch(loginProvider);
+    if (loginState.role != roleAdminValue) {
+      return const SizedBox();
+    }
+
+    if (peserta!.statusMagang == statusMagangBerlangsung) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          RoundedRectangleButton(
+            title: 'Tidak Lanjut',
+            backgroundColor: Colors.red,
+            fontColor: Colors.white,
+            style: bold16,
+            width: 120,
+            height: 40,
+            onPressed: () =>
+                _updateStatus(peserta!.idMagang, statusMagangTidakLanjut),
+          ),
+          const SizedBox(width: 20),
+          RoundedRectangleButton(
+            title: 'Selesai',
+            backgroundColor: darkGrey,
+            fontColor: Colors.white,
+            style: bold16,
+            width: 130,
+            height: 40,
+            onPressed: () =>
+                _updateStatus(peserta!.idMagang, statusMagangBerlangsung),
+          ),
+        ],
+      );
+    } else {
+      return const SizedBox();
+    }
+  }
+
+  //
   // VOID FUNCTIONS ------------
+  //
 
   Future<void> _fetchPesertaAndSkillByEmail(String email) async {
     setState(() => _loading = true);
@@ -622,5 +679,61 @@ class _PendaftaranMagangDetailPageState
     setState(() {
       peserta = peserta!.copyWith(linkMeetInterview: linkMeet);
     });
+  }
+
+  void _showSetPembimbingModal(PesertaMagangData peserta) async {
+    TextEditingController selectedPembimbingName = TextEditingController();
+    List<String> listNamaPembimbing = await fetchKepalaDepartemenNames();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CustomAlertDialog(
+          title: 'Set Pembimbing',
+          subTitle: '',
+          controllers: [selectedPembimbingName],
+          labels: const ['Nama Pembimbing'],
+          fieldTypes: const [BuildFieldTypeController.dropdown],
+          dropdownOptions: listNamaPembimbing,
+          numberOfField: 1,
+          onSave: () {
+            _updateNamaPembimbing(
+              peserta.idMagang,
+              selectedPembimbingName.text,
+            );
+            Navigator.of(context).pop();
+          },
+        );
+      },
+    );
+  }
+
+  Future<List<String>> fetchKepalaDepartemenNames() async {
+    try {
+      // Fetch all Kepala Departemen data
+      List<KepalaDepartemenData> kepalaDepartemenList =
+          await ApiService().kepalaDepartemenService.fetchAllKepalaDepartemen();
+
+      // Extract the names and return them as a list of strings
+      return kepalaDepartemenList.map((kepala) => kepala.nama).toList();
+    } catch (error) {
+      print('Error fetching kepala departemen names: $error');
+      rethrow; // Rethrow the error for further handling if needed
+    }
+  }
+
+  Future<void> _updateNamaPembimbing(String id, String namaPembimbing) async {
+    try {
+      await ApiService()
+          .pesertaMagangService
+          .updateNamaPembimbing(id, namaPembimbing);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Nama Pembimbing updated: $namaPembimbing')),
+      );
+    } catch (error) {
+      print('Error updating nama pembimbing: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to update Nama Pembimbing.')),
+      );
+    }
   }
 }

@@ -291,18 +291,32 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
                     value: kunjungan.status,
                     verticalPadding: 5),
                 const SizedBox(height: 10),
-                buildFileButton('Persetujuan Kampus', () {
-                  launchURLImagePath(kunjungan.pathPersetujuanInstansi);
-                }),
+                Row(
+                  children: [
+                    buildFileButton('Persetujuan Kampus', () {
+                      launchURLImagePath(kunjungan.pathPersetujuanInstansi);
+                    }),
+                    if (kunjungan.pathFileResponJapfa != null) ...[
+                      const SizedBox(width: 30),
+                      buildFileButton('File Respon Japfa', () {
+                        launchURLImagePath(kunjungan.pathFileResponJapfa!);
+                      }),
+                    ]
+                  ],
+                ),
+                Center(
+                  child: RoundedRectangleButton(
+                      title: "Tutup",
+                      fontColor: japfaOrange,
+                      backgroundColor: Colors.white,
+                      outlineColor: japfaOrange,
+                      width: 200.h,
+                      height: 50.h,
+                      onPressed: () => Navigator.of(context).pop()),
+                ),
               ],
             ),
           ),
-          actions: [
-            TextButton(
-              child: const Text('TUTUP'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
         );
       },
     );
@@ -410,7 +424,8 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
     }
   }
 
-  void _showDialogUploadFileRespon(KunjunganStudiData kunjungan) async {
+  void _showDialogUploadFileRespon(KunjunganStudiData kunjungan) {
+    String labelFieldPersetujuan = "File Respon";
     String? uploadedFileName;
     Uint8List? uploadedFileBytes;
 
@@ -418,46 +433,97 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return CustomAlertDialog(
-          title: "Upload File",
-          subTitle: "Select a file to upload",
-          numberOfField: 1,
-          controllers: [
-            TextEditingController(text: uploadedFileName)
-          ], // Adding a TextEditingController to display the file name
-          labels: const ["Select File"],
-          fieldTypes: const [BuildFieldTypeController.file],
-          onSave: () async {
-            if (uploadedFileName != null && uploadedFileBytes != null) {
-              // Call the upload file function
-              await _uploadFile(uploadedFileName!, uploadedFileBytes!);
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: Center(
+                  child: Text(
+                "UPLOAD FILE",
+                style: bold20,
+              )),
+              backgroundColor: Colors.white,
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: [
+                    FileUploading().buildFileField(
+                      labelFieldPersetujuan,
+                      uploadedFileName,
+                      () => FileUploading().pickFile(
+                        setState,
+                        labelFieldPersetujuan,
+                        false,
+                        (field, fileName, fileBytes) {
+                          setState(() {
+                            uploadedFileName = fileName;
+                            uploadedFileBytes = fileBytes;
+                          });
+                        },
+                      ),
+                      () => FileUploading().removeFile(
+                        setState,
+                        labelFieldPersetujuan,
+                        (field, _, __) {
+                          setState(() {
+                            uploadedFileName = null;
+                            uploadedFileBytes = null;
+                          });
+                        },
+                      ),
+                      () {},
+                    ),
+                    const SizedBox(height: 20),
+                    // Row for buttons in the dialog content
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: RoundedRectangleButton(
+                            title: 'CANCEL',
+                            fontColor: japfaOrange,
+                            backgroundColor: Colors.white,
+                            outlineColor: japfaOrange,
+                            height: 50.h,
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: RoundedRectangleButton(
+                            title: 'UPLOAD',
+                            backgroundColor: japfaOrange,
+                            height: 50.h,
+                            onPressed: () async {
+                              if (uploadedFileBytes != null) {
+                                // Call the upload file function
+                                await _uploadFile(
+                                  uploadedFileName!,
+                                  uploadedFileBytes!,
+                                );
 
-              // Call the API function to update the file path in the database
-              await updateFileResponJapfa(
-                kunjungan.idKunjunganStudi,
-                pathFileResponJapfa, // Use the uploaded file name
-              );
+                                // Call the API function to update the file path in the database
+                                await updateFileResponJapfa(
+                                  kunjungan.idKunjunganStudi,
+                                  pathFileResponJapfa,
+                                );
 
-              Navigator.of(context).pop(); // Close the dialog
-            } else {
-              showSnackBar(context, 'Please select a file to upload');
-            }
+                                Navigator.of(context).pop(); // Close the dialog
+                              } else {
+                                showSnackBar(
+                                    context, 'Please select a file to upload');
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
           },
         );
-      },
-    );
-
-    // Open the file picker after the dialog is shown
-    String fieldIdentifier = "file"; // Unique identifier for the file
-    await FileUploading().pickFile(
-      setState,
-      fieldIdentifier,
-      false, // Set to true if it's an image, false otherwise
-      (field, fileName, fileBytes) {
-        setState(() {
-          uploadedFileName = fileName;
-          uploadedFileBytes = fileBytes;
-        });
       },
     );
   }

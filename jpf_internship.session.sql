@@ -88,6 +88,8 @@
 --     status_magang VARCHAR(50) NOT NULL,
 --     password_token VARCHAR,
 --     path_surat_penerimaan VARCHAR(255),
+--     tanggal_interview VARCHAR(20),
+--     jam_interview VARCHAR(50),
 --     link_meet_interview VARCHAR(255),
 --     catatan_hr VARCHAR(255),
 --     nama_pembimbing VARCHAR(255),

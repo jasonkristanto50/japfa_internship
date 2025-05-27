@@ -394,13 +394,16 @@ class PesertaMagangService {
     return res.statusCode == 200;
   }
 
-  // Update Peserta Magang LINK WAWANCARA by ID
-  Future<void> updateLinkMeet(String id, String newLink) async {
+// Update Peserta Magang LINK WAWANCARA by ID
+  Future<void> updateLinkMeet(String id, String newLink,
+      String tanggalInterview, String jamInterview) async {
     try {
       final response = await _dio.put(
         '$baseUrlPesertaMagang/update-link-meet/$id',
         data: {
           'link_meet_interview': newLink,
+          'tanggal_interview': tanggalInterview,
+          'jam_interview': jamInterview,
         },
       );
 

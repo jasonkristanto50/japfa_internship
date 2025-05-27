@@ -31,6 +31,8 @@ class _PendaftaranMagangDetailPageState
   int _currentPage = 1;
   bool _loading = false;
   late bool isAdmin;
+  TextEditingController tanggalMeetController = TextEditingController();
+  TextEditingController jamMeetController = TextEditingController();
   TextEditingController linkMeetController = TextEditingController();
 
   @override
@@ -303,6 +305,14 @@ class _PendaftaranMagangDetailPageState
                       label: "Link Lampiran",
                       value: skill!.urlLampiran,
                     ),
+                    RoundedRectangleButton(
+                      title: "Buka Lampiran",
+                      fontColor: Colors.white,
+                      backgroundColor: japfaOrange,
+                      height: 50.h,
+                      onPressed: () =>
+                          launchFullURLImagePath(fullPath: skill!.urlLampiran),
+                    )
                   ],
                 ),
               ),
@@ -341,8 +351,8 @@ class _PendaftaranMagangDetailPageState
     final img = '$baseUrl${peserta!.pathFotoDiri}';
     return Image.network(
       img,
-      height: 300,
-      width: 225,
+      height: 275,
+      width: 200,
       fit: BoxFit.cover,
       loadingBuilder: (c, child, p) =>
           p == null ? child : const CircularProgressIndicator(),
@@ -352,17 +362,47 @@ class _PendaftaranMagangDetailPageState
 
   Widget _buildAddLinkButton() {
     return isAdmin
-        ? RoundedRectangleButton(
-            title: peserta!.linkMeetInterview == null
-                ? "Tambah Link"
-                : "Edit Link",
-            height: 50.h,
-            rounded: 8,
-            fontColor: Colors.white,
-            backgroundColor: japfaOrange,
-            onPressed: () => _showDialogAddLink(),
+        ? Row(
+            children: [
+              RoundedRectangleButton(
+                title: peserta!.linkMeetInterview == null
+                    ? "Tambah Link"
+                    : "Edit Link",
+                height: 50.h,
+                width: peserta!.linkMeetInterview == null ? 250.w : 200.w,
+                rounded: 5,
+                fontColor: Colors.white,
+                backgroundColor: japfaOrange,
+                onPressed: () => _showDialogAddLink(),
+              ),
+              if (peserta!.linkMeetInterview != null) ...[
+                const SizedBox(width: 100),
+                RoundedRectangleButton(
+                  title: "Lihat Detail",
+                  height: 50.h,
+                  width: 200.w,
+                  rounded: 5,
+                  backgroundColor: lightBlue,
+                  onPressed: () => _showMeetDetail(),
+                )
+              ]
+            ],
           )
-        : const SizedBox();
+        // For peserta magang
+        : Row(
+            children: [
+              if (peserta!.linkMeetInterview != null) ...[
+                RoundedRectangleButton(
+                  title: "Lihat Detail",
+                  height: 50.h,
+                  width: 250.w,
+                  rounded: 5,
+                  backgroundColor: lightBlue,
+                  onPressed: () => _showMeetDetail(),
+                )
+              ]
+            ],
+          );
   }
 
   Widget _buildProyekField() {
@@ -641,6 +681,39 @@ class _PendaftaranMagangDetailPageState
     }
   }
 
+  void _showMeetDetail() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CustomAlertDialog(
+          title: "Detail Wawancara",
+          numberOfField: 3,
+          controllers: [
+            tanggalMeetController,
+            jamMeetController,
+            linkMeetController
+          ],
+          labels: const [
+            "Tanggal Wawancaran",
+            "Jam Wawancara",
+            "Link Wawancara"
+          ],
+          viewValue: [
+            peserta!.tanggalInterview!,
+            peserta!.jamInterview!,
+            peserta!.linkMeetInterview!
+          ],
+          fieldTypes: const [
+            BuildFieldTypeController.viewOnly,
+            BuildFieldTypeController.viewOnly,
+            BuildFieldTypeController.viewOnly
+          ],
+          onSave: () => _saveMeet(),
+        );
+      },
+    );
+  }
+
   void _showDialogAddLink() {
     showDialog(
       context: context,
@@ -648,24 +721,42 @@ class _PendaftaranMagangDetailPageState
         return CustomAlertDialog(
           title:
               peserta!.linkMeetInterview == null ? "Tambah Link" : "Edit Link",
-          numberOfField: 1,
-          controllers: [linkMeetController],
-          labels: const ["Link Wawancara"],
-          fieldTypes: const [BuildFieldTypeController.text],
-          onSave: () => _saveLink(),
+          numberOfField: 3,
+          controllers: [
+            tanggalMeetController,
+            jamMeetController,
+            linkMeetController
+          ],
+          labels: const [
+            "Tanggal Wawancaran",
+            "Jam Wawancara",
+            "Link Wawancara"
+          ],
+          fieldTypes: const [
+            BuildFieldTypeController.date,
+            BuildFieldTypeController.text,
+            BuildFieldTypeController.text
+          ],
+          onSave: () => _saveMeet(),
         );
       },
     );
   }
 
-  void _saveLink() async {
+  void _saveMeet() async {
+    final String tanggalMeet = tanggalMeetController.text;
+    final String jamMeet = jamMeetController.text.trim();
     final String linkMeet = linkMeetController.text.trim();
-    // Assuming that you have the ID of 'peserta' available as 'peserta.idMagang'
-    final String id =
-        peserta?.idMagang ?? ''; // Get the ID from the selected participant
+
+    final String id = peserta?.idMagang ?? '';
 
     if (id.isNotEmpty && linkMeet.isNotEmpty) {
-      await ApiService().pesertaMagangService.updateLinkMeet(id, linkMeet);
+      await ApiService().pesertaMagangService.updateLinkMeet(
+            id,
+            linkMeet,
+            tanggalMeet,
+            jamMeet,
+          );
       // Clear the controller after saving
       linkMeetController.clear();
       Navigator.of(context).pop(); // Close the dialog after saving

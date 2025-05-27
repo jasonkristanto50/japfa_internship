@@ -23,6 +23,8 @@ abstract class PesertaMagangData with _$PesertaMagangData {
     @JsonKey(name: 'status_magang') required String statusMagang,
     @JsonKey(name: 'password_token') String? passwordToken,
     @JsonKey(name: 'path_surat_penerimaan') String? pathSuratPenerimaan,
+    @JsonKey(name: 'tanggal_interview') String? tanggalInterview,
+    @JsonKey(name: 'jam_interview') String? jamInterview,
     @JsonKey(name: 'link_meet_interview') String? linkMeetInterview,
     @JsonKey(name: 'catatan_hr') String? catatanHr,
     @JsonKey(name: 'nama_pembimbing') String? namaPembimbing,

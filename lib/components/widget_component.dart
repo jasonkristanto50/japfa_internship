@@ -359,30 +359,30 @@ class ConfirmationDialog extends StatelessWidget {
   }
 }
 
-enum BuildFieldTypeController { text, number, date, dropdown, file }
+enum BuildFieldTypeController { text, number, date, dropdown, viewOnly }
 
 class CustomAlertDialog extends StatefulWidget {
   final String title;
   final String? subTitle;
   final List<TextEditingController> controllers;
+  final List<String>? viewValue; // For view only
   final List<String> labels;
   final List<BuildFieldTypeController> fieldTypes;
   final VoidCallback onSave;
   final int numberOfField;
   final List<String>? dropdownOptions;
-  final Map<String, Uint8List?>? fileBytesMap;
 
   const CustomAlertDialog(
       {super.key,
       required this.title,
       this.subTitle,
       required this.controllers,
+      this.viewValue,
       required this.labels,
       required this.fieldTypes,
       required this.onSave,
       required this.numberOfField,
-      this.dropdownOptions,
-      this.fileBytesMap});
+      this.dropdownOptions});
 
   @override
   _CustomAlertDialogState createState() => _CustomAlertDialogState();
@@ -429,6 +429,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                   widget.fieldTypes[index],
                   context,
                   index,
+                  widget.viewValue![index],
                   options: widget.dropdownOptions,
                 );
               }),
@@ -448,8 +449,13 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
     );
   }
 
-  Widget _buildField(TextEditingController controller, String label,
-      BuildFieldTypeController fieldType, BuildContext context, int index,
+  Widget _buildField(
+      TextEditingController controller,
+      String label,
+      BuildFieldTypeController fieldType,
+      BuildContext context,
+      int index,
+      String viewValue,
       {List<String>? options}) {
     switch (fieldType) {
       case BuildFieldTypeController.text:
@@ -460,8 +466,8 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
         return _buildDateField(controller, label, context);
       case BuildFieldTypeController.dropdown:
         return _buildDropdownField(controller, label, options!);
-      case BuildFieldTypeController.file:
-        return _buildFileUploadField(label, index);
+      case BuildFieldTypeController.viewOnly:
+        return _buildViewOnlyField(viewValue, label);
     }
   }
 
@@ -580,30 +586,26 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
     );
   }
 
-  // Updated method to build file upload fields
-  Widget _buildFileUploadField(String label, int index) {
-    return FileUploading().buildFileField(
-      label,
-      widget.fileBytesMap?[label]
-          ?.toString(), // Use the file name or other identifier
-      () => FileUploading().pickFile(
-        setState,
-        label,
-        label == 'Foto Diri', // Change this condition based on your needs
-        (field, fileName, fileBytes) {
-          setState(() {
-            widget.fileBytesMap?[label] = fileBytes; // Store the file bytes
-          });
-        },
+  Widget _buildViewOnlyField(String value, String label) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextField(
+        controller: TextEditingController(text: value), // Set the initial value
+        readOnly: true, // Make the field read-only
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(color: Colors.black),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.orange, width: 2),
+          ),
+        ),
+        style: const TextStyle(color: Colors.black),
       ),
-      () => FileUploading().removeFile(setState, label, (field, _, __) {
-        setState(() {
-          widget.fileBytesMap?[label] = null; // Reset the file bytes
-        });
-      }),
-      () {
-        // Handle file preview if necessary
-      },
     );
   }
 }

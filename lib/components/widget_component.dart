@@ -368,6 +368,7 @@ class CustomAlertDialog extends StatefulWidget {
   final List<String>? viewValue; // For view only
   final List<String> labels;
   final List<BuildFieldTypeController> fieldTypes;
+  final String? saveButtonText;
   final VoidCallback onSave;
   final int numberOfField;
   final List<String>? dropdownOptions;
@@ -380,6 +381,7 @@ class CustomAlertDialog extends StatefulWidget {
       this.viewValue,
       required this.labels,
       required this.fieldTypes,
+      this.saveButtonText,
       required this.onSave,
       required this.numberOfField,
       this.dropdownOptions});
@@ -405,9 +407,9 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
         child: Text(widget.title, style: bold24),
       ),
       content: Container(
-        width: isMobile ? 300.w : 400.w, // Adjust width based on device
+        width: isMobile ? 300.w : 400.w,
         constraints: BoxConstraints(
-          maxHeight: isMobile ? 350 : 400, // Adjust height for mobile
+          maxHeight: isMobile ? 350 : 400,
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -436,7 +438,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
               const SizedBox(height: 16),
               Center(
                 child: RoundedRectangleButton(
-                  title: "Simpan",
+                  title: widget.saveButtonText ?? "Simpan",
                   backgroundColor: japfaOrange,
                   fontColor: Colors.white,
                   onPressed: widget.onSave,

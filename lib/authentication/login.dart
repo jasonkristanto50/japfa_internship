@@ -23,7 +23,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final TextEditingController _tokenController = TextEditingController();
 
   bool _visible = false;
-  bool _isTokenLogin = false; // Track which login method to show
+  bool _isTokenLogin = true; // First page is token login
 
   @override
   void initState() {
@@ -51,6 +51,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       appBar: Navbar(
         context: context,
         title: appName,
+        showBackButton: true,
       ),
       body: Container(
         decoration: buildJapfaLogoBackground(),
@@ -86,9 +87,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // ... Your existing header code here ...
         const Text(
-          'Login to your account.',
+          'Login Admin & User',
           style: TextStyle(fontSize: 16),
         ),
         const SizedBox(height: 20),
@@ -96,32 +96,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         const SizedBox(height: 15),
         buildTextField('Password', _passwordController, isPassword: true),
         const SizedBox(height: 20),
-        if (loginState.isLoading) // Show loading indicator
-          const CircularProgressIndicator(),
-        if (!loginState.isLoading) // Show button only if not loading
+        if (loginState.isLoading) const CircularProgressIndicator(),
+        if (!loginState.isLoading)
           RoundedRectangleButton(
             title: "Login",
             backgroundColor: japfaOrange,
             fontColor: Colors.white,
             onPressed: _loginFunction,
           ),
-        if (loginState.errorMessage != null) // Display error
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Text(
-              loginState.errorMessage!,
-              style: const TextStyle(color: Colors.red),
-            ),
-          ),
+        if (loginState.errorMessage != null)
+          showErrorMessage(loginState.errorMessage!),
         const SizedBox(height: 10),
         TextButton(
           onPressed: () {
             setState(() {
-              _isTokenLogin = true; // Switch to token login
+              _isTokenLogin = true;
             });
           },
           child: Text(
-            "Use Token to Login",
+            "Masuk pendaftar Magang / Kunjungan ? Klik Disini",
             style: TextStyle(color: japfaOrange, fontSize: 14),
           ),
         ),
@@ -135,7 +128,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       children: [
         // Similar header code for Token Login
         const Text(
-          'Login with your Token.',
+          'Login Pendaftar Magang / Kunjungan',
           style: TextStyle(fontSize: 16),
         ),
         const SizedBox(height: 20),
@@ -147,7 +140,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           const CircularProgressIndicator(),
         if (!loginState.isLoading) // Show button only if not loading
           RoundedRectangleButton(
-            title: "Login with Token",
+            title: "Login",
             backgroundColor: japfaOrange,
             fontColor: Colors.white,
             onPressed: _tokenLoginFunction,
@@ -168,11 +161,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             });
           },
           child: Text(
-            "Use Password to Login",
+            "Masuk sebagai Admin & User ? Klik Disini",
             style: TextStyle(color: japfaOrange, fontSize: 14),
           ),
         ),
       ],
+    );
+  }
+
+  Widget showErrorMessage(String errorMessage) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0),
+      child: Text(
+        errorMessage,
+        style: const TextStyle(color: Colors.red),
+      ),
     );
   }
 

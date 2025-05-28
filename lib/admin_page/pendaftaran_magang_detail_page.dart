@@ -571,7 +571,7 @@ class _PendaftaranMagangDetailPageState
             width: 130,
             height: 40,
             onPressed: () =>
-                _updateStatus(peserta!.idMagang, statusMagangBerlangsung),
+                _updateStatus(peserta!.idMagang, statusMagangSelesai),
           ),
         ],
       );
@@ -720,7 +720,8 @@ class _PendaftaranMagangDetailPageState
             BuildFieldTypeController.viewOnly,
             BuildFieldTypeController.viewOnly
           ],
-          onSave: () => _saveMeet(),
+          saveButtonText: "Kembali",
+          onSave: () => Navigator.of(context).pop(),
         );
       },
     );
@@ -782,6 +783,7 @@ class _PendaftaranMagangDetailPageState
     setState(() {
       peserta = peserta!.copyWith(linkMeetInterview: linkMeet);
     });
+    _fetchPesertaAndSkillByEmail(peserta!.email);
   }
 
   void _showSetPembimbingModal(PesertaMagangData peserta) async {

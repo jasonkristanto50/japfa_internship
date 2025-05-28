@@ -104,13 +104,13 @@ class LoginNotifier extends StateNotifier<LoginState> {
       } else {
         state = state.copyWith(
           isLoading: false,
-          errorMessage: "Login failed. Please try again.",
+          errorMessage: "Login gagal",
         );
       }
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
-        errorMessage: "An error occurred. Please try again.",
+        errorMessage: "Pastikan email & password / token anda benar",
       );
     }
   }
@@ -172,13 +172,13 @@ class LoginNotifier extends StateNotifier<LoginState> {
       } else {
         state = state.copyWith(
           isLoading: false,
-          errorMessage: "Login failed. Please try again.",
+          errorMessage: "Login gagal",
         );
       }
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
-        errorMessage: "An error occurred. Please try again.",
+        errorMessage: "Pastikan email & password / token anda benar",
       );
     }
   }

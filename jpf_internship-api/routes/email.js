@@ -9,12 +9,12 @@ router.post('/send-email', async (req, res) => {
     const applicationData = req.body; // Expecting application data in the body
 
     // Extract the name and PIN from the request body
-    const { name, pin } = applicationData;
+    const { email, name, pin } = applicationData;
 
     // Construct email information
     const recipient = applicationData.email;
     const subject = 'Konfirmasi Pengajuan';
-    const text = `Salam ${name},\n\nPengajuan anda sudah diterima. Silahkan login gunakan "PIN: ${pin}" untuk melihat status pengajuan. Mohon menunggu\n\nSalam,\nYour Best Friend`;
+    const text = `Salam ${name},\n\nTerima kasih telah mengirimkan pengajuan di PT Japfa. Pengajuan anda sudah kami terima. Silahkan melakukan login untuk melihat status pengajuan. Login dilakukan menggunakan : \n Email : '${email}' \n PIN: '${pin}' \n\n Mohon menunggu respon lebih lanjut. \n\nSalam Sejahtera,\nTim HR & GA`;
 
     try {
         await sendEmail(recipient, subject, text);

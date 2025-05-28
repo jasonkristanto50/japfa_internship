@@ -334,7 +334,7 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
       children: [
         // Cancel button
         RoundedRectangleButton(
-          title: "Cancel",
+          title: "Batal",
           backgroundColor: Colors.white,
           outlineColor: japfaOrange,
           width: 150,
@@ -349,7 +349,8 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
         if (widget.isAdmin)
           // Show "Save Changes" button if isAdmin
           RoundedRectangleButton(
-            title: "Save Changes",
+            title: "Simpan",
+            fontColor: Colors.white,
             backgroundColor: japfaOrange,
             width: 150,
             height: 30,
@@ -365,7 +366,8 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
         // Show "Apply" button for other cases
         if (widget.sisaKuota > 0) ...[
           RoundedRectangleButton(
-            title: "Apply",
+            title: "Daftar",
+            fontColor: Colors.white,
             backgroundColor: japfaOrange,
             width: 150,
             height: 30,
@@ -376,7 +378,7 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
           ),
         ] else ...[
           RoundedRectangleButton(
-            title: "Apply",
+            title: "Daftar",
             backgroundColor: Colors.grey,
             width: 150,
             height: 30,

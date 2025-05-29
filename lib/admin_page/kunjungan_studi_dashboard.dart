@@ -243,9 +243,7 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
   }
 
   void _showDetail(KunjunganStudiData kunjungan) {
-    String infoJamDariSesi = kunjungan.jamKegiatan == 'sesi1'
-        ? 'Sesi 1 ($durasiSesi1)'
-        : (kunjungan.jamKegiatan == 'sesi2' ? 'Sesi 1 ($durasiSesi2)' : '');
+    String infoJamDariSesi = getInfoJamDariSesi(kunjungan.jamKegiatan);
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -258,67 +256,126 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
           ),
           backgroundColor: Colors.white,
           content: SingleChildScrollView(
-            child: Column(
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                buildDataInfoField(
-                    label: 'Asal Universitas',
-                    value: kunjungan.asalUniversitas,
-                    verticalPadding: 5),
-                buildDataInfoField(
-                    label: 'Nama Perwakilan',
-                    value: kunjungan.namaPerwakilan,
-                    verticalPadding: 5),
-                buildDataInfoField(
-                    label: 'Tanggal Kegiatan',
-                    value: kunjungan.tanggalKegiatan,
-                    verticalPadding: 5),
-                buildDataInfoField(
-                    label: 'Jam Kegiatan',
-                    value: infoJamDariSesi,
-                    verticalPadding: 5),
-                buildDataInfoField(
-                    label: 'Jumlah Peserta',
-                    value: kunjungan.jumlahPeserta.toString(),
-                    verticalPadding: 5),
-                buildDataInfoField(
-                    label: 'Email', value: kunjungan.email, verticalPadding: 5),
-                buildDataInfoField(
-                    label: 'No. Telepon',
-                    value: kunjungan.noTelp,
-                    verticalPadding: 5),
-                buildDataInfoField(
-                    label: 'Status',
-                    value: kunjungan.status,
-                    verticalPadding: 5),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    buildFileButton('Persetujuan Kampus', () {
-                      launchURLImagePath(kunjungan.pathPersetujuanInstansi);
-                    }),
-                    if (kunjungan.pathFileResponJapfa != null) ...[
-                      const SizedBox(width: 30),
-                      buildFileButton('File Respon Japfa', () {
-                        launchURLImagePath(kunjungan.pathFileResponJapfa!);
-                      }),
-                    ]
-                  ],
+                // Left Column for Data
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      buildDataInfoField(
+                        label: 'Asal Universitas',
+                        value: kunjungan.asalUniversitas,
+                        verticalPadding: 5,
+                      ),
+                      buildDataInfoField(
+                        label: 'Nama Perwakilan',
+                        value: kunjungan.namaPerwakilan,
+                        verticalPadding: 5,
+                      ),
+                      buildDataInfoField(
+                        label: 'Tanggal Kegiatan',
+                        value: kunjungan.tanggalKegiatan,
+                        verticalPadding: 5,
+                      ),
+                      buildDataInfoField(
+                        label: 'Jam Kegiatan',
+                        value: infoJamDariSesi,
+                        verticalPadding: 5,
+                      ),
+                      buildDataInfoField(
+                        label: 'Jumlah Peserta',
+                        value: kunjungan.jumlahPeserta.toString(),
+                        verticalPadding: 5,
+                      ),
+                      buildDataInfoField(
+                        label: 'Email',
+                        value: kunjungan.email,
+                        verticalPadding: 5,
+                      ),
+                      buildDataInfoField(
+                        label: 'No. Telepon',
+                        value: kunjungan.noTelp,
+                        verticalPadding: 5,
+                      ),
+                      buildDataInfoField(
+                        label: 'Status',
+                        value: kunjungan.status,
+                        verticalPadding: 5,
+                      ),
+                    ],
+                  ),
                 ),
-                Center(
-                  child: RoundedRectangleButton(
-                      title: "Tutup",
-                      fontColor: japfaOrange,
-                      backgroundColor: Colors.white,
-                      outlineColor: japfaOrange,
-                      width: 200.h,
-                      height: 50.h,
-                      onPressed: () => Navigator.of(context).pop()),
+                const SizedBox(width: 20),
+                // Right Column for Buttons
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      buildFileButton('Persetujuan Kampus', () {
+                        launchURLImagePath(kunjungan.pathPersetujuanInstansi);
+                      }),
+                      const SizedBox(height: 20),
+                      if (kunjungan.pathFileResponJapfa != null) ...[
+                        buildFileButton('File Respon Japfa', () {
+                          launchURLImagePath(kunjungan.pathFileResponJapfa!);
+                        }),
+                      ] else ...[
+                        buildFileButton(
+                          'Belum Ada Respon Japfa ',
+                          backgroundColor: Colors.grey,
+                          buttonText: "Tidak Ada File",
+                          () {},
+                        ),
+                      ],
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
+          actions: [
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min, // Ensure it takes minimum space
+                mainAxisAlignment:
+                    MainAxisAlignment.center, // Center the buttons
+                children: [
+                  Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.center, // Center the row
+                    children: [
+                      RoundedRectangleButton(
+                        title: "Tutup",
+                        fontColor: japfaOrange,
+                        backgroundColor: Colors.white,
+                        outlineColor: japfaOrange,
+                        width: 200.h,
+                        height: 50.h,
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                      const SizedBox(width: 10),
+                      RoundedRectangleButton(
+                        title: "EDIT Tanggal",
+                        style: regular14,
+                        fontColor: Colors.white,
+                        backgroundColor: japfaOrange,
+                        width: 150,
+                        height: 35,
+                        rounded: 5,
+                        // TODO: Buat Edit Tanggal
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
         );
       },
     );

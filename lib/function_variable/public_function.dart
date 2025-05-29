@@ -51,6 +51,7 @@ Widget buildFileButton(
   String title,
   VoidCallback onPressed, {
   Color? backgroundColor,
+  String? buttonText,
 }) {
   return Padding(
     padding: const EdgeInsets.only(bottom: 10),
@@ -60,7 +61,7 @@ Widget buildFileButton(
         Text('$title:', style: bold14),
         const SizedBox(height: 5), // Space between label and button
         RoundedRectangleButton(
-          title: "Tampilkan",
+          title: buttonText ?? "Tampilkan",
           style: regular14,
           fontColor: Colors.white,
           backgroundColor: backgroundColor ?? japfaOrange,
@@ -674,6 +675,16 @@ String getValidationStatus(String? validasiPembimbing) {
   }
 }
 
+String getInfoJamDariSesi(String jamKegiatan) {
+  if (jamKegiatan == 'sesi1') {
+    return 'Sesi 1 ($durasiSesi1)';
+  } else if (jamKegiatan == 'sesi2') {
+    return 'Sesi 2 ($durasiSesi2)';
+  }
+  return 'Sesi Tidak Valid';
+}
+
+// COLOR -----------------------
 Color getValidationColor(String? validasiPembimbing) {
   if (validasiPembimbing == 'true') {
     return Colors.green;

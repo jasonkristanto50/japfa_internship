@@ -67,149 +67,151 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
   }
 
   Widget _buildKunjunganStudiTable(
-      List<KunjunganStudiData> filteredKunjunganData) {
-    return Padding(
-      padding: const EdgeInsets.all(24.0),
-      child: Center(
-        child: Container(
-          decoration: BoxDecoration(
-            color: filteredKunjunganData.isEmpty
-                ? Colors.transparent
-                : Colors.white,
-            boxShadow: filteredKunjunganData.isEmpty
-                ? [] // Remove shadows if no data
-                : [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
-                      spreadRadius: 1,
-                      blurRadius: 4,
-                      offset: const Offset(0, 1),
-                    ),
-                  ],
-          ),
-          child: SizedBox(
-            height: 700.h,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                headingRowColor: WidgetStateProperty.all(Colors.orange[500]),
-                headingTextStyle: const TextStyle(
+    List<KunjunganStudiData> filteredKunjunganData,
+  ) {
+    return filteredKunjunganData.isEmpty
+        ? buildEmptyDataMessage(dataName: "Kunjungan Studi")
+        : Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Center(
+              child: Container(
+                constraints: BoxConstraints(
+                  maxHeight: 700.h, // Set the maximum height
+                ),
+                decoration: BoxDecoration(
                   color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-                border: TableBorder.all(
-                  color: Colors.grey,
-                  width: 1,
-                ),
-                columns: const [
-                  DataColumn(label: Text('Asal Universitas')),
-                  DataColumn(label: Text('Tanggal')),
-                  DataColumn(label: Text('Jam Kegiatan')),
-                  DataColumn(label: Text('Nama Perwakilan')),
-                  DataColumn(label: Text('Peserta')),
-                  DataColumn(label: Text('Status')),
-                  DataColumn(label: Text('Aksi')),
-                ],
-                rows: filteredKunjunganData.map((kunjungan) {
-                  String infoJamDariSesi = kunjungan.jamKegiatan == 'sesi1'
-                      ? 'Sesi 1 ($durasiSesi1)'
-                      : (kunjungan.jamKegiatan == 'sesi2'
-                          ? 'Sesi 2 ($durasiSesi2)'
-                          : '');
-                  return DataRow(
-                    cells: [
-                      DataCell(Text(
-                        kunjungan.asalUniversitas,
-                        textAlign: TextAlign.center,
-                      )),
-                      DataCell(Text(
-                        kunjungan.tanggalKegiatan,
-                        textAlign: TextAlign.center,
-                      )),
-                      DataCell(Text(
-                        infoJamDariSesi,
-                        textAlign: TextAlign.center,
-                      )),
-                      DataCell(Text(
-                        kunjungan.namaPerwakilan,
-                        textAlign: TextAlign.center,
-                      )),
-                      DataCell(Text(
-                        kunjungan.jumlahPeserta.toString(),
-                        textAlign: TextAlign.center,
-                      )),
-                      DataCell(Text(
-                        kunjungan.status,
-                        textAlign: TextAlign.center,
-                        style: bold18.copyWith(
-                          color: kunjungan.status == 'Diterima'
-                              ? Colors.green
-                              : kunjungan.status == 'Ditolak'
-                                  ? Colors.red
-                                  : kunjungan.status == 'Menunggu'
-                                      ? Colors.orange
-                                      : Colors.black,
-                        ),
-                      )),
-                      DataCell(
-                        Align(
-                          alignment: Alignment.center,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              RoundedRectangleButton(
-                                title: "DETAIL",
-                                style: regular16,
-                                backgroundColor: lightOrange,
-                                height: 30,
-                                width: 100,
-                                rounded: 5,
-                                onPressed: () => _showDetail(kunjungan),
-                              ),
-                              SizedBox(width: 8.w),
-                              RoundedRectangleButton(
-                                title: "BIAYA",
-                                style: regular16,
-                                backgroundColor: lightOrange,
-                                height: 30,
-                                width: 100,
-                                rounded: 5,
-                                onPressed: () {},
-                              ),
-                              SizedBox(width: 8.w),
-                              RoundedRectangleButton(
-                                title: "UPLOAD",
-                                style: regular16,
-                                backgroundColor: lightOrange,
-                                height: 30,
-                                width: 100,
-                                rounded: 5,
-                                onPressed: () =>
-                                    _showDialogUploadFileRespon(kunjungan),
-                              ),
-                              SizedBox(width: 8.w),
-                              RoundedRectangleButton(
-                                title: "RESPON",
-                                style: regular16,
-                                backgroundColor: lightBlue,
-                                height: 30,
-                                width: 100,
-                                rounded: 5,
-                                onPressed: () => _respond(kunjungan),
-                              ),
-                            ],
+                  boxShadow: filteredKunjunganData.isEmpty
+                      ? [] // Remove shadows if no data
+                      : [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.1),
+                            spreadRadius: 1,
+                            blurRadius: 4,
+                            offset: const Offset(0, 1),
                           ),
-                        ),
-                      ),
+                        ],
+                ),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: DataTable(
+                    headingRowColor:
+                        WidgetStateProperty.all(Colors.orange[500]),
+                    headingTextStyle: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    border: TableBorder.all(
+                      color: Colors.grey,
+                      width: 1,
+                    ),
+                    columns: const [
+                      DataColumn(label: Text('Asal Universitas')),
+                      DataColumn(label: Text('Tanggal')),
+                      DataColumn(label: Text('Jam Kegiatan')),
+                      DataColumn(label: Text('Nama Perwakilan')),
+                      DataColumn(label: Text('Peserta')),
+                      DataColumn(label: Text('Status')),
+                      DataColumn(label: Text('Aksi')),
                     ],
-                  );
-                }).toList(),
+                    rows: filteredKunjunganData.map((kunjungan) {
+                      String infoJamDariSesi = kunjungan.jamKegiatan == 'sesi1'
+                          ? 'Sesi 1 ($durasiSesi1)'
+                          : (kunjungan.jamKegiatan == 'sesi2'
+                              ? 'Sesi 2 ($durasiSesi2)'
+                              : '');
+                      return DataRow(
+                        cells: [
+                          DataCell(Text(
+                            kunjungan.asalUniversitas,
+                            textAlign: TextAlign.center,
+                          )),
+                          DataCell(Text(
+                            kunjungan.tanggalKegiatan,
+                            textAlign: TextAlign.center,
+                          )),
+                          DataCell(Text(
+                            infoJamDariSesi,
+                            textAlign: TextAlign.center,
+                          )),
+                          DataCell(Text(
+                            kunjungan.namaPerwakilan,
+                            textAlign: TextAlign.center,
+                          )),
+                          DataCell(Text(
+                            kunjungan.jumlahPeserta.toString(),
+                            textAlign: TextAlign.center,
+                          )),
+                          DataCell(Text(
+                            kunjungan.status,
+                            textAlign: TextAlign.center,
+                            style: bold18.copyWith(
+                              color: kunjungan.status == 'Diterima'
+                                  ? Colors.green
+                                  : kunjungan.status == 'Ditolak'
+                                      ? Colors.red
+                                      : kunjungan.status == 'Menunggu'
+                                          ? Colors.orange
+                                          : Colors.black,
+                            ),
+                          )),
+                          DataCell(
+                            Align(
+                              alignment: Alignment.center,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  RoundedRectangleButton(
+                                    title: "DETAIL",
+                                    style: regular16,
+                                    backgroundColor: lightOrange,
+                                    height: 30,
+                                    width: 100,
+                                    rounded: 5,
+                                    onPressed: () => _showDetail(kunjungan),
+                                  ),
+                                  SizedBox(width: 8.w),
+                                  RoundedRectangleButton(
+                                    title: "BIAYA",
+                                    style: regular16,
+                                    backgroundColor: lightOrange,
+                                    height: 30,
+                                    width: 100,
+                                    rounded: 5,
+                                    onPressed: () {},
+                                  ),
+                                  SizedBox(width: 8.w),
+                                  RoundedRectangleButton(
+                                    title: "UPLOAD",
+                                    style: regular16,
+                                    backgroundColor: lightOrange,
+                                    height: 30,
+                                    width: 100,
+                                    rounded: 5,
+                                    onPressed: () =>
+                                        _showDialogUploadFileRespon(kunjungan),
+                                  ),
+                                  SizedBox(width: 8.w),
+                                  RoundedRectangleButton(
+                                    title: "RESPON",
+                                    style: regular16,
+                                    backgroundColor: lightBlue,
+                                    height: 30,
+                                    width: 100,
+                                    rounded: 5,
+                                    onPressed: () => _respond(kunjungan),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    }).toList(),
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-      ),
-    );
+          );
   }
 
   // Fetch Kunjungan Studi data from API or Local source

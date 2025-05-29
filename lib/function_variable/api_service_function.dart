@@ -721,6 +721,23 @@ class LogbookService {
       throw Exception('Failed to update catatan');
     }
   }
+
+  // Delete logbook by id
+  Future<void> deleteLogbook(String idLogbook) async {
+    try {
+      final response =
+          await _dio.delete('$baseUrlLogbook/delete-logbook/$idLogbook');
+
+      if (response.statusCode == 200) {
+        print('Logbook deleted successfully!');
+      } else {
+        throw Exception('Failed to delete logbook: ${response.statusMessage}');
+      }
+    } catch (e) {
+      print('Error deleting logbook: $e');
+      rethrow; // Re-throw the error for further handling
+    }
+  }
 }
 
 class SkillService {

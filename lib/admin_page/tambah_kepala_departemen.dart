@@ -95,6 +95,9 @@ class _TambahKepalaDepartemenState extends State<TambahKepalaDepartemen> {
       padding: const EdgeInsets.all(24.0),
       child: Center(
         child: Container(
+          constraints: BoxConstraints(
+            maxHeight: 700.h, // Set the maximum height
+          ),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),

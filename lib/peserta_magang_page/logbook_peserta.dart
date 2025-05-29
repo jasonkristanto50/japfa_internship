@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
+import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/models/logbook_peserta_magang_data/logbook_peserta_magang_data.dart';
 import 'package:japfa_internship/navbar.dart';
@@ -130,81 +132,105 @@ class _LogBookPesertaDashboardState
 
   Widget _buildLogbookTable(filteredLogData) {
     return Expanded(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
-        child: Center(
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.1),
-                  spreadRadius: 1,
-                  blurRadius: 4,
-                  offset: const Offset(0, 1),
-                ),
-              ],
-            ),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                headingRowColor: WidgetStateProperty.all(Colors.orange[500]),
-                headingTextStyle: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-                border: TableBorder.all(color: Colors.grey, width: 1),
-                columns: const [
-                  DataColumn(label: Text('No')),
-                  DataColumn(label: Text('Aktivitas')),
-                  DataColumn(label: Text('Tanggal Aktivitas')),
-                  DataColumn(label: Text('URL Lampiran')),
-                  DataColumn(label: Text('Validasi Pembimbing')),
-                  DataColumn(label: Text('Catatan Pembimbing')),
-                  DataColumn(label: Text('Action')),
-                ],
-                rows: filteredLogData
-                    .map<DataRow>((LogbookPesertaMagangData data) {
-                  return DataRow(cells: [
-                    DataCell(Text(data.idLogbook)),
-                    DataCell(Text(data.namaAktivitas)),
-                    DataCell(Text(data.tanggalAktivitas)),
-                    DataCell(Text(data.urlLampiran)),
-                    DataCell(
-                      Text(
-                        data.validasiPembimbing == 'true'
-                            ? 'Disetujui'
-                            : (data.validasiPembimbing == 'false'
-                                ? 'Ditolak'
-                                : 'Menunggu'),
-                        style: TextStyle(
-                          color: data.validasiPembimbing == 'true'
-                              ? Colors.green
-                              : (data.validasiPembimbing == 'false'
-                                  ? Colors.red
-                                  : Colors.black),
-                          fontWeight: FontWeight.bold,
-                        ),
+      child: filteredLogData.isEmpty
+          ? buildEmptyDataMessage(dataName: "Logbook Peserta")
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(24.0),
+              child: Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 1,
+                        blurRadius: 4,
+                        offset: const Offset(0, 1),
                       ),
-                    ),
-                    DataCell(Text(data.catatanPembimbing ?? '')),
-                    DataCell(
-                      RoundedRectangleButton(
-                          title: isMobile ? 'EDIT' : 'EDIT',
-                          backgroundColor: lightBlue,
-                          height: 30,
-                          width: isMobile ? 70 : 85,
-                          rounded: 5,
-                          onPressed: () => _showEditLogbookModal(data)),
-                    ),
-                  ]);
-                }).toList(),
+                    ],
+                  ),
+                  child: filteredLogData.isEmpty
+                      ? buildEmptyDataMessage(filteredData: filteredLogData)
+                      : SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: DataTable(
+                            headingRowColor:
+                                WidgetStateProperty.all(Colors.orange[500]),
+                            headingTextStyle: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            border:
+                                TableBorder.all(color: Colors.grey, width: 1),
+                            columns: const [
+                              DataColumn(label: Text('No')),
+                              DataColumn(label: Text('Aktivitas')),
+                              DataColumn(label: Text('Tanggal Aktivitas')),
+                              DataColumn(label: Text('URL Lampiran')),
+                              DataColumn(label: Text('Validasi Pembimbing')),
+                              DataColumn(label: Text('Catatan Pembimbing')),
+                              DataColumn(label: Text('Action')),
+                            ],
+                            rows: filteredLogData
+                                .asMap()
+                                .entries
+                                .map<DataRow>((entry) {
+                              // index of entry list
+                              int index = entry.key;
+                              // logbook data
+                              LogbookPesertaMagangData data = entry.value;
+                              return DataRow(cells: [
+                                DataCell(
+                                    Text('${filteredLogData.length - index}')),
+                                DataCell(Text(data.namaAktivitas)),
+                                DataCell(Text(data.tanggalAktivitas)),
+                                DataCell(Text(data.urlLampiran)),
+                                DataCell(
+                                  Text(
+                                    data.validasiPembimbing == 'true'
+                                        ? 'Disetujui'
+                                        : (data.validasiPembimbing == 'false'
+                                            ? 'Ditolak'
+                                            : 'Menunggu'),
+                                    style: TextStyle(
+                                      color: data.validasiPembimbing == 'true'
+                                          ? Colors.green
+                                          : (data.validasiPembimbing == 'false'
+                                              ? Colors.red
+                                              : Colors.black),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                DataCell(Text(data.catatanPembimbing ?? '')),
+                                DataCell(
+                                  Row(
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(Icons.edit,
+                                            color: japfaOrange),
+                                        onPressed: () =>
+                                            _showEditLogbookModal(data),
+                                        tooltip: 'Edit',
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.delete,
+                                            color: Colors.red),
+                                        onPressed: () =>
+                                            _deleteLogbookById(data.idLogbook),
+                                        tooltip: 'Hapus',
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ]);
+                            }).toList(),
+                          ),
+                        ),
+                ),
               ),
             ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -307,8 +333,16 @@ class _LogBookPesertaDashboardState
     try {
       final logbooks =
           await ApiService().logbookService.fetchLogbookByEmail(email);
+
+      // Sort logbooks by date in descending order
+      logbooks.sort((a, b) {
+        DateTime dateA = DateFormat('dd-MM-yyyy').parse(a.tanggalAktivitas);
+        DateTime dateB = DateFormat('dd-MM-yyyy').parse(b.tanggalAktivitas);
+        return dateB.compareTo(dateA); // Descending order
+      });
+
       setState(() {
-        logbookData = logbooks; // Store fetched data
+        logbookData = logbooks; // Store fetched and sorted data
       });
       print('Fetched logbooks: $logbooks'); // Log fetched data
     } catch (e) {
@@ -335,9 +369,7 @@ class _LogBookPesertaDashboardState
     required String url,
   }) async {
     try {
-      final logbookCount = await ApiService().logbookService.countLogbooks();
-      print(logbookCount);
-      String newIdLogbook = 'LG_0${(logbookCount! + 1).toString()}';
+      String newIdLogbook = 'LG_${DateTime.now().millisecondsSinceEpoch}';
 
       // Create a new logbook entry
       final newLogbook = LogbookPesertaMagangData(
@@ -354,6 +386,19 @@ class _LogBookPesertaDashboardState
       await fetchLogbooks();
     } catch (e) {
       print('Error adding logbook: $e');
+    }
+  }
+
+  Future<void> _deleteLogbookById(String idLogbook) async {
+    try {
+      // Call the delete logbook method from your API service
+      await ApiService().logbookService.deleteLogbook(idLogbook);
+
+      // Refresh the logbooks after deletion
+      await fetchLogbooks();
+      print('Logbook deleted successfully!');
+    } catch (e) {
+      print('Error deleting logbook: $e');
     }
   }
 }

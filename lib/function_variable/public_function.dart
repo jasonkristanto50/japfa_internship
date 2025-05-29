@@ -47,8 +47,11 @@ Widget buildTextField(
   );
 }
 
-Widget buildFileButton(String title, VoidCallback onPressed,
-    {Color? backgroundColor}) {
+Widget buildFileButton(
+  String title,
+  VoidCallback onPressed, {
+  Color? backgroundColor,
+}) {
   return Padding(
     padding: const EdgeInsets.only(bottom: 10),
     child: Column(
@@ -168,6 +171,27 @@ Widget buildDropDownField(
       dropdownColor: Colors.white,
       isDense: true,
       itemHeight: 50,
+    ),
+  );
+}
+
+Widget buildEmptyDataMessage({
+  dynamic filteredData,
+  String? dataName,
+  String? message,
+  EdgeInsets? padding,
+}) {
+  print("DATA : $filteredData");
+  String dataTable = dataName ?? '';
+  EdgeInsets paddingValue = padding ?? const EdgeInsets.only(bottom: 100.0);
+
+  return Center(
+    child: Padding(
+      padding: paddingValue,
+      child: Text(
+        message ?? 'Masih belum ada data $dataTable',
+        style: bold24.copyWith(color: Colors.black54),
+      ),
     ),
   );
 }
@@ -380,7 +404,7 @@ Future<String?> showCustomConfirmAcceptDialogWithNote({
   );
 }
 
-// Enum for field types
+// Enum for Field Types
 enum FieldType {
   name,
   school,
@@ -565,8 +589,11 @@ Future<File?> validateFileUpload(BuildContext context) async {
 }
 
 // Helper function to show snack bar
-void showSnackBar(BuildContext? context, String message,
-    {Color? backgroundColor = Colors.red}) {
+void showSnackBar(
+  BuildContext? context,
+  String message, {
+  Color? backgroundColor = Colors.red,
+}) {
   if (context != null) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(message),

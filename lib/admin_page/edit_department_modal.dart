@@ -56,7 +56,7 @@ class _EditDepartmentModalState extends State<EditDepartmentModal> {
             const SizedBox(height: 16),
             Center(
                 child: RoundedRectangleButton(
-                    title: 'SAVE',
+                    title: 'SIMPAN',
                     backgroundColor: japfaOrange,
                     onPressed: _saveChanges)),
           ],

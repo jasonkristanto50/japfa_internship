@@ -119,7 +119,7 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
                 ),
                 const SizedBox(height: 10),
                 const Text(
-                  'Tanggal akan ditentukan lebih lanjut oleh tim Japfa',
+                  'Tanggal Kunjungan studi akan ditentukan lebih lanjut oleh tim HR & GA',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.grey,

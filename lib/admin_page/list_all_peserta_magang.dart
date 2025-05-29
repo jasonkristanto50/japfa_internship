@@ -202,85 +202,98 @@ class _ListAllPesertaMagangState extends State<ListAllPesertaMagang> {
 
   // Build the data table
   Widget _buildPesertaMagangDataTable(List<PesertaMagangData> filteredData) {
-    return Padding(
-      padding: const EdgeInsets.all(24.0),
-      child: Center(
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
-                spreadRadius: 1,
-                blurRadius: 4,
-                offset: const Offset(0, 1),
-              ),
-            ],
-          ),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: DataTable(
-              headingRowColor: WidgetStateProperty.all(Colors.orange[500]),
-              headingTextStyle: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-              border: TableBorder.all(color: Colors.grey, width: 1),
-              columns: const [
-                DataColumn(label: Text('Nama')),
-                DataColumn(label: Text('No. Telp')),
-                DataColumn(label: Text('Email')),
-                DataColumn(label: Text('Universitas')),
-                DataColumn(label: Text('Jurusan')),
-                DataColumn(label: Text('Departemen')),
-                DataColumn(label: Text('Status')),
-                DataColumn(label: Text('Aksi')),
-              ],
-              rows: filteredData.map((peserta) {
-                return DataRow(
-                  cells: [
-                    DataCell(Text(peserta.nama, textAlign: TextAlign.center)),
-                    DataCell(Text(peserta.noTelp, textAlign: TextAlign.center)),
-                    DataCell(Text(peserta.email, textAlign: TextAlign.center)),
-                    DataCell(Text(peserta.asalUniversitas,
-                        textAlign: TextAlign.center)),
-                    DataCell(
-                        Text(peserta.jurusan, textAlign: TextAlign.center)),
-                    DataCell(Text(peserta.departemen ?? "-")),
-                    DataCell(
-                      Text(
-                        peserta.statusMagang,
-                        style: TextStyle(
-                          color: getStatusMagangColor(peserta.statusMagang),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    DataCell(
-                      Align(
-                        alignment: Alignment.center,
-                        child: RoundedRectangleButton(
-                          title: "DETAIL",
-                          backgroundColor:
-                              const Color.fromARGB(255, 152, 209, 255),
-                          height: 30,
-                          width: 100,
-                          rounded: 5,
-                          onPressed: () {
-                            _viewDetails(peserta);
-                          },
-                        ),
-                      ),
+    return filteredData.isEmpty
+        ? buildEmptyDataMessage(
+            dataName: "Pendaftar Magang Status $currentStatus",
+            padding: const EdgeInsets.only(top: 100, bottom: 0),
+          )
+        : Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Center(
+              child: Container(
+                constraints: BoxConstraints(
+                  maxHeight: 700.h, // Set the maximum height
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.1),
+                      spreadRadius: 1,
+                      blurRadius: 4,
+                      offset: const Offset(0, 1),
                     ),
                   ],
-                );
-              }).toList(),
+                ),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: DataTable(
+                    headingRowColor:
+                        WidgetStateProperty.all(Colors.orange[500]),
+                    headingTextStyle: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    border: TableBorder.all(color: Colors.grey, width: 1),
+                    columns: const [
+                      DataColumn(label: Text('Nama')),
+                      DataColumn(label: Text('No. Telp')),
+                      DataColumn(label: Text('Email')),
+                      DataColumn(label: Text('Universitas')),
+                      DataColumn(label: Text('Jurusan')),
+                      DataColumn(label: Text('Departemen')),
+                      DataColumn(label: Text('Status')),
+                      DataColumn(label: Text('Aksi')),
+                    ],
+                    rows: filteredData.map((peserta) {
+                      return DataRow(
+                        cells: [
+                          DataCell(
+                              Text(peserta.nama, textAlign: TextAlign.center)),
+                          DataCell(Text(peserta.noTelp,
+                              textAlign: TextAlign.center)),
+                          DataCell(
+                              Text(peserta.email, textAlign: TextAlign.center)),
+                          DataCell(Text(peserta.asalUniversitas,
+                              textAlign: TextAlign.center)),
+                          DataCell(Text(peserta.jurusan,
+                              textAlign: TextAlign.center)),
+                          DataCell(Text(peserta.departemen ?? "-")),
+                          DataCell(
+                            Text(
+                              peserta.statusMagang,
+                              style: TextStyle(
+                                color:
+                                    getStatusMagangColor(peserta.statusMagang),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          DataCell(
+                            Align(
+                              alignment: Alignment.center,
+                              child: RoundedRectangleButton(
+                                title: "DETAIL",
+                                backgroundColor:
+                                    const Color.fromARGB(255, 152, 209, 255),
+                                height: 30,
+                                width: 100,
+                                rounded: 5,
+                                onPressed: () {
+                                  _viewDetails(peserta);
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
-    );
+          );
   }
 
   Future<void> _fetchPesertaMagangData() async {

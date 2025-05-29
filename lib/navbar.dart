@@ -128,7 +128,7 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
                         _navigateToTambahKepalaDept,
                       ),
                       buildNavBarTab(
-                        'Home Page Magang',
+                        'Edit Departemen',
                         _navigateToHomePageMagang,
                       ),
                     ] else if (loginState.role == rolePesertaMagangValue) ...[

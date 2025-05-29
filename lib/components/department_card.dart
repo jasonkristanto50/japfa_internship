@@ -108,7 +108,7 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
                         children: [
                           Text(
                             widget.title,
-                            style: bold16.copyWith(color: japfaOrange),
+                            style: bold20.copyWith(color: japfaOrange),
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 8),
@@ -143,7 +143,7 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
       builder: (BuildContext dialogContext) {
         return GestureDetector(
           onTap: () {
-            Navigator.of(context).pop(); // Dismiss the modal
+            Navigator.of(context).pop();
           },
           child: Center(
             child: GestureDetector(
@@ -197,7 +197,7 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
         Center(
       child: Text(
         widget.title,
-        style: bold16.copyWith(
+        style: bold20.copyWith(
             color: japfaOrange,
             // Text decoration none untuk menghapus garis kuning
             decoration: TextDecoration.none),
@@ -228,13 +228,13 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
             Center(
               child: Text(
                 "Sisa Kuota : ${widget.sisaKuota}",
-                style: bold12.copyWith(color: japfaOrange),
+                style: bold16.copyWith(color: japfaOrange),
               ),
             ),
             Center(
               child: Text(
                 "Antri Pengajuan : ${widget.jumlahPengajuan}",
-                style: bold12.copyWith(color: japfaOrange),
+                style: bold14.copyWith(color: japfaOrange),
               ),
             ),
             const SizedBox(height: 20),
@@ -245,7 +245,7 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
                     controller: _descriptionController,
                     maxLines: 5,
                     textAlignVertical: TextAlignVertical.top,
-                    style: regular12,
+                    style: regular16,
                     decoration: const InputDecoration(
                       labelText: "Edit Deskripsi",
                       border: OutlineInputBorder(),
@@ -261,8 +261,10 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
             // Requirements section
             Text(
               widget.isAdmin ? 'Edit Syarat' : 'Syarat:',
-              style: light16.copyWith(
-                  color: darkGrey, decoration: TextDecoration.none),
+              style: bold16.copyWith(
+                color: darkGrey,
+                decoration: TextDecoration.none,
+              ),
             ),
             widget.isAdmin
                 ? Column(
@@ -271,49 +273,58 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
                               padding: const EdgeInsets.symmetric(vertical: 4),
                               child: TextField(
                                 controller: controller,
-                                style: regular14,
+                                style: regular16,
                                 decoration: const InputDecoration(
-                                  labelText: "Edit Syarat",
                                   border: OutlineInputBorder(),
                                 ),
                               ),
                             ))
                         .toList(),
                   )
-                : Column(
-                    children: widget.requirements
-                        .map((requirement) => Text(
-                              requirement,
-                              style: light12.copyWith(
-                                  color: const Color.fromARGB(255, 88, 88, 88),
-                                  decoration: TextDecoration.none),
-                            ))
-                        .toList(),
+                // Not Admin
+                : Padding(
+                    padding: const EdgeInsets.only(left: 15.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: widget.requirements
+                          .map((requirement) => Text(
+                                requirement,
+                                style: light16.copyWith(
+                                  color: darkGrey,
+                                  decoration: TextDecoration.none,
+                                ),
+                              ))
+                          .toList(),
+                    ),
                   ),
 
             // For Admin: Add and Remove Requirement Button
             if (widget.isAdmin) ...[
+              const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   RoundedRectangleButton(
-                    title: "Del Syarat",
+                    title: "Hapus",
                     backgroundColor: Colors.white,
                     outlineColor: japfaOrange,
                     width: 120,
-                    height: 40,
+                    height: 30,
+                    rounded: 5,
                     onPressed: () {
                       setState(() {
                         _removeRequirementField();
                       });
                     },
                   ),
+                  const SizedBox(width: 10),
                   RoundedRectangleButton(
-                    title: "Add Syarat",
+                    title: "Tambah",
                     fontColor: Colors.white,
                     backgroundColor: japfaOrange,
                     width: 120,
-                    height: 40,
+                    height: 30,
+                    rounded: 5,
                     onPressed: () {
                       setState(() {
                         _addRequirementField();

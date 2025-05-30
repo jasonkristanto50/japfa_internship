@@ -16,7 +16,6 @@ import 'package:japfa_internship/kepala_departemen_page/dashboard_pembimbing_mag
 import 'package:japfa_internship/models/kunjungan_studi_data/kunjungan_studi_data.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
 import 'package:japfa_internship/pendaftar_submission_page/kunjungan_studi_detail_page.dart';
-import 'package:japfa_internship/pendaftar_submission_page/timeline_interview.dart';
 import 'package:japfa_internship/peserta_magang_page/laporan_peserta_magang.dart';
 import 'package:japfa_internship/peserta_magang_page/logbook_peserta.dart';
 import 'package:japfa_internship/profile_page.dart';
@@ -146,10 +145,13 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
                       ),
                     ] else if (loginState.role == rolePendaftarValue) ...[
                       buildNavBarTab(
-                          "Pengajuan Magang", _navigateToSubmissionData),
+                        "Pengajuan Magang",
+                        _navigateToSubmissionData,
+                      ),
                       buildNavBarTab(
-                          "Pengajuan Kunjungan", _navigateToKunjunganData),
-                      buildNavBarTab("Timeline", _navigateToTimeLine),
+                        "Pengajuan Kunjungan",
+                        _navigateToKunjunganData,
+                      ),
                     ],
                     const SizedBox(width: 16),
                     // Profile Pop Up
@@ -297,10 +299,6 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
           value: 'pengajuanKunjungan',
           child: Text('Pengajuan Kunjungan'),
         ));
-        menuItems.add(const PopupMenuItem<String>(
-          value: 'timeline',
-          child: Text('Timeline'),
-        ));
       }
 
       menuItems.add(const PopupMenuItem<String>(
@@ -345,9 +343,6 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
               break;
             case 'pengajuanKunjungan':
               _navigateToKunjunganData();
-              break;
-            case 'timeline':
-              _navigateToTimeLine();
               break;
             case 'logout':
               _logOutFunction(context, ref, isMobile);
@@ -427,10 +422,6 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
 
   void _navigateToKunjunganData() {
     fadeNavigation(context, targetNavigation: const KunjunganStudiDetailPage());
-  }
-
-  void _navigateToTimeLine() {
-    fadeNavigation(context, targetNavigation: const TimelineInterview());
   }
 
   // ADMIN HR/GA TAB ---------------------------------------------------

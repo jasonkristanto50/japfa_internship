@@ -56,11 +56,13 @@ class _PendaftaranMagangDetailPageState
 
   @override
   Widget build(BuildContext context) {
+    final login = ref.read(loginProvider);
     return Scaffold(
       appBar: Navbar(
         title: 'Detail Peserta Magang',
         context: context,
-        showBackButton: true,
+        showBackButton: login.role == rolePendaftarValue ? false : true,
+        titleOnPressed: () {},
       ),
       body: Container(
         decoration: buildJapfaLogoBackground(),
@@ -171,6 +173,7 @@ class _PendaftaranMagangDetailPageState
   }
 
   Widget _buildDataPesertaPage() {
+    final login = ref.read(loginProvider);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Row(
@@ -216,11 +219,16 @@ class _PendaftaranMagangDetailPageState
                     value: peserta!.nilaiUniv.toString(),
                     verticalPadding: 7,
                   ),
-                  buildDataInfoField(
-                    label: 'Nama Pembimbing',
-                    value: peserta!.namaPembimbing ?? "-",
-                    verticalPadding: 7,
-                  ),
+                  // IF pembimbing kosong, pendaftar tidak bisa lihat
+                  if (login.role == rolePendaftarValue &&
+                      peserta!.namaPembimbing == null) ...[
+                    const SizedBox(),
+                  ] else
+                    buildDataInfoField(
+                      label: 'Nama Pembimbing',
+                      value: peserta!.namaPembimbing ?? "-",
+                      verticalPadding: 7,
+                    ),
                 ],
               ),
             ),
@@ -245,6 +253,12 @@ class _PendaftaranMagangDetailPageState
                       peringatan:
                           peserta!.linkMeetInterview == null ? true : false,
                     ),
+                    if (peserta!.linkMeetInterview == null &&
+                        login.role == rolePendaftarValue)
+                      Text(
+                        "Silahkan menunggu tim HR memberi link wawancara",
+                        style: regular14.copyWith(color: Colors.grey),
+                      ),
                     _buildAddLinkButton(),
                   ],
                 ),

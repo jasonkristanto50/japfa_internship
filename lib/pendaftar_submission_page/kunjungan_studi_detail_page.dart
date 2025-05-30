@@ -37,7 +37,7 @@ class _KunjunganStudiDetailPageState
       appBar: Navbar(
         title: 'Detail Kunjungan Studi',
         context: context,
-        showBackButton: true,
+        titleOnPressed: () {},
       ),
       body: Container(
         decoration: buildJapfaLogoBackground(),

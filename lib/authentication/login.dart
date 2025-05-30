@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:japfa_internship/admin_page/departemen_magang_dashboard.dart';
+import 'package:japfa_internship/admin_page/pendaftaran_magang_detail_page.dart';
 import 'package:japfa_internship/kepala_departemen_page/dashboard_pembimbing_magang.dart';
+import 'package:japfa_internship/pendaftar_submission_page/kunjungan_studi_detail_page.dart';
 import 'package:japfa_internship/peserta_magang_page/logbook_peserta.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/home_page.dart';
@@ -217,50 +219,70 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   void _handleLoginResponse() {
     final currentState = ref.read(loginProvider);
-    // Now check if logged in after the state is updated
+
+    // Check if logged in after the state is updated
     if (currentState.isLoggedIn) {
-      // Check role to decide which page to navigate to
-      switch (currentState.role) {
-        case 'admin':
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const DepartemenMagangDashboard(),
-            ),
-          );
-          break;
-        case 'pendaftar':
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const MyHomePage(),
-            ),
-          );
-          break;
-        case 'peserta magang':
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const LogBookPesertaDashboard(),
-            ),
-          );
-          break;
-        case 'kepala departemen':
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const DashboardPembimbingMagang(),
-            ),
-          );
-          break;
-        default:
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const MyHomePage(),
-            ),
-          );
-          break;
+      // Determine navigation based on status
+      if (currentState.statusMagang != null) {
+        // Navigate to Detail Magang if status magang is found
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const PendaftaranMagangDetailPage(),
+          ),
+        );
+      } else if (currentState.statusKunjungan != null) {
+        // Navigate to Detail Kunjungan if status kunjungan is found
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const KunjunganStudiDetailPage(),
+          ),
+        );
+      } else {
+        // Default navigation by role if no specific status is found
+        switch (currentState.role) {
+          case 'admin':
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const DepartemenMagangDashboard(),
+              ),
+            );
+            break;
+          case 'pendaftar':
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const MyHomePage(),
+              ),
+            );
+            break;
+          case 'peserta magang':
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LogBookPesertaDashboard(),
+              ),
+            );
+            break;
+          case 'kepala departemen':
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const DashboardPembimbingMagang(),
+              ),
+            );
+            break;
+          default:
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const MyHomePage(),
+              ),
+            );
+            break;
+        }
       }
     }
   }

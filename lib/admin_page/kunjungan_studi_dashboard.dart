@@ -172,16 +172,6 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
                                   ),
                                   SizedBox(width: 8.w),
                                   RoundedRectangleButton(
-                                    title: "BIAYA",
-                                    style: regular16,
-                                    backgroundColor: lightOrange,
-                                    height: 30,
-                                    width: 100,
-                                    rounded: 5,
-                                    onPressed: () {},
-                                  ),
-                                  SizedBox(width: 8.w),
-                                  RoundedRectangleButton(
                                     title: "UPLOAD",
                                     style: regular16,
                                     backgroundColor: lightOrange,
@@ -597,6 +587,7 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
                         Expanded(
                           child: RoundedRectangleButton(
                             title: 'UPLOAD',
+                            fontColor: Colors.white,
                             backgroundColor: japfaOrange,
                             height: 50.h,
                             onPressed: () async {

@@ -27,6 +27,7 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
   String? persetujuanInstansiFileName;
   String? persetujuanInstansiPath;
   Uint8List? persetujuanInstansiFile;
+  bool _isLoading = false;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController universityController = TextEditingController();
@@ -273,6 +274,7 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
       children: [
         Text('Jam Kegiatan:', style: regular16),
         DropdownButton<String>(
+          dropdownColor: Colors.white,
           value: selectedSession,
           hint: const Text('Pilih Jam'),
           items: pilihanJamKunjunganStudi,
@@ -293,9 +295,20 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
     final DateTime now = DateTime.now();
     final DateTime firstAvailableDate = now.add(const Duration(days: 1));
 
+    // Ensure initialDate is selectable
+    DateTime initialDate = selectedDate ?? firstAvailableDate;
+
+    // Loop if current date not selectable
+    while (!(initialDate.weekday >= DateTime.tuesday &&
+        initialDate.weekday <= DateTime.thursday)) {
+      initialDate = initialDate.add(
+        const Duration(days: 1),
+      );
+    }
+
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: selectedDate ?? firstAvailableDate,
+      initialDate: initialDate,
       firstDate: firstAvailableDate,
       lastDate: DateTime(2050),
       selectableDayPredicate: (DateTime date) {
@@ -393,6 +406,11 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
 
   // Submit Kunjungan Studi Data
   Future<void> _submitKunjunganStudiData() async {
+    if (_isLoading) return; // Prevent double submission
+    setState(() {
+      _isLoading = true; // Set loading to true
+    });
+
     final String nama = nameController.text;
     final String asalUniversitas = selectedUniversity!;
     final String jumlahPeserta = studentCountController.text;
@@ -400,44 +418,44 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
     final String email = emailController.text.trim();
     final String tanggalKegiatan = dateController.text;
 
-    persetujuanInstansiPath = await ApiService().uploadFileToServer(
-      persetujuanInstansiFile!,
-      persetujuanInstansiFileName!,
-    );
-
-    // Fetch the current count to generate the new ID
-    final countResponse =
-        await Dio().get('http://localhost:3000/api/kunjungan_studi/count');
-    final currentCount = int.parse(countResponse.data['count']);
-    final String idKunjunganStudi = 'KJS_0${currentCount + 1}';
-
-    // Generate password token
-    String passwordTokenValue = generateRandomPassword(7);
-
-    final kunjunganStudi = KunjunganStudiData(
-      idKunjunganStudi: idKunjunganStudi,
-      namaPerwakilan: nama,
-      noTelp: noTelepon,
-      email: email,
-      asalUniversitas: asalUniversitas,
-      jumlahPeserta: int.parse(jumlahPeserta),
-      tanggalKegiatan: tanggalKegiatan,
-      jamKegiatan: selectedSession!,
-      pathPersetujuanInstansi: persetujuanInstansiPath!,
-      status: statusKunjunganMenunggu,
-      passwordToken: passwordTokenValue,
-    );
-
     try {
+      persetujuanInstansiPath = await ApiService().uploadFileToServer(
+        persetujuanInstansiFile!,
+        persetujuanInstansiFileName!,
+      );
+
+      // Fetch the current count
+      final countResponse =
+          await Dio().get('http://localhost:3000/api/kunjungan_studi/count');
+      final currentCount = int.parse(countResponse.data['count']);
+      final String idKunjunganStudi = 'KJS_0${currentCount + 1}';
+
+      // Generate password token
+      String passwordTokenValue = generateRandomPassword(7);
+
+      final kunjunganStudi = KunjunganStudiData(
+        idKunjunganStudi: idKunjunganStudi,
+        namaPerwakilan: nama,
+        noTelp: noTelepon,
+        email: email,
+        asalUniversitas: asalUniversitas,
+        jumlahPeserta: int.parse(jumlahPeserta),
+        tanggalKegiatan: tanggalKegiatan,
+        jamKegiatan: selectedSession!,
+        pathPersetujuanInstansi: persetujuanInstansiPath!,
+        status: statusKunjunganMenunggu,
+        passwordToken: passwordTokenValue,
+      );
+
       // Submit the data
       final response = await ApiService()
           .kunjunganStudiService
           .submitKunjunganStudi(kunjunganStudi);
 
-      // Send Email contain passwordToken to user
+      // Send email with password token
       await ApiService().sendEmail(
-        emailController.text.trim(),
-        nameController.text,
+        email,
+        nama,
         passwordTokenValue,
       );
 
@@ -456,6 +474,10 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Submission failed: $e')));
+    } finally {
+      setState(() {
+        _isLoading = false; // Reset the loading state
+      });
     }
   }
 }

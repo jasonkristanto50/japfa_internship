@@ -89,11 +89,13 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
   ];
   List<String> tipeDataFotoUpload = ['jpg', 'png', 'jpeg'];
 
-  final _visible = true;
   String labelCV = 'CV';
   String labelPersetujuanUniv = 'Persetujuan Univ';
   String labelTranskripNilai = 'Transkrip Nilai';
   String labelFotoDiri = 'Foto Diri';
+
+  final _visible = true;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -242,48 +244,6 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
     );
   }
 
-  // VALIDATE FIELD
-  bool validateFileFields(BuildContext context) {
-    // Check if the files are uploaded
-    if (!validateFileUpload(labelCV)) {
-      return false;
-    }
-
-    if (!validateFileUpload(labelPersetujuanUniv)) {
-      return false;
-    }
-
-    if (!validateFileUpload(labelTranskripNilai)) {
-      return false;
-    }
-    if (!validateFileUpload(labelFotoDiri)) {
-      return false;
-    }
-
-    return true;
-  }
-
-  // Validate file upload (check if files are selected)
-  bool validateFileUpload(String field) {
-    String? fileName;
-    if (field == labelCV) {
-      fileName = cvFileName;
-    } else if (field == labelPersetujuanUniv) {
-      fileName = campusApprovalFileName;
-    } else if (field == labelTranskripNilai) {
-      fileName = transcriptFileName;
-    } else if (field == labelFotoDiri) {
-      fileName = fotoDiriFileName;
-    }
-
-    if (fileName == null) {
-      showSnackBar(context, '$field harus diupload');
-      return false;
-    }
-
-    return true;
-  }
-
   // Function to update file data based on the field
   void updateFileData(String field, String? fileName, Uint8List fileBytes) {
     if (field == labelCV) {
@@ -375,29 +335,26 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
     }
   }
 
-  // Method to submit the form
   void _submitFormPesertaMagang() async {
+    if (_isLoading) return; // Prevent double submission
+    setState(() {
+      _isLoading = true; // Start loading
+    });
+
     if (cvFileName != null &&
         campusApprovalFileName != null &&
         transcriptFileName != null) {
       try {
         // Set the file path
-        cvFilePath = await ApiService().uploadFileToServer(
-          cvFile!,
-          cvFileName!,
-        );
-        campusApprovalFilePath = await ApiService().uploadFileToServer(
-          campusApprovalFile!,
-          campusApprovalFileName!,
-        );
-        transcriptFilePath = await ApiService().uploadFileToServer(
-          transcriptFile!,
-          transcriptFileName!,
-        );
-        fotoDiriFilePath = await ApiService().uploadFileToServer(
-          fotoDiriFile!,
-          fotoDiriFileName!,
-        );
+        cvFilePath =
+            await ApiService().uploadFileToServer(cvFile!, cvFileName!);
+        campusApprovalFilePath = await ApiService()
+            .uploadFileToServer(campusApprovalFile!, campusApprovalFileName!);
+        transcriptFilePath = await ApiService()
+            .uploadFileToServer(transcriptFile!, transcriptFileName!);
+        fotoDiriFilePath = await ApiService()
+            .uploadFileToServer(fotoDiriFile!, fotoDiriFileName!);
+
         // Fetch the count of peserta magang
         int count =
             await ApiService().pesertaMagangService.countPesertaMagang();
@@ -437,20 +394,74 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
         // Add skill & project to database skill_peserta_magang
         _submitSkillData();
 
-        // Send Email contain passwordToken to user
-        await ApiService().sendEmail(
-          widget.email,
-          widget.name,
-          passwordTokenValue,
+        // Send Email containing passwordToken to user
+        await ApiService()
+            .sendEmail(widget.email, widget.name, passwordTokenValue);
+
+        // Show success message
+        showSnackBar(
+          context,
+          'Submission successful!',
+          backgroundColor: Colors.green,
         );
       } catch (error) {
         showSnackBar(context, 'An error occurred while submitting the form');
+      } finally {
+        setState(() {
+          _isLoading = false; // Reset loading state
+        });
       }
     } else {
       showSnackBar(context, 'All files must be uploaded');
+      setState(() {
+        _isLoading = false; // Reset loading state if files are not uploaded
+      });
     }
   }
 
+  // VALIDATE FIELD
+  bool validateFileFields(BuildContext context) {
+    // Check if the files are uploaded
+    if (!validateFileUpload(labelCV)) {
+      return false;
+    }
+
+    if (!validateFileUpload(labelPersetujuanUniv)) {
+      return false;
+    }
+
+    if (!validateFileUpload(labelTranskripNilai)) {
+      return false;
+    }
+    if (!validateFileUpload(labelFotoDiri)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  // Validate file upload (check if files are selected)
+  bool validateFileUpload(String field) {
+    String? fileName;
+    if (field == labelCV) {
+      fileName = cvFileName;
+    } else if (field == labelPersetujuanUniv) {
+      fileName = campusApprovalFileName;
+    } else if (field == labelTranskripNilai) {
+      fileName = transcriptFileName;
+    } else if (field == labelFotoDiri) {
+      fileName = fotoDiriFileName;
+    }
+
+    if (fileName == null) {
+      showSnackBar(context, '$field harus diupload');
+      return false;
+    }
+
+    return true;
+  }
+
+  // Check project yang disubmit pendaftar
   int _checkProject(List<String> projectList) {
     int projectCount = 0;
     if (widget.projectDetail1 != null && widget.projectDetail1!.isNotEmpty) {

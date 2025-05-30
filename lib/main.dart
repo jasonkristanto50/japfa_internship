@@ -51,10 +51,16 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.white,
         ),
         inputDecorationTheme: InputDecorationTheme(
-          fillColor: Colors.grey[200], // Light fill color for inputs
+          fillColor: Colors.grey[200],
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide(color: japfaOrange),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: japfaOrange),
+          ),
+          labelStyle: const TextStyle(
+            color: Colors.black, // Color for labels
           ),
         ),
 

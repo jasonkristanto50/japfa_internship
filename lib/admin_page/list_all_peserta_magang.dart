@@ -345,7 +345,7 @@ class _ListAllPesertaMagangState extends State<ListAllPesertaMagang> {
 
   void _downloadExcel() {} // TODO: DUMMY comment only for testing in windows
 
-  // // Method to download Excel
+  // Method to download Excel
   // void _downloadExcel() async {
   //   try {
   //     // Create an Excel document

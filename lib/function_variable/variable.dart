@@ -2,9 +2,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-String appName = "Japfa Internship";
-const String baseUrl = 'http://192.168.254.119:3000'; // Use IP Address
+// Use IP Address (Mobile Hotspot) -- change to localhost if want to use another connection wifi
+const String baseUrl = 'http://192.168.254.119:3000';
 
+String appName = "Japfa Internship";
 Dio dio = Dio();
 int jumlahMaksimalPeserta = 55;
 

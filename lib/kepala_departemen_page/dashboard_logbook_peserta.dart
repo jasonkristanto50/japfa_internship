@@ -7,8 +7,10 @@ import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/string_value.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/models/logbook_peserta_magang_data/logbook_peserta_magang_data.dart';
+import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/components/widget_component.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DashboardLogbookPeserta extends ConsumerStatefulWidget {
   const DashboardLogbookPeserta({super.key, required this.email});
@@ -24,11 +26,14 @@ class _DashboardLogbookPesertaState
   String searchQuery = "";
   List<LogbookPesertaMagangData> logbookData = [];
   late bool isAdmin;
+  bool isTableLogbook = true;
+  late PesertaMagangData peserta;
 
   @override
   void initState() {
     super.initState();
     fetchLogbooks();
+    _fetchPesertaData();
     final login = ref.read(loginProvider);
     if (login.role == roleAdminValue) {
       isAdmin = true;
@@ -58,9 +63,12 @@ class _DashboardLogbookPesertaState
           children: [
             // Add Search Bar
             _buildSearchBar(),
+            _buildLogbookOrLaporanTable(),
             const SizedBox(height: 24),
             // Logbook Table
-            _buildLogbookTable(filteredLogData),
+            isTableLogbook
+                ? _buildLogbookTable(filteredLogData) // Display logbook table
+                : _buildLaporanAkhirTable(), // Display final report table
           ],
         ),
       ),
@@ -76,6 +84,47 @@ class _DashboardLogbookPesertaState
             searchQuery = value; // Update search query
           });
         },
+      ),
+    );
+  }
+
+  // Build buttons to switch logbook or laporan
+  Widget _buildLogbookOrLaporanTable() {
+    return Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Button for "Logbook Harian"
+          RoundedRectangleButton(
+            title: "Logbook Harian",
+            style: bold14,
+            width: 200.w,
+            height: 40.h,
+            fontColor: Colors.white,
+            backgroundColor: isTableLogbook ? japfaOrange : Colors.grey,
+            onPressed: () {
+              setState(() {
+                isTableLogbook = true;
+              });
+            },
+          ),
+          const SizedBox(width: 10),
+          // Button for "Laporan Akhir"
+          RoundedRectangleButton(
+            title: "Laporan Akhir",
+            style: bold14,
+            width: 200.w,
+            height: 40.h,
+            fontColor: Colors.white,
+            backgroundColor:
+                isTableLogbook == false ? japfaOrange : Colors.grey,
+            onPressed: () {
+              setState(() {
+                isTableLogbook = false;
+              });
+            },
+          ),
+        ],
       ),
     );
   }
@@ -191,6 +240,88 @@ class _DashboardLogbookPesertaState
     );
   }
 
+  Widget _buildLaporanAkhirTable() {
+    return Expanded(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(24.0),
+        child: Center(
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.1),
+                  spreadRadius: 1,
+                  blurRadius: 4,
+                  offset: const Offset(0, 1),
+                ),
+              ],
+            ),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: DataTable(
+                headingRowColor: const WidgetStatePropertyAll(Colors.orange),
+                headingTextStyle: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+                border: TableBorder.all(color: Colors.grey, width: 1),
+                columns: const [
+                  DataColumn(label: Text('No')),
+                  DataColumn(label: Text('Nama Peserta')),
+                  DataColumn(label: Text('Laporan')),
+                  DataColumn(label: Text('Validasi')),
+                ],
+                rows: [
+                  DataRow(cells: [
+                    const DataCell(Text('1')),
+                    DataCell(Text(peserta.nama)),
+                    DataCell(
+                      GestureDetector(
+                        onTap: () {
+                          // 'laporanAkhir' is the URL for the final report
+                          if (peserta.urlLaporanAkhir != null) {
+                            _launchURL(peserta.urlLaporanAkhir!);
+                          }
+                        },
+                        child: Text(
+                          peserta.urlLaporanAkhir ??
+                              "Masih belum ada laporan akhir",
+                          style: TextStyle(
+                            color: peserta.urlLaporanAkhir != null
+                                ? Colors.blue
+                                : Colors.grey,
+                            decoration: peserta.urlLaporanAkhir != null
+                                ? TextDecoration.underline
+                                : TextDecoration.none,
+                          ),
+                        ),
+                      ),
+                    ),
+                    DataCell(
+                      RoundedRectangleButton(
+                          title: "Validasi",
+                          backgroundColor: lightBlue,
+                          fontColor: Colors.black,
+                          style: regular14,
+                          height: 40.h,
+                          width: 150.w,
+                          rounded: 5,
+                          onPressed: () {
+                            // TODO: Validasi
+                          }),
+                    ),
+                  ]),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   void showValidationConfirmation(String id) {
     showDialog(
       context: context,
@@ -260,6 +391,32 @@ class _DashboardLogbookPesertaState
       print('Fetched logbooks: $logbooks'); // Log fetched data
     } catch (e) {
       print('Error fetching logbooks: $e'); // Log errors
+    }
+  }
+
+  Future<void> _fetchPesertaData() async {
+    try {
+      PesertaMagangData pesertaData = await ApiService()
+          .pesertaMagangService
+          .fetchPesertaMagangByEmail(widget.email);
+
+      setState(() {
+        peserta = pesertaData;
+      });
+    } catch (e) {
+      // Handle error
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error fetching data: $e')),
+      );
+    }
+  }
+
+  // Launch URL function
+  void _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
     }
   }
 }

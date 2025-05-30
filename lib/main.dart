@@ -59,9 +59,7 @@ class MyApp extends StatelessWidget {
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(color: japfaOrange),
           ),
-          labelStyle: const TextStyle(
-            color: Colors.black, // Color for labels
-          ),
+          labelStyle: TextStyle(color: darkGrey),
         ),
 
         // ============================ DATE PICKER THEME ============================

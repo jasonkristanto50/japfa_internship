@@ -110,16 +110,17 @@ class _LogBookPesertaDashboardState
               });
             },
             labelSearchBar: "Cari",
+            heightValue: 40,
             widthValue: isMobile ? 200.w : 1200.w, // Adjust width for mobile
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: isMobile ? 0 : 16),
           // Button to add a new logbook
           RoundedRectangleButton(
             title: isMobile ? "Tambah" : "Tambah Log Book", // Conditional title
             backgroundColor: japfaOrange,
             fontColor: Colors.white,
             height: 40,
-            width: isMobile ? 100 : 200, // Adjust width for mobile
+            width: isMobile ? 110 : 200, // Adjust width for mobile
             rounded: 5,
             onPressed: () {
               _showAddLogBookModal();

@@ -69,81 +69,85 @@ class _LaporanPesertaMagangState extends ConsumerState<LaporanPesertaMagang> {
           child: Center(
             child: Container(
               color: Colors.white, // Background color behind the DataTable
-              child: DataTable(
-                headingRowColor: WidgetStateProperty.all(Colors.orange[500]),
-                headingTextStyle: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-                border: TableBorder.all(color: Colors.grey, width: 1),
-                columns: const [
-                  DataColumn(label: Text('Nama Laporan')),
-                  DataColumn(label: Text('File / URL')),
-                  DataColumn(label: Text('Verifikasi Pembimbing')),
-                  DataColumn(label: Text('Action')),
-                ],
-                rows: laporans.map<DataRow>((laporan) {
-                  String? url = laporanData[laporan]?['url'];
-                  return DataRow(cells: [
-                    DataCell(Text(laporan)),
-                    DataCell(
-                      GestureDetector(
-                        onTap: () {
-                          if (url != null && url.isNotEmpty) {
-                            _launchURL(url);
-                          }
-                        },
-                        child: Text(
-                          url ?? '',
-                          style: TextStyle(
-                            color: url != null && url.isNotEmpty
-                                ? Colors.blue
-                                : Colors.grey,
-                            decoration: url != null && url.isNotEmpty
-                                ? TextDecoration.underline
-                                : TextDecoration.none,
+              child: SingleChildScrollView(
+                // Added for horizontal scrolling
+                scrollDirection: Axis.horizontal, // Enable horizontal scroll
+                child: DataTable(
+                  headingRowColor: const WidgetStatePropertyAll(Colors.orange),
+                  headingTextStyle: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  border: TableBorder.all(color: Colors.grey, width: 1),
+                  columns: const [
+                    DataColumn(label: Text('Nama Laporan')),
+                    DataColumn(label: Text('File / URL')),
+                    DataColumn(label: Text('Verifikasi Pembimbing')),
+                    DataColumn(label: Text('Action')),
+                  ],
+                  rows: laporans.map<DataRow>((laporan) {
+                    String? url = laporanData[laporan]?['url'];
+                    return DataRow(cells: [
+                      DataCell(Text(laporan)),
+                      DataCell(
+                        GestureDetector(
+                          onTap: () {
+                            if (url != null && url.isNotEmpty) {
+                              _launchURL(url);
+                            }
+                          },
+                          child: Text(
+                            url ?? '',
+                            style: TextStyle(
+                              color: url != null && url.isNotEmpty
+                                  ? Colors.blue
+                                  : Colors.grey,
+                              decoration: url != null && url.isNotEmpty
+                                  ? TextDecoration.underline
+                                  : TextDecoration.none,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    DataCell(
-                        Text(laporanData[laporan]?['validasi'] ?? 'Pending')),
-                    DataCell(
-                      Row(
-                        children: [
-                          // Check for Laporan Akhir for edit
-                          (laporan == 'Laporan Akhir')
-                              ? RoundedRectangleButton(
-                                  title: "Edit URL",
-                                  backgroundColor: lightBlue,
-                                  fontColor: Colors.black,
-                                  style: regular14,
-                                  height: 40.h,
-                                  width: 150.w,
-                                  rounded: 5,
-                                  onPressed: () => _showEditUrlModal(laporan),
-                                )
-                              : RoundedRectangleButton(
-                                  title: "Tambah URL",
-                                  backgroundColor: lightBlue,
-                                  fontColor: Colors.black,
-                                  style: regular14,
-                                  height: 40.h,
-                                  width: 150.w,
-                                  rounded: 5,
-                                  onPressed: () =>
-                                      _showAddLaporanModal(laporan),
-                                ),
-                          const SizedBox(width: 8),
-                          IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () => _deleteLaporan(laporan),
-                          ),
-                        ],
+                      DataCell(
+                          Text(laporanData[laporan]?['validasi'] ?? 'Pending')),
+                      DataCell(
+                        Row(
+                          children: [
+                            // Check for Laporan Akhir for edit
+                            (laporan == 'Laporan Akhir')
+                                ? RoundedRectangleButton(
+                                    title: "Edit URL",
+                                    backgroundColor: lightBlue,
+                                    fontColor: Colors.black,
+                                    style: regular14,
+                                    height: 40.h,
+                                    width: 150.w,
+                                    rounded: 5,
+                                    onPressed: () => _showEditUrlModal(laporan),
+                                  )
+                                : RoundedRectangleButton(
+                                    title: "Tambah URL",
+                                    backgroundColor: lightBlue,
+                                    fontColor: Colors.black,
+                                    style: regular14,
+                                    height: 40.h,
+                                    width: 150.w,
+                                    rounded: 5,
+                                    onPressed: () =>
+                                        _showAddLaporanModal(laporan),
+                                  ),
+                            const SizedBox(width: 8),
+                            IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () => _deleteLaporan(laporan),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ]);
-                }).toList(),
+                    ]);
+                  }).toList(),
+                ),
               ),
             ),
           ),

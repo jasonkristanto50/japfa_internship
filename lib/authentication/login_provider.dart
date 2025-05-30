@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:japfa_internship/function_variable/string_value.dart';
+import 'package:japfa_internship/function_variable/variable.dart';
 
 class LoginState {
   final bool isLoading;
@@ -72,7 +73,7 @@ class LoginNotifier extends StateNotifier<LoginState> {
     }
     state = state.copyWith(isLoading: true, errorMessage: null);
 
-    String url = 'http://localhost:3000/api/login/login-password';
+    String url = '$baseUrl/api/login/login-password';
 
     try {
       final response = await _dio.post(
@@ -121,7 +122,7 @@ class LoginNotifier extends StateNotifier<LoginState> {
   }) async {
     state = state.copyWith(isLoading: true, errorMessage: null);
 
-    String url = 'http://localhost:3000/api/login/login-token';
+    String url = '$baseUrl/api/login/login-token';
 
     try {
       final response = await _dio.post(

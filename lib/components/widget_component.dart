@@ -224,6 +224,7 @@ class CustomSearchBar extends StatelessWidget {
   final Function(String) onChanged;
   final String? labelSearchBar;
   final double? widthValue;
+  final double? heightValue;
   final bool withSearchButton;
 
   const CustomSearchBar({
@@ -231,6 +232,7 @@ class CustomSearchBar extends StatelessWidget {
     required this.onChanged,
     this.labelSearchBar,
     this.widthValue,
+    this.heightValue,
     this.withSearchButton = false,
   });
 
@@ -243,6 +245,7 @@ class CustomSearchBar extends StatelessWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
           child: Container(
+            height: heightValue ?? 70,
             width: widthValue,
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.5),

@@ -96,7 +96,7 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
                   if (loginState.isLoggedIn)
                     IconButton(
                       icon: const Icon(Icons.menu, color: Colors.white),
-                      onPressed: () => _showMenu(context, ref),
+                      onPressed: () => _showMenu(context, ref, isMobile),
                     ),
                 ] else ...[
                   // Website & Desktop
@@ -153,7 +153,7 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
                     ],
                     const SizedBox(width: 16),
                     // Profile Pop Up
-                    buildProfileIcon(ref),
+                    buildProfileIcon(ref, isMobile),
                   ],
                 ],
               ],
@@ -181,12 +181,12 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
     );
   }
 
-  Widget buildProfileIcon(WidgetRef ref) {
+  Widget buildProfileIcon(WidgetRef ref, bool isMobile) {
     return PopupMenuButton<String>(
       color: Colors.white,
       onSelected: (value) {
         if (value == 'logout') {
-          _logOutFunction(context, ref);
+          _logOutFunction(context, ref, isMobile);
         } else if (value == 'profile') {
           _navigateToProfilePage();
         }
@@ -243,7 +243,7 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
     );
   }
 
-  void _showMenu(BuildContext context, WidgetRef ref) {
+  void _showMenu(BuildContext context, WidgetRef ref, bool isMobile) {
     final loginState = ref.watch(loginProvider);
 
     List<PopupMenuEntry<String>> menuItems = [];
@@ -310,7 +310,8 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
 
       showMenu(
         context: context,
-        position: const RelativeRect.fromLTRB(100.0, 100.0, 100.0, 0.0),
+        color: Colors.white,
+        position: const RelativeRect.fromLTRB(300.0, 100.0, 0.0, 0.0),
         items: menuItems,
       ).then((value) {
         if (value != null) {
@@ -349,7 +350,7 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
               _navigateToTimeLine();
               break;
             case 'logout':
-              _logOutFunction(context, ref);
+              _logOutFunction(context, ref, isMobile);
               break;
           }
         }
@@ -486,12 +487,14 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
         targetNavigation: const LaporanPesertaMagang(), time: 200);
   }
 
-  void _logOutFunction(BuildContext context, WidgetRef ref) {
+  void _logOutFunction(BuildContext context, WidgetRef ref, bool isMobile) {
     ref.read(loginProvider.notifier).logout();
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
-        builder: (context) => const MyHomePage(), // Your HomePage
+        builder: (context) => isMobile
+            ? const LoginScreen()
+            : const MyHomePage(), // Your HomePage
       ),
       (route) => false,
     );

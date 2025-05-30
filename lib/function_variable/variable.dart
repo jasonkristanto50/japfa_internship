@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 String appName = "Japfa Internship";
-const String baseUrl = 'http://localhost:3000';
+const String baseUrl = 'http://192.168.254.119:3000'; // Use IP Address
+
 Dio dio = Dio();
 int jumlahMaksimalPeserta = 55;
 

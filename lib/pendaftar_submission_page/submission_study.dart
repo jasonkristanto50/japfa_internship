@@ -297,7 +297,14 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
       context: context,
       initialDate: selectedDate ?? firstAvailableDate,
       firstDate: firstAvailableDate,
-      lastDate: DateTime(2101),
+      lastDate: DateTime(2050),
+      selectableDayPredicate: (DateTime date) {
+        // Hanya boleh selasa - kamis
+        return date.weekday != DateTime.monday &&
+            date.weekday != DateTime.friday &&
+            date.weekday != DateTime.saturday &&
+            date.weekday != DateTime.sunday;
+      },
     );
 
     print(

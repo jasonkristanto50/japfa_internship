@@ -155,6 +155,39 @@ router.put('/update_path_file_respon_japfa/:id', async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 });
+
+// Update tanggal_kegiatan and return updated fields
+router.put('/update-tanggal/:id', async (req, res) => {
+    const { id } = req.params; 
+    const { tanggal_kegiatan } = req.body; // New tanggal_kegiatan
+
+    try {
+        // Prepare the SQL query to update tanggal_kegiatan
+        const query = `
+          UPDATE KUNJUNGAN_STUDI 
+          SET tanggal_kegiatan = $1
+          WHERE id_kunjungan_studi = $2 RETURNING tanggal_kegiatan, jam_kegiatan, email
+        `;
+
+        // Execute the query with parameters
+        const params = [tanggal_kegiatan, id];
+        const result = await pool.query(query, params);
+
+        // Check if the record was found and updated
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: 'Kunjungan Studi not found' });
+        }
+
+        // Return the updated fields in the response
+        res.status(200).json({ 
+            message: 'Tanggal updated successfully!', 
+            updated_data: result.rows[0] 
+        });
+    } catch (error) {
+        console.error('Error updating tanggal_kegiatan:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
   
 
 // Delete all Kunjungan Studi records

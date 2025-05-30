@@ -23,6 +23,7 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
   String searchQuery = "";
   List<KunjunganStudiData> kunjunganList = [];
   String pathFileResponJapfa = '-';
+  TextEditingController editedTanggalController = TextEditingController();
 
   @override
   void initState() {
@@ -341,13 +342,11 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
           actions: [
             Center(
               child: Column(
-                mainAxisSize: MainAxisSize.min, // Ensure it takes minimum space
-                mainAxisAlignment:
-                    MainAxisAlignment.center, // Center the buttons
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.center, // Center the row
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       RoundedRectangleButton(
                         title: "Tutup",
@@ -368,7 +367,7 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
                         height: 35,
                         rounded: 5,
                         // TODO: Buat Edit Tanggal
-                        onPressed: () {},
+                        onPressed: () => _showEditTanggalDialog(kunjungan),
                       ),
                     ],
                   ),
@@ -480,6 +479,53 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
         kunjungan = kunjungan.copyWith(
             status: 'Pending', catatanHr: null); // Clear the note on error
       });
+    }
+  }
+
+  void _showEditTanggalDialog(KunjunganStudiData kunjungan) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CustomAlertDialog(
+          title: "Edit Tanggal Kegiatan",
+          numberOfField: 1,
+          controllers: [editedTanggalController],
+          labels: const ["Tanggal Kegiatan Baru"],
+          fieldTypes: const [
+            BuildFieldTypeController.date,
+          ],
+          onSave: () {
+            _updateTanggal(kunjungan, editedTanggalController.text);
+            Navigator.of(context).pop(); // Close input tanggal page
+            Navigator.of(context).pop(); // Close the detail page
+          },
+        );
+      },
+    );
+  }
+
+  // New function to handle updating the tanggal
+  Future<void> _updateTanggal(
+      KunjunganStudiData kunjungan, String newTanggalKegiatan) async {
+    if (newTanggalKegiatan.isNotEmpty) {
+      try {
+        // Call the API to update the tanggal
+        await ApiService().kunjunganStudiService.updateTanggalKegiatan(
+            kunjungan.idKunjunganStudi, newTanggalKegiatan);
+
+        // Refresh the list after updating
+        await _fetchKunjunganData();
+        showSnackBar(
+          context,
+          'Tanggal berhasil diperbarui!',
+          backgroundColor: Colors.green,
+        );
+      } catch (e) {
+        print('Error updating tanggal: $e');
+        showSnackBar(context, 'Gagal memperbarui tanggal.');
+      }
+    } else {
+      showSnackBar(context, 'Tanggal tidak boleh kosong.');
     }
   }
 

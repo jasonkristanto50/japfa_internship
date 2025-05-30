@@ -529,6 +529,29 @@ class KunjunganStudiService {
       rethrow; // Rethrow the exception for further handling
     }
   }
+
+  // Method to update the tanggal_kegiatan
+  Future<void> updateTanggalKegiatan(String id, String tanggalKegiatan) async {
+    try {
+      final response = await _dio.put(
+        '$baseUrlKunjunganStudi/update-tanggal/$id',
+        data: {
+          'tanggal_kegiatan': tanggalKegiatan,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // Handle success
+        print('Tanggal updated successfully: ${response.data}');
+      } else {
+        // Handle error
+        print('Failed to update tanggal: ${response.data}');
+      }
+    } catch (e) {
+      print('Error updating tanggal: $e');
+      rethrow; // Rethrow the exception for further handling
+    }
+  }
 }
 
 class KepalaDepartemenService {

@@ -72,13 +72,27 @@ class _ListAllPesertaMagangState extends State<ListAllPesertaMagang> {
             widthValue: 1200.w,
           ),
           RoundedRectangleButton(
-            title: "Download",
+            title: "Rekomendasi",
+            backgroundColor: Colors.white,
+            outlineColor: japfaOrange,
+            height: 40,
+            width: 150,
+            rounded: 5,
+            onPressed: () {
+              // _downloadExcel();
+            },
+          ),
+          const SizedBox(width: 15),
+          RoundedRectangleButton(
+            title: "Download Data",
             backgroundColor: Colors.white,
             outlineColor: Colors.green,
             height: 40,
-            width: 200,
+            width: 150,
             rounded: 5,
-            onPressed: () => _downloadExcel(),
+            onPressed: () {
+              // _downloadExcel();
+            },
           ),
         ],
       ),
@@ -342,8 +356,6 @@ class _ListAllPesertaMagangState extends State<ListAllPesertaMagang> {
       ),
     );
   }
-
-  void _downloadExcel() {} // TODO: DUMMY comment only for testing in windows
 
   // Method to download Excel
   // void _downloadExcel() async {

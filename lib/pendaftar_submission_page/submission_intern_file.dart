@@ -10,7 +10,6 @@ import 'package:japfa_internship/home_page.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
 import 'package:japfa_internship/models/skill_peserta_magang_data/skill_peserta_magang_data.dart';
 import 'package:japfa_internship/navbar.dart';
-import 'package:japfa_internship/pendaftar_submission_page/submission_intern_text.dart';
 
 class SubmissionInternFile extends StatefulWidget {
   final String departmentName;
@@ -147,12 +146,7 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
         IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            fadeNavigation(
-              context,
-              targetNavigation: SubmissionIntern(
-                departmentName: widget.departmentName,
-              ),
-            );
+            Navigator.of(context).pop();
           },
           padding: EdgeInsets.zero,
           constraints: const BoxConstraints(),

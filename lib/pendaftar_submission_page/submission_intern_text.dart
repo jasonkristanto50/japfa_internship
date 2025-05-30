@@ -299,28 +299,31 @@ class _SubmissionInternState extends State<SubmissionIntern> {
             // Final submission action for Project Submission Page
             int? generation = int.tryParse(generationController.text);
             double? score = double.tryParse(scoreController.text);
-            fadeNavigation(context,
-                targetNavigation: SubmissionInternFile(
-                  departmentName: widget.departmentName,
-                  name: nameController.text,
-                  address: addressController.text,
-                  phoneNumber: phoneNumberController.text,
-                  email: emailController.text,
-                  university: selectedUniversity!,
-                  akreditasiUniversitas: akreditasiUniversitas!,
-                  generation: generation ?? 0,
-                  score: score ?? 0,
-                  major: selectedMajor!,
-                  likertKomunikasi: likertKomunikasiValue,
-                  likertKreativitas: likertKreativitasValue,
-                  likertTanggungJawab: likertTanggungJawabValue,
-                  likertKerjaSama: likertKerjaSamaValue,
-                  likertTeknis: likertTeknisValue,
-                  projectDetail1: projectDetail1Controller.text,
-                  projectDetail2: projectDetail2Controller.text,
-                  projectDetail3: projectDetail3Controller.text,
-                  urlProject: urlController.text,
-                ));
+            fadeNavigation(
+              context,
+              targetNavigation: SubmissionInternFile(
+                departmentName: widget.departmentName,
+                name: nameController.text,
+                address: addressController.text,
+                phoneNumber: phoneNumberController.text,
+                email: emailController.text,
+                university: selectedUniversity!,
+                akreditasiUniversitas: akreditasiUniversitas!,
+                generation: generation ?? 0,
+                score: score ?? 0,
+                major: selectedMajor!,
+                likertKomunikasi: likertKomunikasiValue,
+                likertKreativitas: likertKreativitasValue,
+                likertTanggungJawab: likertTanggungJawabValue,
+                likertKerjaSama: likertKerjaSamaValue,
+                likertTeknis: likertTeknisValue,
+                projectDetail1: projectDetail1Controller.text,
+                projectDetail2: projectDetail2Controller.text,
+                projectDetail3: projectDetail3Controller.text,
+                urlProject: urlController.text,
+              ),
+              time: 0, // No fade animation
+            );
           }
         }
       },

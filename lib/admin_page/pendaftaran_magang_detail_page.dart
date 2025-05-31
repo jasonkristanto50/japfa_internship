@@ -329,16 +329,19 @@ class _PendaftaranMagangDetailPageState
                     const SizedBox(height: 10),
                     buildDataInfoField(
                       label: "Link Lampiran",
-                      value: skill!.urlLampiran,
+                      value: skill!.urlLampiran.isNotEmpty
+                          ? skill!.urlLampiran
+                          : "--Tidak ada lampiran--",
                     ),
-                    RoundedRectangleButton(
-                      title: "Buka Lampiran",
-                      fontColor: Colors.white,
-                      backgroundColor: japfaOrange,
-                      height: 50.h,
-                      onPressed: () =>
-                          launchFullURLImagePath(fullPath: skill!.urlLampiran),
-                    )
+                    if (skill!.urlLampiran.isNotEmpty)
+                      RoundedRectangleButton(
+                        title: "Buka Lampiran",
+                        fontColor: Colors.white,
+                        backgroundColor: japfaOrange,
+                        height: 50.h,
+                        onPressed: () => launchFullURLImagePath(
+                            fullPath: skill!.urlLampiran),
+                      )
                   ],
                 ),
               ),
@@ -436,13 +439,14 @@ class _PendaftaranMagangDetailPageState
       children: [
         // Check if there are any projects
         if (skill!.banyakProyek == 0) ...[
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 5), // Add vertical padding
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(vertical: 5), // Add vertical padding
             child: Text(
               'Tidak ada proyek',
-              style: TextStyle(
-                  fontSize: 16,
-                  fontStyle: FontStyle.italic), // Adjust style as needed
+              style: regular20.copyWith(
+                fontStyle: FontStyle.italic,
+              ),
             ),
           ),
         ] else ...[
@@ -601,7 +605,6 @@ class _PendaftaranMagangDetailPageState
   Future<void> _fetchPesertaAndSkillByEmail(String email) async {
     setState(() => _loading = true);
     try {
-      // TODO
       final dataPeserta = await ApiService()
           .pesertaMagangService
           .fetchPesertaMagangByEmail(email);

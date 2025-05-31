@@ -10,6 +10,7 @@ import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/string_value.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
+import 'package:japfa_internship/models/skill_peserta_magang_data/skill_peserta_magang_data.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/components/widget_component.dart';
 import 'package:path_provider/path_provider.dart';
@@ -35,7 +36,7 @@ class _ListAllPesertaMagangState extends State<ListAllPesertaMagang> {
 
   @override
   Widget build(BuildContext context) {
-    _updateFilteredPesertaData(); // Ensure filtered data is updated
+    _updateFilteredPesertaData();
 
     return Scaffold(
       appBar: Navbar(
@@ -79,7 +80,7 @@ class _ListAllPesertaMagangState extends State<ListAllPesertaMagang> {
             width: 150,
             rounded: 5,
             onPressed: () {
-              // _downloadExcel();
+              _sortPesertaByDepartmentAndFuzzyScore();
             },
           ),
           const SizedBox(width: 15),
@@ -355,6 +356,49 @@ class _ListAllPesertaMagangState extends State<ListAllPesertaMagang> {
         ),
       ),
     );
+  }
+
+  void _sortPesertaByDepartmentAndFuzzyScore() async {
+    try {
+      // Fetch the skill data for fuzzy scores
+      List<SkillPesertaMagangData> skillDataList =
+          await ApiService().skillService.fetchAllSkills();
+
+      // Create a map to correlate email to fuzzy scores
+      Map<String, double> emailToFuzzyScoreMap = {
+        for (var skill in skillDataList) skill.email: skill.fuzzyScore,
+      };
+
+      // Sort by department and then by fuzzy score
+      pesertaMagangList.sort((a, b) {
+        // First sort by department (ascending order)
+        final departmentComparison =
+            a.departemen?.compareTo(b.departemen ?? "") ?? -1;
+
+        // If departments are equal, sort by fuzzy score
+        if (departmentComparison == 0) {
+          final scoreA = emailToFuzzyScoreMap[a.email] ?? 0;
+          final scoreB = emailToFuzzyScoreMap[b.email] ?? 0;
+          return scoreB
+              .compareTo(scoreA); // Sort by fuzzy score (descending order)
+        }
+
+        return departmentComparison; // Order departments
+      });
+
+      // Set the state to refresh UI
+      setState(() {
+        // Refresh the display with the sorted list
+        pesertaMagangList = pesertaMagangList;
+      });
+
+      // Show a confirmation message
+      showSnackBar(context,
+          "Data telah diurutkan berdasarkan departemen dan skor fuzzy.",
+          backgroundColor: Colors.grey);
+    } catch (e) {
+      print('Error sorting data: $e');
+    }
   }
 
   // Method to download Excel

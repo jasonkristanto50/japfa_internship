@@ -31,9 +31,14 @@ const pool = new Pool({
     port: process.env.DB_PORT || 5432,    // Default PostgreSQL port  
 });  
 
-// Start the server  
-app.listen(port, '0.0.0.0', () => {  
-    console.log(`Server running at http://0.0.0.0:${port}`);  
+// // Start the server  
+// app.listen(port, '0.0.0.0', () => {  
+//     console.log(`Server running at http://0.0.0.0:${port}`);  
+// });  
+
+// Start server in localhost  
+app.listen(port, 'localhost', () => {  
+    console.log(`Server running at http://localhost:${port}`);  
 });  
 
 // Routes  

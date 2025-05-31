@@ -684,6 +684,33 @@ String getInfoJamDariSesi(String jamKegiatan) {
   return 'Sesi Tidak Valid';
 }
 
+// Function to extract the original file name from PATH
+String getOriginalFileNameFromPath(String? url) {
+  if (url != null) {
+    // Extract original file name with extension
+    final parts = url.split('/');
+    final fullFileName = parts.isNotEmpty ? parts.last : '';
+
+    // Check for additional timestamps
+    final nameParts = fullFileName.split('-');
+    if (nameParts.isNotEmpty) {
+      return nameParts[0]; // Return just the original file name
+    }
+  }
+  return '';
+}
+
+IconData getFileIcon(String? url) {
+  if (url != null) {
+    if (url.endsWith('.pdf')) {
+      return Icons.picture_as_pdf; // PDF icon
+    } else if (url.endsWith('.doc') || url.endsWith('.docx')) {
+      return Icons.description; // DOC icon
+    }
+  }
+  return Icons.file_present; // Default file icon
+}
+
 // COLOR -----------------------
 Color getValidationColor(String? validasiPembimbing) {
   if (validasiPembimbing == 'true') {

@@ -10,7 +10,6 @@ import 'package:japfa_internship/models/logbook_peserta_magang_data/logbook_pese
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/components/widget_component.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class DashboardLogbookPeserta extends ConsumerStatefulWidget {
   const DashboardLogbookPeserta({super.key, required this.email});
@@ -67,8 +66,8 @@ class _DashboardLogbookPesertaState
             const SizedBox(height: 24),
             // Logbook Table
             isTableLogbook
-                ? _buildLogbookTable(filteredLogData) // Display logbook table
-                : _buildLaporanAkhirTable(), // Display final report table
+                ? _buildLogbookTable(filteredLogData)
+                : _buildLaporanAkhirTable(),
           ],
         ),
       ),
@@ -241,6 +240,7 @@ class _DashboardLogbookPesertaState
   }
 
   Widget _buildLaporanAkhirTable() {
+    String pathLaporanAkhir = peserta.urlLaporanAkhir ?? '';
     return Expanded(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
@@ -271,7 +271,6 @@ class _DashboardLogbookPesertaState
                   DataColumn(label: Text('No')),
                   DataColumn(label: Text('Nama Peserta')),
                   DataColumn(label: Text('Laporan')),
-                  DataColumn(label: Text('Validasi')),
                 ],
                 rows: [
                   DataRow(cells: [
@@ -280,37 +279,31 @@ class _DashboardLogbookPesertaState
                     DataCell(
                       GestureDetector(
                         onTap: () {
-                          // 'laporanAkhir' is the URL for the final report
-                          if (peserta.urlLaporanAkhir != null) {
-                            _launchURL(peserta.urlLaporanAkhir!);
+                          if (pathLaporanAkhir.isNotEmpty) {
+                            launchURLImagePath(pathLaporanAkhir);
                           }
                         },
-                        child: Text(
-                          peserta.urlLaporanAkhir ??
-                              "Masih belum ada laporan akhir",
-                          style: TextStyle(
-                            color: peserta.urlLaporanAkhir != null
-                                ? Colors.blue
-                                : Colors.grey,
-                            decoration: peserta.urlLaporanAkhir != null
-                                ? TextDecoration.underline
-                                : TextDecoration.none,
-                          ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              getFileIcon(pathLaporanAkhir),
+                              color: pathLaporanAkhir.isNotEmpty
+                                  ? Colors.blue
+                                  : Colors.grey,
+                            ),
+                            const SizedBox(
+                                width: 8), // Space between icon and text
+                            Text(
+                              getOriginalFileNameFromPath(pathLaporanAkhir),
+                              style: TextStyle(
+                                color: pathLaporanAkhir.isNotEmpty
+                                    ? Colors.blue
+                                    : Colors.grey,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                    DataCell(
-                      RoundedRectangleButton(
-                          title: "Validasi",
-                          backgroundColor: lightBlue,
-                          fontColor: Colors.black,
-                          style: regular14,
-                          height: 40.h,
-                          width: 150.w,
-                          rounded: 5,
-                          onPressed: () {
-                            // TODO: Validasi
-                          }),
                     ),
                   ]),
                 ],
@@ -408,15 +401,6 @@ class _DashboardLogbookPesertaState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error fetching data: $e')),
       );
-    }
-  }
-
-  // Launch URL function
-  void _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
     }
   }
 }

@@ -1,11 +1,13 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/components/widget_component.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
+import 'package:japfa_internship/function_variable/file_uploading.dart';
+import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -17,10 +19,12 @@ class LaporanPesertaMagang extends ConsumerStatefulWidget {
 }
 
 class _LaporanPesertaMagangState extends ConsumerState<LaporanPesertaMagang> {
+  late PesertaMagangData peserta;
   String email = "";
+  String pathFileLaporanAkhir = '';
+
   // Default report types
   List<String> laporans = ['Laporan Akhir'];
-
   Map<String, Map<String, String?>> laporanData = {
     'Laporan Akhir': {'url': null, 'validasi': 'Pending'},
   };
@@ -82,61 +86,55 @@ class _LaporanPesertaMagangState extends ConsumerState<LaporanPesertaMagang> {
                   columns: const [
                     DataColumn(label: Text('Nama Laporan')),
                     DataColumn(label: Text('File / URL')),
-                    DataColumn(label: Text('Verifikasi Pembimbing')),
                     DataColumn(label: Text('Action')),
                   ],
                   rows: laporans.map<DataRow>((laporan) {
-                    String? url = laporanData[laporan]?['url'];
+                    String? url = peserta.urlLaporanAkhir ?? '';
                     return DataRow(cells: [
                       DataCell(Text(laporan)),
                       DataCell(
                         GestureDetector(
                           onTap: () {
-                            if (url != null && url.isNotEmpty) {
-                              _launchURL(url);
+                            if (url.isNotEmpty) {
+                              launchURLImagePath(url);
                             }
                           },
-                          child: Text(
-                            url ?? '',
-                            style: TextStyle(
-                              color: url != null && url.isNotEmpty
-                                  ? Colors.blue
-                                  : Colors.grey,
-                              decoration: url != null && url.isNotEmpty
-                                  ? TextDecoration.underline
-                                  : TextDecoration.none,
-                            ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                getFileIcon(url),
+                                color:
+                                    url.isNotEmpty ? Colors.blue : Colors.grey,
+                              ),
+                              const SizedBox(
+                                  width: 8), // Space between icon and text
+                              Text(
+                                getOriginalFileNameFromPath(url),
+                                style: TextStyle(
+                                  color: url.isNotEmpty
+                                      ? Colors.blue
+                                      : Colors.grey,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
                       DataCell(
-                          Text(laporanData[laporan]?['validasi'] ?? 'Pending')),
-                      DataCell(
                         Row(
                           children: [
                             // Check for Laporan Akhir for edit
-                            (laporan == 'Laporan Akhir')
-                                ? RoundedRectangleButton(
-                                    title: "Edit URL",
-                                    backgroundColor: lightBlue,
-                                    fontColor: Colors.black,
-                                    style: regular14,
-                                    height: 40.h,
-                                    width: 150.w,
-                                    rounded: 5,
-                                    onPressed: () => _showEditUrlModal(laporan),
-                                  )
-                                : RoundedRectangleButton(
-                                    title: "Tambah URL",
-                                    backgroundColor: lightBlue,
-                                    fontColor: Colors.black,
-                                    style: regular14,
-                                    height: 40.h,
-                                    width: 150.w,
-                                    rounded: 5,
-                                    onPressed: () =>
-                                        _showAddLaporanModal(laporan),
-                                  ),
+                            RoundedRectangleButton(
+                              title: "UPLOAD",
+                              backgroundColor: lightBlue,
+                              fontColor: Colors.black,
+                              style: regular14,
+                              height: 40.h,
+                              width: 150.w,
+                              rounded: 5,
+                              onPressed: () =>
+                                  _showDialogUploadLaporanAkhir(email),
+                            ),
                             const SizedBox(width: 8),
                             IconButton(
                               icon: const Icon(Icons.delete, color: Colors.red),
@@ -163,8 +161,7 @@ class _LaporanPesertaMagangState extends ConsumerState<LaporanPesertaMagang> {
           .fetchPesertaMagangByEmail(email);
 
       setState(() {
-        // Assuming url_lampiran is a property of PesertaMagangData
-        laporanData['Laporan Akhir']?['url'] = pesertaData.urlLaporanAkhir;
+        peserta = pesertaData;
       });
     } catch (e) {
       // Handle error
@@ -174,93 +171,139 @@ class _LaporanPesertaMagangState extends ConsumerState<LaporanPesertaMagang> {
     }
   }
 
-  // Launch URL function
-  void _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
+  void _showDialogUploadLaporanAkhir(String email) {
+    String labelFieldPersetujuan = "File Laporan Akhir";
+    String? uploadedFileName;
+    Uint8List? uploadedFileBytes;
+
+    // Use CustomAlertDialog for file upload
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: Center(
+                  child: Text(
+                "UPLOAD LAPORAN AKHIR",
+                style: bold20,
+              )),
+              backgroundColor: Colors.white,
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: [
+                    FileUploading().buildFileField(
+                      labelFieldPersetujuan,
+                      uploadedFileName,
+                      () => FileUploading().pickFile(
+                        setState,
+                        labelFieldPersetujuan,
+                        false,
+                        (field, fileName, fileBytes) {
+                          setState(() {
+                            uploadedFileName = fileName;
+                            uploadedFileBytes = fileBytes;
+                          });
+                        },
+                      ),
+                      () => FileUploading().removeFile(
+                        setState,
+                        labelFieldPersetujuan,
+                        (field, _, __) {
+                          setState(() {
+                            uploadedFileName = null;
+                            uploadedFileBytes = null;
+                          });
+                        },
+                      ),
+                      () {},
+                    ),
+                    const SizedBox(height: 20),
+                    // Row for buttons in the dialog content
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: RoundedRectangleButton(
+                            title: 'CANCEL',
+                            fontColor: japfaOrange,
+                            backgroundColor: Colors.white,
+                            outlineColor: japfaOrange,
+                            height: 50.h,
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: RoundedRectangleButton(
+                            title: 'UPLOAD',
+                            fontColor: Colors.white,
+                            backgroundColor: japfaOrange,
+                            height: 50.h,
+                            onPressed: () async {
+                              if (uploadedFileBytes != null) {
+                                // Call the upload file function
+                                await _uploadFile(
+                                  uploadedFileName!,
+                                  uploadedFileBytes!,
+                                );
+                                print("PATH LAPORAN : $pathFileLaporanAkhir");
+
+                                // DATABASE nama adalah URL tapi Valuenya adalah path laporan akhir
+                                await ApiService()
+                                    .pesertaMagangService
+                                    .updateUrlLaporanAkhir(
+                                      email,
+                                      pathFileLaporanAkhir,
+                                    );
+
+                                Navigator.of(context).pop(); // Close the dialog
+                              } else {
+                                showSnackBar(
+                                  context,
+                                  'Tolong pilih file untuk diupload',
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _uploadFile(String fileName, Uint8List fileBytes) async {
+    try {
+      // Here you replace the URL with your actual endpoint for file uploads
+      final uploadFilePath =
+          await ApiService().uploadFileToServer(fileBytes, fileName);
+
+      setState(() {
+        pathFileLaporanAkhir = uploadFilePath;
+      });
+      print("FILE PATH : $pathFileLaporanAkhir");
+    } catch (e) {
+      print('Error uploading file: $e');
+      showSnackBar(context, 'Error uploading file.');
     }
   }
 
-  void _showAddLaporanModal(String laporanType) {
-    TextEditingController urlController = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return CustomAlertDialog(
-          title: 'Tambah URL Laporan',
-          subTitle: laporanType,
-          numberOfField: 1,
-          controllers: [urlController],
-          labels: const ["File / URL Laporan"],
-          fieldTypes: const [BuildFieldTypeController.text],
-          onSave: () {
-            String filePath = urlController.text;
-            if (filePath.isNotEmpty) {
-              setState(() {
-                laporanData[laporanType]?['url'] = filePath;
-                laporanData[laporanType]?['validasi'] =
-                    'Pending'; // Reset validation
-              });
-              Navigator.of(context).pop();
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Please enter a valid URL.")),
-              );
-            }
-          },
-        );
-      },
-    );
-  }
-
-  void _showEditUrlModal(String laporanType) {
-    TextEditingController urlController =
-        TextEditingController(text: laporanData[laporanType]?['url'] ?? '');
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return CustomAlertDialog(
-          title: 'Edit URL Laporan Akhir',
-          subTitle: laporanType,
-          numberOfField: 1,
-          controllers: [urlController],
-          labels: const ["File / URL Laporan"],
-          fieldTypes: const [BuildFieldTypeController.text],
-          onSave: () async {
-            String newUrl = urlController.text;
-            if (newUrl.isNotEmpty) {
-              await ApiService()
-                  .pesertaMagangService
-                  .updateUrlLaporanAkhir(email, newUrl);
-
-              setState(() {
-                laporanData[laporanType]?['url'] =
-                    newUrl; // Update the URL in local state
-                laporanData[laporanType]?['validasi'] =
-                    'Pending'; // Reset validation
-              });
-              Navigator.of(context).pop();
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Please enter a valid URL.")),
-              );
-            }
-          },
-        );
-      },
-    );
-  }
-
   void _deleteLaporan(String laporanType) {
-    setState(() {
-      laporanData[laporanType]?['url'] =
-          null; // Remove the URL for the selected report
+    setState(() async {
+      // PATH URL Laporan akhir = empty
+      await ApiService().pesertaMagangService.updateUrlLaporanAkhir(email, '');
+      _fetchPesertaData();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("URL deleted successfully!")),
+        const SnackBar(content: Text("File Upload berhasil dihapus")),
       );
     });
   }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Use IP Address (Mobile Hotspot) -- change to localhost if want to use another connection wifi
-const String baseUrl = 'http://10.219.44.68:3000';
+const String baseUrl = 'http://localhost:3000';
 
 String appName = "Japfa Internship";
 Dio dio = Dio();

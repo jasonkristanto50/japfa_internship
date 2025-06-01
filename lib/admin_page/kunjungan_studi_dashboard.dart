@@ -410,8 +410,16 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
     // Call the API to update the status in the backend
     try {
       final response = await Dio().put(
-        'http://localhost:3000/api/kunjungan_studi/update_status/${kunjungan.idKunjunganStudi}',
+        '$baseUrl/api/kunjungan_studi/update_status/${kunjungan.idKunjunganStudi}',
         data: dataToUpdate,
+      );
+
+      // Send email with password token
+      await ApiService().sendEmail(
+        kunjungan.email,
+        kunjungan.namaPerwakilan,
+        kunjungan.passwordToken!,
+        EmailMessageType.statusKunjungan,
       );
 
       if (response.statusCode == 200) {
@@ -450,8 +458,16 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
     // Call the API to update the status in the backend
     try {
       final response = await Dio().put(
-        'http://localhost:3000/api/kunjungan_studi/update_status-catatan/${kunjungan.idKunjunganStudi}',
+        '$baseUrl/api/kunjungan_studi/update_status-catatan/${kunjungan.idKunjunganStudi}',
         data: dataToUpdate,
+      );
+
+      // Send email with password token
+      await ApiService().sendEmail(
+        kunjungan.email,
+        kunjungan.namaPerwakilan,
+        kunjungan.passwordToken!,
+        EmailMessageType.statusKunjungan,
       );
 
       if (response.statusCode == 200) {

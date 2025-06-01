@@ -676,6 +676,14 @@ class _PendaftaranMagangDetailPageState
         .pesertaMagangService
         .updatePesertaMagangStatus(id, status);
     if (upd != null) {
+      // Send email with password token
+      await ApiService().sendEmail(
+        peserta!.email,
+        peserta!.nama,
+        peserta!.passwordToken!,
+        EmailMessageType.statusMagang,
+      );
+
       setState(() => peserta = upd);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Peserta updated: ${upd.nama}')),
@@ -687,25 +695,37 @@ class _PendaftaranMagangDetailPageState
   }
 
   Future<void> _updateStatusWithNote(
-      PesertaMagangData p, bool accepted, String note) async {
+    PesertaMagangData peserta,
+    bool accepted,
+    String note,
+  ) async {
     setState(() {
-      peserta = p.copyWith(
+      peserta = peserta.copyWith(
         statusMagang: accepted ? statusMagangDiterima : statusMagangDitolak,
         catatanHr: note,
       );
     });
     try {
       await ApiService().pesertaMagangService.updatePesertaMagangStatusWithNote(
-            idMagang: p.idMagang,
-            status: peserta!.statusMagang,
+            idMagang: peserta.idMagang,
+            status: peserta.statusMagang,
             catatanHr: note,
           );
+
+      // Send email with password token
+      await ApiService().sendEmail(
+        peserta.email,
+        peserta.nama,
+        peserta.passwordToken!,
+        EmailMessageType.statusMagang,
+      );
+
       if (widget.onUpdate != null) {
         widget.onUpdate!();
       }
     } catch (_) {
       setState(() {
-        peserta = p.copyWith(statusMagang: 'Pending', catatanHr: null);
+        peserta = peserta.copyWith(statusMagang: 'Pending', catatanHr: null);
       });
     }
   }
@@ -787,6 +807,14 @@ class _PendaftaranMagangDetailPageState
             tanggalMeet,
             jamMeet,
           );
+      // Send email with password token
+      await ApiService().sendEmail(
+        peserta!.email,
+        peserta!.nama,
+        peserta!.passwordToken!,
+        EmailMessageType.tambahLinkMeet,
+      );
+
       // Clear the controller after saving
       linkMeetController.clear();
       Navigator.of(context).pop(); // Close the dialog after saving

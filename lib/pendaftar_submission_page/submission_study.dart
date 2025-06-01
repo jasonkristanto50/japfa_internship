@@ -435,7 +435,7 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
 
       // Fetch the current count
       final countResponse =
-          await Dio().get('http://localhost:3000/api/kunjungan_studi/count');
+          await Dio().get('$baseUrl/api/kunjungan_studi/count');
       final currentCount = int.parse(countResponse.data['count']);
       final String idKunjunganStudi = 'KJS_0${currentCount + 1}';
 
@@ -466,6 +466,7 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
         email,
         nama,
         passwordTokenValue,
+        EmailMessageType.daftarKunjungan,
       );
 
       if (response.statusCode == 201) {

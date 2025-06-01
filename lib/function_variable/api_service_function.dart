@@ -10,6 +10,15 @@ import 'package:japfa_internship/models/skill_peserta_magang_data/skill_peserta_
 
 String baseUrlApi = '$baseUrl/api';
 
+enum EmailMessageType {
+  daftarMagang,
+  daftarKunjungan,
+  statusMagang,
+  statusKunjungan,
+  tambahLinkMeet,
+  tambahPembimbing
+}
+
 class ApiService {
   final Dio _dio = Dio();
 
@@ -29,7 +38,12 @@ class ApiService {
         skillService = SkillService(Dio());
 
   // SEND EMAIL
-  Future<void> sendEmail(String email, String name, String pin) async {
+  Future<void> sendEmail(
+    String email,
+    String name,
+    String pin,
+    EmailMessageType messageType,
+  ) async {
     try {
       final response = await _dio.post(
         '$baseUrlApi/email/send-email',
@@ -37,6 +51,8 @@ class ApiService {
           'email': email,
           'name': name,
           'pin': pin,
+          'messageType':
+              messageType.toString().split('.').last, // Convert enum to string
         },
       );
 

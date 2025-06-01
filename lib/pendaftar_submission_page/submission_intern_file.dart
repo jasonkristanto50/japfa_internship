@@ -389,8 +389,12 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
         _submitSkillData();
 
         // Send Email containing passwordToken to user
-        await ApiService()
-            .sendEmail(widget.email, widget.name, passwordTokenValue);
+        await ApiService().sendEmail(
+          widget.email,
+          widget.name,
+          passwordTokenValue,
+          EmailMessageType.daftarMagang,
+        );
 
         // Show success message
         showSnackBar(

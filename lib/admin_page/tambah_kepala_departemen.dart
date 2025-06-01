@@ -250,14 +250,24 @@ class _TambahKepalaDepartemenState extends State<TambahKepalaDepartemen> {
       await ApiService()
           .kepalaDepartemenService
           .addKepalaDepartemen(kepalaDepartemen);
-      // Optionally show success message
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Kepala Departemen added successfully!')));
+
+      // Send email with password token
+      await ApiService().sendEmail(
+        kepalaDepartemen.email,
+        kepalaDepartemen.nama,
+        kepalaDepartemen.password,
+        EmailMessageType.tambahPembimbing,
+      );
+
+      showSnackBar(
+        context,
+        "Pembimbing baru berhasil ditambahkan",
+        backgroundColor: Colors.green,
+      );
       _fetchKepalaDept();
     } catch (error) {
       // Handle the error: show error message
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Error: $error')));
+      showSnackBar(context, "Error");
     }
   }
 

@@ -411,13 +411,13 @@ class _LogBookPesertaDashboardState
     print("DatePicker: Initializing date selection");
 
     final DateTime now = DateTime.now();
+    final DateTime oneMonthAgo = DateTime(now.year, now.month - 1, now.day);
 
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: now,
-      firstDate: now, // Set firstDate to now
-      lastDate: DateTime(2050),
-      // Remove selectableDayPredicate to allow selection of all days
+      firstDate: oneMonthAgo,
+      lastDate: now,
     );
 
     print(

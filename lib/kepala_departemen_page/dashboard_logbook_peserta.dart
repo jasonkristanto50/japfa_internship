@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
@@ -63,7 +64,6 @@ class _DashboardLogbookPesertaState
             // Add Search Bar
             _buildSearchBar(),
             _buildLogbookOrLaporanTable(),
-            const SizedBox(height: 24),
             // Logbook Table
             isTableLogbook
                 ? _buildLogbookTable(filteredLogData)
@@ -136,6 +136,9 @@ class _DashboardLogbookPesertaState
               padding: const EdgeInsets.all(24.0),
               child: Center(
                 child: Container(
+                  constraints: BoxConstraints(
+                    maxHeight: 700.h, // Set the maximum height
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(8),
@@ -380,6 +383,14 @@ class _DashboardLogbookPesertaState
     try {
       final logbooks =
           await ApiService().logbookService.fetchLogbookByEmail(widget.email);
+
+      // Sort logbooks by date in descending order
+      logbooks.sort((a, b) {
+        DateTime dateA = DateFormat('dd-MM-yyyy').parse(a.tanggalAktivitas);
+        DateTime dateB = DateFormat('dd-MM-yyyy').parse(b.tanggalAktivitas);
+        return dateB.compareTo(dateA); // Descending order
+      });
+
       setState(() {
         logbookData = logbooks; // Store fetched data
       });

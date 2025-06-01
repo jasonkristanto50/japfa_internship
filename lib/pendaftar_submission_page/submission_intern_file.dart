@@ -452,6 +452,17 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
       return false;
     }
 
+    // Additional check for fotoDiri file extension
+    if (field == labelFotoDiri) {
+      final allowedExtensions = ['jpg', 'jpeg', 'png'];
+      final extension = fileName.split('.').last.toLowerCase();
+
+      if (!allowedExtensions.contains(extension)) {
+        showSnackBar(context, 'File $field harus berupa JPG, JPEG, atau PNG');
+        return false;
+      }
+    }
+
     return true;
   }
 

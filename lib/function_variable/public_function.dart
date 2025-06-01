@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:japfa_internship/components/widget_component.dart';
 import 'package:japfa_internship/function_variable/string_value.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
@@ -44,6 +45,44 @@ Widget buildTextField(
       border: const OutlineInputBorder(),
     ),
     cursorColor: const Color.fromARGB(255, 48, 48, 48),
+  );
+}
+
+Widget buildDateField(
+  String label,
+  TextEditingController controller,
+  BuildContext context,
+) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8.0),
+    child: TextField(
+      controller: controller,
+      readOnly: true,
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: regular14.copyWith(color: Colors.black),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: Colors.orange, width: 2),
+        ),
+        suffixIcon: const Icon(Icons.calendar_today),
+      ),
+      onTap: () async {
+        DateTime? picked = await showDatePicker(
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime(2000),
+          lastDate: DateTime(2101),
+        );
+        if (picked != null) {
+          controller.text = DateFormat('dd-MM-yyyy').format(picked);
+        }
+      },
+    ),
   );
 }
 

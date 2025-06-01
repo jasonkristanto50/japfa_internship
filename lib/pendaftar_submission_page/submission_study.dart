@@ -253,16 +253,25 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
 
   // Date field
   Widget buildTanggalField() {
-    return TextField(
-      controller: dateController,
-      readOnly: true,
-      decoration: InputDecoration(
-        labelText: "Tanggal Kegiatan",
-        suffixIcon: IconButton(
-          icon: const Icon(Icons.calendar_today),
-          onPressed: () => _selectDate(context),
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: () => _selectDate(context),
+        child: AbsorbPointer(
+          // Prevent keyboard from showing
+          child: TextField(
+            controller: dateController,
+            readOnly: true,
+            decoration: InputDecoration(
+              labelText: "Tanggal Kegiatan",
+              suffixIcon: IconButton(
+                icon: const Icon(Icons.calendar_today),
+                onPressed: () => _selectDate(context),
+              ),
+              border: const OutlineInputBorder(),
+            ),
+          ),
         ),
-        border: const OutlineInputBorder(),
       ),
     );
   }

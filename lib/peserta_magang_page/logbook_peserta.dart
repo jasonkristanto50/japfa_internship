@@ -1,9 +1,13 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
+import 'package:japfa_internship/function_variable/file_uploading.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/models/logbook_peserta_magang_data/logbook_peserta_magang_data.dart';
@@ -27,6 +31,10 @@ class _LogBookPesertaDashboardState
   String namaPembimbing = "";
   List<LogbookPesertaMagangData> logbookData = [];
   bool isMobile = false;
+  String pathLogbookFile = '';
+
+  final TextEditingController activityController = TextEditingController();
+  final TextEditingController dateController = TextEditingController();
 
   @override
   void initState() {
@@ -162,13 +170,14 @@ class _LogBookPesertaDashboardState
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
+                            dataRowHeight: 120,
                             border:
                                 TableBorder.all(color: Colors.grey, width: 1),
                             columns: const [
                               DataColumn(label: Text('No')),
                               DataColumn(label: Text('Aktivitas')),
                               DataColumn(label: Text('Tanggal Aktivitas')),
-                              DataColumn(label: Text('URL Lampiran')),
+                              DataColumn(label: Text('Foto Lampiran')),
                               DataColumn(label: Text('Validasi Pembimbing')),
                               DataColumn(label: Text('Catatan Pembimbing')),
                               DataColumn(label: Text('Action')),
@@ -186,7 +195,7 @@ class _LogBookPesertaDashboardState
                                     Text('${filteredLogData.length - index}')),
                                 DataCell(Text(data.namaAktivitas)),
                                 DataCell(Text(data.tanggalAktivitas)),
-                                DataCell(Text(data.urlLampiran)),
+                                DataCell(showFoto(data)),
                                 DataCell(
                                   Text(
                                     data.validasiPembimbing == 'true'
@@ -236,35 +245,166 @@ class _LogBookPesertaDashboardState
   }
 
   void _showAddLogBookModal() {
-    final TextEditingController activityController = TextEditingController();
-    final TextEditingController dateController = TextEditingController();
-    final TextEditingController urlController = TextEditingController();
+    String labelLogbookFile = "Foto Kegiatan";
+    String? uploadedFileName;
+    Uint8List? uploadedFileBytes;
 
     showDialog(
       context: context,
-      builder: (ctx) {
-        return CustomAlertDialog(
-          title: 'Tambah Log Book',
-          subTitle: 'Isi Formulir Berikut',
-          controllers: [activityController, dateController, urlController],
-          labels: const ['Aktivitas', 'Tanggal Aktivitas', 'URL Lampiran'],
-          fieldTypes: const [
-            BuildFieldTypeController.text,
-            BuildFieldTypeController.date,
-            BuildFieldTypeController.text,
-          ],
-          numberOfField: 3,
-          onSave: () {
-            addNewLogbook(
-              activityName: activityController.text,
-              tanggalActivity: dateController.text,
-              url: urlController.text,
-            );
-            Navigator.of(ctx).pop();
-          },
-        );
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+          return AlertDialog(
+            title: const Text('Tambah Log Book'),
+            backgroundColor: Colors.white,
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: [
+                  buildTextField("Nama Kegiatan", activityController),
+                  const SizedBox(height: 20),
+                  buildTanggalField(),
+                  const SizedBox(height: 10),
+                  FileUploading().buildFileField(
+                    labelLogbookFile,
+                    uploadedFileName,
+                    () => FileUploading().pickFile(
+                      setState,
+                      labelLogbookFile,
+                      true,
+                      (field, fileName, fileBytes) {
+                        setState(() {
+                          uploadedFileName = fileName;
+                          uploadedFileBytes = fileBytes;
+                        });
+                      },
+                    ),
+                    () => FileUploading().removeFile(
+                      setState,
+                      labelLogbookFile,
+                      (field, _, __) {
+                        setState(() {
+                          uploadedFileName = null;
+                          uploadedFileBytes = null;
+                        });
+                      },
+                    ),
+                    () {},
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              RoundedRectangleButton(
+                title: "SIMPAN",
+                fontColor: Colors.white,
+                backgroundColor: japfaOrange,
+                onPressed: () async {
+                  if (uploadedFileBytes != null) {
+                    if (!validateField(
+                      controller: activityController,
+                      fieldName: "Nama Kegiatan",
+                      fieldType: FieldType.name,
+                      context: context,
+                    )) {
+                      return;
+                    }
+                    if (!validateField(
+                      controller: dateController,
+                      fieldName: "Tanggal Kegiatan",
+                      fieldType: FieldType.elseMustFill,
+                      context: context,
+                    )) {
+                      return;
+                    }
+
+                    validateFileUpload(
+                      labelLogbookFile,
+                      labelLogbookFile,
+                      uploadedFileName,
+                    );
+
+                    // Call the upload file function
+                    await _uploadFile(
+                      uploadedFileName!,
+                      uploadedFileBytes!,
+                    );
+                    addNewLogbook(
+                      activityName: activityController.text,
+                      tanggalActivity: dateController.text,
+                      url: pathLogbookFile,
+                    );
+                    Navigator.of(context).pop();
+                  }
+                },
+              )
+            ],
+          );
+        });
       },
     );
+  }
+
+  Widget buildTanggalField() {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: () => selectDate(context),
+        child: AbsorbPointer(
+          // Prevent keyboard from showing
+          child: TextField(
+            controller: dateController,
+            readOnly: true,
+            decoration: InputDecoration(
+              labelText: "Tanggal Kegiatan",
+              suffixIcon: IconButton(
+                icon: const Icon(Icons.calendar_today),
+                onPressed: () => selectDate(context),
+              ),
+              border: const OutlineInputBorder(),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> selectDate(BuildContext context) async {
+    print("DatePicker: Initializing date selection");
+
+    final DateTime now = DateTime.now();
+
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: now,
+      firstDate: now, // Set firstDate to now
+      lastDate: DateTime(2050),
+      // Remove selectableDayPredicate to allow selection of all days
+    );
+
+    print(
+        "DatePicker: Date selected: ${picked.toString()}"); // Check if this is printed
+
+    if (picked != null) {
+      setState(() {
+        dateController.text = DateFormat('dd-MM-yyyy').format(picked);
+      });
+    }
+  }
+
+  Future<void> _uploadFile(String fileName, Uint8List fileBytes) async {
+    try {
+      // Here you replace the URL with your actual endpoint for file uploads
+      final uploadFilePath =
+          await ApiService().uploadFileToServer(fileBytes, fileName);
+
+      setState(() {
+        pathLogbookFile = uploadFilePath;
+      });
+      print("FILE PATH : $pathLogbookFile");
+    } catch (e) {
+      print('Error uploading file: $e');
+      showSnackBar(context, 'Error uploading file.');
+    }
   }
 
   void _showEditLogbookModal(LogbookPesertaMagangData existingLogbook) {
@@ -401,5 +541,45 @@ class _LogBookPesertaDashboardState
     } catch (e) {
       print('Error deleting logbook: $e');
     }
+  }
+
+  Widget showFoto(LogbookPesertaMagangData logbook) {
+    final img = '$baseUrl${logbook.urlLampiran}';
+    return Image.network(
+      img,
+      height: 100,
+      width: 75,
+      fit: BoxFit.cover,
+      loadingBuilder: (c, child, p) =>
+          p == null ? child : const CircularProgressIndicator(),
+      errorBuilder: (c, _, __) => const Text('Failed to load image'),
+    );
+  }
+
+  bool validateFileUpload(
+    String field,
+    String labelLogbookFile,
+    String? uploadedFileName,
+  ) {
+    String? fileName;
+    if (field == labelLogbookFile) {
+      fileName = uploadedFileName;
+    }
+
+    if (fileName == null) {
+      showSnackBar(context, '$field harus diupload');
+      return false;
+    }
+
+    // Additional check for file extension
+    final allowedExtensions = ['jpg', 'jpeg', 'png'];
+    final extension = fileName.split('.').last.toLowerCase();
+
+    if (!allowedExtensions.contains(extension)) {
+      showSnackBar(context, 'File $field harus berupa JPG, JPEG, atau PNG');
+      return false;
+    }
+
+    return true;
   }
 }

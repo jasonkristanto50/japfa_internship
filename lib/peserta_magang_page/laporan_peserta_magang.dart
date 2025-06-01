@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,6 +24,7 @@ class _LaporanPesertaMagangState extends ConsumerState<LaporanPesertaMagang> {
   late PesertaMagangData peserta;
   String email = "";
   String pathFileLaporanAkhir = '';
+  bool isLoading = true;
 
   // Default report types
   List<String> laporans = ['Laporan Akhir'];
@@ -39,29 +42,40 @@ class _LaporanPesertaMagangState extends ConsumerState<LaporanPesertaMagang> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: Navbar(
-        context: context,
-        title: 'Laporan Peserta',
-      ),
-      body: Container(
-        decoration: buildJapfaLogoBackground(),
-        child: Column(
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(24.0),
-              child: Text(
-                "Laporan Peserta",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-            ),
-            Expanded(
-              child: _buildLaporanTable(),
-            ),
-          ],
+    if (isLoading) {
+      // Show loading indicator while fetching data
+      return Scaffold(
+        appBar: Navbar(
+          context: context,
+          title: 'Laporan Peserta',
         ),
-      ),
-    );
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    } else {
+      return Scaffold(
+        appBar: Navbar(
+          context: context,
+          title: 'Laporan Peserta',
+        ),
+        body: Container(
+          decoration: buildJapfaLogoBackground(),
+          child: Column(
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(24.0),
+                child: Text(
+                  "Laporan Peserta",
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Expanded(
+                child: _buildLaporanTable(),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
   }
 
   Widget _buildLaporanTable() {
@@ -162,8 +176,12 @@ class _LaporanPesertaMagangState extends ConsumerState<LaporanPesertaMagang> {
 
       setState(() {
         peserta = pesertaData;
+        isLoading = false; // Set loading to false on data fetch completion
       });
     } catch (e) {
+      setState(() {
+        isLoading = false; // Stop loading on error
+      });
       // Handle error
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error fetching data: $e')),
@@ -195,6 +213,7 @@ class _LaporanPesertaMagangState extends ConsumerState<LaporanPesertaMagang> {
                     FileUploading().buildFileField(
                       labelFieldPersetujuan,
                       uploadedFileName,
+                      isMobile: true,
                       () => FileUploading().pickFile(
                         setState,
                         labelFieldPersetujuan,
@@ -258,6 +277,7 @@ class _LaporanPesertaMagangState extends ConsumerState<LaporanPesertaMagang> {
                                       email,
                                       pathFileLaporanAkhir,
                                     );
+                                _fetchPesertaData();
 
                                 Navigator.of(context).pop(); // Close the dialog
                               } else {

@@ -1,7 +1,8 @@
+import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:japfa_internship/function_variable/variable.dart'; // Make sure to import your variable definitions
+import 'package:japfa_internship/function_variable/variable.dart';
 
 class FileUploading {
   // Build a file upload field with delete functionality
@@ -10,8 +11,9 @@ class FileUploading {
     String? fileName,
     Function pickFile,
     Function removeFile,
-    Function openFilePreview,
-  ) {
+    Function openFilePreview, {
+    bool isMobile = false,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -21,7 +23,7 @@ class FileUploading {
         ),
         const SizedBox(height: 5),
         Container(
-          width: double.infinity,
+          width: isMobile ? 250 : double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
             border: Border.all(color: Colors.grey),
@@ -41,24 +43,20 @@ class FileUploading {
                         const Icon(Icons.picture_as_pdf, size: 20), // PDF icon
                         const SizedBox(width: 5),
                         SizedBox(
-                          width: 200,
+                          width: isMobile ? 100 : 200,
                           child: Text(
-                            getFileNameWithEllipsis(fileName),
+                            getFileNameWithEllipsis(fileName, isMobile),
                             style: regular16,
                           ),
                         ),
                       ],
                     ),
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            Icons.remove_circle_outline,
-                            color: Colors.red,
-                          ),
-                          onPressed: () => removeFile(),
-                        ),
-                      ],
+                    IconButton(
+                      icon: const Icon(
+                        Icons.remove_circle_outline,
+                        color: Colors.red,
+                      ),
+                      onPressed: () => removeFile(),
                     ),
                   ],
                 ),
@@ -68,13 +66,21 @@ class FileUploading {
   }
 
   // Function to truncate the middle part of the file name
-  String getFileNameWithEllipsis(String fileName) {
-    if (fileName.length <= 20) {
-      return fileName; // No truncation needed if the file name is short
+  String getFileNameWithEllipsis(String fileName, bool isMobile) {
+    if (isMobile) {
+      if (fileName.length > 12) {
+        String start = fileName.substring(0, 3);
+        String end = fileName.substring(fileName.length - 3);
+        return '$start...$end';
+      }
+    } else {
+      if (fileName.length > 20) {
+        String start = fileName.substring(0, 10);
+        String end = fileName.substring(fileName.length - 10);
+        return '$start....$end';
+      }
     }
-    String start = fileName.substring(0, 10);
-    String end = fileName.substring(fileName.length - 10);
-    return '$start....$end';
+    return fileName;
   }
 
   // Method to pick a file using file_picker
@@ -93,24 +99,30 @@ class FileUploading {
     if (result != null) {
       String fileName = result.files.single.name;
 
-      // Check if the file is uploaded to web
+      // Check if the platform is web
       if (kIsWeb) {
         Uint8List? fileBytes = result.files.single.bytes;
-
-        // Update using the byte data
         if (fileBytes != null) {
           setState(() {
             updateFileData(field, fileName, fileBytes);
           });
         }
       } else {
-        // For mobile or desktop, update directly with file path
-        setState(() {
-          updateFileData(field, fileName, null); // Null for Uint8List
-        });
+        // For mobile, read the file and get bytes
+        String? filePath = result.files.single.path;
+        if (filePath != null) {
+          // Read the file bytes
+          File file = File(filePath);
+          Uint8List fileBytes = await file.readAsBytes();
+          setState(() {
+            updateFileData(field, fileName, fileBytes); // Update with bytes
+          });
+        } else {
+          print("File path is null, please try again.");
+        }
       }
     } else {
-      // Handle case where no file was selected
+      print("No file selected. Please try again.");
     }
   }
 

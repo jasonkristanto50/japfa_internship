@@ -247,93 +247,138 @@ class _LogBookPesertaDashboardState
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-          return AlertDialog(
-            title: const Text('Tambah Log Book'),
-            backgroundColor: Colors.white,
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: [
-                  buildTextField("Nama Kegiatan", activityController),
-                  const SizedBox(height: 20),
-                  buildTanggalField(),
-                  const SizedBox(height: 10),
-                  FileUploading().buildFileField(
-                    labelLogbookFile,
-                    uploadedFileName,
-                    () => FileUploading().pickFile(
-                      setState,
-                      labelLogbookFile,
-                      true,
-                      (field, fileName, fileBytes) {
-                        setState(() {
-                          uploadedFileName = fileName;
-                          uploadedFileBytes = fileBytes;
-                        });
-                      },
-                    ),
-                    () => FileUploading().removeFile(
-                      setState,
-                      labelLogbookFile,
-                      (field, _, __) {
-                        setState(() {
-                          uploadedFileName = null;
-                          uploadedFileBytes = null;
-                        });
-                      },
-                    ),
-                    () {},
-                  ),
-                ],
-              ),
-            ),
-            actions: [
-              RoundedRectangleButton(
-                title: "SIMPAN",
-                fontColor: Colors.white,
-                backgroundColor: japfaOrange,
-                onPressed: () async {
-                  if (uploadedFileBytes != null) {
-                    if (!validateField(
-                      controller: activityController,
-                      fieldName: "Nama Kegiatan",
-                      fieldType: FieldType.name,
-                      context: context,
-                    )) {
-                      return;
-                    }
-                    if (!validateField(
-                      controller: dateController,
-                      fieldName: "Tanggal Kegiatan",
-                      fieldType: FieldType.elseMustFill,
-                      context: context,
-                    )) {
-                      return;
-                    }
-
-                    validateFileUpload(
-                      labelLogbookFile,
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: const Text('Tambah Log Book'),
+              backgroundColor: Colors.white,
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: [
+                    buildTextField("Nama Kegiatan", activityController),
+                    const SizedBox(height: 20),
+                    buildTanggalField(),
+                    const SizedBox(height: 10),
+                    FileUploading().buildFileField(
                       labelLogbookFile,
                       uploadedFileName,
-                    );
+                      isMobile: true,
+                      () => FileUploading().pickFile(
+                        setState,
+                        labelLogbookFile,
+                        true,
+                        (field, fileName, fileBytes) {
+                          setState(() {
+                            uploadedFileName = fileName;
+                            uploadedFileBytes = fileBytes;
+                          });
+                        },
+                      ),
+                      () => FileUploading().removeFile(
+                        setState,
+                        labelLogbookFile,
+                        (field, _, __) {
+                          setState(() {
+                            uploadedFileName = null;
+                            uploadedFileBytes = null;
+                          });
+                        },
+                      ),
+                      () {},
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                RoundedRectangleButton(
+                  title: "SIMPAN",
+                  fontColor: Colors.white,
+                  backgroundColor: japfaOrange,
+                  onPressed: () async {
+                    try {
+                      if (uploadedFileBytes == null) {
+                        _showErrorDialog(
+                            context, "Please upload a file before saving.");
+                        return;
+                      }
 
-                    // Call the upload file function
-                    await _uploadFile(
-                      uploadedFileName!,
-                      uploadedFileBytes!,
-                    );
-                    addNewLogbook(
-                      activityName: activityController.text,
-                      tanggalActivity: dateController.text,
-                      url: pathLogbookFile,
-                    );
-                    Navigator.of(context).pop();
-                  }
-                },
-              )
-            ],
-          );
-        });
+                      if (!validateField(
+                        controller: activityController,
+                        fieldName: "Nama Kegiatan",
+                        fieldType: FieldType.name,
+                        context: context,
+                      )) {
+                        return; // Validation error, message shown in validateField
+                      }
+
+                      if (!validateField(
+                        controller: dateController,
+                        fieldName: "Tanggal Kegiatan",
+                        fieldType: FieldType.elseMustFill,
+                        context: context,
+                      )) {
+                        return; // Validation error, message shown in validateField
+                      }
+
+                      // Validate file upload and check return value
+                      bool fileValidationResult = validateFileUpload(
+                        labelLogbookFile,
+                        labelLogbookFile,
+                        uploadedFileName,
+                      );
+
+                      if (!fileValidationResult) {
+                        _showErrorDialog(context,
+                            'Invalid file upload. Please check your file.');
+                        return; // File validation failed, error message shown
+                      }
+
+                      // Call the upload file function
+                      await _uploadFile(
+                        uploadedFileName!,
+                        uploadedFileBytes!,
+                      );
+
+                      // Ensure the upload was successful
+                      if (uploadedFileBytes != null) {
+                        addNewLogbook(
+                          activityName: activityController.text,
+                          tanggalActivity: dateController.text,
+                          url: pathLogbookFile,
+                        );
+                        Navigator.of(context).pop();
+                      } else {
+                        _showErrorDialog(context, "File upload failed.");
+                      }
+                    } catch (e) {
+                      _showErrorDialog(
+                          context, "An error occurred: ${e.toString()}");
+                    }
+                  },
+                )
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _showErrorDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
       },
     );
   }

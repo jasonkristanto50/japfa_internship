@@ -157,6 +157,8 @@ class _DashboardLogbookPesertaState
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
+                      dataRowMinHeight: 120,
+                      dataRowMaxHeight: 150,
                       border: TableBorder.all(color: Colors.grey, width: 1),
                       columns: [
                         const DataColumn(label: Text('No')),
@@ -180,7 +182,7 @@ class _DashboardLogbookPesertaState
                           DataCell(Text(data.namaPeserta)),
                           DataCell(Text(data.namaAktivitas)),
                           DataCell(Text(data.tanggalAktivitas)),
-                          DataCell(Text(data.urlLampiran)),
+                          DataCell(showFoto(data)),
                           DataCell(
                             Text(
                               getValidationStatus(data.validasiPembimbing),
@@ -402,5 +404,18 @@ class _DashboardLogbookPesertaState
         SnackBar(content: Text('Error fetching data: $e')),
       );
     }
+  }
+
+  Widget showFoto(LogbookPesertaMagangData logbook) {
+    final img = '$baseUrl${logbook.urlLampiran}';
+    return Image.network(
+      img,
+      height: 120,
+      width: 90,
+      fit: BoxFit.cover,
+      loadingBuilder: (c, child, p) =>
+          p == null ? child : const CircularProgressIndicator(),
+      errorBuilder: (c, _, __) => const Text('Failed to load image'),
+    );
   }
 }

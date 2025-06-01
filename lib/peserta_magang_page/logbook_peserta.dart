@@ -170,7 +170,8 @@ class _LogBookPesertaDashboardState
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
-                            dataRowHeight: 120,
+                            dataRowMinHeight: 120,
+                            dataRowMaxHeight: 150,
                             border:
                                 TableBorder.all(color: Colors.grey, width: 1),
                             columns: const [
@@ -217,13 +218,6 @@ class _LogBookPesertaDashboardState
                                 DataCell(
                                   Row(
                                     children: [
-                                      IconButton(
-                                        icon: Icon(Icons.edit,
-                                            color: japfaOrange),
-                                        onPressed: () =>
-                                            _showEditLogbookModal(data),
-                                        tooltip: 'Edit',
-                                      ),
                                       IconButton(
                                         icon: const Icon(Icons.delete,
                                             color: Colors.red),
@@ -407,69 +401,6 @@ class _LogBookPesertaDashboardState
     }
   }
 
-  void _showEditLogbookModal(LogbookPesertaMagangData existingLogbook) {
-    final TextEditingController activityController =
-        TextEditingController(text: existingLogbook.namaAktivitas);
-    final TextEditingController dateController =
-        TextEditingController(text: existingLogbook.tanggalAktivitas);
-    final TextEditingController urlController =
-        TextEditingController(text: existingLogbook.urlLampiran);
-
-    showDialog(
-      context: context,
-      builder: (ctx) {
-        return CustomAlertDialog(
-          title: 'Edit Log Book',
-          subTitle: 'Update Formulir Berikut',
-          controllers: [activityController, dateController, urlController],
-          labels: const ['Aktivitas', 'Tanggal Aktivitas', 'URL Lampiran'],
-          fieldTypes: const [
-            BuildFieldTypeController.text,
-            BuildFieldTypeController.date,
-            BuildFieldTypeController.text,
-          ],
-          numberOfField: 3,
-          onSave: () {
-            updateLogbook(
-              idLogbook:
-                  existingLogbook.idLogbook, // Pass the existing logbook ID
-              activityName: activityController.text,
-              tanggalActivity: dateController.text,
-              url: urlController.text,
-            );
-            Navigator.of(ctx).pop();
-          },
-        );
-      },
-    );
-  }
-
-  Future<void> updateLogbook({
-    required String idLogbook,
-    required String activityName,
-    required String tanggalActivity,
-    required String url,
-  }) async {
-    try {
-      // Create the updated logbook entry
-      final updatedLogbook = LogbookPesertaMagangData(
-        idLogbook: idLogbook,
-        namaPeserta: nama,
-        email: email,
-        departemen: departement,
-        namaAktivitas: activityName,
-        tanggalAktivitas: tanggalActivity,
-        urlLampiran: url,
-      );
-
-      await ApiService().logbookService.updateLogbook(
-          updatedLogbook); // Ensure you implement this method in your API service
-      await fetchLogbooks(); // Refresh the list after updating
-    } catch (e) {
-      print('Error updating logbook: $e');
-    }
-  }
-
   Future<void> fetchLogbooks() async {
     try {
       final logbooks =
@@ -547,8 +478,8 @@ class _LogBookPesertaDashboardState
     final img = '$baseUrl${logbook.urlLampiran}';
     return Image.network(
       img,
-      height: 100,
-      width: 75,
+      height: 120,
+      width: 90,
       fit: BoxFit.cover,
       loadingBuilder: (c, child, p) =>
           p == null ? child : const CircularProgressIndicator(),

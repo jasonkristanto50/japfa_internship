@@ -97,7 +97,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         const SizedBox(height: 20),
         buildTextField('Email', _emailController),
         const SizedBox(height: 15),
-        buildTextField('Password', _passwordController, isPassword: true),
+        PasswordToggleTextField(
+          label: 'Password',
+          controller: _passwordController,
+        ),
         const SizedBox(height: 20),
         if (loginState.isLoading) const CircularProgressIndicator(),
         if (!loginState.isLoading)
@@ -137,7 +140,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         const SizedBox(height: 20),
         buildTextField('Email', _emailController),
         const SizedBox(height: 15),
-        buildTextField('Token', _tokenController, isPassword: true),
+        PasswordToggleTextField(
+          label: 'Token',
+          controller: _tokenController,
+        ),
         const SizedBox(height: 20),
         if (loginState.isLoading) // Show loading indicator
           const CircularProgressIndicator(),

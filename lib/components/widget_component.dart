@@ -615,3 +615,51 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
     );
   }
 }
+
+class PasswordToggleTextField extends StatefulWidget {
+  final String label;
+  final TextEditingController controller;
+
+  const PasswordToggleTextField({
+    super.key,
+    required this.label,
+    required this.controller,
+  });
+
+  @override
+  _PasswordToggleTextFieldState createState() =>
+      _PasswordToggleTextFieldState();
+}
+
+class _PasswordToggleTextFieldState extends State<PasswordToggleTextField> {
+  bool _isPasswordVisible = false;
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _isPasswordVisible = !_isPasswordVisible;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        TextField(
+          controller: widget.controller,
+          obscureText: !_isPasswordVisible,
+          decoration: InputDecoration(
+            labelText: widget.label,
+            border: const OutlineInputBorder(),
+            suffixIcon: IconButton(
+              icon: Icon(
+                _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+              ),
+              onPressed: _togglePasswordVisibility,
+            ),
+          ),
+          cursorColor: const Color.fromARGB(255, 48, 48, 48),
+        ),
+      ],
+    );
+  }
+}

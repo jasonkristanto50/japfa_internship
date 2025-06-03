@@ -43,9 +43,9 @@ router.post('/fuzzy-scale', async (req, res) => {
 
         const weights = {
             softskills: 0.4,
-            projects: 0.3,
+            projects: 0.25,
             ipk: 0.2,
-            asalUniversitas: 0.05,
+            asalUniversitas: 0.1,
             jurusan: 0.05,
         };
 

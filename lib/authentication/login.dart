@@ -49,12 +49,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final loginState = ref.watch(loginProvider); // Watch login state
+    bool isMobile = MediaQuery.of(context).size.width < 600;
 
     return Scaffold(
       appBar: Navbar(
         context: context,
         title: appName,
-        showBackButton: true,
+        showBackButton: isMobile ? false : true,
       ),
       body: Container(
         decoration: buildJapfaLogoBackground(),

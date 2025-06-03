@@ -123,7 +123,7 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
                         _navigateToAdminKunjunganStudiPage,
                       ),
                       buildNavBarTab(
-                        'Tambah Pembimbing',
+                        'Pembimbing',
                         _navigateToTambahKepalaDept,
                       ),
                       buildNavBarTab(
@@ -264,11 +264,14 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
           value: 'kunjungan',
           child: Text('Kunjungan Studi'),
         ));
+
+        // MENU untuk PESERTA MAGANG
       } else if (loginState.role == rolePesertaMagangValue) {
-        menuItems.add(const PopupMenuItem<String>(
-          value: 'detailDiri',
-          child: Text('Detail Diri'),
-        ));
+        // DETAIL tidak bisa dilihat dari mobile
+        // menuItems.add(const PopupMenuItem<String>(
+        //   value: 'detailDiri',
+        //   child: Text('Detail Diri'),
+        // ));
         menuItems.add(const PopupMenuItem<String>(
           value: 'logbook',
           child: Text('Logbook'),
@@ -277,6 +280,7 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
           value: 'laporan',
           child: Text('Laporan'),
         ));
+        //
       } else if (loginState.role == roleKepalaDeptValue) {
         menuItems.add(const PopupMenuItem<String>(
           value: 'logbook',

@@ -75,7 +75,7 @@ class _TambahKepalaDepartemenState extends State<TambahKepalaDepartemen> {
           ),
           // Button to add a new kepala departmen
           RoundedRectangleButton(
-            title: "Tambah Kepala Dept",
+            title: "Tambah Pembimbing",
             backgroundColor: Colors.white,
             outlineColor: japfaOrange,
             height: 40,

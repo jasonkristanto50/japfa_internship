@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:japfa_internship/admin_page/pendaftaran_magang_detail_page.dart';
 import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
+import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/kepala_departemen_page/dashboard_logbook_peserta.dart';
 import 'package:japfa_internship/models/kepala_departemen_data/kepala_departemen_data.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
@@ -137,19 +139,37 @@ class _DashboardPembimbingMagangState
                           DataCell(Text(peserta.nilaiUniv.toString(),
                               textAlign: TextAlign.center)),
                           DataCell(
-                            Align(
-                              alignment: Alignment.center,
-                              child: RoundedRectangleButton(
-                                title: "LOGBOOK",
-                                backgroundColor:
-                                    const Color.fromARGB(255, 152, 209, 255),
-                                height: 30,
-                                width: 150,
-                                rounded: 5,
-                                onPressed: () {
-                                  _viewLogbook(peserta.email);
-                                },
-                              ),
+                            Row(
+                              children: [
+                                RoundedRectangleButton(
+                                  title: "LOGBOOK",
+                                  backgroundColor: lightBlue,
+                                  height: 30,
+                                  width: 120,
+                                  rounded: 5,
+                                  onPressed: () {
+                                    _viewLogbook(peserta.email);
+                                  },
+                                ),
+                                const SizedBox(width: 10),
+                                RoundedRectangleButton(
+                                  title: "DETAIL",
+                                  backgroundColor: lightOrange,
+                                  height: 30,
+                                  width: 100,
+                                  rounded: 5,
+                                  onPressed: () {
+                                    fadeNavigation(
+                                      context,
+                                      targetNavigation:
+                                          PendaftaranMagangDetailPage(
+                                        peserta: peserta,
+                                      ),
+                                      time: 200,
+                                    );
+                                  },
+                                ),
+                              ],
                             ),
                           ),
                         ],

@@ -36,6 +36,8 @@ Widget buildTextField(
   String label,
   TextEditingController controller, {
   bool isPassword = false,
+  bool withDeleteIcon = false,
+  VoidCallback? onDelete,
 }) {
   return TextField(
     controller: controller,
@@ -43,6 +45,12 @@ Widget buildTextField(
     decoration: InputDecoration(
       labelText: label,
       border: const OutlineInputBorder(),
+      suffixIcon: withDeleteIcon
+          ? IconButton(
+              icon: const Icon(Icons.remove_circle_outline, color: Colors.red),
+              onPressed: onDelete,
+            )
+          : null,
     ),
     cursorColor: const Color.fromARGB(255, 48, 48, 48),
   );
@@ -160,20 +168,51 @@ Widget buildDataInfoField({
 }
 
 Widget buildLikertScale(
-  String text,
+  String title,
   double likertValue,
   ValueChanged<double> onChanged,
 ) {
+  // Mapping of Likert values to corresponding labels
+  String getLabel(double value) {
+    switch (value.toInt()) {
+      case 1:
+        return "Sangat kurang";
+      case 2:
+        return "Kurang";
+      case 3:
+        return "Cukup";
+      case 4:
+        return "Bagus";
+      case 5:
+        return "Sangat bagus";
+      default:
+        return "";
+    }
+  }
+
   return Column(
     children: [
-      Text(text, style: regular20),
+      Text(title, style: regular20),
+      Row(
+        children: [
+          Text(
+            "Sangat kurang",
+            style: regular16.copyWith(color: Colors.grey),
+          ),
+          const Spacer(),
+          Text(
+            "Sangat bagus",
+            style: regular16.copyWith(color: Colors.grey),
+          ),
+        ],
+      ),
       Slider(
         activeColor: japfaOrange,
         value: likertValue,
         min: 1.0,
         max: 5.0,
         divisions: 4,
-        label: likertValue.round().toString(),
+        label: getLabel(likertValue), // Update the label based on value
         onChanged: onChanged,
       ),
     ],
@@ -261,7 +300,7 @@ Future<String?> showCustomConfirmRejectDialogWithNote({
         elevation: 5.0,
         child: Container(
           width: 350,
-          height: 350,
+          height: withNote ? 350 : 200,
           padding: const EdgeInsets.all(24.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -321,7 +360,7 @@ Future<String?> showCustomConfirmRejectDialogWithNote({
                     },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
-                      backgroundColor: Colors.red,
+                      backgroundColor: rejectColor ?? Colors.red,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 30, vertical: 12),
                       shape: RoundedRectangleBorder(
@@ -493,7 +532,8 @@ bool validateField({
     case FieldType.email:
       if (controller.text.isEmpty ||
           !controller.text.contains('@') ||
-          !controller.text.endsWith('.com')) {
+          !controller.text.endsWith('.com') &&
+              !controller.text.endsWith('.ac.id')) {
         showSnackBar(context, 'Tolong isi $fieldName dengan benar');
         return false;
       }
@@ -787,6 +827,16 @@ Color getStatusKunjunganColor(String status) {
     return Colors.green;
   } else if (status == statusKunjunganSelesai) {
     return Colors.blue;
+  } else {
+    return Colors.grey;
+  }
+}
+
+Color getColorButtonRespondKunjungan(String statusKunjungan) {
+  if (statusKunjungan == statusKunjunganMenunggu) {
+    return lightBlue;
+  } else if (statusKunjungan == statusKunjunganDiterima) {
+    return lightBlue;
   } else {
     return Colors.grey;
   }

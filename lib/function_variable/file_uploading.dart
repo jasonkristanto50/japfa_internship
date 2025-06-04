@@ -32,7 +32,8 @@ class FileUploading {
           child: fileName == null
               ? InkWell(
                   onTap: () => pickFile(),
-                  child: const Center(child: Text('Click to upload file')),
+                  child: const Center(
+                      child: Text('Klik disini untuk upload file')),
                 )
               : Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

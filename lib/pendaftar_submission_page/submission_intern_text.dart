@@ -28,12 +28,7 @@ class _SubmissionInternState extends State<SubmissionIntern> {
   final TextEditingController generationController = TextEditingController();
   final TextEditingController majorController = TextEditingController();
   final TextEditingController scoreController = TextEditingController();
-  final TextEditingController projectDetail1Controller =
-      TextEditingController();
-  final TextEditingController projectDetail2Controller =
-      TextEditingController();
-  final TextEditingController projectDetail3Controller =
-      TextEditingController();
+  List<TextEditingController> projectDetailControllers = [];
   final TextEditingController urlController = TextEditingController();
 
   String? selectedUniversity;
@@ -99,7 +94,7 @@ class _SubmissionInternState extends State<SubmissionIntern> {
                     if (_currentPage == 1) _buildSoftSkillScale(),
                     if (_currentPage == 2) _buildProjectSubmissionFields(),
                     const SizedBox(height: 20), // Add spacing before the button
-                    _buildRoundedButton(), // Build the button
+                    _(), // Build the button
                   ],
                 ),
               ),
@@ -112,45 +107,63 @@ class _SubmissionInternState extends State<SubmissionIntern> {
 
   // Build Title
   Widget _buildTitle() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
+    return Column(
       children: [
-        IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            if (_currentPage == 0) {
-              Navigator.pop(context);
-            } else {
-              setState(() {
-                _currentPage = _currentPage - 1; // Go back to the previous page
-              });
-            }
-          },
-          padding: EdgeInsets.zero,
-          constraints: const BoxConstraints(),
-        ),
-        Expanded(
-          child: Center(
-            child: Column(
-              children: [
-                Text(
-                  _currentPage == 0
-                      ? 'Data Diri'
-                      : _currentPage == 1
-                          ? 'Penilaian Diri'
-                          : 'Lampiran',
-                  style: bold30,
-                ),
-                _currentPage == 2
-                    ? Text(
-                        "Bersifat opsional dan boleh kosong",
-                        style: regular16,
-                      )
-                    : const SizedBox(),
-              ],
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                if (_currentPage == 0) {
+                  Navigator.pop(context);
+                } else {
+                  setState(() {
+                    _currentPage =
+                        _currentPage - 1; // Go back to the previous page
+                  });
+                }
+              },
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
             ),
-          ),
+            Expanded(
+              child: Center(
+                child: Column(
+                  children: [
+                    Text(
+                      _currentPage == 0
+                          ? 'Data Diri'
+                          : _currentPage == 1
+                              ? 'Penilaian Diri'
+                              : 'Lampiran Proyek',
+                      style: bold30,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
+        const SizedBox(height: 10),
+        Column(
+          children: [
+            _currentPage == 2
+                ? Column(
+                    children: [
+                      Text(
+                        "Tuliskan Judul Proyek yang Pernah Dikerjakan",
+                        style: regular16,
+                      ),
+                      Text(
+                        "Bersifat opsional / tidak wajib",
+                        style: regular14,
+                      ),
+                    ],
+                  )
+                : const SizedBox(),
+          ],
+        )
       ],
     );
   }
@@ -263,24 +276,77 @@ class _SubmissionInternState extends State<SubmissionIntern> {
     );
   }
 
-  // Build Project Submission Fields
   Widget _buildProjectSubmissionFields() {
+    int maxField = 5;
+    bool isMax = projectDetailControllers.length == maxField;
     return Column(
       children: [
         const SizedBox(height: 20),
-        buildTextField('Detail Proyek 1', projectDetail1Controller),
-        const SizedBox(height: 20),
-        buildTextField('Detail Proyek 2', projectDetail2Controller),
-        const SizedBox(height: 20),
-        buildTextField('Detail Proyek 3', projectDetail3Controller),
-        const SizedBox(height: 20),
-        buildTextField('URL Lampiran', urlController),
+        ...projectDetailControllers.asMap().entries.map((entry) {
+          int index = entry.key;
+
+          TextEditingController controller = entry.value;
+
+          return Column(
+            children: [
+              buildTextField(
+                'Judul Proyek ${index + 1} (Opsional)',
+                controller,
+                withDeleteIcon: true,
+                onDelete: () {
+                  _removeProjectField(index);
+                },
+              ),
+              const SizedBox(height: 20),
+            ],
+          );
+        }),
+        buildTextField('Link Lampiran (untuk semua proyek)', urlController),
+        const SizedBox(height: 10),
+
+        // Add button to add more project fields
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            RoundedRectangleButton(
+              title: "Tambah Proyek",
+              fontColor: !isMax ? japfaOrange : Colors.white,
+              backgroundColor: !isMax ? Colors.white : Colors.grey,
+              outlineColor: !isMax ? japfaOrange : Colors.grey,
+              width: 150,
+              height: 30,
+              rounded: 5,
+              onPressed: !isMax
+                  ? () => _addProjectField()
+                  : () => showSnackBar(
+                        context,
+                        "Proyek yang bisa dituliskan sudah maksimal",
+                        backgroundColor: darkGrey,
+                      ),
+            ),
+          ],
+        ),
       ],
     );
   }
 
+  void _addProjectField() {
+    setState(() {
+      projectDetailControllers.add(TextEditingController());
+    });
+  }
+
+  void _removeProjectField(int index) {
+    setState(() {
+      if (projectDetailControllers.isNotEmpty) {
+        projectDetailControllers[index].dispose();
+        projectDetailControllers.removeAt(index);
+      }
+    });
+  }
+
   // Method for building the RoundedRectangleButton
-  Widget _buildRoundedButton() {
+  Widget _() {
     return RoundedRectangleButton(
       title: "Selanjutnya",
       backgroundColor: japfaOrange,
@@ -299,6 +365,7 @@ class _SubmissionInternState extends State<SubmissionIntern> {
             // Final submission action for Project Submission Page
             int? generation = int.tryParse(generationController.text);
             double? score = double.tryParse(scoreController.text);
+            // TODO: Fix project detail
             fadeNavigation(
               context,
               targetNavigation: SubmissionInternFile(
@@ -317,9 +384,9 @@ class _SubmissionInternState extends State<SubmissionIntern> {
                 likertTanggungJawab: likertTanggungJawabValue,
                 likertKerjaSama: likertKerjaSamaValue,
                 likertTeknis: likertTeknisValue,
-                projectDetail1: projectDetail1Controller.text,
-                projectDetail2: projectDetail2Controller.text,
-                projectDetail3: projectDetail3Controller.text,
+                projectDetail1: "projectDetail1Controller.text",
+                projectDetail2: "projectDetail2Controller.text",
+                projectDetail3: "projectDetail3Controller.text",
                 urlProject: urlController.text,
               ),
               time: 0, // No fade animation

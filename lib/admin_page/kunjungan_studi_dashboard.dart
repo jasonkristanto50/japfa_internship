@@ -185,11 +185,15 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
                                   RoundedRectangleButton(
                                     title: "RESPON",
                                     style: regular16,
-                                    backgroundColor: lightBlue,
+                                    backgroundColor:
+                                        getColorButtonRespondKunjungan(
+                                      kunjungan.status,
+                                    ),
                                     height: 30,
                                     width: 100,
                                     rounded: 5,
-                                    onPressed: () => _respond(kunjungan),
+                                    onPressed: () =>
+                                        _showRespondDialog(kunjungan),
                                   ),
                                 ],
                               ),
@@ -370,28 +374,92 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
     );
   }
 
-  void _respond(KunjunganStudiData kunjungan) async {
-    await showCustomConfirmRejectDialogWithNote(
-      context: context,
-      title: "Berikan Respon",
-      message: "Mau menerima / menolak kunjungan ?",
-      withNote: true,
-      cancelColor: Colors.green,
-      cancelText: "Terima",
-      // Accepted actually
-      onCancel: () {
-        _handleResponse(kunjungan, true);
-      },
-      // Note hanya dikirim ke pengaju saat ditolak
-      onReject: (note) {
-        if (note == null) {
-          _handleResponse(kunjungan, false);
-        } else {
-          _handleResponseWithNote(kunjungan, false, note);
-        }
-      },
-    );
+  void _showRespondDialog(KunjunganStudiData kunjungan) async {
+    if (kunjungan.status == statusKunjunganMenunggu) {
+      await showCustomConfirmRejectDialogWithNote(
+        context: context,
+        title: "Berikan Respon",
+        message: "Mau menerima / menolak kunjungan ?",
+        withNote: true,
+        cancelColor: Colors.green,
+        cancelText: "Terima",
+        // Accepted actually
+        onCancel: () {
+          _handleResponse(kunjungan, true);
+        },
+        // Note hanya dikirim ke pengaju saat ditolak
+        onReject: (note) {
+          if (note == null) {
+            _handleResponse(kunjungan, false);
+          } else {
+            _handleResponseWithNote(kunjungan, false, note);
+          }
+        },
+      );
+    } else if (kunjungan.status == statusKunjunganDiterima) {
+      await showCustomConfirmRejectDialogWithNote(
+        context: context,
+        title: "Selesaikan Kunjungan",
+        message: "Konfirmasi Kunjungan selesai ?",
+        rejectColor: darkGrey,
+        rejectText: "Selesai",
+        withNote: false,
+        onCancel: () {
+          Navigator.of(context).pop();
+        },
+        // Note hanya dikirim ke pengaju saat ditolak
+        onReject: (note) {
+          _setKunjunganSelesai(kunjungan);
+        },
+      );
+    }
+
     setState(() {});
+  }
+
+  void _setKunjunganSelesai(KunjunganStudiData kunjungan) async {
+    // Update status locally first
+    setState(() {
+      kunjungan = kunjungan.copyWith(
+        status: statusKunjunganSelesai,
+      );
+    });
+
+    // Prepare data payload
+    final dataToUpdate = {
+      'status': kunjungan.status, // Send the updated status
+    };
+
+    // Call the API to update the status in the backend
+    try {
+      final response = await Dio().put(
+        '$baseUrl/api/kunjungan_studi/update_status/${kunjungan.idKunjunganStudi}',
+        data: dataToUpdate,
+      );
+
+      // Send email with password token
+      await ApiService().sendEmail(
+        kunjungan.email,
+        kunjungan.namaPerwakilan,
+        kunjungan.passwordToken!,
+        EmailMessageType.statusKunjungan,
+      );
+
+      if (response.statusCode == 200) {
+        // Optionally, show a success message or handle UI updates
+        print('Status updated to: ${kunjungan.status}');
+        // Refresh data
+        _fetchKunjunganData();
+      } else {
+        print('Failed to update status');
+      }
+    } catch (e) {
+      print('Error updating status: $e');
+      setState(() {
+        kunjungan =
+            kunjungan.copyWith(status: 'Pending'); // Clear the note on error
+      });
+    }
   }
 
   void _handleResponse(KunjunganStudiData kunjungan, bool isAccepted) async {

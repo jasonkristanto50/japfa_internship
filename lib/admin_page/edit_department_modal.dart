@@ -65,32 +65,6 @@ class _EditDepartmentModalState extends State<EditDepartmentModal> {
     );
   }
 
-  // Function to save changes and close the modal
-  void _saveChanges() async {
-    try {
-      int departmentNowMaxKuota = widget.department.maxKuota ?? 0;
-      int newMaxKuota =
-          int.tryParse(maxQuotaController.text) ?? departmentNowMaxKuota;
-
-      // Calculate new sisa_kuota based on jumlah approved
-      int departmentNowApproved = widget.department.jumlahApproved ?? 0;
-      int newSisaKuota = newMaxKuota - departmentNowApproved;
-
-      // Call the API method to update max kuota
-      await ApiService().departemenService.updateMaxKuotaDepartemen(
-          widget.department.idDepartemen, newMaxKuota);
-
-      // Create a new instance of DepartemenData with the updated maxKuota
-      DepartemenData updatedDepartment = widget.department
-          .copyWith(maxKuota: newMaxKuota, sisaKuota: newSisaKuota);
-
-      Navigator.pop(context, updatedDepartment);
-    } catch (e) {
-      // Handle errors (e.g., show a snackbar or dialog)
-      print('Failed to save changes: $e');
-    }
-  }
-
   // Custom method to build text field for the modal
   Widget _buildTextField(TextEditingController controller, String label) {
     return Padding(
@@ -118,5 +92,31 @@ class _EditDepartmentModalState extends State<EditDepartmentModal> {
         cursorColor: Colors.black,
       ),
     );
+  }
+
+  // Function to save changes and close the modal
+  void _saveChanges() async {
+    try {
+      int departmentNowMaxKuota = widget.department.maxKuota ?? 0;
+      int newMaxKuota =
+          int.tryParse(maxQuotaController.text) ?? departmentNowMaxKuota;
+
+      // Calculate new sisa_kuota based on jumlah approved
+      int departmentNowApproved = widget.department.jumlahApproved ?? 0;
+      int newSisaKuota = newMaxKuota - departmentNowApproved;
+
+      // Call the API method to update max kuota
+      await ApiService().departemenService.updateMaxKuotaDepartemen(
+          widget.department.idDepartemen, newMaxKuota);
+
+      // Create a new instance of DepartemenData with the updated maxKuota
+      DepartemenData updatedDepartment = widget.department
+          .copyWith(maxKuota: newMaxKuota, sisaKuota: newSisaKuota);
+
+      Navigator.pop(context, updatedDepartment);
+    } catch (e) {
+      // Handle errors (e.g., show a snackbar or dialog)
+      print('Failed to save changes: $e');
+    }
   }
 }

@@ -85,17 +85,17 @@ class _DepartemenMagangDashboardState extends State<DepartemenMagangDashboard> {
             widthValue: 1200.w,
           ),
           // Button to add a new department
-          RoundedRectangleButton(
-            title: "Tambah Departemen",
-            backgroundColor: Colors.white,
-            outlineColor: japfaOrange,
-            height: 40,
-            width: 200,
-            rounded: 5,
-            onPressed: () {
-              _addNewDepartment();
-            },
-          ),
+          // RoundedRectangleButton(
+          //   title: "Tambah Departemen",
+          //   backgroundColor: Colors.white,
+          //   outlineColor: japfaOrange,
+          //   height: 40,
+          //   width: 200,
+          //   rounded: 5,
+          //   onPressed: () {
+          //     _addNewDepartment();
+          //   },
+          // ),
         ],
       ),
     );
@@ -181,18 +181,6 @@ class _DepartemenMagangDashboardState extends State<DepartemenMagangDashboard> {
         ),
       ),
     );
-  }
-
-  void _addNewDepartment() {
-    // showDialog(
-    //   context: context,
-    //   builder: (BuildContext context) {
-    //     return CustomAlertDialog(
-    //       title: "Tambah Departemen",
-    //       controllers: [],
-    //     );
-    //   },
-    // );
   }
 
   void _editMaxKuota(DepartemenData department) {

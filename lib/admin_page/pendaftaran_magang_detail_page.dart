@@ -479,22 +479,24 @@ class _PendaftaranMagangDetailPageState
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           RoundedRectangleButton(
-            title: 'Tolak',
-            backgroundColor: Colors.red,
-            fontColor: Colors.white,
-            width: 100,
-            height: 40,
-            onPressed: () => _confirmReject(peserta!),
-          ),
+              title: 'Tolak',
+              backgroundColor: Colors.red,
+              fontColor: Colors.white,
+              width: 100,
+              height: 40,
+              onPressed: () {
+                _confirmReject(peserta!);
+              }),
           const SizedBox(width: 20),
           RoundedRectangleButton(
-            title: 'Terima',
-            backgroundColor: Colors.green,
-            fontColor: Colors.white,
-            width: 100,
-            height: 40,
-            onPressed: () => _confirmAccept(peserta!),
-          ),
+              title: 'Terima',
+              backgroundColor: Colors.green,
+              fontColor: Colors.white,
+              width: 100,
+              height: 40,
+              onPressed: () {
+                _confirmAccept(peserta!);
+              }),
         ],
       );
     } else {
@@ -719,6 +721,7 @@ class _PendaftaranMagangDetailPageState
         peserta.passwordToken!,
         EmailMessageType.statusMagang,
       );
+      await _fetchPesertaAndSkillByEmail(peserta.email);
 
       if (widget.onUpdate != null) {
         widget.onUpdate!();

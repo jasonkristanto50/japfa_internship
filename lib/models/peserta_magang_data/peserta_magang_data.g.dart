@@ -28,9 +28,11 @@ _PesertaMagangData _$PesertaMagangDataFromJson(Map<String, dynamic> json) =>
       tanggalInterview: json['tanggal_interview'] as String?,
       jamInterview: json['jam_interview'] as String?,
       linkMeetInterview: json['link_meet_interview'] as String?,
+      catatanHasilInterview: json['catatan_hasil_interview'] as String?,
       catatanHr: json['catatan_hr'] as String?,
       namaPembimbing: json['nama_pembimbing'] as String?,
-      urlLaporanAkhir: json['url_laporan_akhir'] as String?,
+      pathLaporanAkhir: json['path_laporan_akhir'] as String?,
+      validasiLaporanAkhir: json['validasi_laporan_akhir'] as String?,
       nilaiAkhirMagang: (json['nilai_akhir_magang'] as num?)?.toInt(),
     );
 
@@ -56,8 +58,10 @@ Map<String, dynamic> _$PesertaMagangDataToJson(_PesertaMagangData instance) =>
       'tanggal_interview': instance.tanggalInterview,
       'jam_interview': instance.jamInterview,
       'link_meet_interview': instance.linkMeetInterview,
+      'catatan_hasil_interview': instance.catatanHasilInterview,
       'catatan_hr': instance.catatanHr,
       'nama_pembimbing': instance.namaPembimbing,
-      'url_laporan_akhir': instance.urlLaporanAkhir,
+      'path_laporan_akhir': instance.pathLaporanAkhir,
+      'validasi_laporan_akhir': instance.validasiLaporanAkhir,
       'nilai_akhir_magang': instance.nilaiAkhirMagang,
     };

@@ -99,37 +99,44 @@ class _LaporanPesertaMagangState extends ConsumerState<LaporanPesertaMagang> {
                   border: TableBorder.all(color: Colors.grey, width: 1),
                   columns: const [
                     DataColumn(label: Text('Nama Laporan')),
-                    DataColumn(label: Text('File / URL')),
+                    DataColumn(label: Text('File')),
                     DataColumn(label: Text('Action')),
                   ],
                   rows: laporans.map<DataRow>((laporan) {
-                    String? url = peserta.urlLaporanAkhir ?? '';
+                    String? pathLaporan = peserta.pathLaporanAkhir ?? '';
                     return DataRow(cells: [
                       DataCell(Text(laporan)),
                       DataCell(
                         GestureDetector(
                           onTap: () {
-                            if (url.isNotEmpty) {
-                              launchURLImagePath(url);
+                            if (pathLaporan.isNotEmpty) {
+                              launchURLImagePath(pathLaporan);
                             }
                           },
                           child: Row(
                             children: [
                               Icon(
-                                getFileIcon(url),
-                                color:
-                                    url.isNotEmpty ? Colors.blue : Colors.grey,
+                                getFileIcon(pathLaporan),
+                                color: pathLaporan.isNotEmpty
+                                    ? Colors.blue
+                                    : Colors.grey,
                               ),
-                              const SizedBox(
-                                  width: 8), // Space between icon and text
-                              Text(
-                                getOriginalFileNameFromPath(url),
-                                style: TextStyle(
-                                  color: url.isNotEmpty
-                                      ? Colors.blue
-                                      : Colors.grey,
+                              const SizedBox(width: 8),
+                              if (pathLaporan.isNotEmpty) ...[
+                                Text(
+                                  getOriginalFileNameFromPath(pathLaporan),
+                                  style: const TextStyle(
+                                    color: Colors.blue,
+                                  ),
                                 ),
-                              ),
+                              ] else ...[
+                                const Text(
+                                  "Belum Ada Laporan",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ]
                             ],
                           ),
                         ),
@@ -273,7 +280,7 @@ class _LaporanPesertaMagangState extends ConsumerState<LaporanPesertaMagang> {
                                 // DATABASE nama adalah URL tapi Valuenya adalah path laporan akhir
                                 await ApiService()
                                     .pesertaMagangService
-                                    .updateUrlLaporanAkhir(
+                                    .updatePathLaporanAkhir(
                                       email,
                                       pathFileLaporanAkhir,
                                     );
@@ -319,8 +326,8 @@ class _LaporanPesertaMagangState extends ConsumerState<LaporanPesertaMagang> {
 
   void _deleteLaporan(String laporanType) {
     setState(() async {
-      // PATH URL Laporan akhir = empty
-      await ApiService().pesertaMagangService.updateUrlLaporanAkhir(email, '');
+      // PATH Laporan akhir = empty
+      await ApiService().pesertaMagangService.updatePathLaporanAkhir(email, '');
       _fetchPesertaData();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("File Upload berhasil dihapus")),

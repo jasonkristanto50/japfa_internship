@@ -30,9 +30,7 @@ class SubmissionInternFile extends StatefulWidget {
   final double likertKerjaSama;
   final double likertTeknis;
 
-  final String? projectDetail1;
-  final String? projectDetail2;
-  final String? projectDetail3;
+  final List<String> listProjectName;
   final String? urlProject;
 
   const SubmissionInternFile({
@@ -52,9 +50,7 @@ class SubmissionInternFile extends StatefulWidget {
     required this.likertTanggungJawab,
     required this.likertKerjaSama,
     required this.likertTeknis,
-    this.projectDetail1,
-    this.projectDetail2,
-    this.projectDetail3,
+    required this.listProjectName,
     this.urlProject,
   });
 
@@ -281,8 +277,8 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
           'SKILL_MG_${(skillCount + 1).toString().padLeft(3, '0')}';
 
       // Count non-null projects
-      List<String> projectList = [];
-      int projectCount = _checkProject(projectList);
+      List<String> projectList = widget.listProjectName;
+      int projectCount = projectList.length;
 
       int totalSoftskillValue = calculateTotalSoftskills();
 
@@ -468,24 +464,6 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
     }
 
     return true;
-  }
-
-  // Check project yang disubmit pendaftar
-  int _checkProject(List<String> projectList) {
-    int projectCount = 0;
-    if (widget.projectDetail1 != null && widget.projectDetail1!.isNotEmpty) {
-      projectCount++;
-      projectList.add(widget.projectDetail1!);
-    }
-    if (widget.projectDetail2 != null && widget.projectDetail2!.isNotEmpty) {
-      projectCount++;
-      projectList.add(widget.projectDetail2!);
-    }
-    if (widget.projectDetail3 != null && widget.projectDetail3!.isNotEmpty) {
-      projectCount++;
-      projectList.add(widget.projectDetail3!);
-    }
-    return projectCount;
   }
 
   // Method to calculate total soft skills

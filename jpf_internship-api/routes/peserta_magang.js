@@ -335,24 +335,24 @@ router.put('/update-link-meet/:id', async (req, res) => {
     }
 });
 
-// Update url_laporan_akhir by email
-router.put('/update-url-laporan-akhir-email/:email', async (req, res) => {
+// Update path_laporan_akhir by email
+router.put('/update-path-laporan-akhir-email/:email', async (req, res) => {
     const { email } = req.params; // Email of the Peserta Magang to update
-    const { url_laporan_akhir } = req.body; // New URL value
+    const { path_laporan_akhir } = req.body; // New path value
 
     try {
         const result = await pool.query(
-            'UPDATE PESERTA_MAGANG SET url_laporan_akhir = $1 WHERE email = $2 RETURNING *',
-            [url_laporan_akhir, email]
+            'UPDATE PESERTA_MAGANG SET path_laporan_akhir = $1 WHERE email = $2 RETURNING *',
+            [path_laporan_akhir, email]
         );
 
         if (result.rowCount === 0) {
             return res.status(404).json({ error: 'Peserta Magang not found' });
         }
 
-        res.status(200).json({ message: 'URL updated successfully!', data: result.rows[0] });
+        res.status(200).json({ message: 'path updated successfully!', data: result.rows[0] });
     } catch (error) {
-        console.error('Error updating url_laporan_akhir:', error);
+        console.error('Error updating path_laporan_akhir:', error);
         res.status(500).json({ error: 'Server error' });
     }
 });

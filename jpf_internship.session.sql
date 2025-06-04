@@ -91,9 +91,11 @@
 --     tanggal_interview VARCHAR(20),
 --     jam_interview VARCHAR(50),
 --     link_meet_interview VARCHAR(255),
+--     catatan_hasil_interview VARCHAR(255),
 --     catatan_hr VARCHAR(255),
 --     nama_pembimbing VARCHAR(255),
---     url_laporan_akhir VARCHAR(255),     
+--     path_laporan_akhir VARCHAR(255),
+--     validasi_laporan_akhir VARCHAR(255) DEFAULT NULL,    
 --     nilai_akhir_magang INTEGER  
 -- );  
 

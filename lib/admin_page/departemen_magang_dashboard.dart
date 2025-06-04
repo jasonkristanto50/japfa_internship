@@ -139,19 +139,19 @@ class _DepartemenMagangDashboardState extends State<DepartemenMagangDashboard> {
               DataColumn(label: Text('Action')),
             ],
             rows: filteredData
-                .map((d) => DataRow(cells: [
-                      DataCell(
-                          Text(d.namaDepartemen, textAlign: TextAlign.center)),
-                      DataCell(
-                          Text('${d.maxKuota}', textAlign: TextAlign.center)),
-                      DataCell(Text('${d.jumlahPengajuan}',
+                .map((departemen) => DataRow(cells: [
+                      DataCell(Text(departemen.namaDepartemen,
                           textAlign: TextAlign.center)),
-                      DataCell(Text('${d.jumlahApproved}',
+                      DataCell(Text('${departemen.maxKuota}',
                           textAlign: TextAlign.center)),
-                      DataCell(Text('${d.jumlahOnBoarding}',
+                      DataCell(Text('${departemen.jumlahPengajuan}',
                           textAlign: TextAlign.center)),
-                      DataCell(
-                          Text('${d.sisaKuota}', textAlign: TextAlign.center)),
+                      DataCell(Text('${departemen.jumlahApproved}',
+                          textAlign: TextAlign.center)),
+                      DataCell(Text('${departemen.jumlahOnBoarding}',
+                          textAlign: TextAlign.center)),
+                      DataCell(Text('${departemen.sisaKuota}',
+                          textAlign: TextAlign.center)),
                       DataCell(Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -161,7 +161,7 @@ class _DepartemenMagangDashboardState extends State<DepartemenMagangDashboard> {
                             height: 30,
                             width: 85,
                             rounded: 5,
-                            onPressed: () => _editMaxKuota(d),
+                            onPressed: () => _editMaxKuota(departemen),
                           ),
                           const SizedBox(width: 8),
                           RoundedRectangleButton(
@@ -171,7 +171,7 @@ class _DepartemenMagangDashboardState extends State<DepartemenMagangDashboard> {
                             width: 85,
                             rounded: 5,
                             onPressed: () =>
-                                _onViewApplications(d.namaDepartemen),
+                                _onViewApplications(departemen.namaDepartemen),
                           ),
                         ],
                       )),
@@ -193,11 +193,10 @@ class _DepartemenMagangDashboardState extends State<DepartemenMagangDashboard> {
       if (updatedDepartment != null) {
         setState(() {
           // Find the index and update the list
-          int index = departemen.indexWhere(
-              (d) => d.idDepartemen == updatedDepartment.idDepartemen);
+          int index = departemen.indexWhere((departemen) =>
+              departemen.idDepartemen == updatedDepartment.idDepartemen);
           if (index != -1) {
-            departemen[index] =
-                updatedDepartment; // Update the list with the new department instance
+            departemen[index] = updatedDepartment;
           }
         });
       }

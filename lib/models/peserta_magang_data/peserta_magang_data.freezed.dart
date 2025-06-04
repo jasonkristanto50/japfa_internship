@@ -55,12 +55,16 @@ mixin _$PesertaMagangData {
   String? get jamInterview;
   @JsonKey(name: 'link_meet_interview')
   String? get linkMeetInterview;
+  @JsonKey(name: 'catatan_hasil_interview')
+  String? get catatanHasilInterview;
   @JsonKey(name: 'catatan_hr')
   String? get catatanHr;
   @JsonKey(name: 'nama_pembimbing')
   String? get namaPembimbing;
-  @JsonKey(name: 'url_laporan_akhir')
-  String? get urlLaporanAkhir;
+  @JsonKey(name: 'path_laporan_akhir')
+  String? get pathLaporanAkhir;
+  @JsonKey(name: 'validasi_laporan_akhir')
+  String? get validasiLaporanAkhir;
   @JsonKey(name: 'nilai_akhir_magang')
   int? get nilaiAkhirMagang;
 
@@ -114,12 +118,16 @@ mixin _$PesertaMagangData {
                 other.jamInterview == jamInterview) &&
             (identical(other.linkMeetInterview, linkMeetInterview) ||
                 other.linkMeetInterview == linkMeetInterview) &&
+            (identical(other.catatanHasilInterview, catatanHasilInterview) ||
+                other.catatanHasilInterview == catatanHasilInterview) &&
             (identical(other.catatanHr, catatanHr) ||
                 other.catatanHr == catatanHr) &&
             (identical(other.namaPembimbing, namaPembimbing) ||
                 other.namaPembimbing == namaPembimbing) &&
-            (identical(other.urlLaporanAkhir, urlLaporanAkhir) ||
-                other.urlLaporanAkhir == urlLaporanAkhir) &&
+            (identical(other.pathLaporanAkhir, pathLaporanAkhir) ||
+                other.pathLaporanAkhir == pathLaporanAkhir) &&
+            (identical(other.validasiLaporanAkhir, validasiLaporanAkhir) ||
+                other.validasiLaporanAkhir == validasiLaporanAkhir) &&
             (identical(other.nilaiAkhirMagang, nilaiAkhirMagang) ||
                 other.nilaiAkhirMagang == nilaiAkhirMagang));
   }
@@ -148,15 +156,17 @@ mixin _$PesertaMagangData {
         tanggalInterview,
         jamInterview,
         linkMeetInterview,
+        catatanHasilInterview,
         catatanHr,
         namaPembimbing,
-        urlLaporanAkhir,
+        pathLaporanAkhir,
+        validasiLaporanAkhir,
         nilaiAkhirMagang
       ]);
 
   @override
   String toString() {
-    return 'PesertaMagangData(idMagang: $idMagang, nama: $nama, departemen: $departemen, alamat: $alamat, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, angkatan: $angkatan, nilaiUniv: $nilaiUniv, jurusan: $jurusan, pathCv: $pathCv, pathPersetujuanUniv: $pathPersetujuanUniv, pathTranskripNilai: $pathTranskripNilai, pathFotoDiri: $pathFotoDiri, statusMagang: $statusMagang, passwordToken: $passwordToken, pathSuratPenerimaan: $pathSuratPenerimaan, tanggalInterview: $tanggalInterview, jamInterview: $jamInterview, linkMeetInterview: $linkMeetInterview, catatanHr: $catatanHr, namaPembimbing: $namaPembimbing, urlLaporanAkhir: $urlLaporanAkhir, nilaiAkhirMagang: $nilaiAkhirMagang)';
+    return 'PesertaMagangData(idMagang: $idMagang, nama: $nama, departemen: $departemen, alamat: $alamat, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, angkatan: $angkatan, nilaiUniv: $nilaiUniv, jurusan: $jurusan, pathCv: $pathCv, pathPersetujuanUniv: $pathPersetujuanUniv, pathTranskripNilai: $pathTranskripNilai, pathFotoDiri: $pathFotoDiri, statusMagang: $statusMagang, passwordToken: $passwordToken, pathSuratPenerimaan: $pathSuratPenerimaan, tanggalInterview: $tanggalInterview, jamInterview: $jamInterview, linkMeetInterview: $linkMeetInterview, catatanHasilInterview: $catatanHasilInterview, catatanHr: $catatanHr, namaPembimbing: $namaPembimbing, pathLaporanAkhir: $pathLaporanAkhir, validasiLaporanAkhir: $validasiLaporanAkhir, nilaiAkhirMagang: $nilaiAkhirMagang)';
   }
 }
 
@@ -187,9 +197,11 @@ abstract mixin class $PesertaMagangDataCopyWith<$Res> {
       @JsonKey(name: 'tanggal_interview') String? tanggalInterview,
       @JsonKey(name: 'jam_interview') String? jamInterview,
       @JsonKey(name: 'link_meet_interview') String? linkMeetInterview,
+      @JsonKey(name: 'catatan_hasil_interview') String? catatanHasilInterview,
       @JsonKey(name: 'catatan_hr') String? catatanHr,
       @JsonKey(name: 'nama_pembimbing') String? namaPembimbing,
-      @JsonKey(name: 'url_laporan_akhir') String? urlLaporanAkhir,
+      @JsonKey(name: 'path_laporan_akhir') String? pathLaporanAkhir,
+      @JsonKey(name: 'validasi_laporan_akhir') String? validasiLaporanAkhir,
       @JsonKey(name: 'nilai_akhir_magang') int? nilaiAkhirMagang});
 }
 
@@ -226,9 +238,11 @@ class _$PesertaMagangDataCopyWithImpl<$Res>
     Object? tanggalInterview = freezed,
     Object? jamInterview = freezed,
     Object? linkMeetInterview = freezed,
+    Object? catatanHasilInterview = freezed,
     Object? catatanHr = freezed,
     Object? namaPembimbing = freezed,
-    Object? urlLaporanAkhir = freezed,
+    Object? pathLaporanAkhir = freezed,
+    Object? validasiLaporanAkhir = freezed,
     Object? nilaiAkhirMagang = freezed,
   }) {
     return _then(_self.copyWith(
@@ -312,6 +326,10 @@ class _$PesertaMagangDataCopyWithImpl<$Res>
           ? _self.linkMeetInterview
           : linkMeetInterview // ignore: cast_nullable_to_non_nullable
               as String?,
+      catatanHasilInterview: freezed == catatanHasilInterview
+          ? _self.catatanHasilInterview
+          : catatanHasilInterview // ignore: cast_nullable_to_non_nullable
+              as String?,
       catatanHr: freezed == catatanHr
           ? _self.catatanHr
           : catatanHr // ignore: cast_nullable_to_non_nullable
@@ -320,9 +338,13 @@ class _$PesertaMagangDataCopyWithImpl<$Res>
           ? _self.namaPembimbing
           : namaPembimbing // ignore: cast_nullable_to_non_nullable
               as String?,
-      urlLaporanAkhir: freezed == urlLaporanAkhir
-          ? _self.urlLaporanAkhir
-          : urlLaporanAkhir // ignore: cast_nullable_to_non_nullable
+      pathLaporanAkhir: freezed == pathLaporanAkhir
+          ? _self.pathLaporanAkhir
+          : pathLaporanAkhir // ignore: cast_nullable_to_non_nullable
+              as String?,
+      validasiLaporanAkhir: freezed == validasiLaporanAkhir
+          ? _self.validasiLaporanAkhir
+          : validasiLaporanAkhir // ignore: cast_nullable_to_non_nullable
               as String?,
       nilaiAkhirMagang: freezed == nilaiAkhirMagang
           ? _self.nilaiAkhirMagang
@@ -356,9 +378,11 @@ class _PesertaMagangData implements PesertaMagangData {
       @JsonKey(name: 'tanggal_interview') this.tanggalInterview,
       @JsonKey(name: 'jam_interview') this.jamInterview,
       @JsonKey(name: 'link_meet_interview') this.linkMeetInterview,
+      @JsonKey(name: 'catatan_hasil_interview') this.catatanHasilInterview,
       @JsonKey(name: 'catatan_hr') this.catatanHr,
       @JsonKey(name: 'nama_pembimbing') this.namaPembimbing,
-      @JsonKey(name: 'url_laporan_akhir') this.urlLaporanAkhir,
+      @JsonKey(name: 'path_laporan_akhir') this.pathLaporanAkhir,
+      @JsonKey(name: 'validasi_laporan_akhir') this.validasiLaporanAkhir,
       @JsonKey(name: 'nilai_akhir_magang') this.nilaiAkhirMagang});
   factory _PesertaMagangData.fromJson(Map<String, dynamic> json) =>
       _$PesertaMagangDataFromJson(json);
@@ -424,14 +448,20 @@ class _PesertaMagangData implements PesertaMagangData {
   @JsonKey(name: 'link_meet_interview')
   final String? linkMeetInterview;
   @override
+  @JsonKey(name: 'catatan_hasil_interview')
+  final String? catatanHasilInterview;
+  @override
   @JsonKey(name: 'catatan_hr')
   final String? catatanHr;
   @override
   @JsonKey(name: 'nama_pembimbing')
   final String? namaPembimbing;
   @override
-  @JsonKey(name: 'url_laporan_akhir')
-  final String? urlLaporanAkhir;
+  @JsonKey(name: 'path_laporan_akhir')
+  final String? pathLaporanAkhir;
+  @override
+  @JsonKey(name: 'validasi_laporan_akhir')
+  final String? validasiLaporanAkhir;
   @override
   @JsonKey(name: 'nilai_akhir_magang')
   final int? nilaiAkhirMagang;
@@ -490,12 +520,16 @@ class _PesertaMagangData implements PesertaMagangData {
                 other.jamInterview == jamInterview) &&
             (identical(other.linkMeetInterview, linkMeetInterview) ||
                 other.linkMeetInterview == linkMeetInterview) &&
+            (identical(other.catatanHasilInterview, catatanHasilInterview) ||
+                other.catatanHasilInterview == catatanHasilInterview) &&
             (identical(other.catatanHr, catatanHr) ||
                 other.catatanHr == catatanHr) &&
             (identical(other.namaPembimbing, namaPembimbing) ||
                 other.namaPembimbing == namaPembimbing) &&
-            (identical(other.urlLaporanAkhir, urlLaporanAkhir) ||
-                other.urlLaporanAkhir == urlLaporanAkhir) &&
+            (identical(other.pathLaporanAkhir, pathLaporanAkhir) ||
+                other.pathLaporanAkhir == pathLaporanAkhir) &&
+            (identical(other.validasiLaporanAkhir, validasiLaporanAkhir) ||
+                other.validasiLaporanAkhir == validasiLaporanAkhir) &&
             (identical(other.nilaiAkhirMagang, nilaiAkhirMagang) ||
                 other.nilaiAkhirMagang == nilaiAkhirMagang));
   }
@@ -524,15 +558,17 @@ class _PesertaMagangData implements PesertaMagangData {
         tanggalInterview,
         jamInterview,
         linkMeetInterview,
+        catatanHasilInterview,
         catatanHr,
         namaPembimbing,
-        urlLaporanAkhir,
+        pathLaporanAkhir,
+        validasiLaporanAkhir,
         nilaiAkhirMagang
       ]);
 
   @override
   String toString() {
-    return 'PesertaMagangData(idMagang: $idMagang, nama: $nama, departemen: $departemen, alamat: $alamat, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, angkatan: $angkatan, nilaiUniv: $nilaiUniv, jurusan: $jurusan, pathCv: $pathCv, pathPersetujuanUniv: $pathPersetujuanUniv, pathTranskripNilai: $pathTranskripNilai, pathFotoDiri: $pathFotoDiri, statusMagang: $statusMagang, passwordToken: $passwordToken, pathSuratPenerimaan: $pathSuratPenerimaan, tanggalInterview: $tanggalInterview, jamInterview: $jamInterview, linkMeetInterview: $linkMeetInterview, catatanHr: $catatanHr, namaPembimbing: $namaPembimbing, urlLaporanAkhir: $urlLaporanAkhir, nilaiAkhirMagang: $nilaiAkhirMagang)';
+    return 'PesertaMagangData(idMagang: $idMagang, nama: $nama, departemen: $departemen, alamat: $alamat, noTelp: $noTelp, email: $email, asalUniversitas: $asalUniversitas, angkatan: $angkatan, nilaiUniv: $nilaiUniv, jurusan: $jurusan, pathCv: $pathCv, pathPersetujuanUniv: $pathPersetujuanUniv, pathTranskripNilai: $pathTranskripNilai, pathFotoDiri: $pathFotoDiri, statusMagang: $statusMagang, passwordToken: $passwordToken, pathSuratPenerimaan: $pathSuratPenerimaan, tanggalInterview: $tanggalInterview, jamInterview: $jamInterview, linkMeetInterview: $linkMeetInterview, catatanHasilInterview: $catatanHasilInterview, catatanHr: $catatanHr, namaPembimbing: $namaPembimbing, pathLaporanAkhir: $pathLaporanAkhir, validasiLaporanAkhir: $validasiLaporanAkhir, nilaiAkhirMagang: $nilaiAkhirMagang)';
   }
 }
 
@@ -565,9 +601,11 @@ abstract mixin class _$PesertaMagangDataCopyWith<$Res>
       @JsonKey(name: 'tanggal_interview') String? tanggalInterview,
       @JsonKey(name: 'jam_interview') String? jamInterview,
       @JsonKey(name: 'link_meet_interview') String? linkMeetInterview,
+      @JsonKey(name: 'catatan_hasil_interview') String? catatanHasilInterview,
       @JsonKey(name: 'catatan_hr') String? catatanHr,
       @JsonKey(name: 'nama_pembimbing') String? namaPembimbing,
-      @JsonKey(name: 'url_laporan_akhir') String? urlLaporanAkhir,
+      @JsonKey(name: 'path_laporan_akhir') String? pathLaporanAkhir,
+      @JsonKey(name: 'validasi_laporan_akhir') String? validasiLaporanAkhir,
       @JsonKey(name: 'nilai_akhir_magang') int? nilaiAkhirMagang});
 }
 
@@ -604,9 +642,11 @@ class __$PesertaMagangDataCopyWithImpl<$Res>
     Object? tanggalInterview = freezed,
     Object? jamInterview = freezed,
     Object? linkMeetInterview = freezed,
+    Object? catatanHasilInterview = freezed,
     Object? catatanHr = freezed,
     Object? namaPembimbing = freezed,
-    Object? urlLaporanAkhir = freezed,
+    Object? pathLaporanAkhir = freezed,
+    Object? validasiLaporanAkhir = freezed,
     Object? nilaiAkhirMagang = freezed,
   }) {
     return _then(_PesertaMagangData(
@@ -690,6 +730,10 @@ class __$PesertaMagangDataCopyWithImpl<$Res>
           ? _self.linkMeetInterview
           : linkMeetInterview // ignore: cast_nullable_to_non_nullable
               as String?,
+      catatanHasilInterview: freezed == catatanHasilInterview
+          ? _self.catatanHasilInterview
+          : catatanHasilInterview // ignore: cast_nullable_to_non_nullable
+              as String?,
       catatanHr: freezed == catatanHr
           ? _self.catatanHr
           : catatanHr // ignore: cast_nullable_to_non_nullable
@@ -698,9 +742,13 @@ class __$PesertaMagangDataCopyWithImpl<$Res>
           ? _self.namaPembimbing
           : namaPembimbing // ignore: cast_nullable_to_non_nullable
               as String?,
-      urlLaporanAkhir: freezed == urlLaporanAkhir
-          ? _self.urlLaporanAkhir
-          : urlLaporanAkhir // ignore: cast_nullable_to_non_nullable
+      pathLaporanAkhir: freezed == pathLaporanAkhir
+          ? _self.pathLaporanAkhir
+          : pathLaporanAkhir // ignore: cast_nullable_to_non_nullable
+              as String?,
+      validasiLaporanAkhir: freezed == validasiLaporanAkhir
+          ? _self.validasiLaporanAkhir
+          : validasiLaporanAkhir // ignore: cast_nullable_to_non_nullable
               as String?,
       nilaiAkhirMagang: freezed == nilaiAkhirMagang
           ? _self.nilaiAkhirMagang

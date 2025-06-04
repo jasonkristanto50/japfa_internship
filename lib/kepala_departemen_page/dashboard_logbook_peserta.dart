@@ -245,7 +245,7 @@ class _DashboardLogbookPesertaState
   }
 
   Widget _buildLaporanAkhirTable() {
-    String pathLaporanAkhir = peserta.urlLaporanAkhir ?? '';
+    String pathLaporanAkhir = peserta.pathLaporanAkhir ?? '';
     return Expanded(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),

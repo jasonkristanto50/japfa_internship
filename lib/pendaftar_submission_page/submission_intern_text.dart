@@ -28,7 +28,7 @@ class _SubmissionInternState extends State<SubmissionIntern> {
   final TextEditingController generationController = TextEditingController();
   final TextEditingController majorController = TextEditingController();
   final TextEditingController scoreController = TextEditingController();
-  List<TextEditingController> projectDetailControllers = [];
+  List<TextEditingController> projectNameControllers = [];
   final TextEditingController urlController = TextEditingController();
 
   String? selectedUniversity;
@@ -40,6 +40,8 @@ class _SubmissionInternState extends State<SubmissionIntern> {
   double likertTanggungJawabValue = 1.0;
   double likertKerjaSamaValue = 1.0;
   double likertTeknisValue = 1.0;
+
+  final List<String> projectName = [];
 
   @override
   void initState() {
@@ -94,7 +96,7 @@ class _SubmissionInternState extends State<SubmissionIntern> {
                     if (_currentPage == 1) _buildSoftSkillScale(),
                     if (_currentPage == 2) _buildProjectSubmissionFields(),
                     const SizedBox(height: 20), // Add spacing before the button
-                    _(), // Build the button
+                    _buildNextButton(), // Build the button
                   ],
                 ),
               ),
@@ -278,11 +280,11 @@ class _SubmissionInternState extends State<SubmissionIntern> {
 
   Widget _buildProjectSubmissionFields() {
     int maxField = 5;
-    bool isMax = projectDetailControllers.length == maxField;
+    bool isMax = projectNameControllers.length == maxField;
     return Column(
       children: [
         const SizedBox(height: 20),
-        ...projectDetailControllers.asMap().entries.map((entry) {
+        ...projectNameControllers.asMap().entries.map((entry) {
           int index = entry.key;
 
           TextEditingController controller = entry.value;
@@ -332,21 +334,21 @@ class _SubmissionInternState extends State<SubmissionIntern> {
 
   void _addProjectField() {
     setState(() {
-      projectDetailControllers.add(TextEditingController());
+      projectNameControllers.add(TextEditingController());
     });
   }
 
   void _removeProjectField(int index) {
     setState(() {
-      if (projectDetailControllers.isNotEmpty) {
-        projectDetailControllers[index].dispose();
-        projectDetailControllers.removeAt(index);
+      if (projectNameControllers.isNotEmpty) {
+        projectNameControllers[index].dispose();
+        projectNameControllers.removeAt(index);
       }
     });
   }
 
   // Method for building the RoundedRectangleButton
-  Widget _() {
+  Widget _buildNextButton() {
     return RoundedRectangleButton(
       title: "Selanjutnya",
       backgroundColor: japfaOrange,
@@ -365,6 +367,10 @@ class _SubmissionInternState extends State<SubmissionIntern> {
             // Final submission action for Project Submission Page
             int? generation = int.tryParse(generationController.text);
             double? score = double.tryParse(scoreController.text);
+
+            // Prepare project names for submission
+            addProjectNameList();
+
             // TODO: Fix project detail
             fadeNavigation(
               context,
@@ -384,9 +390,7 @@ class _SubmissionInternState extends State<SubmissionIntern> {
                 likertTanggungJawab: likertTanggungJawabValue,
                 likertKerjaSama: likertKerjaSamaValue,
                 likertTeknis: likertTeknisValue,
-                projectDetail1: "projectDetail1Controller.text",
-                projectDetail2: "projectDetail2Controller.text",
-                projectDetail3: "projectDetail3Controller.text",
+                listProjectName: projectName,
                 urlProject: urlController.text,
               ),
               time: 0, // No fade animation
@@ -395,6 +399,17 @@ class _SubmissionInternState extends State<SubmissionIntern> {
         }
       },
     );
+  }
+
+  void addProjectNameList() {
+    projectName.clear();
+    for (var controller in projectNameControllers) {
+      // Add only non-empty strings to the projectName list
+      String text = controller.text.trim();
+      if (text.isNotEmpty) {
+        projectName.add(text);
+      }
+    }
   }
 
   // Validate form TEXT fields

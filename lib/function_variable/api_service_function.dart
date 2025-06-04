@@ -291,27 +291,27 @@ class PesertaMagangService {
     }
   }
 
-  // Update URL Laporan Akhir
-  Future<void> updateUrlLaporanAkhir(
-      String email, String urlLaporanAkhir) async {
-    final url = '$baseUrlPesertaMagang/update-url-laporan-akhir-email/$email';
+  // Update path Laporan Akhir
+  Future<void> updatePathLaporanAkhir(
+      String email, String pathLaporanAkhir) async {
+    final path = '$baseUrlPesertaMagang/update-path-laporan-akhir-email/$email';
 
     try {
       final response = await _dio.put(
-        url,
+        path,
         data: {
-          'url_laporan_akhir': urlLaporanAkhir,
+          'path_laporan_akhir': pathLaporanAkhir,
         },
       );
 
       if (response.statusCode == 200) {
-        print('URL updated successfully');
+        print('path updated successfully');
       } else {
-        throw Exception('Failed to update URL: ${response.data}');
+        throw Exception('Failed to update path: ${response.data}');
       }
     } catch (e) {
-      print('Error updating URL: $e');
-      rethrow; // Optionally, rethrow the error for handling at a higher level
+      print('Error updating path: $e');
+      rethrow;
     }
   }
 

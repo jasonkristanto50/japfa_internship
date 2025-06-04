@@ -404,9 +404,7 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
         rejectColor: darkGrey,
         rejectText: "Selesai",
         withNote: false,
-        onCancel: () {
-          Navigator.of(context).pop();
-        },
+        onCancel: () {},
         // Note hanya dikirim ke pengaju saat ditolak
         onReject: (note) {
           _setKunjunganSelesai(kunjungan);

@@ -523,38 +523,40 @@ class _PendaftaranMagangDetailPageState
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          RoundedRectangleButton(
-            title: 'Menunggu',
-            backgroundColor: japfaOrange,
-            fontColor: Colors.white,
-            style: bold16,
-            width: 120,
-            height: 40,
-            onPressed: () =>
-                _updateStatus(peserta!.idMagang, statusMagangMenunggu),
-          ),
           const SizedBox(width: 10),
           RoundedRectangleButton(
             title: 'Set Pembimbing',
-            backgroundColor: Colors.white,
-            fontColor: japfaOrange,
-            outlineColor: japfaOrange,
+            backgroundColor: japfaOrange,
+            fontColor: Colors.white,
             style: bold16,
             width: 150,
             height: 40,
             onPressed: () => _showSetPembimbingModal(peserta!),
           ),
           const SizedBox(width: 10),
-          RoundedRectangleButton(
-            title: 'Berlangsung',
-            backgroundColor: lightBlue,
-            fontColor: Colors.black54,
-            style: bold16,
-            width: 130,
-            height: 40,
-            onPressed: () =>
-                _updateStatus(peserta!.idMagang, statusMagangBerlangsung),
-          ),
+          if (peserta!.namaPembimbing != null) ...[
+            RoundedRectangleButton(
+              title: 'Berlangsung',
+              backgroundColor: lightBlue,
+              fontColor: Colors.black54,
+              style: bold16,
+              width: 130,
+              height: 40,
+              onPressed: () =>
+                  _updateStatus(peserta!.idMagang, statusMagangBerlangsung),
+            ),
+          ] else ...[
+            RoundedRectangleButton(
+                title: 'Berlangsung',
+                backgroundColor: Colors.grey,
+                fontColor: Colors.white,
+                style: bold16,
+                width: 130,
+                height: 40,
+                onPressed: () => showSnackBar(
+                    context, "Mohon isi Nama Pembimbing Dahulu",
+                    backgroundColor: darkGrey)),
+          ]
         ],
       );
     } else {

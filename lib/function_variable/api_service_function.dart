@@ -486,6 +486,30 @@ class PesertaMagangService {
       print('Unexpected error: $e');
     }
   }
+
+  // Update validasi_laporan_akhir by ID
+  Future<void> validasiLaporanAkhir(
+    String idMagang,
+    String statusValidasi,
+  ) async {
+    try {
+      final response = await _dio.put(
+        '$baseUrlPesertaMagang/validasi-laporan-akhir/$idMagang',
+        data: {
+          'validasi_laporan_akhir': statusValidasi,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Laporan Akhir validated successfully: ${response.data}');
+      } else {
+        throw Exception('Failed to validate laporan akhir: ${response.data}');
+      }
+    } catch (e) {
+      print('Error validating laporan akhir: $e');
+      throw Exception('Error validating laporan akhir: $e');
+    }
+  }
 }
 
 class KunjunganStudiService {

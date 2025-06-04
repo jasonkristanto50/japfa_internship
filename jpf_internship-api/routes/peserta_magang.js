@@ -406,6 +406,28 @@ router.put('/update-nama-pembimbing/:id', async (req, res) => {
     }  
 });
 
+// Update validasi_laporan_akhir by ID
+router.put('/validasi-laporan-akhir/:id', async (req, res) => {
+    const { id } = req.params;
+    const { validasi_laporan_akhir } = req.body;
+
+    try {
+        const result = await pool.query(
+            'UPDATE PESERTA_MAGANG SET validasi_laporan_akhir = $1 WHERE id_magang = $2 RETURNING *',
+            [validasi_laporan_akhir, id]
+        );
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: 'Peserta Magang not found' });
+        }
+
+        res.status(200).json({ message: 'Validasi laporan akhir updated successfully!', data: result.rows[0] });
+    } catch (error) {
+        console.error('Error updating validasi laporan akhir:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
 /////////////////////////////////////////////// DELETE //////////////////////////////////////////////
 
 // Delete all Peserta Magang records  

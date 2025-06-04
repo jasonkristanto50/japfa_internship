@@ -841,3 +841,13 @@ Color getColorButtonRespondKunjungan(String statusKunjungan) {
     return Colors.grey;
   }
 }
+
+Color getStatusValidasiColor(String statusValidasi) {
+  if (statusValidasi == statusValidasiDiterima) {
+    return Colors.green;
+  } else if (statusValidasi == statusValidasiDitolak) {
+    return Colors.red;
+  } else {
+    return Colors.black;
+  }
+}

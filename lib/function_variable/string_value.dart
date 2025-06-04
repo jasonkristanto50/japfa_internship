@@ -27,3 +27,6 @@ String statusKunjunganSelesai = 'Selesai';
 
 String statusPembimbingAktif = "Aktif";
 String statusPembimbingTidakAktif = "Tidak Aktif";
+
+String statusValidasiDiterima = "Diterima";
+String statusValidasiDitolak = "Ditolak";

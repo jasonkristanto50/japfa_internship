@@ -213,7 +213,9 @@ class _DashboardLogbookPesertaState
                                       rounded: 5,
                                       onPressed: () {
                                         showValidationConfirmation(
-                                            data.idLogbook);
+                                          isLogbook: true,
+                                          id: data.idLogbook,
+                                        );
                                       },
                                     ),
                                     const SizedBox(
@@ -276,6 +278,8 @@ class _DashboardLogbookPesertaState
                   DataColumn(label: Text('No')),
                   DataColumn(label: Text('Nama Peserta')),
                   DataColumn(label: Text('Laporan')),
+                  DataColumn(label: Text('Validasi')),
+                  DataColumn(label: Text('Aksi')),
                 ],
                 rows: [
                   DataRow(cells: [
@@ -310,6 +314,26 @@ class _DashboardLogbookPesertaState
                         ),
                       ),
                     ),
+                    DataCell(Text(
+                      peserta.validasiLaporanAkhir ?? 'Belum ada Validasi',
+                      style: bold16.copyWith(
+                        color: getStatusValidasiColor(
+                            peserta.validasiLaporanAkhir ?? ''),
+                      ),
+                    )),
+                    DataCell(
+                      RoundedRectangleButton(
+                        title: 'VALIDASI',
+                        backgroundColor: lightBlue,
+                        fontColor: darkGrey,
+                        style: bold16,
+                        width: 120,
+                        height: 30,
+                        rounded: 5,
+                        onPressed: () => showValidationConfirmation(
+                            isLogbook: false, id: ''),
+                      ),
+                    ),
                   ]),
                 ],
               ),
@@ -320,23 +344,62 @@ class _DashboardLogbookPesertaState
     );
   }
 
-  void showValidationConfirmation(String id) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return CustomRespondDialog(
-          title: "Validasi Logbook?",
-          onAccept: () async {
-            await updateValidation(id, true);
-            Navigator.pop(context);
-          },
-          onReject: () async {
-            await updateValidation(id, false);
-            Navigator.pop(context);
-          },
-        );
-      },
+  Widget showFoto(LogbookPesertaMagangData logbook) {
+    final img = '$baseUrl${logbook.urlLampiran}';
+    return Image.network(
+      img,
+      height: 120,
+      width: 90,
+      fit: BoxFit.cover,
+      loadingBuilder: (c, child, p) =>
+          p == null ? child : const CircularProgressIndicator(),
+      errorBuilder: (c, _, __) => const Text('Failed to load image'),
     );
+  }
+
+  void showValidationConfirmation({
+    required bool isLogbook,
+    required String id,
+  }) {
+    isLogbook
+        ?
+        // Logbook
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return CustomRespondDialog(
+                title: "Validasi Logbook?",
+                onAccept: () async {
+                  await updateValidationLogbook(id, true);
+                  Navigator.pop(context);
+                },
+                onReject: () async {
+                  await updateValidationLogbook(id, false);
+                  Navigator.pop(context);
+                },
+              );
+            },
+          )
+        :
+        // Laporan Akhir
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return CustomRespondDialog(
+                title: "Validasi Laporan?",
+                onAccept: () async {
+                  await updateValidationLaporanAkhir(
+                      peserta.idMagang, statusValidasiDiterima);
+                  Navigator.pop(context);
+                },
+                onReject: () async {
+                  await updateValidationLaporanAkhir(
+                      peserta.idMagang, statusValidasiDitolak);
+                  Navigator.pop(context);
+                },
+              );
+            },
+          );
   }
 
   void addCatatan(String idLogbook) async {
@@ -365,7 +428,10 @@ class _DashboardLogbookPesertaState
     }
   }
 
-  Future<void> updateValidation(String idLogbook, bool validasiValue) async {
+  Future<void> updateValidationLogbook(
+    String idLogbook,
+    bool validasiValue,
+  ) async {
     bool newValidationStatus = validasiValue;
     try {
       await ApiService()
@@ -376,6 +442,21 @@ class _DashboardLogbookPesertaState
     } catch (error) {
       print(
           'Failed to update validation: $error'); // Handle error appropriately
+    }
+  }
+
+  Future<void> updateValidationLaporanAkhir(
+    String idMagang,
+    String validationStatus,
+  ) async {
+    try {
+      await ApiService()
+          .pesertaMagangService
+          .validasiLaporanAkhir(idMagang, validationStatus);
+
+      _fetchPesertaData();
+    } catch (error) {
+      print('Failed to update validation for laporan akhir: $error');
     }
   }
 
@@ -415,18 +496,5 @@ class _DashboardLogbookPesertaState
         SnackBar(content: Text('Error fetching data: $e')),
       );
     }
-  }
-
-  Widget showFoto(LogbookPesertaMagangData logbook) {
-    final img = '$baseUrl${logbook.urlLampiran}';
-    return Image.network(
-      img,
-      height: 120,
-      width: 90,
-      fit: BoxFit.cover,
-      loadingBuilder: (c, child, p) =>
-          p == null ? child : const CircularProgressIndicator(),
-      errorBuilder: (c, _, __) => const Text('Failed to load image'),
-    );
   }
 }

@@ -364,6 +364,7 @@ class ConfirmationDialog extends StatelessWidget {
 
 enum BuildFieldTypeController { text, number, date, dropdown, viewOnly }
 
+// Custom Alert Dialog
 class CustomAlertDialog extends StatefulWidget {
   final String title;
   final String? subTitle;
@@ -616,6 +617,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
   }
 }
 
+// Password Textfield
 class PasswordToggleTextField extends StatefulWidget {
   final String label;
   final TextEditingController controller;
@@ -660,6 +662,105 @@ class _PasswordToggleTextFieldState extends State<PasswordToggleTextField> {
           cursorColor: const Color.fromARGB(255, 48, 48, 48),
         ),
       ],
+    );
+  }
+}
+
+// Dropdown textfield
+
+class CustomDropdown extends StatefulWidget {
+  final String label;
+  final String? selectedValue;
+  final List<Map<String, String>> options;
+  final ValueChanged<String?> onChanged;
+  final bool mandatory;
+
+  const CustomDropdown({
+    super.key,
+    required this.label,
+    required this.selectedValue,
+    required this.options,
+    required this.onChanged,
+    this.mandatory = false,
+  });
+
+  @override
+  _CustomDropdownState createState() => _CustomDropdownState();
+}
+
+class _CustomDropdownState extends State<CustomDropdown> {
+  List<Map<String, String>> filteredOptions;
+  final TextEditingController _searchController = TextEditingController();
+
+  _CustomDropdownState() : filteredOptions = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // Start with the full list of options
+    filteredOptions = widget.options;
+  }
+
+  void _filterOptions(String query) {
+    setState(() {
+      filteredOptions = widget.options
+          .where((option) =>
+              option['name']!.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: const Color.fromARGB(255, 48, 48, 48)),
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: PopupMenuButton<String>(
+        onSelected: widget.onChanged,
+        itemBuilder: (BuildContext context) {
+          return [
+            // Search Text Field
+            PopupMenuItem<String>(
+              enabled: false,
+              child: TextField(
+                controller: _searchController,
+                onChanged: _filterOptions,
+                decoration: const InputDecoration(
+                  hintText: 'Search...',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            // Divider
+            const PopupMenuDivider(),
+            // Filtered Options
+            ...filteredOptions.map((option) {
+              return PopupMenuItem<String>(
+                value: option['value'],
+                child: Text(option['name']!),
+              );
+            }),
+          ];
+        },
+        constraints: const BoxConstraints(maxHeight: 300),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                widget.selectedValue == null
+                    ? widget.label
+                    : widget.selectedValue!,
+                style: const TextStyle(color: Colors.black87),
+              ),
+              const Icon(Icons.arrow_drop_down),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

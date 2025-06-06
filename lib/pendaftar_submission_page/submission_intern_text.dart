@@ -201,6 +201,24 @@ class _SubmissionInternState extends State<SubmissionIntern> {
             });
           },
         ),
+        // CustomDropdown(
+        //   label: 'Universitas/Sekolah',
+        //   selectedValue: selectedUniversity,
+        //   options: universities,
+        //   onChanged: (value) {
+        //     setState(() {
+        //       selectedUniversity = value!;
+        //       final selectedUniversityData = universities.firstWhere(
+        //         (univ) => univ['value'] == selectedUniversity,
+        //         orElse: () => {'akreditasi': ''},
+        //       );
+        //       akreditasiUniversitas =
+        //           selectedUniversityData['akreditasi'] ?? '';
+        //       print('Akreditas : $akreditasiUniversitas');
+        //     });
+        //   },
+        //   mandatory: true,
+        // ),
         const SizedBox(height: 15),
         buildTextField('Angkatan', generationController, mandatory: true),
         const SizedBox(height: 15),

@@ -384,6 +384,8 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
             height: 30,
             style: regular16,
             onPressed: () {
+              // Clear the modal
+              Navigator.pop(context);
               applyDaftarFunction();
             },
           ),

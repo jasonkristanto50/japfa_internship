@@ -273,6 +273,15 @@ Widget buildDropDownField(
       dropdownColor: Colors.white,
       isDense: true,
       itemHeight: 50,
+      // Create a custom dropdown with scrolling capability
+      selectedItemBuilder: (BuildContext context) {
+        return options.map((option) {
+          return Container(
+            alignment: Alignment.centerLeft,
+            child: Text(option['name']!),
+          );
+        }).toList();
+      },
     ),
   );
 }

@@ -1,12 +1,12 @@
 final List<Map<String, String>> universities = [
   {
-    'value': 'Universitas Petra',
-    'name': 'Universitas Petra',
+    'value': 'Universitas Kristen Petra',
+    'name': 'Universitas Kristen Petra',
     'akreditasi': 'A'
   },
   {
-    'value': 'Universitas Ubaya',
-    'name': 'Universitas Ubaya',
+    'value': 'Universitas Surabaya',
+    'name': 'Universitas Surabaya',
     'akreditasi': 'A'
   },
   {

@@ -79,7 +79,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
               child: _isTokenLogin
                   ? buildTokenLoginForm(loginState)
-                  : buildLoginForm(loginState),
+                  : buildLoginPasswordForm(loginState),
             ),
           ),
         ),
@@ -87,12 +87,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  Widget buildLoginForm(LoginState loginState) {
+  Widget buildLoginPasswordForm(LoginState loginState) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         const Text(
-          'Login Admin & User',
+          'Login Admin & Kepala Dept',
           style: TextStyle(fontSize: 16),
         ),
         const SizedBox(height: 20),
@@ -171,7 +171,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             });
           },
           child: Text(
-            "Masuk sebagai Admin & User ? Klik Disini",
+            "Login Admin & Kepala Dept ? Klik Disini",
             style: TextStyle(color: japfaOrange, fontSize: 14),
           ),
         ),

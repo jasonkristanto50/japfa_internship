@@ -175,18 +175,19 @@ class _SubmissionInternState extends State<SubmissionIntern> {
     return Column(
       children: [
         const SizedBox(height: 20),
-        buildTextField('Nama', nameController),
+        buildTextField('Nama', nameController, mandatory: true),
         const SizedBox(height: 20),
-        buildTextField('Alamat', addressController),
+        buildTextField('Alamat', addressController, mandatory: true),
         const SizedBox(height: 20),
-        buildTextField('No Telepon', phoneNumberController),
+        buildTextField('No Telepon', phoneNumberController, mandatory: true),
         const SizedBox(height: 20),
-        buildTextField('Email', emailController),
+        buildTextField('Email', emailController, mandatory: true),
         const SizedBox(height: 15),
         buildDropDownField(
           'Universitas/Sekolah',
+          mandatory: true,
           selectedUniversity,
-          universities, // universities list
+          universities,
           (value) {
             setState(() {
               selectedUniversity = value!;
@@ -201,12 +202,13 @@ class _SubmissionInternState extends State<SubmissionIntern> {
           },
         ),
         const SizedBox(height: 15),
-        buildTextField('Angkatan / Kelas', generationController),
+        buildTextField('Angkatan', generationController, mandatory: true),
         const SizedBox(height: 15),
-        buildTextField('Nilai', scoreController),
+        buildTextField('IPK', scoreController, mandatory: true),
         const SizedBox(height: 15),
         buildDropDownField(
           'Jurusan',
+          mandatory: true,
           selectedMajor,
           majors, // jurusan list
           (value) {

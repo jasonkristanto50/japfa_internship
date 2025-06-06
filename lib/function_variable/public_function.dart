@@ -35,15 +35,26 @@ void fadeNavigation(
 Widget buildTextField(
   String label,
   TextEditingController controller, {
-  bool isPassword = false,
   bool withDeleteIcon = false,
   VoidCallback? onDelete,
+  bool mandatory = false,
 }) {
   return TextField(
     controller: controller,
-    obscureText: isPassword,
     decoration: InputDecoration(
-      labelText: label,
+      label: RichText(
+        text: TextSpan(
+          text: label,
+          style: regular20.copyWith(color: Colors.black87),
+          children: <TextSpan>[
+            if (mandatory)
+              const TextSpan(
+                text: ' *',
+                style: TextStyle(color: Colors.red),
+              ),
+          ],
+        ),
+      ),
       border: const OutlineInputBorder(),
       suffixIcon: withDeleteIcon
           ? IconButton(
@@ -219,13 +230,13 @@ Widget buildLikertScale(
   );
 }
 
-// Field dropdown
 Widget buildDropDownField(
   String label,
   String? selectedValue,
   List<Map<String, String>> options,
-  ValueChanged<String?> onChanged,
-) {
+  ValueChanged<String?> onChanged, {
+  bool mandatory = false,
+}) {
   return Container(
     decoration: BoxDecoration(
       border: Border.all(color: const Color.fromARGB(255, 48, 48, 48)),
@@ -234,7 +245,19 @@ Widget buildDropDownField(
     child: DropdownButtonFormField<String>(
       value: selectedValue,
       decoration: InputDecoration(
-        labelText: label,
+        label: RichText(
+          text: TextSpan(
+            text: label,
+            style: regular20.copyWith(color: Colors.black87),
+            children: <TextSpan>[
+              if (mandatory)
+                const TextSpan(
+                  text: ' *',
+                  style: TextStyle(color: Colors.red),
+                ),
+            ],
+          ),
+        ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 10),
         border: InputBorder.none,
       ),
@@ -530,19 +553,25 @@ bool validateField({
       break;
 
     case FieldType.email:
-      if (controller.text.isEmpty ||
-          !controller.text.contains('@') ||
-          !controller.text.endsWith('.com') &&
-              !controller.text.endsWith('.ac.id')) {
-        showSnackBar(context, 'Tolong isi $fieldName dengan benar');
+      if (controller.text.isEmpty) {
+        showSnackBar(context, 'Tolong isi $fieldName.');
+        return false;
+      } else if (!controller.text.contains('@') ||
+          (!controller.text.endsWith('.com') &&
+              !controller.text.endsWith('.ac.id'))) {
+        showSnackBar(context,
+            'Format $fieldName tidak valid. Pastikan mengandung "@" dan diakhiri dengan ".com" atau ".ac.id".');
         return false;
       }
       break;
 
     case FieldType.phone:
-      if (controller.text.isEmpty ||
-          !RegExp(r'^\d+').hasMatch(controller.text)) {
-        showSnackBar(context, '$fieldName harus diisi dan harus angka');
+      if (controller.text.isEmpty) {
+        showSnackBar(context, '$fieldName harus diisi.');
+        return false;
+      } else if (!RegExp(r'^\d{8,12}').hasMatch(controller.text)) {
+        showSnackBar(
+            context, '$fieldName harus berupa 8 hingga 12 digit angka.');
         return false;
       }
       break;

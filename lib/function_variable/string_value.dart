@@ -30,3 +30,4 @@ String statusPembimbingTidakAktif = "Tidak Aktif";
 
 String statusValidasiDiterima = "Diterima";
 String statusValidasiDitolak = "Ditolak";
+String statusValidasiBelum = "Belum Validasi";

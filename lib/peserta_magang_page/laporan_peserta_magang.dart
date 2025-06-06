@@ -8,6 +8,7 @@ import 'package:japfa_internship/components/widget_component.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
 import 'package:japfa_internship/function_variable/file_uploading.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
+import 'package:japfa_internship/function_variable/string_value.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
 import 'package:japfa_internship/navbar.dart';
@@ -80,16 +81,15 @@ class _LaporanPesertaMagangState extends ConsumerState<LaporanPesertaMagang> {
 
   Widget _buildLaporanTable() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(12.0), // Padding around the table
+      padding: const EdgeInsets.all(12.0),
       child: Center(
         child: SizedBox(
           width: MediaQuery.of(context).size.width * 0.9,
           child: Center(
             child: Container(
-              color: Colors.white, // Background color behind the DataTable
+              color: Colors.white,
               child: SingleChildScrollView(
-                // Added for horizontal scrolling
-                scrollDirection: Axis.horizontal, // Enable horizontal scroll
+                scrollDirection: Axis.horizontal,
                 child: DataTable(
                   headingRowColor: const WidgetStatePropertyAll(Colors.orange),
                   headingTextStyle: const TextStyle(
@@ -100,7 +100,8 @@ class _LaporanPesertaMagangState extends ConsumerState<LaporanPesertaMagang> {
                   columns: const [
                     DataColumn(label: Text('Nama Laporan')),
                     DataColumn(label: Text('File')),
-                    DataColumn(label: Text('Action')),
+                    DataColumn(label: Text('Validasi')),
+                    DataColumn(label: Text('Aksi')),
                   ],
                   rows: laporans.map<DataRow>((laporan) {
                     String? pathLaporan = peserta.pathLaporanAkhir ?? '';
@@ -138,6 +139,18 @@ class _LaporanPesertaMagangState extends ConsumerState<LaporanPesertaMagang> {
                                 ),
                               ]
                             ],
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Text(
+                          _checkValidasiLaporanAkhir(
+                            pathLaporan,
+                            peserta.validasiLaporanAkhir,
+                          ),
+                          style: bold16.copyWith(
+                            color: getStatusValidasiColor(
+                                peserta.validasiLaporanAkhir ?? ''),
                           ),
                         ),
                       ),
@@ -324,14 +337,35 @@ class _LaporanPesertaMagangState extends ConsumerState<LaporanPesertaMagang> {
     }
   }
 
-  void _deleteLaporan(String laporanType) {
-    setState(() async {
-      // PATH Laporan akhir = empty
-      await ApiService().pesertaMagangService.updatePathLaporanAkhir(email, '');
-      _fetchPesertaData();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("File Upload berhasil dihapus")),
-      );
-    });
+  String _checkValidasiLaporanAkhir(
+    String? pathLaporanAkhir,
+    String? validasiLaporan,
+  ) {
+    if (pathLaporanAkhir != null && pathLaporanAkhir.isNotEmpty) {
+      if (validasiLaporan == statusValidasiDiterima) {
+        return statusValidasiDiterima;
+      }
+      if (validasiLaporan == statusValidasiDitolak) {
+        return statusValidasiDitolak;
+      }
+      if (validasiLaporan == statusValidasiBelum) {
+        return statusValidasiBelum;
+      }
+    }
+    return "-";
+  }
+
+  void _deleteLaporan(String laporanType) async {
+    await ApiService().pesertaMagangService.updatePathLaporanAkhir(email, '');
+    await ApiService().pesertaMagangService.validasiLaporanAkhir(
+          peserta.idMagang,
+          statusValidasiBelum,
+        );
+
+    await _fetchPesertaData();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("File Upload berhasil dihapus")),
+    );
   }
 }

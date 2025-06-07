@@ -38,6 +38,7 @@ Widget buildTextField(
   bool withDeleteIcon = false,
   VoidCallback? onDelete,
   bool mandatory = false,
+  String? hintText,
 }) {
   return TextField(
     controller: controller,
@@ -55,6 +56,7 @@ Widget buildTextField(
           ],
         ),
       ),
+      hintText: hintText,
       border: const OutlineInputBorder(),
       suffixIcon: withDeleteIcon
           ? IconButton(

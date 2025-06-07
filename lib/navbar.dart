@@ -214,19 +214,19 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
       offset: const Offset(-30, 50),
       itemBuilder: (BuildContext context) {
         return [
-          const PopupMenuItem<String>(
-            value: 'profile',
-            child: SizedBox(
-              width: 100,
-              child: Row(
-                children: [
-                  Icon(Icons.person, color: Colors.black),
-                  SizedBox(width: 10),
-                  Text('Profile')
-                ],
-              ),
-            ),
-          ),
+          // const PopupMenuItem<String>(
+          //   value: 'profile',
+          //   child: SizedBox(
+          //     width: 100,
+          //     child: Row(
+          //       children: [
+          //         Icon(Icons.person, color: Colors.black),
+          //         SizedBox(width: 10),
+          //         Text('Profile')
+          //       ],
+          //     ),
+          //   ),
+          // ),
           const PopupMenuItem<String>(
             value: 'logout',
             child: SizedBox(

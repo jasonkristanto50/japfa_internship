@@ -156,17 +156,19 @@ class _DepartemenMagangDashboardState extends State<DepartemenMagangDashboard> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           RoundedRectangleButton(
-                            title: 'EDIT',
+                            title: 'EDIT KUOTA',
                             backgroundColor: lightOrange,
+                            style: regular16,
                             height: 30,
-                            width: 85,
+                            width: 120,
                             rounded: 5,
                             onPressed: () => _editMaxKuota(departemen),
                           ),
                           const SizedBox(width: 8),
                           RoundedRectangleButton(
-                            title: 'VIEW',
+                            title: 'LIHAT',
                             backgroundColor: lightBlue,
+                            style: regular16,
                             height: 30,
                             width: 85,
                             rounded: 5,

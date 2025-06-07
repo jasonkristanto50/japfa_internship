@@ -28,7 +28,9 @@ class _SubmissionInternState extends State<SubmissionIntern> {
   final TextEditingController generationController = TextEditingController();
   final TextEditingController majorController = TextEditingController();
   final TextEditingController scoreController = TextEditingController();
-  List<TextEditingController> projectNameControllers = [];
+  List<TextEditingController> projectNameControllers = [
+    TextEditingController() // default 1 field
+  ];
   final TextEditingController urlController = TextEditingController();
 
   String? selectedUniversity;

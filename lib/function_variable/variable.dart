@@ -7,6 +7,8 @@ const String baseUrl = 'http://localhost:3000';
 
 String appName = "Japfa Internship";
 Dio dio = Dio();
+bool isLoading = false;
+
 int jumlahMaksimalPeserta = 55;
 
 String durasiSesi1 = '08.30 - 12.00';

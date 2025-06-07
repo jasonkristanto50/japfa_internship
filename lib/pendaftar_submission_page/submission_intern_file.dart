@@ -90,7 +90,6 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
   String labelFotoDiri = 'Foto Diri';
 
   final _visible = true;
-  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -102,34 +101,36 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
       body: Container(
         decoration: buildJapfaLogoBackground(),
         child: Center(
-          child: AnimatedOpacity(
-            opacity: _visible ? 1.0 : 0.0,
-            duration: const Duration(milliseconds: 500),
-            child: SingleChildScrollView(
-              child: Container(
-                width: 400,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 10,
-                      offset: Offset(0, 5),
+          child: isLoading
+              ? const CircularProgressIndicator()
+              : AnimatedOpacity(
+                  opacity: _visible ? 1.0 : 0.0,
+                  duration: const Duration(milliseconds: 500),
+                  child: SingleChildScrollView(
+                    child: Container(
+                      width: 400,
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 10,
+                            offset: Offset(0, 5),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _buildTitle(),
+                          _buildSubmissionFileForm(),
+                        ],
+                      ),
                     ),
-                  ],
+                  ),
                 ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _buildTitle(),
-                    _buildSubmissionFileForm(),
-                  ],
-                ),
-              ),
-            ),
-          ),
         ),
       ),
     );
@@ -271,6 +272,9 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
   // Method to submit skill data
   void _submitSkillData() async {
     try {
+      setState(() {
+        isLoading = true;
+      });
       // Get the count to generate unique ID
       int skillCount = await ApiService().skillService.countSkills();
       String idSkillValue =
@@ -322,13 +326,15 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
     } catch (error) {
       print('Error submitting skill data: $error');
       showSnackBar(context, 'Error submitting skill data');
+    } finally {
+      isLoading = false;
     }
   }
 
   void _submitFormPesertaMagang() async {
-    if (_isLoading) return; // Prevent double submission
+    if (isLoading) return;
     setState(() {
-      _isLoading = true; // Start loading
+      isLoading = true;
     });
 
     if (cvFileName != null &&
@@ -402,13 +408,13 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
         showSnackBar(context, 'An error occurred while submitting the form');
       } finally {
         setState(() {
-          _isLoading = false; // Reset loading state
+          isLoading = false;
         });
       }
     } else {
       showSnackBar(context, 'All files must be uploaded');
       setState(() {
-        _isLoading = false; // Reset loading state if files are not uploaded
+        isLoading = false;
       });
     }
   }

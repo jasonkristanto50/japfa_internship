@@ -27,7 +27,6 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
   String? persetujuanInstansiFileName;
   String? persetujuanInstansiPath;
   Uint8List? persetujuanInstansiFile;
-  bool _isLoading = false;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController universityController = TextEditingController();
@@ -68,9 +67,11 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
             fit: BoxFit.cover,
           ),
         ),
-        child: _isFirstForm
-            ? _buildKunjunganStudiForm()
-            : _buildKunjunganStudiForm2(),
+        child: isLoading // Check if loading
+            ? const CircularProgressIndicator() // Show loading indicator
+            : _isFirstForm
+                ? _buildKunjunganStudiForm()
+                : _buildKunjunganStudiForm2(),
       ),
     );
   }
@@ -430,9 +431,9 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
 
   // Submit Kunjungan Studi Data
   Future<void> _submitKunjunganStudiData() async {
-    if (_isLoading) return; // Prevent double submission
+    if (isLoading) return; // Prevent double submission
     setState(() {
-      _isLoading = true; // Set loading to true
+      isLoading = true; // Set loading to true
     });
 
     final String nama = nameController.text;
@@ -501,7 +502,7 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
           .showSnackBar(SnackBar(content: Text('Submission failed: $e')));
     } finally {
       setState(() {
-        _isLoading = false; // Reset the loading state
+        isLoading = false;
       });
     }
   }

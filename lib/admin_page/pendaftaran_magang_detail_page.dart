@@ -29,7 +29,6 @@ class _PendaftaranMagangDetailPageState
   PesertaMagangData? peserta;
   SkillPesertaMagangData? skill;
   int _currentPage = 1;
-  bool _loading = false;
   late bool isAdmin;
   TextEditingController tanggalMeetController = TextEditingController();
   TextEditingController jamMeetController = TextEditingController();
@@ -72,7 +71,7 @@ class _PendaftaranMagangDetailPageState
   }
 
   Widget _buildMainBodyByRole() {
-    if (_loading) return const Center(child: CircularProgressIndicator());
+    if (isLoading) return const Center(child: CircularProgressIndicator());
     final login = ref.read(loginProvider);
     if (login.isLoggedIn == false) {
       return CustomLoginDialog(
@@ -607,7 +606,7 @@ class _PendaftaranMagangDetailPageState
   //
 
   Future<void> _fetchPesertaAndSkillByEmail(String email) async {
-    setState(() => _loading = true);
+    setState(() => isLoading = true);
     try {
       final dataPeserta = await ApiService()
           .pesertaMagangService
@@ -623,12 +622,12 @@ class _PendaftaranMagangDetailPageState
       // Handle error here (e.g., show a message)
       print('Error fetching pengajuan data: $error');
     } finally {
-      setState(() => _loading = false);
+      setState(() => isLoading = false);
     }
   }
 
   Future<void> _fetchSkillByEmail(String email) async {
-    setState(() => _loading = true);
+    setState(() => isLoading = true);
     try {
       // TODO
       final dataSkill =
@@ -637,7 +636,7 @@ class _PendaftaranMagangDetailPageState
         skill = dataSkill;
       });
     } finally {
-      setState(() => _loading = false);
+      setState(() => isLoading = false);
     }
   }
 
@@ -704,6 +703,7 @@ class _PendaftaranMagangDetailPageState
     String note,
   ) async {
     setState(() {
+      isLoading = true;
       peserta = peserta.copyWith(
         statusMagang: accepted ? statusMagangDiterima : statusMagangDitolak,
         catatanHr: note,
@@ -731,6 +731,10 @@ class _PendaftaranMagangDetailPageState
     } catch (_) {
       setState(() {
         peserta = peserta.copyWith(statusMagang: 'Pending', catatanHr: null);
+      });
+    } finally {
+      setState(() {
+        isLoading = false;
       });
     }
   }

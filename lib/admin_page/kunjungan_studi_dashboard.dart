@@ -84,11 +84,11 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
             style: bold14,
             width: 120.w,
             height: 40.h,
-            fontColor: currentStatus == "Semua" ? Colors.white : japfaOrange,
+            fontColor: Colors.white,
             backgroundColor:
-                currentStatus == "Semua" ? japfaOrange : Colors.white,
+                currentStatus == "Semua" ? japfaOrange : Colors.grey,
             outlineColor:
-                currentStatus == "Semua" ? Colors.transparent : japfaOrange,
+                currentStatus == "Semua" ? japfaOrange : Colors.transparent,
             onPressed: () {
               setState(() {
                 currentStatus = "Semua";
@@ -134,7 +134,7 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
           RoundedRectangleButton(
             title: statusKunjunganMenunggu,
             style: bold14,
-            width: 125.w,
+            width: 130.w,
             height: 40.h,
             fontColor: Colors.white,
             backgroundColor: currentStatus == statusKunjunganMenunggu
@@ -238,7 +238,7 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
                             DataCell(Text(
                               kunjungan.status,
                               textAlign: TextAlign.center,
-                              style: bold20.copyWith(
+                              style: bold18.copyWith(
                                 color:
                                     getStatusKunjunganColor(kunjungan.status),
                               ),

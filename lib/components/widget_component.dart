@@ -689,24 +689,36 @@ class CustomDropdown extends StatefulWidget {
 }
 
 class _CustomDropdownState extends State<CustomDropdown> {
-  List<Map<String, String>> filteredOptions;
+  List<Map<String, String>> filteredOptions = [];
   final TextEditingController _searchController = TextEditingController();
-
-  _CustomDropdownState() : filteredOptions = [];
+  bool isDropdownOpen = false;
 
   @override
   void initState() {
     super.initState();
-    // Start with the full list of options
-    filteredOptions = widget.options;
+    filteredOptions = List.from(widget.options);
   }
 
   void _filterOptions(String query) {
     setState(() {
-      filteredOptions = widget.options
-          .where((option) =>
-              option['name']!.toLowerCase().contains(query.toLowerCase()))
-          .toList();
+      if (query.isEmpty) {
+        filteredOptions = List.from(widget.options);
+      } else {
+        filteredOptions = widget.options.where((option) {
+          final name = option['name'];
+          return name != null &&
+              name.toLowerCase().contains(query.toLowerCase());
+        }).toList();
+      }
+    });
+  }
+
+  void _onSelected(String? value) {
+    widget.onChanged(value);
+    _searchController.clear();
+    setState(() {
+      filteredOptions = List.from(widget.options);
+      isDropdownOpen = false;
     });
   }
 
@@ -717,49 +729,91 @@ class _CustomDropdownState extends State<CustomDropdown> {
         border: Border.all(color: const Color.fromARGB(255, 48, 48, 48)),
         borderRadius: BorderRadius.circular(5),
       ),
-      child: PopupMenuButton<String>(
-        onSelected: widget.onChanged,
-        itemBuilder: (BuildContext context) {
-          return [
-            // Search Text Field
-            PopupMenuItem<String>(
-              enabled: false,
-              child: TextField(
-                controller: _searchController,
-                onChanged: _filterOptions,
-                decoration: const InputDecoration(
-                  hintText: 'Search...',
-                  border: OutlineInputBorder(),
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                isDropdownOpen = !isDropdownOpen;
+              });
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              height: 45,
+              color: Colors.white,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      text: widget.selectedValue == null
+                          ? widget.label
+                          : widget.selectedValue!,
+                      style: const TextStyle(color: Colors.black87),
+                      children: <TextSpan>[
+                        if (widget.selectedValue == null && widget.mandatory)
+                          const TextSpan(
+                            text: ' *',
+                            style: TextStyle(color: Colors.red),
+                          ),
+                      ],
+                    ),
+                  ),
+                  const Icon(Icons.arrow_drop_down),
+                ],
+              ),
+            ),
+          ),
+          if (isDropdownOpen)
+            SizedBox(
+              height: 200, // Set a height limit for the dropdown
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border(
+                    top: BorderSide(color: Colors.grey.shade300),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    // Search Text Field
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        controller: _searchController,
+                        onChanged: _filterOptions,
+                        decoration: const InputDecoration(
+                          hintText: 'Cari',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                    // Filtered Options
+                    Expanded(
+                      child: ListView(
+                        children: filteredOptions.isEmpty
+                            ? [
+                                const Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                                  child: ListTile(
+                                    title: Text('No results found',
+                                        style: TextStyle(color: Colors.grey)),
+                                  ),
+                                )
+                              ]
+                            : filteredOptions.map((option) {
+                                return ListTile(
+                                  title: Text(option['name']!),
+                                  onTap: () => _onSelected(option['value']),
+                                );
+                              }).toList(),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
-            // Divider
-            const PopupMenuDivider(),
-            // Filtered Options
-            ...filteredOptions.map((option) {
-              return PopupMenuItem<String>(
-                value: option['value'],
-                child: Text(option['name']!),
-              );
-            }),
-          ];
-        },
-        constraints: const BoxConstraints(maxHeight: 300),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                widget.selectedValue == null
-                    ? widget.label
-                    : widget.selectedValue!,
-                style: const TextStyle(color: Colors.black87),
-              ),
-              const Icon(Icons.arrow_drop_down),
-            ],
-          ),
-        ),
+        ],
       ),
     );
   }

@@ -472,16 +472,32 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
         withNote: true,
         cancelColor: Colors.green,
         cancelText: "Terima",
-        // Accepted actually
+        // DITERIMA
         onCancel: () {
           _handleResponse(kunjungan, true);
+          showSnackBar(
+            context,
+            "Kunjungan Diterima",
+            backgroundColor: darkGrey,
+          );
         },
+        // DITOLAK
         // Note hanya dikirim ke pengaju saat ditolak
         onReject: (note) {
           if (note == null) {
             _handleResponse(kunjungan, false);
+            showSnackBar(
+              context,
+              "Kunjungan Ditolak",
+              backgroundColor: darkGrey,
+            );
           } else {
             _handleResponseWithNote(kunjungan, false, note);
+            showSnackBar(
+              context,
+              "Kunjungan Ditolak",
+              backgroundColor: darkGrey,
+            );
           }
         },
       );

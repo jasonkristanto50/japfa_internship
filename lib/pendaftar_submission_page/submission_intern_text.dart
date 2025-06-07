@@ -63,13 +63,7 @@ class _SubmissionInternState extends State<SubmissionIntern> {
         title: "$appName - Daftar ${widget.departmentName}",
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          image: DecorationImage(
-            image: AssetImage('assets/japfa_logo_background.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
+        decoration: buildJapfaLogoBackground(),
         child: Center(
           child: AnimatedOpacity(
             opacity: _visible ? 1.0 : 0.0,
@@ -93,12 +87,12 @@ class _SubmissionInternState extends State<SubmissionIntern> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     _buildTitle(),
-                    // Show different content based on current page
+                    // Different form based on page
                     if (_currentPage == 0) _buildSubmissionTextField(),
                     if (_currentPage == 1) _buildSoftSkillScale(),
                     if (_currentPage == 2) _buildProjectSubmissionFields(),
-                    const SizedBox(height: 20), // Add spacing before the button
-                    _buildNextButton(), // Build the button
+                    const SizedBox(height: 20),
+                    _buildNextButton(),
                   ],
                 ),
               ),
@@ -185,29 +179,12 @@ class _SubmissionInternState extends State<SubmissionIntern> {
         const SizedBox(height: 20),
         buildTextField('Email', emailController, mandatory: true),
         const SizedBox(height: 15),
-        buildDropDownField(
-          'Universitas/Sekolah',
-          mandatory: true,
-          selectedUniversity,
-          universities,
-          (value) {
-            setState(() {
-              selectedUniversity = value!;
-              final selectedUniversityData = universities.firstWhere(
-                (univ) => univ['value'] == selectedUniversity,
-                orElse: () => {'akreditasi': ''},
-              );
-              akreditasiUniversitas =
-                  selectedUniversityData['akreditasi'] ?? '';
-              print('Akreditas : $akreditasiUniversitas');
-            });
-          },
-        ),
-        // CustomDropdown(
-        //   label: 'Universitas/Sekolah',
-        //   selectedValue: selectedUniversity,
-        //   options: universities,
-        //   onChanged: (value) {
+        // buildDropDownField(
+        //   'Universitas/Sekolah',
+        //   mandatory: true,
+        //   selectedUniversity,
+        //   universities,
+        //   (value) {
         //     setState(() {
         //       selectedUniversity = value!;
         //       final selectedUniversityData = universities.firstWhere(
@@ -219,24 +196,52 @@ class _SubmissionInternState extends State<SubmissionIntern> {
         //       print('Akreditas : $akreditasiUniversitas');
         //     });
         //   },
-        //   mandatory: true,
         // ),
+        CustomDropdown(
+          label: 'Universitas/Sekolah',
+          selectedValue: selectedUniversity,
+          options: universities,
+          onChanged: (value) {
+            setState(() {
+              selectedUniversity = value!;
+              final selectedUniversityData = universities.firstWhere(
+                (univ) => univ['value'] == selectedUniversity,
+                orElse: () => {'akreditasi': ''},
+              );
+              akreditasiUniversitas =
+                  selectedUniversityData['akreditasi'] ?? '';
+              print('Akreditas : $akreditasiUniversitas');
+            });
+          },
+          mandatory: true,
+        ),
         const SizedBox(height: 15),
         buildTextField('Angkatan', generationController, mandatory: true),
         const SizedBox(height: 15),
         buildTextField('IPK', scoreController, mandatory: true),
         const SizedBox(height: 15),
-        buildDropDownField(
-          'Jurusan',
-          mandatory: true,
-          selectedMajor,
-          majors, // jurusan list
-          (value) {
+        // buildDropDownField(
+        //   'Jurusan',
+        //   mandatory: true,
+        //   selectedMajor,
+        //   majors, // jurusan list
+        //   (value) {
+        //     setState(() {
+        //       selectedMajor = value!;
+        //     });
+        //   },
+        // ),
+        CustomDropdown(
+          label: "Jurusan",
+          selectedValue: selectedMajor,
+          options: majors,
+          onChanged: (value) {
             setState(() {
               selectedMajor = value!;
             });
           },
-        ),
+          mandatory: true,
+        )
       ],
     );
   }

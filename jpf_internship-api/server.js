@@ -31,6 +31,11 @@ const pool = new Pool({
     port: process.env.DB_PORT || 5432,    // Default PostgreSQL port  
 });  
 
+// Add a simple root route -- for server hosting
+app.get('/', (req, res) => {
+    res.send('Welcome to the JPF Internship API!');
+});
+
 // Start the server  
 app.listen(port, '0.0.0.0', () => {  
     console.log(`Server running at http://0.0.0.0:${port}`);  

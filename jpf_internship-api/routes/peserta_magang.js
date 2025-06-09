@@ -11,6 +11,11 @@ const pool = new Pool({
     port: process.env.DB_PORT || 5432,  
 });  
 
+// Utility function for handling errors  
+const handleError = (res, error, message) => {  
+    console.error(message, error);  
+    res.status(500).json({ error: 'Server err', details: error.message });  
+};  
 
 
 // Add a new Peserta Magang  
@@ -73,7 +78,10 @@ router.get('/fetch-all-peserta-data', async (req, res) => {
         res.status(200).json(result.rows);  
     } catch (error) {  
         console.error('Error fetching Peserta Magang:', error);  
-        res.status(500).json({ error: 'Server error' });  
+        res.status(500).json({ 
+            error: 'Server erro',
+            details: error.message
+        });    
     }  
 });  
 

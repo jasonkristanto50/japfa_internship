@@ -7,7 +7,7 @@
             "port": 5432,
             "driver": "PostgreSQL",
             "name": "jpf_internship",
-            "database": "jpf_internship_DB",
+            "database": "jpf_internship_db",
             "username": "postgres",
             "password": "admin",
             "connectionTimeout": 30

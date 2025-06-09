@@ -1,13 +1,14 @@
 // To start : cd jpf_internship-api 
 // npm start
 
-const express = require('express');  
+const express = require('express');
+const router = express.Router();  
 const { Pool } = require('pg');  
 const cors = require('cors');  
 const bodyParser = require('body-parser');  
 const multer = require('multer'); // Import multer  
 const path = require('path'); // Import path module  
-require('dotenv').config(); // For environment variables
+require('dotenv').config();
 
 // Import fuzzy
 const fuzzyLogic = require('./fuzzy_logic/fuzzy_logic');
@@ -16,20 +17,35 @@ const app = express();
 const port = process.env.PORT || 3000;  
 
 // Middleware  
-app.use(cors());  
+app.use(cors({
+    origin: '*',  // Temporarily allow all origins for testing
+}));  
 app.use(bodyParser.json());  
 
 // Serve static files from the 'uploads' directory
 app.use('/api/jpf_internship-api/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// // PostgreSQL connection pool  
+// const pool = new Pool({  
+//     user: process.env.DB_USER,          
+//     host: process.env.DB_HOST || 'localhost',  
+//     database: process.env.DB_DATABASE,   
+//     password: process.env.DB_PASSWORD,   
+//     port: process.env.DB_PORT || 5432,    
+// });  
+
 // PostgreSQL connection pool  
-const pool = new Pool({  
+// PostgreSQL connection pool
+const pool = new Pool({
     user: process.env.DB_USER,          
-    host: process.env.DB_HOST || 'localhost',  
+    host: process.env.DB_HOST,  
     database: process.env.DB_DATABASE,   
     password: process.env.DB_PASSWORD,   
-    port: process.env.DB_PORT || 5432,    
-});  
+    port: process.env.DB_PORT,    
+    ssl: {
+        rejectUnauthorized: false,  // Allow self-signed certificates
+    },
+});
 
 pool.connect()
     .then(() => console.log('Connected to PostgreSQL'))

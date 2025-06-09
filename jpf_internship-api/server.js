@@ -24,12 +24,16 @@ app.use('/api/jpf_internship-api/uploads', express.static(path.join(__dirname, '
 
 // PostgreSQL connection pool  
 const pool = new Pool({  
-    user: process.env.DB_USER,          // Using environment variables  
+    user: process.env.DB_USER,          
     host: process.env.DB_HOST || 'localhost',  
-    database: process.env.DB_DATABASE,   // Set the database name in your .env file  
-    password: process.env.DB_PASSWORD,   // Your database password  
-    port: process.env.DB_PORT || 5432,    // Default PostgreSQL port  
+    database: process.env.DB_DATABASE,   
+    password: process.env.DB_PASSWORD,   
+    port: process.env.DB_PORT || 5432,    
 });  
+
+pool.connect()
+    .then(() => console.log('Connected to PostgreSQL'))
+    .catch(err => console.error('Connection error', err.stack));
 
 // Add a simple root route -- for server hosting
 app.get('/', (req, res) => {

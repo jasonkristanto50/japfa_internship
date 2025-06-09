@@ -40,15 +40,15 @@ app.get('/', (req, res) => {
     res.send('Welcome to the JPF Internship API!');
 });
 
-// // Start the server  
-// app.listen(port, '0.0.0.0', () => {  
-//     console.log(`Server running at http://0.0.0.0:${port}`);  
-// });  
-
-// Start server in localhost  
-app.listen(port, 'localhost', () => {  
-    console.log(`Server running at http://localhost:${port}`);  
+// Start the server  
+app.listen(port, '0.0.0.0', () => {  
+    console.log(`Server running at http://0.0.0.0:${port}`);  
 });  
+
+// // Start server in localhost  
+// app.listen(port, 'localhost', () => {  
+//     console.log(`Server running at http://localhost:${port}`);  
+// });  
 
 // Routes  
 const pendaftarRouter = require('./routes/pendaftar');  

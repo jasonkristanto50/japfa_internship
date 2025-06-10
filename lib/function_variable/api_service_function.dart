@@ -444,6 +444,38 @@ class PesertaMagangService {
     }
   }
 
+  // Update Catatan Hasil Wawancara by ID
+  Future<void> updateCatatanHasilInterview(
+      String id, String catatanHasilInterview) async {
+    try {
+      final response = await _dio.post(
+        '$baseUrlPesertaMagang/update-catatan-hasil-interview/$id',
+        data: {
+          'catatan_hasil_interview': catatanHasilInterview,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // Handle success, e.g., update local data or notify user
+        print('Catatan updated successfully: ${response.data}');
+      } else {
+        throw Exception('Failed to update catatan: ${response.data}');
+      }
+    } on DioException catch (e) {
+      // Handle Dio errors
+      if (e.response != null) {
+        print('Error: ${e.response?.data}');
+      } else {
+        print('Error: ${e.message}');
+      }
+      rethrow; // Rethrow or handle as needed
+    } catch (e) {
+      // Handle other errors
+      print('Error: ${e.toString()}');
+      rethrow;
+    }
+  }
+
   Future<String?> fetchPembimbingByEmail(String email) async {
     try {
       final response = await _dio

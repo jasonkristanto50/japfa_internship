@@ -33,6 +33,7 @@ class _PendaftaranMagangDetailPageState
   TextEditingController tanggalMeetController = TextEditingController();
   TextEditingController jamMeetController = TextEditingController();
   TextEditingController linkMeetController = TextEditingController();
+  TextEditingController catatanWawancaraController = TextEditingController();
 
   @override
   void initState() {
@@ -92,7 +93,7 @@ class _PendaftaranMagangDetailPageState
     return Center(
       child: Container(
         width: 1000,
-        height: 675,
+        height: 700,
         padding: const EdgeInsets.all(25),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -276,40 +277,39 @@ class _PendaftaranMagangDetailPageState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  buildDataInfoField(
-                    label: 'Komunikasi',
-                    value: likertStringValue(skill!.komunikasi),
-                    verticalPadding: 5,
-                  ),
-                  buildDataInfoField(
-                    label: 'Kreativitas',
-                    value: likertStringValue(skill!.kreativitas),
-                    verticalPadding: 5,
-                  ),
-                  buildDataInfoField(
-                    label: 'Tanggung Jawab',
-                    value: likertStringValue(skill!.tanggungJawab),
-                    verticalPadding: 5,
-                  ),
-                  buildDataInfoField(
-                    label: 'Kerja Sama',
-                    value: likertStringValue(skill!.kerjaSama),
-                    verticalPadding: 5,
-                  ),
-                  buildDataInfoField(
-                    label: 'Skill Teknis',
-                    value: likertStringValue(skill!.skillTeknis),
-                    verticalPadding: 5,
-                  ),
-                  const SizedBox(height: 10),
-                  Text('Proyek:', style: bold20),
-                  _buildProyekField(),
-                ],
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildDataInfoField(
+                  label: 'Komunikasi',
+                  value: likertStringValue(skill!.komunikasi),
+                  verticalPadding: 3,
+                ),
+                buildDataInfoField(
+                  label: 'Kreativitas',
+                  value: likertStringValue(skill!.kreativitas),
+                  verticalPadding: 3,
+                ),
+                buildDataInfoField(
+                  label: 'Tanggung Jawab',
+                  value: likertStringValue(skill!.tanggungJawab),
+                  verticalPadding: 3,
+                ),
+                buildDataInfoField(
+                  label: 'Kerja Sama',
+                  value: likertStringValue(skill!.kerjaSama),
+                  verticalPadding: 3,
+                ),
+                buildDataInfoField(
+                  label: 'Skill Teknis',
+                  value: likertStringValue(skill!.skillTeknis),
+                  verticalPadding: 3,
+                ),
+                const SizedBox(height: 5),
+                Center(child: Text('Proyek:', style: bold20)),
+                const SizedBox(height: 3),
+                _buildProyekField(),
+              ],
             ),
           ),
           Expanded(
@@ -460,7 +460,7 @@ class _PendaftaranMagangDetailPageState
                 return buildDataInfoField(
                   label: 'Proyek ${index + 1}',
                   value: project,
-                  verticalPadding: 5,
+                  verticalPadding: 3,
                 );
               }
               return Container(); // Return an empty container if out of range
@@ -522,6 +522,15 @@ class _PendaftaranMagangDetailPageState
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          RoundedRectangleButton(
+            title: 'Tolak',
+            backgroundColor: Colors.red,
+            fontColor: Colors.white,
+            width: 120,
+            height: 40,
+            onPressed: () =>
+                _updateStatus(peserta!.idMagang, statusMagangDitolak),
+          ),
           const SizedBox(width: 10),
           RoundedRectangleButton(
             title: 'Set Pembimbing',
@@ -578,7 +587,7 @@ class _PendaftaranMagangDetailPageState
             backgroundColor: Colors.red,
             fontColor: Colors.white,
             style: bold16,
-            width: 120,
+            width: 140,
             height: 40,
             onPressed: () =>
                 _updateStatus(peserta!.idMagang, statusMagangTidakLanjut),
@@ -740,40 +749,50 @@ class _PendaftaranMagangDetailPageState
   }
 
   void _showMeetDetail() {
+    catatanWawancaraController.text =
+        peserta!.catatanHasilInterview ?? 'Belum ada catatan';
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return CustomAlertDialog(
           title: "Detail Wawancara",
-          numberOfField: 3,
+          numberOfField: 4,
           controllers: [
             tanggalMeetController,
             jamMeetController,
-            linkMeetController
+            linkMeetController,
+            catatanWawancaraController,
           ],
           labels: const [
-            "Tanggal Wawancaran",
+            "Tanggal Wawancara",
             "Jam Wawancara",
-            "Link Wawancara"
+            "Link Wawancara",
+            "Catatan Hasil Wawancara"
           ],
           viewValue: [
             peserta!.tanggalInterview!,
             peserta!.jamInterview!,
-            peserta!.linkMeetInterview!
+            peserta!.linkMeetInterview!,
+            ''
           ],
           fieldTypes: const [
             BuildFieldTypeController.viewOnly,
             BuildFieldTypeController.viewOnly,
-            BuildFieldTypeController.viewOnly
+            BuildFieldTypeController.viewOnly,
+            BuildFieldTypeController.multiLineText
           ],
-          saveButtonText: "Kembali",
-          onSave: () => Navigator.of(context).pop(),
+          withCancelButton: true,
+          saveButtonText: "Simpan Catatan",
+          onSave: () => _saveCatatanHasilInterview(),
         );
       },
     );
   }
 
   void _showDialogAddLink() {
+    tanggalMeetController.text = peserta!.tanggalInterview ?? '';
+    jamMeetController.text = peserta!.jamInterview ?? '';
+    linkMeetController.text = peserta!.linkMeetInterview ?? '';
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -784,7 +803,7 @@ class _PendaftaranMagangDetailPageState
           controllers: [
             tanggalMeetController,
             jamMeetController,
-            linkMeetController
+            linkMeetController,
           ],
           labels: const [
             "Tanggal Wawancaran",
@@ -794,7 +813,7 @@ class _PendaftaranMagangDetailPageState
           fieldTypes: const [
             BuildFieldTypeController.date,
             BuildFieldTypeController.text,
-            BuildFieldTypeController.text
+            BuildFieldTypeController.text,
           ],
           onSave: () => _saveMeet(),
         );
@@ -838,6 +857,44 @@ class _PendaftaranMagangDetailPageState
       peserta = peserta!.copyWith(linkMeetInterview: linkMeet);
     });
     _fetchPesertaAndSkillByEmail(peserta!.email);
+  }
+
+  void _saveCatatanHasilInterview() async {
+    final String catatanHasilInterview = catatanWawancaraController.text.trim();
+    final String id = peserta?.idMagang ?? '';
+
+    if (id.isNotEmpty && catatanHasilInterview.isNotEmpty) {
+      try {
+        await ApiService()
+            .pesertaMagangService
+            .updateCatatanHasilInterview(id, catatanHasilInterview);
+
+        // Clear the controller after saving
+        catatanWawancaraController.clear();
+        Navigator.of(context).pop(); // Close the dialog after saving
+
+        // Optional: Notify the user about success
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Catatan hasil wawancara berhasil disimpan.')),
+        );
+      } catch (error) {
+        // Handle the error, e.g., show a message to the user
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Gagal menyimpan catatan: $error')),
+        );
+      }
+    } else {
+      // Show an error message if fields are empty
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('ID and catatan are required.')),
+      );
+    }
+
+    // Optionally update the local data or state
+    setState(() {
+      peserta = peserta!.copyWith(catatanHasilInterview: catatanHasilInterview);
+    });
   }
 
   void _showSetPembimbingModal(PesertaMagangData peserta) async {

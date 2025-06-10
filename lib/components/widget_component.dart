@@ -362,7 +362,14 @@ class ConfirmationDialog extends StatelessWidget {
   }
 }
 
-enum BuildFieldTypeController { text, number, date, dropdown, viewOnly }
+enum BuildFieldTypeController {
+  text,
+  multiLineText,
+  number,
+  date,
+  dropdown,
+  viewOnly
+}
 
 // Custom Alert Dialog
 class CustomAlertDialog extends StatefulWidget {
@@ -374,6 +381,7 @@ class CustomAlertDialog extends StatefulWidget {
   final List<BuildFieldTypeController> fieldTypes;
   final String? saveButtonText;
   final VoidCallback onSave;
+  final bool withCancelButton;
   final int numberOfField;
   final List<String>? dropdownOptions;
 
@@ -387,6 +395,7 @@ class CustomAlertDialog extends StatefulWidget {
       required this.fieldTypes,
       this.saveButtonText,
       required this.onSave,
+      this.withCancelButton = false,
       required this.numberOfField,
       this.dropdownOptions});
 
@@ -427,7 +436,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                       : regular20.copyWith(color: japfaOrange),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
               ...List.generate(widget.numberOfField, (index) {
                 return _buildField(
                   widget.controllers[index],
@@ -441,11 +450,29 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
               }),
               const SizedBox(height: 16),
               Center(
-                child: RoundedRectangleButton(
-                  title: widget.saveButtonText ?? "Simpan",
-                  backgroundColor: japfaOrange,
-                  fontColor: Colors.white,
-                  onPressed: widget.onSave,
+                child: Row(
+                  children: [
+                    if (widget.withCancelButton == true) ...[
+                      RoundedRectangleButton(
+                        title: "Batal",
+                        backgroundColor: Colors.white,
+                        fontColor: japfaOrange,
+                        outlineColor: japfaOrange,
+                        height: 40,
+                        width: 150,
+                        onPressed: Navigator.of(context).pop,
+                      ),
+                      const SizedBox(width: 20),
+                    ],
+                    RoundedRectangleButton(
+                      title: widget.saveButtonText ?? "Simpan",
+                      width: widget.withCancelButton ? 150 : 320,
+                      height: widget.withCancelButton ? 40 : 50,
+                      backgroundColor: japfaOrange,
+                      fontColor: Colors.white,
+                      onPressed: widget.onSave,
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -467,6 +494,8 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
     switch (fieldType) {
       case BuildFieldTypeController.text:
         return _buildTextField(controller, label);
+      case BuildFieldTypeController.multiLineText:
+        return _buildMultiLineTextField(controller, label);
       case BuildFieldTypeController.number:
         return _buildNumberField(controller, label);
       case BuildFieldTypeController.date:
@@ -495,6 +524,31 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
             borderSide: const BorderSide(color: Colors.orange, width: 2),
           ),
         ),
+        style: const TextStyle(color: Colors.black),
+        cursorColor: Colors.black,
+      ),
+    );
+  }
+
+  Widget _buildMultiLineTextField(
+      TextEditingController controller, String label) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: regular14.copyWith(color: Colors.black),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.orange, width: 2),
+          ),
+        ),
+        maxLines: 3, // Set this to control the number of visible lines
         style: const TextStyle(color: Colors.black),
         cursorColor: Colors.black,
       ),

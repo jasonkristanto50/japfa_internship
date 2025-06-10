@@ -131,12 +131,12 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
                 buildTextField('Nama Perwakilan', nameController,
                     mandatory: true),
                 const SizedBox(height: 15),
-                buildDropDownField(
-                  'Universitas',
+                CustomDropdown(
+                  label: 'Universitas',
                   mandatory: true,
-                  selectedUniversity,
-                  universities,
-                  (value) {
+                  selectedValue: selectedUniversity,
+                  options: universities,
+                  onChanged: (value) {
                     setState(() {
                       selectedUniversity = value!;
                     });

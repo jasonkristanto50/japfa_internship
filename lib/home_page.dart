@@ -44,8 +44,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             children: [
               Column(
                 children: [
-                  if (loginState.role == "admin" ||
-                      loginState.role == "kepala departemen") ...[
+                  if (loginState.role == roleAdminValue ||
+                      loginState.role == roleKepalaDeptValue) ...[
                     // Blur japfa logo background
                     _blurBackground(),
                   ] else ...[

@@ -36,10 +36,11 @@ pool.connect()
     .catch(err => console.error('Connection error', err.stack));
 
 // Add a simple root route -- for server hosting
-app.get('/api', (req, res) => {
+app.get('/', (req, res) => {
     res.send('Welcome to the JPF Internship API!');
 });
 
+// Add a simple root route -- for server hosting
 app.get('/api/coba', (req, res) => {
     res.send('API/COBA');
 });

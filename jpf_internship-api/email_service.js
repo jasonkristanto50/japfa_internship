@@ -28,4 +28,4 @@ const sendEmail = (recipient, subject, text) => {
     });
 };
 
-module.exports = { sendEmail, checkEmailExists };
+module.exports = { sendEmail };

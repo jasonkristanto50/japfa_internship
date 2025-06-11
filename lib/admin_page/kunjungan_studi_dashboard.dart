@@ -298,31 +298,16 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
           );
   }
 
-  // Fetch Kunjungan Studi data from API or Local source
   Future<void> _fetchKunjunganData() async {
     try {
-      final response = await Dio().get(
-          'http://localhost:3000/api/kunjungan_studi/fetch-all-kunjungan-data');
-      final List<dynamic> data = response.data;
-
+      final data =
+          await ApiService().kunjunganStudiService.fetchKunjunganData();
       setState(() {
-        kunjunganList = data
-            .map((item) => KunjunganStudiData.fromJson(
-                item)) // Deserialize into KunjunganStudiData
-            .toList();
-
-        // Sort by date (tanggalKegiatan) in descending order (latest first)
-        kunjunganList.sort((a, b) {
-          // Parse the date format 'DD-MM-YYYY'
-          final dateA =
-              DateTime.parse(a.tanggalKegiatan.split('-').reversed.join('-'));
-          final dateB =
-              DateTime.parse(b.tanggalKegiatan.split('-').reversed.join('-'));
-          return dateA.compareTo(dateB); // To sort in ascending order
-        });
+        kunjunganList = data; // Update state with the fetched data
       });
     } catch (e) {
-      print('Error fetching kunjungan studi data: $e');
+      print('Error loading data: $e');
+      showSnackBar(context, "Gagal mengambil data kunjungan");
     }
   }
 

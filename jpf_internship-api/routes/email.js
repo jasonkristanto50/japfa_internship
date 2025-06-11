@@ -64,6 +64,10 @@ router.post('/send-email', async (req, res) => {
         return res.status(200).json({ message: 'Email sent successfully!' });
     } catch (error) {
         console.error('Error sending email:', error);
+        // Check if the error message indicates a timeout
+        if (error.message === 'Email sending timed out') {
+            return res.status(503).json({ message: 'Email gagal dikirimkan - timeout' });
+        }
         return res.status(500).json({ message: 'Error sending email' });
     }
 });

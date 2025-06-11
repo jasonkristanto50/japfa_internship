@@ -114,20 +114,21 @@ class DepartemenService {
     }
   }
 
-  Future<List<DepartemenData>> fetchDepartemen() async {
-    try {
-      final response =
-          await _dio.get('$baseUrlDepartemen/fetch-all-departemen');
-      if (response.statusCode == 200) {
-        List data = response.data;
-        return data.map((json) => DepartemenData.fromJson(json)).toList();
-      } else {
-        throw Exception('Failed to load departments');
-      }
-    } catch (e) {
-      rethrow;
-    }
-  }
+  // Tidak dipakai lagi
+  // Future<List<DepartemenData>> fetchDeprtemen() async {
+  //   try {
+  //     final response =
+  //         await _dio.get('$baseUrlDepartemen/fetch-all-departemen');
+  //     if (response.statusCode == 200) {
+  //       List data = response.data;
+  //       return data.map((json) => DepartemenData.fromJson(json)).toList();
+  //     } else {
+  //       throw Exception('Failed to load departments');
+  //     }
+  //   } catch (e) {
+  //     rethrow;
+  //   }
+  // }
 
   // Fetch all department data with count data updated
   Future<List<DepartemenData>> fetchDepartemenDataUpdateCount() async {
@@ -560,6 +561,38 @@ class KunjunganStudiService {
       data: kunjunganStudi.toJson(),
       options: Options(contentType: 'application/json'),
     );
+  }
+
+  // Fetch Kunjungan Studi data
+  Future<List<KunjunganStudiData>> fetchKunjunganData() async {
+    try {
+      final response =
+          await _dio.get('$baseUrlKunjunganStudi/fetch-all-kunjungan-data');
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data;
+
+        // Deserialize into KunjunganStudiData
+        List<KunjunganStudiData> kunjunganList =
+            data.map((item) => KunjunganStudiData.fromJson(item)).toList();
+
+        // Sort by date (tanggalKegiatan) in descending order (latest first)
+        kunjunganList.sort((a, b) {
+          final dateA =
+              DateTime.parse(a.tanggalKegiatan.split('-').reversed.join('-'));
+          final dateB =
+              DateTime.parse(b.tanggalKegiatan.split('-').reversed.join('-'));
+          return dateB.compareTo(dateA); // To sort in descending order
+        });
+
+        return kunjunganList; // Return the sorted list
+      } else {
+        throw Exception('Failed to fetch Kunjungan Studi data');
+      }
+    } catch (e) {
+      print('Error fetching kunjungan studi data: $e');
+      rethrow; // Rethrow the exception for higher-level handling
+    }
   }
 
   // Fetch Kunjungan Studi Data by Email

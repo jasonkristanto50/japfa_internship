@@ -60,8 +60,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                 child: Column(
                   children: [
                     const Text(
-                      // TODO
-                      'Department cobaaa',
+                      'Daftar Departemen',
                       style:
                           TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
@@ -165,10 +164,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
   Widget buildCardDepartment() {
     final loginState = ref.watch(loginProvider);
-
     return FutureBuilder<List<DepartemenData>>(
-      // TODO
-      future: ApiService().departemenService.fetchDepartemen(),
+      future: ApiService().departemenService.fetchDepartemenDataUpdateCount(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());

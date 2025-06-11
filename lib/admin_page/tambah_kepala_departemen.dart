@@ -332,7 +332,7 @@ class _TambahKepalaDepartemenState extends State<TambahKepalaDepartemen> {
     try {
       // Fetch all departemen data
       List<DepartemenData> departemenList =
-          await ApiService().departemenService.fetchDepartemen();
+          await ApiService().departemenService.fetchDepartemenDataUpdateCount();
 
       // Extract the names and return them as a list of strings
       return departemenList

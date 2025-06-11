@@ -166,7 +166,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     final loginState = ref.watch(loginProvider);
 
     return FutureBuilder<List<DepartemenData>>(
-      future: ApiService().departemenService.fetchDepartemenDataUpdateCount(),
+      future: ApiService().departemenService.fetchDepartemen(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());

@@ -158,11 +158,18 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
                   title: "Next",
                   backgroundColor: japfaOrange,
                   fontColor: Colors.white,
-                  onPressed: () {
+                  onPressed: () async {
                     if (validateFields(context)) {
-                      setState(() {
-                        _isFirstForm = false; // Show second form
-                      });
+                      bool emailSudahDaftar =
+                          await checkEmailSudahMendaftar(emailController.text);
+                      if (emailSudahDaftar == false) {
+                        setState(() {
+                          _isFirstForm = false; // Show second form
+                        });
+                      } else {
+                        showSnackBar(context,
+                            "Email sudah terdaftar pengajuan (Tiap email hanya bisa mendaftar sekali)");
+                      }
                     }
                   },
                 ),
@@ -356,69 +363,6 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
     }
   }
 
-  // Validate fields for the first form
-  bool validateFields(BuildContext context) {
-    if (!validateField(
-        controller: nameController,
-        fieldName: "Nama",
-        fieldType: FieldType.name,
-        context: context)) {
-      return false;
-    }
-    if (!validateField(
-        controller: universityController,
-        fieldName: "Asal Universitas",
-        fieldType: FieldType.universityDropdown,
-        selectedValue: selectedUniversity,
-        context: context)) {
-      return false;
-    }
-    if (!validateField(
-        controller: studentCountController,
-        fieldName: "Jumlah Anak",
-        fieldType: FieldType.jumlahAnakKunjungan,
-        context: context)) {
-      return false;
-    }
-    if (!validateField(
-        controller: phoneController,
-        fieldName: "No Telepon",
-        fieldType: FieldType.phone,
-        context: context)) {
-      return false;
-    }
-    if (!validateField(
-        controller: emailController,
-        fieldName: "Email",
-        fieldType: FieldType.email,
-        context: context)) {
-      return false;
-    }
-    return true;
-  }
-
-  // Validate fields for the second form
-  bool validateSecondFormFields(BuildContext context) {
-    if (!validateField(
-        controller: dateController,
-        fieldName: "Tanggal Kegiatan",
-        fieldType: FieldType.elseMustFill,
-        context: context)) {
-      return false;
-    }
-    if (selectedSession == null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Silahkan pilih jam")));
-      return false;
-    }
-    if (persetujuanInstansiFileName == null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Tolong upload file ")));
-      return false;
-    }
-    return true;
-  }
-
   void updateFileData(String field, String? fileName, Uint8List fileBytes) {
     persetujuanInstansiFileName = fileName;
     persetujuanInstansiFile = fileBytes;
@@ -504,6 +448,80 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
       setState(() {
         isLoading = false;
       });
+    }
+  }
+
+  // Validate fields for the first form
+  bool validateFields(BuildContext context) {
+    if (!validateField(
+        controller: nameController,
+        fieldName: "Nama",
+        fieldType: FieldType.name,
+        context: context)) {
+      return false;
+    }
+    if (!validateField(
+        controller: universityController,
+        fieldName: "Asal Universitas",
+        fieldType: FieldType.universityDropdown,
+        selectedValue: selectedUniversity,
+        context: context)) {
+      return false;
+    }
+    if (!validateField(
+        controller: studentCountController,
+        fieldName: "Jumlah Anak",
+        fieldType: FieldType.jumlahAnakKunjungan,
+        context: context)) {
+      return false;
+    }
+    if (!validateField(
+        controller: phoneController,
+        fieldName: "No Telepon",
+        fieldType: FieldType.phone,
+        context: context)) {
+      return false;
+    }
+    if (!validateField(
+        controller: emailController,
+        fieldName: "Email",
+        fieldType: FieldType.email,
+        context: context)) {
+      return false;
+    }
+    return true;
+  }
+
+  // Validate fields for the second form
+  bool validateSecondFormFields(BuildContext context) {
+    if (!validateField(
+        controller: dateController,
+        fieldName: "Tanggal Kegiatan",
+        fieldType: FieldType.elseMustFill,
+        context: context)) {
+      return false;
+    }
+    if (selectedSession == null) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Silahkan pilih jam")));
+      return false;
+    }
+    if (persetujuanInstansiFileName == null) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Tolong upload file ")));
+      return false;
+    }
+    return true;
+  }
+
+  // Method for checking if an email has already been submitted
+  Future<bool> checkEmailSudahMendaftar(String email) async {
+    try {
+      // Call the function to fetch data by email
+      await ApiService().kunjunganStudiService.fetchKunjunganDataByEmail(email);
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 }

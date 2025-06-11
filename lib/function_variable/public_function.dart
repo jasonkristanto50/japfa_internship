@@ -743,13 +743,6 @@ void launchFullURLImagePath({required String fullPath}) async {
   }
 }
 
-String generateRandomPassword(int length) {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  final Random random = Random();
-  return List.generate(length, (index) => chars[random.nextInt(chars.length)])
-      .join();
-}
-
 // Show Confirmation Dialog
 Future<void> showConfirmationDialog(
   BuildContext context, {
@@ -765,6 +758,14 @@ Future<void> showConfirmationDialog(
       );
     },
   );
+}
+
+// --- STRING FUNCTION -----------
+String generateRandomPassword(int length) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  final Random random = Random();
+  return List.generate(length, (index) => chars[random.nextInt(chars.length)])
+      .join();
 }
 
 String likertStringValue(String likertValue) {
@@ -830,7 +831,7 @@ IconData getFileIcon(String? url) {
   return Icons.file_present; // Default file icon
 }
 
-// COLOR -----------------------
+// ---------------------COLOR -----------------------
 Color getValidationColor(String? validasiPembimbing) {
   if (validasiPembimbing == 'true') {
     return Colors.green;

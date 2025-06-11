@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:japfa_internship/data.dart';
+import 'package:japfa_internship/function_variable/api_service_function.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/pendaftar_submission_page/submission_intern_file.dart';
@@ -380,15 +381,22 @@ class _SubmissionInternState extends State<SubmissionIntern> {
       title: "Selanjutnya",
       backgroundColor: japfaOrange,
       fontColor: Colors.white,
-      onPressed: () {
+      onPressed: () async {
+        bool emailSudahDaftar =
+            await checkEmailSudahMendaftar(emailController.text);
         if (validateTextFields(context)) {
           if (_currentPage == 0) {
-            setState(() {
-              _currentPage = 1; // Go to the next page
-            });
+            if (emailSudahDaftar == false) {
+              setState(() {
+                _currentPage = 1;
+              });
+            } else {
+              showSnackBar(context,
+                  "Email sudah terdaftar pengajuan (Tiap email hanya bisa mendaftar sekali)");
+            }
           } else if (_currentPage == 1) {
             setState(() {
-              _currentPage = 2; // Go to project submission page
+              _currentPage = 2;
             });
           } else if (_currentPage == 2) {
             // Final submission action for Project Submission Page
@@ -436,6 +444,17 @@ class _SubmissionInternState extends State<SubmissionIntern> {
       if (text.isNotEmpty) {
         projectName.add(text);
       }
+    }
+  }
+
+  // Method for checking if an email has already been submitted
+  Future<bool> checkEmailSudahMendaftar(String email) async {
+    try {
+      // Call the function to fetch data by email
+      await ApiService().pesertaMagangService.fetchPesertaMagangByEmail(email);
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 

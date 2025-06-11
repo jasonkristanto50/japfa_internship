@@ -3,10 +3,10 @@ const nodemailer = require('nodemailer');
 
 // Create a transporter object
 const transporter = nodemailer.createTransport({
-  service: 'gmail', // or your email provider
+  service: 'gmail',
   auth: {
-    user: process.env.EMAIL_USER, // Your email address from .env
-    pass: process.env.EMAIL_PASSWORD // Your email password or app password
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD
   },
 });
 
@@ -28,4 +28,4 @@ const sendEmail = (recipient, subject, text) => {
     });
 };
 
-module.exports = { sendEmail };
+module.exports = { sendEmail, checkEmailExists };

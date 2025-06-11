@@ -60,7 +60,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                 child: Column(
                   children: [
                     const Text(
-                      'Department List',
+                      // TODO
+                      'Department fcefe',
                       style:
                           TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
@@ -166,6 +167,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     final loginState = ref.watch(loginProvider);
 
     return FutureBuilder<List<DepartemenData>>(
+      // TODO
       future: ApiService().departemenService.fetchDepartemen(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {

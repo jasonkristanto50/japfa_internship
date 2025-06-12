@@ -1,13 +1,24 @@
 const nodemailer = require('nodemailer');
 
 // Create a transporter object
+// const transporter = nodemailer.createTransport({
+//   service: 'gmail',
+//   auth: {
+//     user: process.env.EMAIL_USER,
+//     port: 2525,
+//     pass: process.env.EMAIL_PASSWORD
+//   },
+// });
+
+// Create a transporter object
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: process.env.SMTP_HOST,          // smtp.sendgrid.net
+  port: Number(process.env.SMTP_PORT),  // 2525
+  secure: false,                        // STARTTLS
   auth: {
-    user: process.env.EMAIL_USER,
-    port: 2525,
-    pass: process.env.EMAIL_PASSWORD
-  },
+    user: process.env.SMTP_USER,        // 'apikey'
+    pass: process.env.SENDGRID_KEY      // the new SG.… token
+  }
 });
 
 // Function to send email with timeout

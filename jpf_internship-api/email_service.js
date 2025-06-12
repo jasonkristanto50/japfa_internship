@@ -21,6 +21,15 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+// test the credentials once at boot
+transporter.verify((err, ok) => {
+  if (err) {
+    console.error('SMTP VERIFY ERROR →', err);
+  } else {
+    console.log('SMTP connection ready');
+  }
+});
+
 // Function to send email with timeout
 const sendEmail = (recipient, subject, text, timeout = 10000) => {
   const mailOptions = {

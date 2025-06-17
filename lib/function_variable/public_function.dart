@@ -569,9 +569,10 @@ bool validateField({
         return false;
       } else if (!controller.text.contains('@') ||
           (!controller.text.endsWith('.com') &&
-              !controller.text.endsWith('.ac.id'))) {
+              !controller.text.endsWith('.ac.id') &&
+              !controller.text.endsWith('.co.id'))) {
         showSnackBar(context,
-            'Format $fieldName tidak valid. Pastikan mengandung "@" dan diakhiri dengan ".com" atau ".ac.id".');
+            'Format $fieldName tidak valid. Pastikan mengandung "@" dan diakhiri dengan ".com", ".ac.id", atau ".co.id".');
         return false;
       }
       break;

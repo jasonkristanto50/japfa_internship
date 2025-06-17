@@ -222,12 +222,6 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
           onPressed: () {
             if (validateFileFields(context)) {
               _submitFormPesertaMagang();
-              fadeNavigation(context, targetNavigation: const MyHomePage());
-              showConfirmationDialog(
-                context,
-                title: confirmationTitleValue,
-                message: confirmationMessageValue,
-              );
             }
           },
         ),
@@ -398,14 +392,21 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
           EmailMessageType.daftarMagang,
         );
 
+        fadeNavigation(context, targetNavigation: const MyHomePage());
+        showConfirmationDialog(
+          context,
+          title: confirmationTitleValue,
+          message: confirmationMessageValue,
+        );
+
         // Show success message
         showSnackBar(
           context,
-          'Submission successful!',
+          'Pengajuan Magang berhasil',
           backgroundColor: Colors.green,
         );
       } catch (error) {
-        showSnackBar(context, 'An error occurred while submitting the form');
+        showSnackBar(context, 'Error dalam mengajukan magang');
       } finally {
         setState(() {
           isLoading = false;

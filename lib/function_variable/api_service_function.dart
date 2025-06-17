@@ -657,6 +657,21 @@ class KunjunganStudiService {
       rethrow; // Rethrow the exception for further handling
     }
   }
+
+  // Fetch the current count of kunjungan studi
+  Future<int> fetchCurrentCount() async {
+    try {
+      final countResponse = await _dio.get('$baseUrlKunjunganStudi/count');
+      if (countResponse.statusCode == 200) {
+        return int.parse(countResponse.data['count']);
+      } else {
+        throw Exception('Failed to fetch current count');
+      }
+    } catch (e) {
+      print('Error fetching current count: $e');
+      rethrow; // Rethrow the exception for higher-level handling
+    }
+  }
 }
 
 class KepalaDepartemenService {

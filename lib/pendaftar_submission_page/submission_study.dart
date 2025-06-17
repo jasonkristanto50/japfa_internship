@@ -7,7 +7,6 @@ import 'package:japfa_internship/function_variable/string_value.dart';
 import 'package:japfa_internship/home_page.dart';
 import 'package:japfa_internship/models/kunjungan_studi_data/kunjungan_studi_data.dart';
 import 'package:japfa_internship/navbar.dart';
-import 'package:dio/dio.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/components/widget_component.dart';
@@ -394,10 +393,9 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
       );
 
       // Fetch the current count
-      final countResponse =
-          await Dio().get('$baseUrl/api/kunjungan_studi/count');
-      final currentCount = int.parse(countResponse.data['count']);
-      final String idKunjunganStudi = 'KJS_0${currentCount + 1}';
+      int countResponse =
+          await ApiService().kunjunganStudiService.fetchCurrentCount();
+      final String idKunjunganStudi = 'KJS_0${countResponse + 1}';
 
       // Generate password token
       String passwordTokenValue = generateRandomPassword(7);

@@ -1,5 +1,5 @@
 import 'dart:io';
-// import 'dart:html' as html; // uncomment if ran in chrome
+import 'dart:html' as html; // uncomment if ran in chrome
 import 'package:excel/excel.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -92,7 +92,7 @@ class _ListAllPesertaMagangState extends State<ListAllPesertaMagang> {
             width: 150,
             rounded: 5,
             onPressed: () {
-              // _downloadExcel();
+              _downloadExcel();
             },
           ),
         ],
@@ -402,77 +402,77 @@ class _ListAllPesertaMagangState extends State<ListAllPesertaMagang> {
   }
 
   // Method to download Excel
-  // void _downloadExcel() async {
-  //   try {
-  //     // Create an Excel document
-  //     var excel = Excel.createExcel();
-  //     Sheet sheet = excel['Data Peserta Magang'];
+  void _downloadExcel() async {
+    try {
+      // Create an Excel document
+      var excel = Excel.createExcel();
+      Sheet sheet = excel['Data Peserta Magang'];
 
-  //     // Column name
-  //     sheet.appendRow([
-  //       TextCellValue('Nama'),
-  //       TextCellValue('No. Telp'),
-  //       TextCellValue('Email'),
-  //       TextCellValue('Universitas'),
-  //       TextCellValue('Jurusan'),
-  //       TextCellValue('Departemen'),
-  //       TextCellValue('Status'),
-  //       TextCellValue('Angkatan'),
-  //       TextCellValue('Alamat'),
-  //       TextCellValue('Nilai'),
-  //       TextCellValue('Catatan HR'),
-  //       TextCellValue('Pembimbing'),
-  //       TextCellValue('Nilai Akhir Magang'),
-  //     ]);
+      // Column name
+      sheet.appendRow([
+        TextCellValue('Nama'),
+        TextCellValue('No. Telp'),
+        TextCellValue('Email'),
+        TextCellValue('Universitas'),
+        TextCellValue('Jurusan'),
+        TextCellValue('Departemen'),
+        TextCellValue('Status'),
+        TextCellValue('Angkatan'),
+        TextCellValue('Alamat'),
+        TextCellValue('Nilai'),
+        TextCellValue('Catatan HR'),
+        TextCellValue('Pembimbing'),
+        TextCellValue('Nilai Akhir Magang'),
+      ]);
 
-  //     // Data value
-  //     for (var peserta in pesertaMagangList) {
-  //       sheet.appendRow([
-  //         TextCellValue(peserta.nama),
-  //         TextCellValue(peserta.noTelp),
-  //         TextCellValue(peserta.email),
-  //         TextCellValue(peserta.asalUniversitas),
-  //         TextCellValue(peserta.jurusan),
-  //         TextCellValue(peserta.departemen ?? "-"),
-  //         TextCellValue(peserta.statusMagang),
-  //         TextCellValue(peserta.angkatan.toString()),
-  //         TextCellValue(peserta.alamat),
-  //         TextCellValue(peserta.nilaiUniv.toString()),
-  //         TextCellValue(peserta.catatanHr ?? "-"),
-  //         TextCellValue(peserta.namaPembimbing ?? "-"),
-  //         TextCellValue(peserta.nilaiAkhirMagang?.toString() ?? "-"),
-  //       ]);
-  //     }
+      // Data value
+      for (var peserta in pesertaMagangList) {
+        sheet.appendRow([
+          TextCellValue(peserta.nama),
+          TextCellValue(peserta.noTelp),
+          TextCellValue(peserta.email),
+          TextCellValue(peserta.asalUniversitas),
+          TextCellValue(peserta.jurusan),
+          TextCellValue(peserta.departemen ?? "-"),
+          TextCellValue(peserta.statusMagang),
+          TextCellValue(peserta.angkatan.toString()),
+          TextCellValue(peserta.alamat),
+          TextCellValue(peserta.nilaiUniv.toString()),
+          TextCellValue(peserta.catatanHr ?? "-"),
+          TextCellValue(peserta.namaPembimbing ?? "-"),
+          TextCellValue(peserta.nilaiAkhirMagang?.toString() ?? "-"),
+        ]);
+      }
 
-  //     // Download if using web
-  //     if (kIsWeb) {
-  //       final bytes = excel.encode()!;
-  //       final blob = html.Blob([
-  //         bytes
-  //       ], 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+      // Download if using web
+      if (kIsWeb) {
+        final bytes = excel.encode()!;
+        final blob = html.Blob([
+          bytes
+        ], 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 
-  //       // Create a link element
-  //       final url = html.Url.createObjectUrlFromBlob(blob);
-  //       html.AnchorElement(href: url)
-  //         ..setAttribute('download', 'peserta_magang.xlsx')
-  //         ..click();
+        // Create a link element
+        final url = html.Url.createObjectUrlFromBlob(blob);
+        html.AnchorElement(href: url)
+          ..setAttribute('download', 'peserta_magang.xlsx')
+          ..click();
 
-  //       html.Url.revokeObjectUrl(url);
-  //       showSnackBar(context, "Excel file downloaded.",
-  //           backgroundColor: Colors.green);
-  //     } else {
-  //       // For mobile platforms, you can directly save it
-  //       Directory? directory = await getExternalStorageDirectory();
-  //       String filePath = '${directory!.path}/peserta_magang.xlsx';
+        html.Url.revokeObjectUrl(url);
+        showSnackBar(context, "Excel file downloaded.",
+            backgroundColor: Colors.green);
+      } else {
+        // For mobile platforms, you can directly save it
+        Directory? directory = await getExternalStorageDirectory();
+        String filePath = '${directory!.path}/peserta_magang.xlsx';
 
-  //       // Save the Excel file
-  //       File(filePath).writeAsBytesSync(excel.encode()!);
-  //       showSnackBar(context, "Excel file downloaded: $filePath",
-  //           backgroundColor: Colors.green);
-  //     }
-  //   } catch (e) {
-  //     showSnackBar(context, "Error during download: $e",
-  //         backgroundColor: Colors.red);
-  //   }
-  // }
+        // Save the Excel file
+        File(filePath).writeAsBytesSync(excel.encode()!);
+        showSnackBar(context, "Excel file downloaded: $filePath",
+            backgroundColor: Colors.green);
+      }
+    } catch (e) {
+      showSnackBar(context, "Error during download: $e",
+          backgroundColor: Colors.red);
+    }
+  }
 }

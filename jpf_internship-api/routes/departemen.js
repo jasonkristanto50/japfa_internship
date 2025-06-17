@@ -132,7 +132,7 @@ router.get('/fetch-all-departemen-data-updated', async (req, res) => {
             const newJumlahPengajuan = await countPengajuan(namaDepartemen);  
             const newJumlahApproved = await countApproved(namaDepartemen); 
             const newJumlahOnBoarding = await countOnBoarding(namaDepartemen);
-            const newSisaKuota = department.max_kuota - newJumlahApproved; 
+            const newSisaKuota = department.max_kuota - newJumlahApproved - newJumlahOnBoarding; 
 
             // Update counts in the DEPARTEMEN table  
             await pool.query(  

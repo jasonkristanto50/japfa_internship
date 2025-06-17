@@ -46,28 +46,15 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                 children: [
                   if (loginState.role == roleAdminValue ||
                       loginState.role == roleKepalaDeptValue) ...[
-                    // Blur japfa logo background
-                    _blurBackground(),
+                    Stack(
+                      children: [_buildDepartmentListSection()],
+                    ),
                   ] else ...[
                     _buildBackgroundBlurImageWithContainer(),
                     const SizedBox(height: 50),
+                    _buildDepartmentListSection(),
                   ]
                 ],
-              ),
-              // DEPARTMENT CARD SECTION
-              Padding(
-                padding: const EdgeInsets.fromLTRB(150, 50, 150, 20),
-                child: Column(
-                  children: [
-                    const Text(
-                      'Daftar Departemen',
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 50),
-                    buildCardDepartment()
-                  ],
-                ),
               ),
             ],
           ),
@@ -76,13 +63,19 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     );
   }
 
-  Widget _blurBackground() {
-    return Positioned.fill(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
-        child: Container(
-          color: Colors.black.withOpacity(0.5),
-        ),
+  Widget _buildDepartmentListSection() {
+    return // DEPARTMENT CARD SECTION
+        Padding(
+      padding: const EdgeInsets.fromLTRB(150, 50, 150, 20),
+      child: Column(
+        children: [
+          const Text(
+            'Daftar Departemen',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 50),
+          buildCardDepartment()
+        ],
       ),
     );
   }

@@ -49,7 +49,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final loginState = ref.watch(loginProvider); // Watch login state
-    bool isMobile = MediaQuery.of(context).size.width < 600;
+    bool isMobile = isScreenMobile(context);
 
     return Scaffold(
       appBar: Navbar(
@@ -88,6 +88,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Widget buildLoginPasswordForm(LoginState loginState) {
+    bool isMobile = MediaQuery.of(context).size.width < 600;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -96,7 +97,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           style: TextStyle(fontSize: 16),
         ),
         const SizedBox(height: 20),
-        buildTextField('Email', _emailController),
+        buildTextField('Email', _emailController, isMobile: isMobile),
         const SizedBox(height: 15),
         PasswordToggleTextField(
           label: 'Password',
@@ -130,6 +131,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Widget buildTokenLoginForm(LoginState loginState) {
+    bool isMobile = isScreenMobile(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -139,7 +141,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           style: TextStyle(fontSize: 16),
         ),
         const SizedBox(height: 20),
-        buildTextField('Email', _emailController),
+        buildTextField('Email', _emailController, isMobile: isMobile),
         const SizedBox(height: 15),
         PasswordToggleTextField(
           label: 'Token',

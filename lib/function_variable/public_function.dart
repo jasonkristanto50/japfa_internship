@@ -35,6 +35,7 @@ void fadeNavigation(
 Widget buildTextField(
   String label,
   TextEditingController controller, {
+  bool isMobile = false,
   bool withDeleteIcon = false,
   VoidCallback? onDelete,
   bool mandatory = false,
@@ -46,7 +47,9 @@ Widget buildTextField(
       label: RichText(
         text: TextSpan(
           text: label,
-          style: regular20.copyWith(color: Colors.black87),
+          style: isMobile
+              ? regular12.copyWith(color: Colors.black87)
+              : regular20.copyWith(color: Colors.black87),
           children: <TextSpan>[
             if (mandatory)
               const TextSpan(
@@ -532,6 +535,11 @@ enum FieldType {
   universityDropdown,
   jurusanDropdown,
   elseMustFill,
+}
+
+// Check if is mobile
+bool isScreenMobile(BuildContext context) {
+  return MediaQuery.of(context).size.width < 600;
 }
 
 // Global validation function

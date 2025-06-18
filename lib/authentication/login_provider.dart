@@ -53,24 +53,6 @@ class LoginNotifier extends StateNotifier<LoginState> {
     required String email,
     required String password,
   }) async {
-    if (email == 'peserta' && password == '123') {
-      state = LoginState(
-        isLoading: false,
-        isLoggedIn: true,
-        role: 'peserta magang',
-        email: email,
-      );
-      return;
-    }
-    if (email == 'kepala' && password == '123') {
-      state = LoginState(
-        isLoading: false,
-        isLoggedIn: true,
-        role: 'kepala departemen',
-        email: email,
-      );
-      return;
-    }
     state = state.copyWith(isLoading: true, errorMessage: null);
 
     String url = '$baseUrl/api/login/login-password';

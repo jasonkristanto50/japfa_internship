@@ -216,7 +216,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     if (email.isEmpty || token.isEmpty) {
       // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
       ref.read(loginProvider.notifier).state =
-          LoginState(errorMessage: "Please fill in all fields");
+          LoginState(errorMessage: "Tolong isi semua data");
       return;
     }
 

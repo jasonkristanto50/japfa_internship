@@ -63,6 +63,7 @@ class _LogBookPesertaDashboardState
       appBar: Navbar(
         context: context,
         title: 'Log Book Mahasiswa',
+        titleOnPressed: () {},
       ),
       body: Container(
         decoration: buildJapfaLogoBackground(),

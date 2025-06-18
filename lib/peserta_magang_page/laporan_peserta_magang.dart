@@ -57,6 +57,7 @@ class _LaporanPesertaMagangState extends ConsumerState<LaporanPesertaMagang> {
         appBar: Navbar(
           context: context,
           title: 'Laporan Peserta',
+          titleOnPressed: () {},
         ),
         body: Container(
           decoration: buildJapfaLogoBackground(),

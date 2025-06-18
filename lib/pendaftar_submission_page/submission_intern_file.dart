@@ -87,7 +87,7 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
   String labelCV = 'CV';
   String labelPersetujuanUniv = 'Persetujuan Univ';
   String labelTranskripNilai = 'Transkrip Nilai';
-  String labelFotoDiri = 'Foto Diri';
+  String labelFotoDiri = 'Foto Diri (3x6)';
 
   final _visible = true;
 

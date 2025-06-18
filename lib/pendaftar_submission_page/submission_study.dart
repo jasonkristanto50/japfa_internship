@@ -59,18 +59,14 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
         title: appName,
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          image: DecorationImage(
-            image: AssetImage('assets/japfa_logo_background.png'),
-            fit: BoxFit.cover,
-          ),
+        decoration: buildJapfaLogoBackground(),
+        child: Center(
+          child: isLoading
+              ? const CircularProgressIndicator() // Show loading indicator
+              : _isFirstForm
+                  ? _buildKunjunganStudiForm()
+                  : _buildKunjunganStudiForm2(),
         ),
-        child: isLoading // Check if loading
-            ? const CircularProgressIndicator() // Show loading indicator
-            : _isFirstForm
-                ? _buildKunjunganStudiForm()
-                : _buildKunjunganStudiForm2(),
       ),
     );
   }
@@ -519,6 +515,8 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
       final response = await ApiService()
           .kunjunganStudiService
           .fetchKunjunganDataByEmail(email);
+
+      print("API Response Kunjungan: $response");
 
       // Check if the response is an empty list
       if (response.isEmpty) {

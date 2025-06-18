@@ -113,7 +113,7 @@ class _DashboardPembimbingMagangState
                     border: TableBorder.all(color: Colors.grey, width: 1),
                     columns: const [
                       DataColumn(label: Text('Nama')),
-                      DataColumn(label: Text('No. Telp')),
+                      DataColumn(label: Text('Departemen')),
                       DataColumn(label: Text('Email')),
                       DataColumn(label: Text('Universitas')),
                       DataColumn(label: Text('Jurusan')),
@@ -126,7 +126,7 @@ class _DashboardPembimbingMagangState
                         cells: [
                           DataCell(
                               Text(peserta.nama, textAlign: TextAlign.center)),
-                          DataCell(Text(peserta.noTelp,
+                          DataCell(Text(peserta.departemen ?? '-',
                               textAlign: TextAlign.center)),
                           DataCell(
                               Text(peserta.email, textAlign: TextAlign.center)),

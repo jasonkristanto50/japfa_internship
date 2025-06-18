@@ -204,24 +204,17 @@ class _TambahKepalaDepartemenState extends State<TambahKepalaDepartemen> {
         return CustomAlertDialog(
           title: "Masukkan Data",
           subTitle: "Kepala Departemen",
-          numberOfField: 4,
+          numberOfField: 3,
           controllers: [
             namaKepalaDepartemenController,
             emailController,
             namaDepartemenController,
-            passwordTokenController
           ],
-          labels: const [
-            "Nama Kepala Departemen",
-            "Email",
-            "Nama Departemen",
-            "Password Token"
-          ],
+          labels: const ["Nama Kepala Departemen", "Email", "Nama Departemen"],
           fieldTypes: const [
             BuildFieldTypeController.text,
             BuildFieldTypeController.text,
-            BuildFieldTypeController.dropdown,
-            BuildFieldTypeController.text
+            BuildFieldTypeController.dropdown
           ],
           dropdownOptions: namaDepartemen,
           onSave: () => _addKepalaDepartemen(),
@@ -237,12 +230,15 @@ class _TambahKepalaDepartemenState extends State<TambahKepalaDepartemen> {
           .fetchKepalaDepartemenCount();
       final idKepalaDepartemen = 'KP_${count.toString().padLeft(2, '0')}';
 
+      // Generate password token
+      String passwordKepalaValue = generateRandomPassword(7);
+
       final kepalaDepartemen = KepalaDepartemenData(
         idKepalaDepartemenData: idKepalaDepartemen,
         nama: namaKepalaDepartemenController.text,
         email: emailController.text,
         departemen: namaDepartemenController.text,
-        password: passwordTokenController.text,
+        password: passwordKepalaValue,
         role: roleKepalaDeptValue,
         status: statusPembimbingAktif,
       );
@@ -255,16 +251,17 @@ class _TambahKepalaDepartemenState extends State<TambahKepalaDepartemen> {
       await ApiService().sendEmail(
         kepalaDepartemen.email,
         kepalaDepartemen.nama,
-        kepalaDepartemen.password,
+        passwordKepalaValue,
         EmailMessageType.tambahPembimbing,
       );
+      _fetchKepalaDept();
 
       showSnackBar(
         context,
         "Pembimbing baru berhasil ditambahkan",
         backgroundColor: Colors.green,
       );
-      _fetchKepalaDept();
+      Navigator.of(context).pop();
     } catch (error) {
       // Handle the error: show error message
       showSnackBar(context, "Error");

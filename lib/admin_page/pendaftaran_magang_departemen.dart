@@ -25,6 +25,8 @@ class _PendaftaranMagangDepartemenState
   List<PesertaMagangData> pesertaMagangList = [];
   List<PesertaMagangData> filteredPesertaData = [];
   String? currentStatus;
+  bool isFuzzyRecomView = false;
+  Map<String, double> emailToFuzzyScoreMap = {};
 
   @override
   void initState() {
@@ -72,8 +74,8 @@ class _PendaftaranMagangDepartemenState
             widthValue: 1200.w,
           ),
           RoundedRectangleButton(
-            title: "Rekomendasi",
-            backgroundColor: Colors.white,
+            title: isFuzzyRecomView ? "Kembali" : "Rekomendasi",
+            backgroundColor: isFuzzyRecomView ? lightOrange : Colors.white,
             outlineColor: japfaOrange,
             height: 40,
             width: 200,
@@ -203,32 +205,62 @@ class _PendaftaranMagangDepartemenState
                       fontWeight: FontWeight.bold,
                     ),
                     border: TableBorder.all(color: Colors.grey, width: 1),
-                    columns: const [
-                      DataColumn(label: Text('Nama')),
-                      DataColumn(label: Text('No. Telp')),
-                      DataColumn(label: Text('Email')),
-                      DataColumn(label: Text('Universitas')),
-                      DataColumn(label: Text('Jurusan')),
-                      DataColumn(label: Text('Angkatan')),
-                      DataColumn(label: Text('IPK')),
-                      DataColumn(label: Text('Status')),
-                      DataColumn(label: Text('Aksi')),
-                    ],
+                    columns: isFuzzyRecomView
+                        ? [
+                            const DataColumn(label: Text('Nama')),
+                            const DataColumn(label: Text('Nilai Rekomendasi')),
+                            const DataColumn(label: Text('Email')),
+                            const DataColumn(label: Text('Universitas')),
+                            const DataColumn(label: Text('Jurusan')),
+                            const DataColumn(label: Text('IPK')),
+                            const DataColumn(label: Text('Status')),
+                            const DataColumn(label: Text('Aksi')),
+                          ]
+                        : [
+                            const DataColumn(label: Text('Nama')),
+                            const DataColumn(label: Text('No. Telp')),
+                            const DataColumn(label: Text('Email')),
+                            const DataColumn(label: Text('Universitas')),
+                            const DataColumn(label: Text('Jurusan')),
+                            const DataColumn(label: Text('Angkatan')),
+                            const DataColumn(label: Text('IPK')),
+                            const DataColumn(label: Text('Status')),
+                            const DataColumn(label: Text('Aksi')),
+                          ],
                     rows: filteredMagangData.map((peserta) {
+                      // Get fuzzy score from the skill data using email
+                      double? fuzzyScore = emailToFuzzyScoreMap[peserta.email];
+                      print('FuzzyScore : $fuzzyScore');
+                      String fuzzyString = getFuzzyStringValue(fuzzyScore);
                       return DataRow(
                         cells: [
                           DataCell(
                               Text(peserta.nama, textAlign: TextAlign.center)),
-                          DataCell(Text(peserta.noTelp,
-                              textAlign: TextAlign.center)),
+                          DataCell(
+                            Text(
+                              isFuzzyRecomView ? fuzzyString : peserta.noTelp,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: isFuzzyRecomView
+                                    ? getFuzzyStringColor(fuzzyString)
+                                    : Colors.black,
+                              ),
+                            ),
+                          ),
                           DataCell(
                               Text(peserta.email, textAlign: TextAlign.center)),
                           DataCell(Text(peserta.asalUniversitas,
                               textAlign: TextAlign.center)),
                           DataCell(Text(peserta.jurusan,
                               textAlign: TextAlign.center)),
-                          DataCell(Text(peserta.angkatan.toString(),
-                              textAlign: TextAlign.center)),
+                          if (!isFuzzyRecomView) ...[
+                            DataCell(
+                              Text(
+                                peserta.angkatan.toString(),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
                           DataCell(Text(peserta.nilaiUniv.toString(),
                               textAlign: TextAlign.center)),
                           DataCell(
@@ -284,7 +316,7 @@ class _PendaftaranMagangDepartemenState
       List<SkillPesertaMagangData> skillDataList =
           await ApiService().skillService.fetchAllSkills();
 
-      Map<String, double> emailToFuzzyScoreMap = {
+      emailToFuzzyScoreMap = {
         for (var skill in skillDataList) skill.email: skill.fuzzyScore,
       };
 
@@ -296,11 +328,17 @@ class _PendaftaranMagangDepartemenState
       });
 
       setState(() {
-        // Refresh the display with sorted list
         pesertaMagangList = pesertaMagangList;
+        isFuzzyRecomView = !isFuzzyRecomView;
       });
-      showSnackBar(context, "Data telah diurutkan berdasar rekomendasi",
-          backgroundColor: Colors.grey);
+
+      showSnackBar(
+        context,
+        isFuzzyRecomView
+            ? "Data telah diurutkan berdasarkan departemen dan skor fuzzy"
+            : "Data telah kembali diurutkan berdasarkan urutan pengajuan",
+        backgroundColor: Colors.grey,
+      );
     } catch (e) {
       print('Error sorting data: $e');
     }

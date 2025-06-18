@@ -813,6 +813,22 @@ String getInfoJamDariSesi(String jamKegiatan) {
   return 'Sesi Tidak Valid';
 }
 
+String getFuzzyStringValue(double? fuzzyScore) {
+  if (fuzzyScore != null) {
+    if (fuzzyScore >= 0.7) {
+      return 'Baik';
+    } else if (fuzzyScore >= 0.4 && fuzzyScore < 0.7) {
+      return 'Cukup';
+    } else if (fuzzyScore < 0.4) {
+      return 'Kurang';
+    } else {
+      return 'Tidak Valid';
+    }
+  } else {
+    return 'Tidak Ada Data';
+  }
+}
+
 // Function to extract the original file name from PATH
 String getOriginalFileNameFromPath(String? url) {
   if (url != null) {
@@ -896,6 +912,18 @@ Color getStatusValidasiColor(String statusValidasi) {
   if (statusValidasi == statusValidasiDiterima) {
     return Colors.green;
   } else if (statusValidasi == statusValidasiDitolak) {
+    return Colors.red;
+  } else {
+    return Colors.black;
+  }
+}
+
+Color getFuzzyStringColor(String fuzzyString) {
+  if (fuzzyString == 'Baik') {
+    return Colors.green;
+  } else if (fuzzyString == 'Cukup') {
+    return japfaOrange;
+  } else if (fuzzyString == 'Kurang') {
     return Colors.red;
   } else {
     return Colors.black;

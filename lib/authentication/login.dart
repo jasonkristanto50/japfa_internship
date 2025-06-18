@@ -143,21 +143,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         const SizedBox(height: 20),
         buildTextField('Email', _emailController, isMobile: isMobile),
         const SizedBox(height: 15),
+
         PasswordToggleTextField(
           label: 'Token',
           controller: _tokenController,
         ),
         const SizedBox(height: 20),
-        if (loginState.isLoading) // Show loading indicator
-          const CircularProgressIndicator(),
-        if (!loginState.isLoading) // Show button only if not loading
+        if (loginState.isLoading) const CircularProgressIndicator(),
+        if (!loginState.isLoading)
           RoundedRectangleButton(
             title: "Login",
             backgroundColor: japfaOrange,
             fontColor: Colors.white,
             onPressed: _tokenLoginFunction,
           ),
-        if (loginState.errorMessage != null) // Display error
+        if (loginState.errorMessage != null)
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: Text(
@@ -198,7 +198,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     if (email.isEmpty || password.isEmpty) {
       // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
       ref.read(loginProvider.notifier).state =
-          LoginState(errorMessage: "Please fill in all fields");
+          LoginState(errorMessage: "Tolong isi semua data");
       return;
     }
 

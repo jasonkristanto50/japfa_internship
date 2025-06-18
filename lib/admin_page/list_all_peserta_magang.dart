@@ -27,6 +27,8 @@ class _ListAllPesertaMagangState extends State<ListAllPesertaMagang> {
   List<PesertaMagangData> pesertaMagangList = [];
   List<PesertaMagangData> filteredPesertaData = [];
   String? currentStatus;
+  bool isFuzzyRecomView = false;
+  Map<String, double> emailToFuzzyScoreMap = {};
 
   @override
   void initState() {
@@ -73,8 +75,8 @@ class _ListAllPesertaMagangState extends State<ListAllPesertaMagang> {
             widthValue: 1200.w,
           ),
           RoundedRectangleButton(
-            title: "Rekomendasi",
-            backgroundColor: Colors.white,
+            title: isFuzzyRecomView ? "Kembali" : "Rekomendasi",
+            backgroundColor: isFuzzyRecomView ? lightOrange : Colors.white,
             outlineColor: japfaOrange,
             height: 40,
             width: 150,
@@ -251,27 +253,44 @@ class _ListAllPesertaMagangState extends State<ListAllPesertaMagang> {
                       fontWeight: FontWeight.bold,
                     ),
                     border: TableBorder.all(color: Colors.grey, width: 1),
-                    columns: const [
-                      DataColumn(label: Text('Nama')),
-                      DataColumn(label: Text('No. Telp')),
-                      DataColumn(label: Text('Email')),
-                      DataColumn(label: Text('Universitas')),
-                      DataColumn(label: Text('Jurusan')),
-                      DataColumn(label: Text('Departemen')),
-                      DataColumn(label: Text('Status')),
-                      DataColumn(label: Text('Aksi')),
+                    columns: [
+                      const DataColumn(label: Text('Nama')),
+                      const DataColumn(label: Text('Universitas')),
+                      const DataColumn(label: Text('Email')),
+                      DataColumn(
+                        label: Text(
+                          isFuzzyRecomView ? 'Nilai Rekomendasi' : 'No. Telp',
+                        ),
+                      ),
+                      const DataColumn(label: Text('Jurusan')),
+                      const DataColumn(label: Text('Departemen')),
+                      const DataColumn(label: Text('Status')),
+                      const DataColumn(label: Text('Aksi')),
                     ],
                     rows: filteredData.map((peserta) {
+                      // Get fuzzy score from the skill data using email
+                      double? fuzzyScore = emailToFuzzyScoreMap[peserta.email];
+                      print('FuzzyScore : $fuzzyScore');
+                      String fuzzyString = getFuzzyStringValue(fuzzyScore);
                       return DataRow(
                         cells: [
                           DataCell(
                               Text(peserta.nama, textAlign: TextAlign.center)),
-                          DataCell(Text(peserta.noTelp,
+                          DataCell(Text(peserta.asalUniversitas,
                               textAlign: TextAlign.center)),
                           DataCell(
                               Text(peserta.email, textAlign: TextAlign.center)),
-                          DataCell(Text(peserta.asalUniversitas,
-                              textAlign: TextAlign.center)),
+                          DataCell(
+                            Text(
+                              isFuzzyRecomView ? fuzzyString : peserta.noTelp,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: isFuzzyRecomView
+                                    ? getFuzzyStringColor(fuzzyString)
+                                    : Colors.black,
+                              ),
+                            ),
+                          ),
                           DataCell(Text(peserta.jurusan,
                               textAlign: TextAlign.center)),
                           DataCell(Text(peserta.departemen ?? "-")),
@@ -360,13 +379,13 @@ class _ListAllPesertaMagangState extends State<ListAllPesertaMagang> {
 
   void _sortPesertaByDepartmentAndFuzzyScore() async {
     try {
-      // Fetch the skill data for fuzzy scores
       List<SkillPesertaMagangData> skillDataList =
           await ApiService().skillService.fetchAllSkills();
 
       // Create a map to correlate email to fuzzy scores
-      Map<String, double> emailToFuzzyScoreMap = {
-        for (var skill in skillDataList) skill.email: skill.fuzzyScore,
+      emailToFuzzyScoreMap = {
+        for (var skill in skillDataList)
+          skill.email.toLowerCase(): skill.fuzzyScore,
       };
 
       // Sort by department and then by fuzzy score
@@ -379,23 +398,26 @@ class _ListAllPesertaMagangState extends State<ListAllPesertaMagang> {
         if (departmentComparison == 0) {
           final scoreA = emailToFuzzyScoreMap[a.email] ?? 0;
           final scoreB = emailToFuzzyScoreMap[b.email] ?? 0;
-          return scoreB
-              .compareTo(scoreA); // Sort by fuzzy score (descending order)
+          // Sort by fuzzy score (descending order)
+          return scoreB.compareTo(scoreA);
         }
 
         return departmentComparison; // Order departments
       });
 
-      // Set the state to refresh UI
       setState(() {
-        // Refresh the display with the sorted list
         pesertaMagangList = pesertaMagangList;
+        // Switch true false
+        isFuzzyRecomView = !isFuzzyRecomView;
       });
 
-      // Show a confirmation message
-      showSnackBar(context,
-          "Data telah diurutkan berdasarkan departemen dan skor fuzzy.",
-          backgroundColor: Colors.grey);
+      showSnackBar(
+        context,
+        isFuzzyRecomView
+            ? "Data telah diurutkan berdasarkan departemen dan skor fuzzy"
+            : "Data telah kembali diurutkan berdasarkan urutan pengajuan",
+        backgroundColor: Colors.grey,
+      );
     } catch (e) {
       print('Error sorting data: $e');
     }

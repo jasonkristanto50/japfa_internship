@@ -161,9 +161,9 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
                     if (validateFields(context)) {
                       bool emailSudahDaftar =
                           await checkEmailSudahMendaftar(emailController.text);
-                      if (emailSudahDaftar == false) {
+                      if (emailSudahDaftar == true) {
                         setState(() {
-                          _isFirstForm = false; // Show second form
+                          _isFirstForm = false;
                         });
                       } else {
                         showSnackBar(context,

@@ -305,11 +305,13 @@ class CustomSearchBar extends StatelessWidget {
 class ConfirmationDialog extends StatelessWidget {
   final String title;
   final String message;
+  final bool isMobile;
 
   const ConfirmationDialog({
     super.key,
     required this.title,
     required this.message,
+    this.isMobile = false,
   });
 
   @override
@@ -346,7 +348,7 @@ class ConfirmationDialog extends StatelessWidget {
                 title: "OK",
                 backgroundColor: japfaOrange,
                 height: 50.h,
-                width: 300.w,
+                width: isMobile ? 100.w : 300.w,
                 rounded: 5,
                 fontColor: Colors.white,
                 onPressed: () {

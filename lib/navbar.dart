@@ -92,11 +92,14 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
                 const Spacer(),
                 // For mobile, show the hamburger icon instead of tabs
                 if (isMobile) ...[
-                  if (loginState.isLoggedIn)
+                  if (loginState.isLoggedIn) ...[
                     IconButton(
                       icon: const Icon(Icons.menu, color: Colors.white),
                       onPressed: () => _showMenu(context, ref, isMobile),
                     ),
+                  ] else ...[
+                    buildLoginBotton(),
+                  ]
                 ] else ...[
                   // Website & Desktop
                   // If NOT LOGIN

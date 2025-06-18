@@ -58,10 +58,12 @@ class _SubmissionInternState extends State<SubmissionIntern> {
 
   @override
   Widget build(BuildContext context) {
+    bool isMobile = isScreenMobile(context);
     return Scaffold(
       appBar: Navbar(
         context: context,
-        title: "$appName - Daftar ${widget.departmentName}",
+        title:
+            isMobile ? appName : "$appName - Daftar ${widget.departmentName}",
       ),
       body: Container(
         decoration: buildJapfaLogoBackground(),
@@ -71,7 +73,7 @@ class _SubmissionInternState extends State<SubmissionIntern> {
             duration: const Duration(milliseconds: 500),
             child: SingleChildScrollView(
               child: Container(
-                width: 400,
+                width: isMobile ? 300 : 400,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -106,6 +108,7 @@ class _SubmissionInternState extends State<SubmissionIntern> {
 
   // Build Title
   Widget _buildTitle() {
+    bool isMobile = isScreenMobile(context);
     return Column(
       children: [
         Row(
@@ -136,7 +139,7 @@ class _SubmissionInternState extends State<SubmissionIntern> {
                           : _currentPage == 1
                               ? 'Penilaian Diri'
                               : 'Lampiran Proyek',
-                      style: bold30,
+                      style: isMobile ? bold14 : bold30,
                     ),
                   ],
                 ),
@@ -152,11 +155,11 @@ class _SubmissionInternState extends State<SubmissionIntern> {
                     children: [
                       Text(
                         "Tuliskan Judul Proyek yang Pernah Dikerjakan",
-                        style: regular16,
+                        style: isMobile ? regular10 : regular16,
                       ),
                       Text(
                         "Bersifat opsional / tidak wajib",
-                        style: regular14,
+                        style: isMobile ? regular10 : regular14,
                       ),
                     ],
                   )
@@ -169,16 +172,21 @@ class _SubmissionInternState extends State<SubmissionIntern> {
 
   // Build Submission Fields
   Widget _buildSubmissionTextField() {
+    bool isMobile = isScreenMobile(context);
     return Column(
       children: [
         const SizedBox(height: 20),
-        buildTextField('Nama', nameController, mandatory: true),
+        buildTextField('Nama', nameController,
+            mandatory: true, isMobile: isMobile),
         const SizedBox(height: 20),
-        buildTextField('Alamat', addressController, mandatory: true),
+        buildTextField('Alamat', addressController,
+            mandatory: true, isMobile: isMobile),
         const SizedBox(height: 20),
-        buildTextField('No Telepon', phoneNumberController, mandatory: true),
+        buildTextField('No Telepon', phoneNumberController,
+            mandatory: true, isMobile: isMobile),
         const SizedBox(height: 20),
-        buildTextField('Email', emailController, mandatory: true),
+        buildTextField('Email', emailController,
+            mandatory: true, isMobile: isMobile),
         const SizedBox(height: 15),
         // buildDropDownField(
         //   'Universitas/Sekolah',
@@ -217,9 +225,11 @@ class _SubmissionInternState extends State<SubmissionIntern> {
           mandatory: true,
         ),
         const SizedBox(height: 15),
-        buildTextField('Angkatan', generationController, mandatory: true),
+        buildTextField('Angkatan', generationController,
+            mandatory: true, isMobile: isMobile),
         const SizedBox(height: 15),
-        buildTextField('IPK', scoreController, mandatory: true),
+        buildTextField('IPK', scoreController,
+            mandatory: true, isMobile: isMobile),
         const SizedBox(height: 15),
         // buildDropDownField(
         //   'Jurusan',
@@ -249,64 +259,48 @@ class _SubmissionInternState extends State<SubmissionIntern> {
 
   // Build Communication Skills and Likert Scale
   Widget _buildSoftSkillScale() {
+    bool isMobile = isScreenMobile(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         const SizedBox(height: 40),
-        buildLikertScale(
-          'Kemampuan Komunikasi',
-          likertKomunikasiValue,
-          (newValue) {
-            setState(() {
-              likertKomunikasiValue = newValue;
-            });
-          },
-        ),
+        buildLikertScale('Kemampuan Komunikasi', likertKomunikasiValue,
+            (newValue) {
+          setState(() {
+            likertKomunikasiValue = newValue;
+          });
+        }, isMobile: isMobile),
         const SizedBox(height: 10),
-        buildLikertScale(
-          'Kreativitas',
-          likertKreativitasValue,
-          (newValue) {
-            setState(() {
-              likertKreativitasValue = newValue;
-            });
-          },
-        ),
+        buildLikertScale('Kreativitas', likertKreativitasValue, (newValue) {
+          setState(() {
+            likertKreativitasValue = newValue;
+          });
+        }, isMobile: isMobile),
         const SizedBox(height: 10),
-        buildLikertScale(
-          'Tanggung Jawab',
-          likertTanggungJawabValue,
-          (newValue) {
-            setState(() {
-              likertTanggungJawabValue = newValue;
-            });
-          },
-        ),
+        buildLikertScale('Tanggung Jawab', likertTanggungJawabValue,
+            (newValue) {
+          setState(() {
+            likertTanggungJawabValue = newValue;
+          });
+        }, isMobile: isMobile),
         const SizedBox(height: 10),
-        buildLikertScale(
-          'Kerja Sama',
-          likertKerjaSamaValue,
-          (newValue) {
-            setState(() {
-              likertKerjaSamaValue = newValue;
-            });
-          },
-        ),
+        buildLikertScale('Kerja Sama', likertKerjaSamaValue, (newValue) {
+          setState(() {
+            likertKerjaSamaValue = newValue;
+          });
+        }, isMobile: isMobile),
         const SizedBox(height: 10),
-        buildLikertScale(
-          'Kemampuan Teknis',
-          likertTeknisValue,
-          (newValue) {
-            setState(() {
-              likertTeknisValue = newValue;
-            });
-          },
-        ),
+        buildLikertScale('Kemampuan Teknis', likertTeknisValue, (newValue) {
+          setState(() {
+            likertTeknisValue = newValue;
+          });
+        }, isMobile: isMobile),
       ],
     );
   }
 
   Widget _buildProjectSubmissionFields() {
+    bool isMobile = isScreenMobile(context);
     int maxField = 5;
     bool isMax = projectNameControllers.length == maxField;
     return Column(
@@ -319,19 +313,16 @@ class _SubmissionInternState extends State<SubmissionIntern> {
 
           return Column(
             children: [
-              buildTextField(
-                'Judul Proyek ${index + 1} (Opsional)',
-                controller,
-                withDeleteIcon: true,
-                onDelete: () {
-                  _removeProjectField(index);
-                },
-              ),
+              buildTextField('Judul Proyek ${index + 1} (Opsional)', controller,
+                  withDeleteIcon: true, onDelete: () {
+                _removeProjectField(index);
+              }, isMobile: isMobile),
               const SizedBox(height: 20),
             ],
           );
         }),
-        buildTextField('Link Lampiran (untuk semua proyek)', urlController),
+        buildTextField('Link Lampiran (untuk semua proyek)', urlController,
+            isMobile: isMobile),
         const SizedBox(height: 10),
 
         // Add button to add more project fields
@@ -339,7 +330,7 @@ class _SubmissionInternState extends State<SubmissionIntern> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             RoundedRectangleButton(
-              title: "Tambah Proyek",
+              title: isMobile ? "Tambah" : "Tambah Proyek",
               fontColor: !isMax ? japfaOrange : Colors.white,
               backgroundColor: !isMax ? Colors.white : Colors.grey,
               outlineColor: !isMax ? japfaOrange : Colors.grey,

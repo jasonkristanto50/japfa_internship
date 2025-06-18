@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -140,11 +140,12 @@ class _LogBookPesertaDashboardState
   }
 
   Widget _buildLogbookTable(filteredLogData) {
+    bool isMobile = isScreenMobile(context);
     return filteredLogData.isEmpty
         ? buildEmptyDataMessage(dataName: "Logbook Peserta")
         : Container(
             constraints: BoxConstraints(
-              maxHeight: 700.h, // Set the maximum height
+              maxHeight: isMobile ? 500 : 700.h, // Set the maximum height
             ),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -228,6 +229,7 @@ class _LogBookPesertaDashboardState
   }
 
   void _showAddLogBookModal() {
+    bool isMobile = isScreenMobile(context);
     String labelLogbookFile = "Foto Kegiatan";
     String? uploadedFileName;
     Uint8List? uploadedFileBytes;
@@ -243,7 +245,11 @@ class _LogBookPesertaDashboardState
               content: SingleChildScrollView(
                 child: ListBody(
                   children: [
-                    buildTextField("Nama Kegiatan", activityController),
+                    buildTextField(
+                      "Nama Kegiatan",
+                      activityController,
+                      isMobile: isMobile,
+                    ),
                     const SizedBox(height: 20),
                     buildTanggalField(),
                     const SizedBox(height: 10),
@@ -510,14 +516,21 @@ class _LogBookPesertaDashboardState
 
   Widget showFoto(LogbookPesertaMagangData logbook) {
     final img = '$baseUrl${logbook.urlLampiran}';
-    return Image.network(
-      img,
-      height: 120,
-      width: 90,
-      fit: BoxFit.cover,
-      loadingBuilder: (c, child, p) =>
-          p == null ? child : const CircularProgressIndicator(),
-      errorBuilder: (c, _, __) => const Text('Failed to load image'),
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(3),
+      child: CachedNetworkImage(
+        imageUrl: img,
+        height: 120,
+        width: 90,
+        fit: BoxFit.cover,
+        placeholder: (context, url) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+        errorWidget: (context, url, error) => const Center(
+          child: Icon(Icons.error),
+        ),
+      ),
     );
   }
 

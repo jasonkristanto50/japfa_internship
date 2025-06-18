@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/components/department_card.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
+import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/string_value.dart';
 import 'package:japfa_internship/models/departemen_data/departemen_data.dart';
 import 'package:japfa_internship/navbar.dart';
@@ -64,18 +65,24 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
   }
 
   Widget _buildDepartmentListSection() {
+    bool isMobile = isScreenMobile(context);
     return // DEPARTMENT CARD SECTION
         Padding(
-      padding: const EdgeInsets.fromLTRB(150, 50, 150, 20),
-      child: Column(
-        children: [
-          const Text(
-            'Daftar Departemen',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 50),
-          buildCardDepartment()
-        ],
+      padding: isMobile
+          ? const EdgeInsets.fromLTRB(50, 5, 50, 20)
+          : const EdgeInsets.fromLTRB(150, 50, 150, 20),
+      child: Center(
+        child: Column(
+          children: [
+            const Text(
+              'Daftar Departemen',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 50),
+            buildCardDepartment()
+          ],
+        ),
       ),
     );
   }
@@ -109,6 +116,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
   }
 
   Widget _buildWelcomeContainer() {
+    bool isMobile = isScreenMobile(context);
     return Center(
       child: Container(
         padding: const EdgeInsets.all(30.0),
@@ -123,19 +131,19 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
           children: [
             Text(
               'Selamat Datang ke',
-              style: bold24.copyWith(color: Colors.black),
+              style: isMobile ? bold12 : bold24.copyWith(color: Colors.black),
               textAlign: TextAlign.center,
             ),
             Text(
               appName,
-              style: bold34.copyWith(color: Colors.black),
+              style: isMobile ? bold16 : bold34.copyWith(color: Colors.black),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 30),
             // New Kunjungan Studi Button
             RoundedRectangleButton(
               title: 'Kunjungan Studi',
-              style: regular24,
+              style: isMobile ? regular14 : regular24,
               fontColor: Colors.white,
               backgroundColor: japfaOrange,
               onPressed: kunjunganStudiOnPressed,
@@ -144,7 +152,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             // List Departemen Button
             RoundedRectangleButton(
               title: 'Daftar Magang',
-              style: regular24,
+              style: isMobile ? regular14 : regular24,
               fontColor: Colors.white,
               backgroundColor: japfaOrange,
               onPressed: scrollToCard,
@@ -157,6 +165,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
   Widget buildCardDepartment() {
     final loginState = ref.watch(loginProvider);
+    bool isMobile = isScreenMobile(context);
     return FutureBuilder<List<DepartemenData>>(
       future: ApiService().departemenService.fetchDepartemenDataUpdateCount(),
       builder: (context, snapshot) {
@@ -171,7 +180,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 1,
+              crossAxisCount: isMobile ? 1 : 3,
               crossAxisSpacing: 100,
               mainAxisSpacing: 50,
             ),
@@ -188,6 +197,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                     department[index].syaratDepartemen ?? ['Tidak ada syarat'],
                 isAdmin: loginState.role == roleAdminValue,
                 isKepalaDept: loginState.role == roleKepalaDeptValue,
+                isMobile: isMobile,
               );
             },
           );

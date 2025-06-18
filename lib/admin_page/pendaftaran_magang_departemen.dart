@@ -181,7 +181,7 @@ class _PendaftaranMagangDepartemenState
             child: Center(
               child: Container(
                 constraints: BoxConstraints(
-                  maxHeight: 700.h, // Set the maximum height
+                  maxHeight: 650.h, // Set the maximum height
                 ),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -196,102 +196,107 @@ class _PendaftaranMagangDepartemenState
                   ],
                 ),
                 child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: DataTable(
-                    headingRowColor:
-                        WidgetStateProperty.all(Colors.orange[500]),
-                    headingTextStyle: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    border: TableBorder.all(color: Colors.grey, width: 1),
-                    columns: isFuzzyRecomView
-                        ? [
-                            const DataColumn(label: Text('Nama')),
-                            const DataColumn(label: Text('Nilai Rekomendasi')),
-                            const DataColumn(label: Text('Email')),
-                            const DataColumn(label: Text('Universitas')),
-                            const DataColumn(label: Text('Jurusan')),
-                            const DataColumn(label: Text('IPK')),
-                            const DataColumn(label: Text('Status')),
-                            const DataColumn(label: Text('Aksi')),
-                          ]
-                        : [
-                            const DataColumn(label: Text('Nama')),
-                            const DataColumn(label: Text('No. Telp')),
-                            const DataColumn(label: Text('Email')),
-                            const DataColumn(label: Text('Universitas')),
-                            const DataColumn(label: Text('Jurusan')),
-                            const DataColumn(label: Text('Angkatan')),
-                            const DataColumn(label: Text('IPK')),
-                            const DataColumn(label: Text('Status')),
-                            const DataColumn(label: Text('Aksi')),
-                          ],
-                    rows: filteredMagangData.map((peserta) {
-                      // Get fuzzy score from the skill data using email
-                      double? fuzzyScore = emailToFuzzyScoreMap[peserta.email];
-                      print('FuzzyScore : $fuzzyScore');
-                      String fuzzyString = getFuzzyStringValue(fuzzyScore);
-                      return DataRow(
-                        cells: [
-                          DataCell(
-                              Text(peserta.nama, textAlign: TextAlign.center)),
-                          DataCell(
-                            Text(
-                              isFuzzyRecomView ? fuzzyString : peserta.noTelp,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: isFuzzyRecomView
-                                    ? getFuzzyStringColor(fuzzyString)
-                                    : Colors.black,
-                              ),
-                            ),
-                          ),
-                          DataCell(
-                              Text(peserta.email, textAlign: TextAlign.center)),
-                          DataCell(Text(peserta.asalUniversitas,
-                              textAlign: TextAlign.center)),
-                          DataCell(Text(peserta.jurusan,
-                              textAlign: TextAlign.center)),
-                          if (!isFuzzyRecomView) ...[
+                  scrollDirection: Axis.vertical,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: DataTable(
+                      headingRowColor:
+                          WidgetStateProperty.all(Colors.orange[500]),
+                      headingTextStyle: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      border: TableBorder.all(color: Colors.grey, width: 1),
+                      columns: isFuzzyRecomView
+                          ? [
+                              const DataColumn(label: Text('Nama')),
+                              const DataColumn(
+                                  label: Text('Nilai Rekomendasi')),
+                              const DataColumn(label: Text('Email')),
+                              const DataColumn(label: Text('Universitas')),
+                              const DataColumn(label: Text('Jurusan')),
+                              const DataColumn(label: Text('IPK')),
+                              const DataColumn(label: Text('Status')),
+                              const DataColumn(label: Text('Aksi')),
+                            ]
+                          : [
+                              const DataColumn(label: Text('Nama')),
+                              const DataColumn(label: Text('No. Telp')),
+                              const DataColumn(label: Text('Email')),
+                              const DataColumn(label: Text('Universitas')),
+                              const DataColumn(label: Text('Jurusan')),
+                              const DataColumn(label: Text('Angkatan')),
+                              const DataColumn(label: Text('IPK')),
+                              const DataColumn(label: Text('Status')),
+                              const DataColumn(label: Text('Aksi')),
+                            ],
+                      rows: filteredMagangData.map((peserta) {
+                        // Get fuzzy score from the skill data using email
+                        double? fuzzyScore =
+                            emailToFuzzyScoreMap[peserta.email];
+                        print('FuzzyScore : $fuzzyScore');
+                        String fuzzyString = getFuzzyStringValue(fuzzyScore);
+                        return DataRow(
+                          cells: [
+                            DataCell(Text(peserta.nama,
+                                textAlign: TextAlign.center)),
                             DataCell(
                               Text(
-                                peserta.angkatan.toString(),
+                                isFuzzyRecomView ? fuzzyString : peserta.noTelp,
                                 textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: isFuzzyRecomView
+                                      ? getFuzzyStringColor(fuzzyString)
+                                      : Colors.black,
+                                ),
+                              ),
+                            ),
+                            DataCell(Text(peserta.email,
+                                textAlign: TextAlign.center)),
+                            DataCell(Text(peserta.asalUniversitas,
+                                textAlign: TextAlign.center)),
+                            DataCell(Text(peserta.jurusan,
+                                textAlign: TextAlign.center)),
+                            if (!isFuzzyRecomView) ...[
+                              DataCell(
+                                Text(
+                                  peserta.angkatan.toString(),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ],
+                            DataCell(Text(peserta.nilaiUniv.toString(),
+                                textAlign: TextAlign.center)),
+                            DataCell(
+                              Text(
+                                peserta.statusMagang,
+                                style: TextStyle(
+                                  color: getStatusMagangColor(
+                                      peserta.statusMagang),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            DataCell(
+                              Align(
+                                alignment: Alignment.center,
+                                child: RoundedRectangleButton(
+                                  title: "DETAIL",
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 152, 209, 255),
+                                  height: 30,
+                                  width: 100,
+                                  rounded: 5,
+                                  onPressed: () {
+                                    _viewDetails(peserta);
+                                  },
+                                ),
                               ),
                             ),
                           ],
-                          DataCell(Text(peserta.nilaiUniv.toString(),
-                              textAlign: TextAlign.center)),
-                          DataCell(
-                            Text(
-                              peserta.statusMagang,
-                              style: TextStyle(
-                                color:
-                                    getStatusMagangColor(peserta.statusMagang),
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          DataCell(
-                            Align(
-                              alignment: Alignment.center,
-                              child: RoundedRectangleButton(
-                                title: "DETAIL",
-                                backgroundColor:
-                                    const Color.fromARGB(255, 152, 209, 255),
-                                height: 30,
-                                width: 100,
-                                rounded: 5,
-                                onPressed: () {
-                                  _viewDetails(peserta);
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    }).toList(),
+                        );
+                      }).toList(),
+                    ),
                   ),
                 ),
               ),

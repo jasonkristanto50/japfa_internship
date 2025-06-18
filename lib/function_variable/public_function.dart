@@ -48,7 +48,7 @@ Widget buildTextField(
         text: TextSpan(
           text: label,
           style: isMobile
-              ? regular12.copyWith(color: Colors.black87)
+              ? regular16.copyWith(color: Colors.black87)
               : regular20.copyWith(color: Colors.black87),
           children: <TextSpan>[
             if (mandatory)
@@ -186,8 +186,9 @@ Widget buildDataInfoField({
 Widget buildLikertScale(
   String title,
   double likertValue,
-  ValueChanged<double> onChanged,
-) {
+  ValueChanged<double> onChanged, {
+  bool isMobile = false,
+}) {
   // Mapping of Likert values to corresponding labels
   String getLabel(double value) {
     switch (value.toInt()) {
@@ -208,17 +209,21 @@ Widget buildLikertScale(
 
   return Column(
     children: [
-      Text(title, style: regular20),
+      Text(title, style: isMobile ? regular12 : regular20),
       Row(
         children: [
           Text(
             "Sangat kurang",
-            style: regular16.copyWith(color: Colors.grey),
+            style: isMobile
+                ? regular10.copyWith(color: Colors.grey)
+                : regular16.copyWith(color: Colors.grey),
           ),
           const Spacer(),
           Text(
             "Sangat bagus",
-            style: regular16.copyWith(color: Colors.grey),
+            style: isMobile
+                ? regular10.copyWith(color: Colors.grey)
+                : regular16.copyWith(color: Colors.grey),
           ),
         ],
       ),

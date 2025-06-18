@@ -137,6 +137,7 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
   }
 
   Widget _buildTitle() {
+    bool isMobile = isScreenMobile(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -148,12 +149,12 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
           padding: EdgeInsets.zero,
           constraints: const BoxConstraints(),
         ),
-        const Expanded(
+        Expanded(
           child: Center(
             child: Text(
               'Kirim Dokumen',
               style: TextStyle(
-                fontSize: 24,
+                fontSize: isMobile ? 16 : 24,
                 fontWeight: FontWeight.bold,
               ),
             ),

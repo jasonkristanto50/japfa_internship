@@ -138,7 +138,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: isMobile ? const LoginScreen() : const MyHomePage(),
+      home: const MyHomePage(),
     );
   }
 }

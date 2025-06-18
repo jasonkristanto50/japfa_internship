@@ -47,7 +47,6 @@ class FileUploading {
                           width: isMobile ? 100 : 200,
                           child: Text(
                             getFileNameWithEllipsis(fileName, isMobile),
-                            style: regular16,
                           ),
                         ),
                       ],

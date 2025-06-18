@@ -16,6 +16,7 @@ class DepartmentCard extends ConsumerStatefulWidget {
   List<String> requirements;
   final bool isAdmin;
   final bool isKepalaDept;
+  bool isMobile;
 
   DepartmentCard({
     required this.title,
@@ -26,6 +27,7 @@ class DepartmentCard extends ConsumerStatefulWidget {
     required this.requirements,
     required this.isAdmin,
     required this.isKepalaDept,
+    this.isMobile = false,
     super.key,
   });
 
@@ -108,15 +110,21 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
                         children: [
                           Text(
                             widget.title,
-                            style: bold20.copyWith(color: japfaOrange),
+                            style: widget.isMobile
+                                ? bold16.copyWith(
+                                    color: japfaOrange,
+                                    decoration: TextDecoration.none,
+                                  )
+                                : bold20.copyWith(color: japfaOrange),
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 8),
-                          Text(
-                            widget.description,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 12),
-                          ),
+                          if (widget.isMobile == false)
+                            Text(
+                              widget.description,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(fontSize: 12),
+                            ),
                         ],
                       ),
                     ),
@@ -197,10 +205,15 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
         Center(
       child: Text(
         widget.title,
-        style: bold20.copyWith(
-            color: japfaOrange,
-            // Text decoration none untuk menghapus garis kuning
-            decoration: TextDecoration.none),
+        style: widget.isMobile
+            ? bold12.copyWith(
+                color: japfaOrange,
+                decoration: TextDecoration.none,
+              )
+            : bold20.copyWith(
+                color: japfaOrange,
+                decoration: TextDecoration.none,
+              ),
         textAlign: TextAlign.center,
       ),
     );
@@ -228,13 +241,17 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
             Center(
               child: Text(
                 "Sisa Kuota : ${widget.sisaKuota}",
-                style: bold16.copyWith(color: japfaOrange),
+                style: widget.isMobile
+                    ? bold10.copyWith(color: japfaOrange)
+                    : bold16.copyWith(color: japfaOrange),
               ),
             ),
             Center(
               child: Text(
                 "Antri Pengajuan : ${widget.jumlahPengajuan}",
-                style: bold14.copyWith(color: japfaOrange),
+                style: widget.isMobile
+                    ? bold10.copyWith(color: japfaOrange)
+                    : bold16.copyWith(color: japfaOrange),
               ),
             ),
             const SizedBox(height: 20),
@@ -251,20 +268,26 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
                       border: OutlineInputBorder(),
                     ),
                   )
-                : Text(
-                    widget.description,
-                    style: regular16.copyWith(
-                        color: darkGrey, decoration: TextDecoration.none),
+                : Center(
+                    child: Text(
+                      widget.description,
+                      style: widget.isMobile
+                          ? regular10.copyWith(
+                              color: darkGrey, decoration: TextDecoration.none)
+                          : regular16.copyWith(
+                              color: darkGrey, decoration: TextDecoration.none),
+                    ),
                   ),
             const SizedBox(height: 16),
 
             // Requirements section
             Text(
               widget.isAdmin ? 'Edit Syarat' : 'Syarat:',
-              style: bold16.copyWith(
-                color: darkGrey,
-                decoration: TextDecoration.none,
-              ),
+              style: widget.isMobile
+                  ? regular12.copyWith(
+                      color: darkGrey, decoration: TextDecoration.none)
+                  : regular16.copyWith(
+                      color: darkGrey, decoration: TextDecoration.none),
             ),
             widget.isAdmin
                 ? Column(
@@ -273,7 +296,7 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
                               padding: const EdgeInsets.symmetric(vertical: 4),
                               child: TextField(
                                 controller: controller,
-                                style: regular16,
+                                style: widget.isMobile ? regular10 : regular16,
                                 decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
                                 ),
@@ -289,10 +312,15 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
                       children: widget.requirements
                           .map((requirement) => Text(
                                 requirement,
-                                style: light16.copyWith(
-                                  color: darkGrey,
-                                  decoration: TextDecoration.none,
-                                ),
+                                style: widget.isMobile
+                                    ? light10.copyWith(
+                                        color: darkGrey,
+                                        decoration: TextDecoration.none,
+                                      )
+                                    : light16.copyWith(
+                                        color: darkGrey,
+                                        decoration: TextDecoration.none,
+                                      ),
                               ))
                           .toList(),
                     ),
@@ -350,7 +378,7 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
           outlineColor: japfaOrange,
           width: 150,
           height: 30,
-          style: regular16,
+          style: widget.isMobile ? regular12 : regular16,
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -365,7 +393,7 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
             backgroundColor: japfaOrange,
             width: 150,
             height: 30,
-            style: regular16,
+            style: widget.isMobile ? regular12 : regular16,
             onPressed: () {
               saveChangesOnPressedFunction();
             },
@@ -374,7 +402,7 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
           // Show nothing if Kepala Dept
           const SizedBox.shrink()
         else
-        // Show "Apply" button for other cases
+        // Show "Daftar" button for other cases
         if (widget.sisaKuota > 0) ...[
           RoundedRectangleButton(
             title: "Daftar",
@@ -382,7 +410,7 @@ class _DepartmentCardState extends ConsumerState<DepartmentCard> {
             backgroundColor: japfaOrange,
             width: 150,
             height: 30,
-            style: regular16,
+            style: widget.isMobile ? regular12 : regular16,
             onPressed: () {
               // Clear the modal
               Navigator.pop(context);

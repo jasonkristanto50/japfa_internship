@@ -73,6 +73,7 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
 
   // Form pertama
   Widget _buildKunjunganStudiForm() {
+    bool isMobile = isScreenMobile(context);
     return Center(
       child: AnimatedOpacity(
         opacity: _visible ? 1.0 : 0.0,
@@ -105,26 +106,26 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
                       constraints: const BoxConstraints(),
                     ),
                     const SizedBox(width: 65),
-                    const Text(
+                    Text(
                       'Kunjungan Studi',
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: isMobile ? 16 : 24,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 10),
-                const Text(
+                Text(
                   'Tanggal Kunjungan studi akan ditentukan lebih lanjut oleh tim HR & GA',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: isMobile ? 12 : 16,
                     color: Colors.grey,
                   ),
                 ),
                 const SizedBox(height: 20),
                 buildTextField('Nama Perwakilan', nameController,
-                    mandatory: true),
+                    mandatory: true, isMobile: isMobile),
                 const SizedBox(height: 15),
                 CustomDropdown(
                   label: 'Universitas',
@@ -138,16 +139,16 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
                   },
                 ),
                 const SizedBox(height: 15),
-                buildTextField(
-                  'Jumlah Peserta',
-                  studentCountController,
-                  mandatory: true,
-                  hintText: "Maksimal 55 peserta",
-                ),
+                buildTextField('Jumlah Peserta', studentCountController,
+                    mandatory: true,
+                    hintText: "Maksimal 55 peserta",
+                    isMobile: isMobile),
                 const SizedBox(height: 15),
-                buildTextField('No Telepon', phoneController, mandatory: true),
+                buildTextField('No Telepon', phoneController,
+                    mandatory: true, isMobile: isMobile),
                 const SizedBox(height: 15),
-                buildTextField('Email', emailController, mandatory: true),
+                buildTextField('Email', emailController,
+                    mandatory: true, isMobile: isMobile),
                 const SizedBox(height: 20),
                 RoundedRectangleButton(
                   title: "Next",
@@ -178,6 +179,7 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
 
   // Form bagian kedua
   Widget _buildKunjunganStudiForm2() {
+    bool isMobile = isScreenMobile(context);
     return Center(
       child: AnimatedOpacity(
         opacity: _visible ? 1.0 : 0.0,
@@ -214,20 +216,20 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
                       constraints: const BoxConstraints(),
                     ),
                     const SizedBox(width: 61),
-                    const Text(
+                    Text(
                       'Kunjungan Studi',
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: isMobile ? 16 : 24,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 10),
-                const Text(
+                Text(
                   'Hari Kunjungan hanya Selasa - Kamis',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: isMobile ? 12 : 16,
                     color: Colors.grey,
                   ),
                 ),

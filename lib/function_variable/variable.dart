@@ -38,6 +38,11 @@ String japfaLogoBackgroundImgPath = 'assets/japfa_logo_background.png';
 
 const String montserratFontFamily = 'assets/fonts/Montserrat';
 
+TextStyle regular10 = TextStyle(
+  fontFamily: montserratFontFamily,
+  fontSize: 10.sp,
+);
+
 TextStyle regular12 = TextStyle(
   fontFamily: montserratFontFamily,
   fontSize: 12.sp,
@@ -71,6 +76,12 @@ TextStyle regular30 = TextStyle(
 TextStyle regular34 = TextStyle(
   fontFamily: montserratFontFamily,
   fontSize: 34.sp,
+);
+
+TextStyle bold10 = TextStyle(
+  fontFamily: montserratFontFamily,
+  fontWeight: FontWeight.bold,
+  fontSize: 10.sp,
 );
 
 TextStyle bold12 = TextStyle(
@@ -131,6 +142,12 @@ TextStyle bold34 = TextStyle(
   fontFamily: montserratFontFamily,
   fontWeight: FontWeight.bold,
   fontSize: 34.sp,
+);
+
+TextStyle light10 = TextStyle(
+  fontFamily: montserratFontFamily,
+  fontWeight: FontWeight.normal,
+  fontSize: 10.sp,
 );
 
 TextStyle light12 = TextStyle(

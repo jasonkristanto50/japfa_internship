@@ -452,8 +452,11 @@ class _SubmissionInternState extends State<SubmissionIntern> {
     try {
       // Call the function to fetch data by email
       await ApiService().pesertaMagangService.fetchPesertaMagangByEmail(email);
+
+      // Check if the response is empty
       return true;
     } catch (e) {
+      print("error : $e");
       return false;
     }
   }

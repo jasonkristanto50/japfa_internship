@@ -161,9 +161,9 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
                     if (validateFields(context)) {
                       bool emailSudahDaftar =
                           await checkEmailSudahMendaftar(emailController.text);
-                      if (emailSudahDaftar == true) {
+                      if (emailSudahDaftar == false) {
                         setState(() {
-                          _isFirstForm = false;
+                          _isFirstForm = false; // Show second form
                         });
                       } else {
                         showSnackBar(context,
@@ -512,14 +512,23 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
     return true;
   }
 
-  // Method for checking if an email has already been submitted
+// Method for checking if an email has already been submitted
   Future<bool> checkEmailSudahMendaftar(String email) async {
     try {
       // Call the function to fetch data by email
-      await ApiService().kunjunganStudiService.fetchKunjunganDataByEmail(email);
-      return true;
+      final response = await ApiService()
+          .kunjunganStudiService
+          .fetchKunjunganDataByEmail(email);
+
+      // Check if the response is an empty list
+      if (response.isEmpty) {
+        return false;
+      } else {
+        return true;
+      }
     } catch (e) {
-      return false;
+      print("error : $e");
+      return false; // Consider returning false if an error occurs
     }
   }
 }

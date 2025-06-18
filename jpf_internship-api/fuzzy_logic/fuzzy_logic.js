@@ -4,19 +4,19 @@ function fuzzyScale(value, scaleType) {
 
     switch (scaleType) {
         case 'softskills':
-            result = value / 25;
+            result = countSoftskills(value);
             break;
         case 'ipk':
             result = normalizeScore(value);
             break;
         case 'projects':
-            result = value / 3;
+            result = normalizeProjects(value);
             break;
         case 'universitas':
             result = getAccreditationValue(value);
             break;
         case 'jurusan':
-            result = 1;
+            result = getMajorValue(value);
             break;
         default:
             result = 1;
@@ -25,7 +25,11 @@ function fuzzyScale(value, scaleType) {
     return Math.max(0, Math.min(result, 1));
 }
 
-// Function to normalize values for both IPK and Nilai based on predefined ranges
+function countSoftskills(skills){
+    return skills / 25;
+}
+
+// Function to normalize score of IPK
 function normalizeScore(value) {
     // Check if the value is relevant for IPK (1-4)
     if (value >= 1.0 && value <= 4.0) {
@@ -68,6 +72,25 @@ function normalizeScore(value) {
     return 0;
 }
 
+// Function to get the value from project count
+function normalizeProjects(projectCount) {
+    switch (projectCount) {
+        case 0:
+            return 0;
+        case 1:
+            return 0.2;
+        case 2:
+            return 0.5;
+        case 3:
+            return 0.7;
+        case 4:
+        case 5:
+            return 1.0;
+        default:
+            return 1.0; // Assuming more than 5 projects still results in a max score of 1.0
+    }
+}
+
 // Function to get accreditation value
 function getAccreditationValue(accreditation) {
     switch (accreditation) {
@@ -83,6 +106,13 @@ function getAccreditationValue(accreditation) {
         default:
             return 0;
     }
+}
+
+function getMajorValue(major) {
+    if(major)
+    return 1;
+    else 
+    return 0;
 }
 
 // Function to calculate the overall fuzzy score

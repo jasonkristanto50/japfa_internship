@@ -140,102 +140,91 @@ class _LogBookPesertaDashboardState
   }
 
   Widget _buildLogbookTable(filteredLogData) {
-    return Expanded(
-      child: filteredLogData.isEmpty
-          ? buildEmptyDataMessage(dataName: "Logbook Peserta")
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(24.0),
-              child: Center(
-                child: Container(
-                  decoration: BoxDecoration(
+    return filteredLogData.isEmpty
+        ? buildEmptyDataMessage(dataName: "Logbook Peserta")
+        : Container(
+            constraints: BoxConstraints(
+              maxHeight: 700.h, // Set the maximum height
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.1),
+                  spreadRadius: 1,
+                  blurRadius: 4,
+                  offset: const Offset(0, 1),
+                ),
+              ],
+            ),
+            child: SingleChildScrollView(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: DataTable(
+                  headingRowColor: WidgetStateProperty.all(Colors.orange[500]),
+                  headingTextStyle: const TextStyle(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.1),
-                        spreadRadius: 1,
-                        blurRadius: 4,
-                        offset: const Offset(0, 1),
-                      ),
-                    ],
+                    fontWeight: FontWeight.bold,
                   ),
-                  child: filteredLogData.isEmpty
-                      ? buildEmptyDataMessage(filteredData: filteredLogData)
-                      : SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: DataTable(
-                            headingRowColor:
-                                WidgetStateProperty.all(Colors.orange[500]),
-                            headingTextStyle: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            dataRowMinHeight: 120,
-                            dataRowMaxHeight: 150,
-                            border:
-                                TableBorder.all(color: Colors.grey, width: 1),
-                            columns: const [
-                              DataColumn(label: Text('No')),
-                              DataColumn(label: Text('Aktivitas')),
-                              DataColumn(label: Text('Tanggal Aktivitas')),
-                              DataColumn(label: Text('Foto Lampiran')),
-                              DataColumn(label: Text('Validasi Pembimbing')),
-                              DataColumn(label: Text('Catatan Pembimbing')),
-                              DataColumn(label: Text('Action')),
-                            ],
-                            rows: filteredLogData
-                                .asMap()
-                                .entries
-                                .map<DataRow>((entry) {
-                              // index of entry list
-                              int index = entry.key;
-                              // logbook data
-                              LogbookPesertaMagangData data = entry.value;
-                              return DataRow(cells: [
-                                DataCell(
-                                    Text('${filteredLogData.length - index}')),
-                                DataCell(Text(data.namaAktivitas)),
-                                DataCell(Text(data.tanggalAktivitas)),
-                                DataCell(showFoto(data)),
-                                DataCell(
-                                  Text(
-                                    data.validasiPembimbing == 'true'
-                                        ? 'Disetujui'
-                                        : (data.validasiPembimbing == 'false'
-                                            ? 'Ditolak'
-                                            : 'Menunggu'),
-                                    style: TextStyle(
-                                      color: data.validasiPembimbing == 'true'
-                                          ? Colors.green
-                                          : (data.validasiPembimbing == 'false'
-                                              ? Colors.red
-                                              : Colors.black),
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                DataCell(Text(data.catatanPembimbing ?? '')),
-                                DataCell(
-                                  Row(
-                                    children: [
-                                      IconButton(
-                                        icon: const Icon(Icons.delete,
-                                            color: Colors.red),
-                                        onPressed: () =>
-                                            _deleteLogbookById(data.idLogbook),
-                                        tooltip: 'Hapus',
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ]);
-                            }).toList(),
+                  dataRowMinHeight: 120,
+                  dataRowMaxHeight: 150,
+                  border: TableBorder.all(color: Colors.grey, width: 1),
+                  columns: const [
+                    DataColumn(label: Text('No')),
+                    DataColumn(label: Text('Aktivitas')),
+                    DataColumn(label: Text('Tanggal Aktivitas')),
+                    DataColumn(label: Text('Foto Lampiran')),
+                    DataColumn(label: Text('Validasi Pembimbing')),
+                    DataColumn(label: Text('Catatan Pembimbing')),
+                    DataColumn(label: Text('Action')),
+                  ],
+                  rows: filteredLogData.asMap().entries.map<DataRow>((entry) {
+                    // index of entry list
+                    int index = entry.key;
+                    // logbook data
+                    LogbookPesertaMagangData data = entry.value;
+                    return DataRow(cells: [
+                      DataCell(Text('${filteredLogData.length - index}')),
+                      DataCell(Text(data.namaAktivitas)),
+                      DataCell(Text(data.tanggalAktivitas)),
+                      DataCell(showFoto(data)),
+                      DataCell(
+                        Text(
+                          data.validasiPembimbing == 'true'
+                              ? 'Disetujui'
+                              : (data.validasiPembimbing == 'false'
+                                  ? 'Ditolak'
+                                  : 'Menunggu'),
+                          style: TextStyle(
+                            color: data.validasiPembimbing == 'true'
+                                ? Colors.green
+                                : (data.validasiPembimbing == 'false'
+                                    ? Colors.red
+                                    : Colors.black),
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
+                      ),
+                      DataCell(Text(data.catatanPembimbing ?? '')),
+                      DataCell(
+                        Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () =>
+                                  _deleteLogbookById(data.idLogbook),
+                              tooltip: 'Hapus',
+                            ),
+                          ],
+                        ),
+                      ),
+                    ]);
+                  }).toList(),
                 ),
               ),
             ),
-    );
+          );
   }
 
   void _showAddLogBookModal() {

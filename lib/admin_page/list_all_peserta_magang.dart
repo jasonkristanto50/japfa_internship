@@ -140,7 +140,7 @@ class _ListAllPesertaMagangState extends State<ListAllPesertaMagang> {
           const SizedBox(width: 10),
           // Button for "Diterima"
           RoundedRectangleButton(
-            title: statusMagangDiterima, // Assuming this variable is defined
+            title: statusMagangDiterima,
             style: bold14,
             width: 120.w,
             height: 40.h,
@@ -185,7 +185,7 @@ class _ListAllPesertaMagangState extends State<ListAllPesertaMagang> {
           const SizedBox(width: 10),
           // Button for "Ditolak"
           RoundedRectangleButton(
-            title: statusMagangDitolak, // Assuming this variable is defined
+            title: statusMagangDitolak,
             style: bold14,
             width: 120.w,
             height: 40.h,

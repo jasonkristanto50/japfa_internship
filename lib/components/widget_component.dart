@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:japfa_internship/function_variable/file_uploading.dart';
+import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 
 // Build the Japfa Logo Background
@@ -305,24 +306,23 @@ class CustomSearchBar extends StatelessWidget {
 class ConfirmationDialog extends StatelessWidget {
   final String title;
   final String message;
-  final bool isMobile;
 
   const ConfirmationDialog({
     super.key,
     required this.title,
     required this.message,
-    this.isMobile = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    bool isMobile = isScreenMobile(context);
     return Dialog(
-      backgroundColor: Colors.white, // Set background to white
+      backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.0), // Rounded corners
+        borderRadius: BorderRadius.circular(12.0),
       ),
       child: Container(
-        constraints: const BoxConstraints(maxWidth: 400), // Set max width
+        constraints: const BoxConstraints(maxWidth: 400),
         child: Column(
           mainAxisSize: MainAxisSize.min, // Dynamic height based on content
           children: [
@@ -331,7 +331,7 @@ class ConfirmationDialog extends StatelessWidget {
               child: Text(
                 title,
                 style: bold28.copyWith(color: japfaOrange),
-                textAlign: TextAlign.center, // Center align title
+                textAlign: TextAlign.center,
               ),
             ),
             Padding(
@@ -348,7 +348,7 @@ class ConfirmationDialog extends StatelessWidget {
                 title: "OK",
                 backgroundColor: japfaOrange,
                 height: 50.h,
-                width: isMobile ? 100.w : 300.w,
+                width: isMobile ? 150.w : 300.w,
                 rounded: 5,
                 fontColor: Colors.white,
                 onPressed: () {

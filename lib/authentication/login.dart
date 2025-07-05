@@ -7,7 +7,7 @@ import 'package:japfa_internship/kepala_departemen_page/dashboard_pembimbing_mag
 import 'package:japfa_internship/pendaftar_submission_page/kunjungan_studi_detail_page.dart';
 import 'package:japfa_internship/peserta_magang_page/logbook_peserta.dart';
 import 'package:japfa_internship/navbar.dart';
-import 'package:japfa_internship/home_page.dart';
+import 'package:japfa_internship/views/home_page.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/components/widget_component.dart';

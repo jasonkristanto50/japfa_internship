@@ -6,7 +6,7 @@ import 'package:japfa_internship/function_variable/file_uploading.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/string_value.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
-import 'package:japfa_internship/home_page.dart';
+import 'package:japfa_internship/views/home_page.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
 import 'package:japfa_internship/models/skill_peserta_magang_data/skill_peserta_magang_data.dart';
 import 'package:japfa_internship/navbar.dart';

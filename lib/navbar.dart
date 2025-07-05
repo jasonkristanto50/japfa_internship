@@ -11,14 +11,14 @@ import 'package:japfa_internship/authentication/login.dart';
 import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/string_value.dart';
-import 'package:japfa_internship/home_page.dart';
+import 'package:japfa_internship/views/home_page.dart';
 import 'package:japfa_internship/kepala_departemen_page/dashboard_pembimbing_magang.dart';
 import 'package:japfa_internship/models/kunjungan_studi_data/kunjungan_studi_data.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
 import 'package:japfa_internship/pendaftar_submission_page/kunjungan_studi_detail_page.dart';
 import 'package:japfa_internship/peserta_magang_page/laporan_peserta_magang.dart';
 import 'package:japfa_internship/peserta_magang_page/logbook_peserta.dart';
-import 'package:japfa_internship/profile_page.dart';
+import 'package:japfa_internship/views/profile_page.dart';
 
 // ignore: must_be_immutable
 class Navbar extends ConsumerWidget implements PreferredSizeWidget {

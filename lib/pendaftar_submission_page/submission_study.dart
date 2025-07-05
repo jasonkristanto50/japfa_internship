@@ -4,7 +4,7 @@ import 'package:japfa_internship/data.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
 import 'package:japfa_internship/function_variable/file_uploading.dart';
 import 'package:japfa_internship/function_variable/string_value.dart';
-import 'package:japfa_internship/home_page.dart';
+import 'package:japfa_internship/views/home_page.dart';
 import 'package:japfa_internship/models/kunjungan_studi_data/kunjungan_studi_data.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';

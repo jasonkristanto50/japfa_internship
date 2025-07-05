@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:japfa_internship/home_page.dart';
+import 'package:japfa_internship/views/home_page.dart';
 import 'package:japfa_internship/models/pendaftar_data/pendaftar_data.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';

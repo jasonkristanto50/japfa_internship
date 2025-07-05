@@ -306,14 +306,21 @@ class _DashboardLogbookPesertaState
                             ),
                             const SizedBox(
                                 width: 8), // Space between icon and text
-                            Text(
-                              getOriginalFileNameFromPath(pathLaporanAkhir),
-                              style: TextStyle(
-                                color: pathLaporanAkhir.isNotEmpty
-                                    ? Colors.blue
-                                    : Colors.grey,
+                            if (pathLaporanAkhir.isNotEmpty) ...[
+                              Text(
+                                getOriginalFileNameFromPath(pathLaporanAkhir),
+                                style: const TextStyle(
+                                  color: Colors.blue,
+                                ),
                               ),
-                            ),
+                            ] else ...[
+                              const Text(
+                                "Belum Ada Laporan",
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ]
                           ],
                         ),
                       ),

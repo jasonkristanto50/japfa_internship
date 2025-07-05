@@ -26,7 +26,18 @@ function fuzzyScale(value, scaleType) {
 }
 
 function countSoftskills(skills){
-    return skills / 25;
+    if (skills <= 5){
+        return 0.2
+    } else if (skills <= 10){
+        return 0.4
+    } else if (skills <= 15){
+        return 0.6
+    } else if (skills <= 20){
+        return 0.8
+    } else if (skills <= 25){
+        return 1
+    }
+    return 0;
 }
 
 // Function to normalize score of IPK
@@ -35,7 +46,7 @@ function normalizeScore(value) {
     if (value >= 1.0 && value <= 4.0) {
         // Normalization for IPK values based on trapezoidal scaling
         if (value >= 2.4 && value <= 2.9) {
-            return 0.6;
+            return 0.4;
         } else if (value >= 3.0 && value <= 3.4) {
             return 0.8;
         } else if (value >= 3.5 && value <= 4.0) {
@@ -87,7 +98,7 @@ function normalizeProjects(projectCount) {
         case 5:
             return 1.0;
         default:
-            return 1.0; // Assuming more than 5 projects still results in a max score of 1.0
+            return 1.0;
     }
 }
 
@@ -97,22 +108,16 @@ function getAccreditationValue(accreditation) {
         case 'A':
             return 1.0;
         case 'B':
-            return 0.8;
-        case 'C':
             return 0.6;
-        case 'D':
-        case 'F':
-            return 0.4;
+        case 'C':
+            return 0.2;
         default:
             return 0;
     }
 }
 
-function getMajorValue(major) {
-    if(major)
+function getMajorValue() {
     return 1;
-    else 
-    return 0;
 }
 
 // Function to calculate the overall fuzzy score

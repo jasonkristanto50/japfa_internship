@@ -79,7 +79,6 @@ final List<Map<String, String>> universities = [
     'name': 'Universitas Kristen Satya Wacana',
     'akreditasi': 'C'
   },
-  // New universities added
   {
     'value': 'Universitas Terbuka',
     'name': 'Universitas Terbuka',
@@ -278,8 +277,6 @@ final List<Map<String, String>> majors = [
   {'value': 'Pendidikan', 'name': 'Pendidikan'},
   {'value': 'Psikologi', 'name': 'Psikologi'},
   {'value': 'Kedokteran', 'name': 'Kedokteran'},
-
-  // New majors added
   {'value': 'Teknik Elektro', 'name': 'Teknik Elektro'},
   {'value': 'Teknik Mesin', 'name': 'Teknik Mesin'},
   {'value': 'Ilmu Hukum', 'name': 'Ilmu Hukum'},
@@ -290,7 +287,6 @@ final List<Map<String, String>> majors = [
   {'value': 'Teknik Pertambangan', 'name': 'Teknik Pertambangan'},
   {'value': 'Arsitektur', 'name': 'Arsitektur'},
   {'value': 'Seni Musik', 'name': 'Seni Musik'},
-
   {'value': 'Seni Rupa', 'name': 'Seni Rupa'},
   {'value': 'Ilmu Sosiologi', 'name': 'Ilmu Sosiologi'},
   {'value': 'Peternakan', 'name': 'Peternakan'},
@@ -301,7 +297,6 @@ final List<Map<String, String>> majors = [
   {'value': 'Fisika', 'name': 'Fisika'},
   {'value': 'Analisis Keuangan', 'name': 'Analisis Keuangan'},
   {'value': 'Manajemen Pemasaran', 'name': 'Manajemen Pemasaran'},
-
   {
     'value': 'Manajemen Sumber Daya Manusia',
     'name': 'Manajemen Sumber Daya Manusia'

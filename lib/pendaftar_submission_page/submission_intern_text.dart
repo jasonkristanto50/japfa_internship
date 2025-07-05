@@ -231,28 +231,7 @@ class _SubmissionInternState extends State<SubmissionIntern> {
         buildTextField('IPK', scoreController,
             mandatory: true, isMobile: isMobile),
         const SizedBox(height: 15),
-        // buildDropDownField(
-        //   'Jurusan',
-        //   mandatory: true,
-        //   selectedMajor,
-        //   majors, // jurusan list
-        //   (value) {
-        //     setState(() {
-        //       selectedMajor = value!;
-        //     });
-        //   },
-        // ),
-        CustomDropdown(
-          label: "Jurusan",
-          selectedValue: selectedMajor,
-          options: majors,
-          onChanged: (value) {
-            setState(() {
-              selectedMajor = value!;
-            });
-          },
-          mandatory: true,
-        )
+        buildTextField('Jurusan', majorController)
       ],
     );
   }

@@ -83,3 +83,6 @@ app.use('/api/logbook', logbookRouter);
 
 const skillPesertaRouter = require('./routes/skill_peserta');
 app.use('/api/skill_peserta', skillPesertaRouter);
+
+const universitasRouter = require('./routes/universitas');
+app.use('/api/universitas', universitasRouter);

@@ -319,12 +319,3 @@ final List<Map<String, String>> majors = [
   {'value': 'Ilmu Data', 'name': 'Ilmu Data'},
   {'value': 'Teknologi Informasi', 'name': 'Teknologi Informasi'}
 ];
-
-// Tidak digunakan lagi
-final List<Map<String, dynamic>> pembimbingPesertaData = [
-  {
-    'nama_pembimbing': 'Agus Bambang',
-    'departemen': 'HR & GA',
-    'status': 'diterima'
-  },
-];

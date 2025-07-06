@@ -248,7 +248,8 @@ class _SubmissionInternState extends State<SubmissionIntern> {
         buildTextField('IPK', scoreController,
             mandatory: true, isMobile: isMobile),
         const SizedBox(height: 15),
-        buildTextField('Jurusan', majorController)
+        buildTextField('Jurusan', majorController,
+            mandatory: true, isMobile: isMobile)
       ],
     );
   }

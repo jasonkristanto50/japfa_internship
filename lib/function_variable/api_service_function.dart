@@ -7,6 +7,7 @@ import 'package:japfa_internship/models/kunjungan_studi_data/kunjungan_studi_dat
 import 'package:japfa_internship/models/logbook_peserta_magang_data/logbook_peserta_magang_data.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
 import 'package:japfa_internship/models/skill_peserta_magang_data/skill_peserta_magang_data.dart';
+import 'package:japfa_internship/models/universitas_data/universitas_data.dart';
 
 String baseUrlApi = '$baseUrl/api';
 
@@ -28,6 +29,7 @@ class ApiService {
   final KepalaDepartemenService kepalaDepartemenService;
   final LogbookService logbookService;
   final SkillService skillService;
+  final UniversitasService universitasService;
 
   ApiService()
       : departemenService = DepartemenService(Dio()),
@@ -35,7 +37,8 @@ class ApiService {
         kunjunganStudiService = KunjunganStudiService(Dio()),
         kepalaDepartemenService = KepalaDepartemenService(Dio()),
         logbookService = LogbookService(Dio()),
-        skillService = SkillService(Dio());
+        skillService = SkillService(Dio()),
+        universitasService = UniversitasService(Dio());
 
   // SEND EMAIL
   Future<void> sendEmail(
@@ -1036,6 +1039,33 @@ class SkillService {
       print('Skill deleted successfully: ${response.data}');
     } catch (e) {
       print('Error deleting skill: $e');
+    }
+  }
+}
+
+class UniversitasService {
+  final Dio _dio;
+  final baseUrlUniversitas = '$baseUrlApi/universitas';
+  UniversitasService(this._dio);
+
+  // Fetch all universitas
+  Future<List<UniversitasData>> fetchUniversitasData() async {
+    try {
+      final response =
+          await _dio.get('$baseUrlUniversitas/fetch-all-universitas');
+
+      if (response.statusCode == 200) {
+        List<UniversitasData> universitasList = (response.data as List)
+            .map((item) => UniversitasData.fromJson(item))
+            .toList();
+
+        return universitasList; // Return the updated list from the server
+      } else {
+        throw Exception('Failed to load departments');
+      }
+    } catch (e) {
+      print('Error fetching departments: $e');
+      rethrow; // Rethrow the exception for handling in the widget
     }
   }
 }

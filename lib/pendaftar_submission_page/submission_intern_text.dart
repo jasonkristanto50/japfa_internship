@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:japfa_internship/data.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
+import 'package:japfa_internship/models/universitas_data/universitas_data.dart';
 import 'package:japfa_internship/navbar.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/pendaftar_submission_page/submission_intern_file.dart';
@@ -34,6 +35,7 @@ class _SubmissionInternState extends State<SubmissionIntern> {
   ];
   final TextEditingController urlController = TextEditingController();
 
+  List<UniversitasData> universities = [];
   String? selectedUniversity;
   String? akreditasiUniversitas;
   String? selectedMajor;
@@ -49,6 +51,7 @@ class _SubmissionInternState extends State<SubmissionIntern> {
   @override
   void initState() {
     super.initState();
+    _fetchUniversities();
     Future.delayed(const Duration(milliseconds: 300), () {
       setState(() {
         _visible = true;
@@ -209,17 +212,22 @@ class _SubmissionInternState extends State<SubmissionIntern> {
         CustomDropdown(
           label: 'Universitas/Sekolah',
           selectedValue: selectedUniversity,
-          options: universities,
+          options: universities
+              .map((univ) => {
+                    'value': univ.namaUniversitas,
+                    'name': univ.namaUniversitas,
+                    'akreditasi': univ.akreditasi,
+                  })
+              .toList(),
           onChanged: (value) {
             setState(() {
               selectedUniversity = value!;
-              final selectedUniversityData = universities.firstWhere(
-                (univ) => univ['value'] == selectedUniversity,
-                orElse: () => {'akreditasi': ''},
+              final selectedUniv = universities.firstWhere(
+                (selected) => selected.namaUniversitas == value,
+                orElse: () =>
+                    const UniversitasData(namaUniversitas: '', akreditasi: ''),
               );
-              akreditasiUniversitas =
-                  selectedUniversityData['akreditasi'] ?? '';
-              print('Akreditas : $akreditasiUniversitas');
+              akreditasiUniversitas = selectedUniv.akreditasi;
             });
           },
           mandatory: true,
@@ -415,6 +423,21 @@ class _SubmissionInternState extends State<SubmissionIntern> {
         projectName.add(text);
       }
     }
+  }
+
+  Future<void> _fetchUniversities() async {
+    setState(() {});
+
+    try {
+      final List<UniversitasData> fetchedUniversities =
+          await ApiService().universitasService.fetchUniversitasData();
+
+      setState(() {
+        universities = fetchedUniversities;
+      });
+    } catch (e) {
+      showSnackBar(context, "Gagal mengambil list universitas");
+    } finally {}
   }
 
   // Method for checking if an email has already been submitted

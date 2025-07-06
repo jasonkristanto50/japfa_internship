@@ -1,7 +1,0 @@
-<!-- res/values/colors.xml -->
-<resources>
-    <!-- Add this line -->
-    <color name="icon_bg_orange">#FF8C00</color>
-    
-    <!-- Other existing colors -->
-</resources>

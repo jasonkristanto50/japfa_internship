@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:japfa_internship/data.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
 import 'package:japfa_internship/models/universitas_data/universitas_data.dart';
 import 'package:japfa_internship/navbar.dart';
@@ -35,7 +34,7 @@ class _SubmissionInternState extends State<SubmissionIntern> {
   ];
   final TextEditingController urlController = TextEditingController();
 
-  List<UniversitasData> universities = [];
+  late List<UniversitasData> universities;
   String? selectedUniversity;
   String? akreditasiUniversitas;
   String? selectedMajor;
@@ -62,6 +61,15 @@ class _SubmissionInternState extends State<SubmissionIntern> {
   @override
   Widget build(BuildContext context) {
     bool isMobile = isScreenMobile(context);
+
+    if (isLoading) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(20),
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
     return Scaffold(
       appBar: Navbar(
         context: context,
@@ -175,6 +183,7 @@ class _SubmissionInternState extends State<SubmissionIntern> {
 
   // Build Submission Fields
   Widget _buildSubmissionTextField() {
+    print("Universitas Akhir: $universities");
     bool isMobile = isScreenMobile(context);
     return Column(
       children: [
@@ -397,7 +406,7 @@ class _SubmissionInternState extends State<SubmissionIntern> {
                 akreditasiUniversitas: akreditasiUniversitas!,
                 generation: generation ?? 0,
                 score: score ?? 0,
-                major: selectedMajor!,
+                major: majorController.text,
                 likertKomunikasi: likertKomunikasiValue,
                 likertKreativitas: likertKreativitasValue,
                 likertTanggungJawab: likertTanggungJawabValue,
@@ -426,18 +435,19 @@ class _SubmissionInternState extends State<SubmissionIntern> {
   }
 
   Future<void> _fetchUniversities() async {
-    setState(() {});
-
+    setState(() {
+      isLoading = true;
+    });
     try {
-      final List<UniversitasData> fetchedUniversities =
+      universities =
           await ApiService().universitasService.fetchUniversitasData();
-
-      setState(() {
-        universities = fetchedUniversities;
-      });
     } catch (e) {
       showSnackBar(context, "Gagal mengambil list universitas");
-    } finally {}
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   // Method for checking if an email has already been submitted
@@ -499,7 +509,7 @@ class _SubmissionInternState extends State<SubmissionIntern> {
               controller: majorController,
               selectedValue: selectedMajor,
               fieldName: "Jurusan",
-              fieldType: FieldType.jurusanDropdown,
+              fieldType: FieldType.elseMustFill,
               context: context);
     }
 

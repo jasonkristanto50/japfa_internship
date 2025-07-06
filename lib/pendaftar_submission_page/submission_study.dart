@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:japfa_internship/data.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
 import 'package:japfa_internship/function_variable/file_uploading.dart';
 import 'package:japfa_internship/function_variable/string_value.dart';
+import 'package:japfa_internship/models/universitas_data/universitas_data.dart';
 import 'package:japfa_internship/views/home_page.dart';
 import 'package:japfa_internship/models/kunjungan_studi_data/kunjungan_studi_data.dart';
 import 'package:japfa_internship/navbar.dart';
@@ -33,6 +33,7 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
 
+  late List<UniversitasData> universities;
   String? selectedUniversity;
 
   // Second form controllers
@@ -44,6 +45,7 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
   @override
   void initState() {
     super.initState();
+    _fetchUniversities();
     Future.delayed(const Duration(milliseconds: 300), () {
       setState(() {
         _visible = true;
@@ -131,7 +133,13 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
                   label: 'Universitas',
                   mandatory: true,
                   selectedValue: selectedUniversity,
-                  options: universities,
+                  options: universities
+                      .map((univ) => {
+                            'value': univ.namaUniversitas,
+                            'name': univ.namaUniversitas,
+                            'akreditasi': univ.akreditasi,
+                          })
+                      .toList(),
                   onChanged: (value) {
                     setState(() {
                       selectedUniversity = value!;
@@ -180,6 +188,14 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
   // Form bagian kedua
   Widget _buildKunjunganStudiForm2() {
     bool isMobile = isScreenMobile(context);
+    if (isLoading) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(20),
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
     return Center(
       child: AnimatedOpacity(
         opacity: _visible ? 1.0 : 0.0,
@@ -356,6 +372,22 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
       setState(() {
         selectedDate = picked;
         dateController.text = DateFormat('dd-MM-yyyy').format(picked);
+      });
+    }
+  }
+
+  Future<void> _fetchUniversities() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      universities =
+          await ApiService().universitasService.fetchUniversitasData();
+    } catch (e) {
+      showSnackBar(context, "Gagal mengambil list universitas");
+    } finally {
+      setState(() {
+        isLoading = false;
       });
     }
   }

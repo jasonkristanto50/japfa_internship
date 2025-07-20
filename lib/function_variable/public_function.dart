@@ -776,7 +776,7 @@ Future<void> showConfirmationDialog(
 
 // --- STRING FUNCTION -----------
 String generateRandomPassword(int length) {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#%^&*';
   final Random random = Random();
   return List.generate(length, (index) => chars[random.nextInt(chars.length)])
       .join();

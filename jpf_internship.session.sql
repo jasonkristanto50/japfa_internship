@@ -150,58 +150,14 @@
 --     akreditasi VARCHAR(5) NOT NULL
 -- );
 
--- INSERT INTO universitas (nama_universitas, akreditasi)
--- VALUES 
--- ('Universitas Kristen Petra', 'A'),
--- ('Universitas Surabaya', 'A'),
--- ('Universitas Indonesia', 'A'),
--- ('Institut Teknologi Bandung', 'A'),
--- ('Universitas Gadjah Mada', 'A'),
--- ('Universitas Airlangga', 'A'),
--- ('Universitas Negeri Jember', 'A'),
--- ('Universitas Padjadjaran', 'B'),
--- ('Universitas Hasanuddin', 'B'),
--- ('Universitas Diponegoro', 'B'),
--- ('Universitas Brawijaya', 'B'),
--- ('Universitas Negeri Yogyakarta', 'B'),
--- ('Universitas Sriwijaya', 'C'),
--- ('Universitas Sumatera Utara', 'C'),
--- ('Universitas Pelita Harapan', 'C'),
--- ('Universitas Kristen Satya Wacana', 'C'),
--- ('Universitas Terbuka', 'B'),
--- ('Universitas Negeri Jakarta', 'B'),
--- ('Universitas Jenderal Soedirman', 'B'),
--- ('Universitas Muhammadiyah Yogyakarta', 'B'),
--- ('Universitas Islam Indonesia', 'B'),
--- ('Universitas Sanata Dharma', 'B'),
--- ('Universitas Kristen Immanuel', 'B'),
--- ('Universitas Surya', 'B'),
--- ('Universitas Esa Unggul', 'B'),
--- ('Universitas Gunadarma', 'B'),
--- ('Universitas Katolik Soegijapranata', 'B'),
--- ('Universitas Tarumanagara', 'B'),
--- ('Universitas Trisakti', 'B'),
--- ('Universitas Mercu Buana', 'B'),
--- ('Universitas Pancasila', 'B'),
--- ('Universitas Diponegoro', 'B'),
--- ('Universitas Kristen Satya Wacana', 'B'),
--- ('Universitas Bhayangkara Jakarta Raya', 'B'),
--- ('Universitas Islam Negeri Syarif Hidayatullah', 'B'),
--- ('Universitas Andalas', 'B'),
--- ('Universitas Negeri Malang', 'B'),
--- ('Universitas Kristen Duta Wacana', 'B'),
--- ('Universitas Fajar', 'B'),
--- ('Universitas Siliwangi', 'B'),
--- ('Universitas Suryakancana', 'B'),
--- ('Universitas Bhakti Indonesia', 'B'),
--- ('Universitas PGRI Adi Buana', 'B'),
--- ('Universitas Muhammadiyah Sumatera Utara', 'B'),
--- ('Universitas Kader Bangsa', 'B'),
--- ('Universitas Al-Azhar Indonesia', 'B'),
--- ('Universitas Amikom Yogyakarta', 'B'),
--- ('Universitas Jambi', 'B'),
--- ('Universitas Yudharta Pasuruan', 'B'),
--- ('Universitas Pahlawan Tuanku Tambusai', 'B'),
--- ('Universitas Borobudur', 'B'),
--- ('Universitas Muhammadiyah Sidoarjo', 'B'),
--- ('Universitas Tama Jagakarsa', 'B');
+-- DROP TABLE IF EXISTS LOGGING;
+
+-- CREATE TABLE LOGGING (
+--     logdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,      -- Date and time of the log
+--     loguser VARCHAR(100) NOT NULL,                            -- User who performed the action
+--     logtable VARCHAR(100) NOT NULL,                           -- Table affected
+--     logkey VARCHAR(255) NOT NULL,                             -- Primary key of the affected row
+--     logkeyvalue VARCHAR(255) NOT NULL,                       -- Value of the primary key
+--     logtype VARCHAR(10) NOT NULL CHECK (logtype IN ('insert', 'update', 'delete')), -- Type of operation
+--     logdetail TEXT NOT NULL                                    -- Details of the operation
+-- );

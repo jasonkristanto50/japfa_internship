@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Use IP Address (Mobile Hotspot) -- change to localhost if want to use another connection wifi
 const String dropletIpv4 = '104.248.159.15';
-const String baseUrl = 'http://$dropletIpv4:3000';
+const String baseUrl = 'http://localhost:3000';
 
 String appName = "Japfa Internship";
 Dio dio = Dio();

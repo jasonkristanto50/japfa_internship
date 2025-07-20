@@ -5,6 +5,7 @@ import 'package:japfa_internship/models/departemen_data/departemen_data.dart';
 import 'package:japfa_internship/models/kepala_departemen_data/kepala_departemen_data.dart';
 import 'package:japfa_internship/models/kunjungan_studi_data/kunjungan_studi_data.dart';
 import 'package:japfa_internship/models/logbook_peserta_magang_data/logbook_peserta_magang_data.dart';
+import 'package:japfa_internship/models/logging_data/logging_data.dart';
 import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.dart';
 import 'package:japfa_internship/models/skill_peserta_magang_data/skill_peserta_magang_data.dart';
 import 'package:japfa_internship/models/universitas_data/universitas_data.dart';
@@ -39,6 +40,43 @@ class ApiService {
         logbookService = LogbookService(Dio()),
         skillService = SkillService(Dio()),
         universitasService = UniversitasService(Dio());
+
+  // Logging Service
+  Future<void> addLog({
+    required String logUser,
+    required String logTable,
+    required String logKey,
+    required String logKeyValue,
+    required String logType,
+    required String logDetail,
+  }) async {
+    try {
+      // Create a LoggingData instance
+      final loggingData = LoggingData(
+        logDate: DateTime.now(),
+        logUser: logUser,
+        logTable: logTable,
+        logKey: logKey,
+        logKeyValue: logKeyValue,
+        logType: logType,
+        logDetail: logDetail,
+      );
+
+      // Send the JSON representation of LoggingData
+      final response = await _dio.post(
+        '$baseUrlApi/logging/add-log',
+        data: loggingData.toJson(),
+      );
+
+      if (response.statusCode != 201) {
+        throw Exception('Failed to log action: ${response.data}');
+      } else {
+        print('Log action recorded successfully: ${response.data}');
+      }
+    } catch (error) {
+      print('Error logging action: $error');
+    }
+  }
 
   // SEND EMAIL
   Future<void> sendEmail(

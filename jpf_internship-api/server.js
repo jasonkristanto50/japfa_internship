@@ -41,14 +41,14 @@ app.get('/', (req, res) => {
 });
 
 // Start the server  
-app.listen(port, '0.0.0.0', () => {  
-    console.log(`Server running at http://0.0.0.0:${port}`);  
-});  
-
-// // Start server in localhost  
-// app.listen(port, 'localhost', () => {  
-//     console.log(`Server running at http://localhost:${port}`);  
+// app.listen(port, '0.0.0.0', () => {  
+//     console.log(`Server running at http://0.0.0.0:${port}`);  
 // });  
+
+// Start server in localhost  
+app.listen(port, 'localhost', () => {  
+    console.log(`Server running at http://localhost:${port}`);  
+});  
 
 // Routes  
 const pendaftarRouter = require('./routes/pendaftar');  
@@ -86,3 +86,6 @@ app.use('/api/skill_peserta', skillPesertaRouter);
 
 const universitasRouter = require('./routes/universitas');
 app.use('/api/universitas', universitasRouter);
+
+const loggingRouter = require('./routes/logging');
+app.use('/api/logging', loggingRouter);

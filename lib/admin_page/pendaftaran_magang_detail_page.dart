@@ -30,6 +30,7 @@ class _PendaftaranMagangDetailPageState
   SkillPesertaMagangData? skill;
   int _currentPage = 1;
   late bool isAdmin;
+  String? adminName;
   TextEditingController tanggalMeetController = TextEditingController();
   TextEditingController jamMeetController = TextEditingController();
   TextEditingController linkMeetController = TextEditingController();
@@ -43,6 +44,7 @@ class _PendaftaranMagangDetailPageState
     final login = ref.read(loginProvider);
     if (login.role == roleAdminValue) {
       isAdmin = true;
+      adminName = login.name;
     } else {
       isAdmin = false;
     }
@@ -132,8 +134,6 @@ class _PendaftaranMagangDetailPageState
       ),
     );
   }
-
-  // WIDGET Functions
 
   Widget _buildDataDiriSkillButton() {
     return Center(
@@ -661,6 +661,14 @@ class _PendaftaranMagangDetailPageState
         } else {
           _updateStatusWithNote(peserta, true, note);
         }
+        ApiService().addLog(
+          logUser: adminName ?? '',
+          logTable: TableName.pesertaMagang.value,
+          logKey: 'statusMagang',
+          logKeyValue: statusMagangDiterima,
+          logType: LogDataType.update.value,
+          logDetail: 'Menerima peserta magang',
+        );
       },
       onCancel: () {},
     );
@@ -679,6 +687,14 @@ class _PendaftaranMagangDetailPageState
         } else {
           _updateStatusWithNote(peserta, false, note);
         }
+        ApiService().addLog(
+          logUser: adminName ?? '',
+          logTable: TableName.pesertaMagang.value,
+          logKey: 'statusMagang',
+          logKeyValue: statusMagangDitolak,
+          logType: LogDataType.update.value,
+          logDetail: 'Menolak peserta magang',
+        );
       },
     );
   }

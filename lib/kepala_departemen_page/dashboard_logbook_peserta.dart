@@ -422,6 +422,14 @@ class _DashboardLogbookPesertaState
       acceptText: "Kirim",
       onAccept: (note) async {
         await updateCatatan(idLogbook, note!);
+        ApiService().addLog(
+          logUser: loginProvider.name ?? '',
+          logTable: TableName.logbookPesertaMagang.value,
+          logKey: 'catatanPembimbingLogbook',
+          logKeyValue: note,
+          logType: LogDataType.update.value,
+          logDetail: "Pembimbing memberikan catatan logbook",
+        );
       },
       onCancel: () {},
     );
@@ -432,7 +440,6 @@ class _DashboardLogbookPesertaState
       await ApiService()
           .logbookService
           .updateCatatanPembimbing(idLogbook, catatan);
-      // Optionally, refresh the data or show a success message
       fetchLogbooks();
     } catch (error) {
       print('Failed to update validation: $error');
@@ -448,11 +455,17 @@ class _DashboardLogbookPesertaState
       await ApiService()
           .logbookService
           .updateLogbookValidation(idLogbook, newValidationStatus);
-      // Optionally, refresh the data or show a success message
+      ApiService().addLog(
+        logUser: loginProvider.name ?? '',
+        logTable: TableName.logbookPesertaMagang.value,
+        logKey: 'validasiPembimbingLogbook',
+        logKeyValue: newValidationStatus.toString(),
+        logType: LogDataType.update.value,
+        logDetail: "Pembimbing memberikan validasi logbook",
+      );
       fetchLogbooks();
     } catch (error) {
-      print(
-          'Failed to update validation: $error'); // Handle error appropriately
+      print('Failed to update validation: $error');
     }
   }
 
@@ -465,6 +478,14 @@ class _DashboardLogbookPesertaState
           .pesertaMagangService
           .validasiLaporanAkhir(idMagang, validationStatus);
 
+      ApiService().addLog(
+        logUser: loginProvider.name ?? '',
+        logTable: TableName.pesertaMagang.value,
+        logKey: 'validasiPembimbingLaporan',
+        logKeyValue: validationStatus.toString(),
+        logType: LogDataType.update.value,
+        logDetail: "Pembimbing memberikan validasi laporan",
+      );
       _fetchPesertaData();
     } catch (error) {
       print('Failed to update validation for laporan akhir: $error');

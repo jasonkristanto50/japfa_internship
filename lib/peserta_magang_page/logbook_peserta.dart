@@ -341,6 +341,14 @@ class _LogBookPesertaDashboardState
                           tanggalActivity: dateController.text,
                           url: pathLogbookFile,
                         );
+                        ApiService().addLog(
+                          logUser: nama,
+                          logTable: TableName.logbookPesertaMagang.value,
+                          logKey: 'Aktivitas',
+                          logKeyValue: activityController.text,
+                          logType: LogDataType.insert.value,
+                          logDetail: 'Menambah logbook',
+                        );
                         Navigator.of(context).pop();
                       } else {
                         _showErrorDialog(context, "File upload failed.");
@@ -484,7 +492,6 @@ class _LogBookPesertaDashboardState
     try {
       String newIdLogbook = 'LG_${DateTime.now().millisecondsSinceEpoch}';
 
-      // Create a new logbook entry
       final newLogbook = LogbookPesertaMagangData(
         idLogbook: newIdLogbook,
         namaPeserta: nama,
@@ -496,6 +503,7 @@ class _LogBookPesertaDashboardState
       );
 
       await ApiService().logbookService.addLogbook(newLogbook);
+
       await fetchLogbooks();
     } catch (e) {
       print('Error adding logbook: $e');
@@ -507,6 +515,14 @@ class _LogBookPesertaDashboardState
       // Call the delete logbook method from your API service
       await ApiService().logbookService.deleteLogbook(idLogbook);
 
+      ApiService().addLog(
+        logUser: nama,
+        logTable: TableName.logbookPesertaMagang.value,
+        logKey: "Hapus logbook",
+        logKeyValue: '',
+        logType: LogDataType.delete.value,
+        logDetail: 'Menghapus logbook',
+      );
       // Refresh the logbooks after deletion
       await fetchLogbooks();
       print('Logbook deleted successfully!');

@@ -457,6 +457,15 @@ class _SubmissionStudyState extends State<SubmissionStudy> {
         EmailMessageType.daftarKunjungan,
       );
 
+      ApiService().addLog(
+        logUser: kunjunganStudi.namaPerwakilan,
+        logTable: TableName.kunjunganStudi.value,
+        logKey: 'idKunjunganStudi',
+        logKeyValue: idKunjunganStudi,
+        logType: LogDataType.insert.value,
+        logDetail: 'Menambah pengajuan kunjungan studi',
+      );
+
       if (response.statusCode == 201) {
         showSnackBar(context, pengajuanSuksesValue,
             backgroundColor: Colors.green);

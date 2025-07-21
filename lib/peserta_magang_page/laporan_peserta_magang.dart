@@ -298,6 +298,14 @@ class _LaporanPesertaMagangState extends ConsumerState<LaporanPesertaMagang> {
                                       email,
                                       pathFileLaporanAkhir,
                                     );
+                                ApiService().addLog(
+                                  logUser: peserta.nama,
+                                  logTable: TableName.pesertaMagang.value,
+                                  logKey: peserta.idMagang,
+                                  logKeyValue: pathFileLaporanAkhir,
+                                  logType: LogDataType.update.value,
+                                  logDetail: 'Melakukan upload laporan akhir',
+                                );
                                 _fetchPesertaData();
 
                                 Navigator.of(context).pop(); // Close the dialog
@@ -324,7 +332,6 @@ class _LaporanPesertaMagangState extends ConsumerState<LaporanPesertaMagang> {
 
   Future<void> _uploadFile(String fileName, Uint8List fileBytes) async {
     try {
-      // Here you replace the URL with your actual endpoint for file uploads
       final uploadFilePath =
           await ApiService().uploadFileToServer(fileBytes, fileName);
 
@@ -362,7 +369,14 @@ class _LaporanPesertaMagangState extends ConsumerState<LaporanPesertaMagang> {
           peserta.idMagang,
           statusValidasiBelum,
         );
-
+    ApiService().addLog(
+      logUser: peserta.nama,
+      logTable: TableName.pesertaMagang.value,
+      logKey: 'pathFileLaporanAkhir',
+      logKeyValue: pathFileLaporanAkhir,
+      logType: LogDataType.delete.value,
+      logDetail: 'Menghapus upload laporan akhir',
+    );
     await _fetchPesertaData();
 
     ScaffoldMessenger.of(context).showSnackBar(

@@ -393,6 +393,15 @@ class _SubmissionInternFileState extends State<SubmissionInternFile> {
           EmailMessageType.daftarMagang,
         );
 
+        ApiService().addLog(
+          logUser: widget.name,
+          logTable: TableName.pesertaMagang.value,
+          logKey: 'idMagang',
+          logKeyValue: idMagang,
+          logType: LogDataType.insert.value,
+          logDetail: 'Menambah peserta magang',
+        );
+
         fadeNavigation(context, targetNavigation: const MyHomePage());
         showConfirmationDialog(
           context,

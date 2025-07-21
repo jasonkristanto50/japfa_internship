@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:japfa_internship/authentication/login_provider.dart';
 import 'package:japfa_internship/components/widget_component.dart';
 import 'package:japfa_internship/function_variable/api_service_function.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
@@ -10,14 +12,16 @@ import 'package:japfa_internship/models/departemen_data/departemen_data.dart';
 import 'package:japfa_internship/models/kepala_departemen_data/kepala_departemen_data.dart';
 import 'package:japfa_internship/navbar.dart';
 
-class TambahKepalaDepartemen extends StatefulWidget {
+class TambahKepalaDepartemen extends ConsumerStatefulWidget {
   const TambahKepalaDepartemen({super.key});
 
   @override
-  State<TambahKepalaDepartemen> createState() => _TambahKepalaDepartemenState();
+  _TambahKepalaDepartemenState createState() => _TambahKepalaDepartemenState();
 }
 
-class _TambahKepalaDepartemenState extends State<TambahKepalaDepartemen> {
+class _TambahKepalaDepartemenState
+    extends ConsumerState<TambahKepalaDepartemen> {
+  late String namaAdmin;
   String searchQuery = "";
   List<KepalaDepartemenData> kepalaDepartemenList = [];
   TextEditingController namaKepalaDepartemenController =
@@ -29,6 +33,8 @@ class _TambahKepalaDepartemenState extends State<TambahKepalaDepartemen> {
   @override
   void initState() {
     super.initState();
+    final loginState = ref.read(loginProvider);
+    namaAdmin = loginState.name ?? '';
     _fetchKepalaDept();
   }
 
@@ -253,6 +259,15 @@ class _TambahKepalaDepartemenState extends State<TambahKepalaDepartemen> {
         kepalaDepartemen.nama,
         passwordKepalaValue,
         EmailMessageType.tambahPembimbing,
+      );
+
+      ApiService().addLog(
+        logUser: namaAdmin,
+        logTable: TableName.kepalaDepartemen.value,
+        logKey: 'idKepalaDepartemen',
+        logKeyValue: idKepalaDepartemen,
+        logType: LogDataType.delete.value,
+        logDetail: 'Menambah kepala departemen baru',
       );
       _fetchKepalaDept();
 

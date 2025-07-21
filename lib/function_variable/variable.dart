@@ -10,6 +10,33 @@ String appName = "Japfa Internship";
 Dio dio = Dio();
 bool isLoading = false;
 
+enum TableName {
+  admin,
+  departemen,
+  kepalaDepartemen,
+  kunjunganStudi,
+  logbookPesertaMagang,
+  logging,
+  pendaftar,
+  pesertaMagang,
+  skillPesertaMagang,
+  universitas,
+}
+
+extension TableNameExtension on TableName {
+  String get value {
+    return toString().split('.').last;
+  }
+}
+
+enum LogDataType { insert, update, delete }
+
+extension LogDataTypeExtension on LogDataType {
+  String get value {
+    return toString().split('.').last;
+  }
+}
+
 int jumlahMaksimalPeserta = 55;
 
 String durasiSesi1 = '08.30 - 12.00';

@@ -195,22 +195,20 @@ class _KunjunganStudiDetailPageState
   }
 
   Future<void> _fetchKunjunganDataByEmail(String email) async {
-    setState(() => _loading = true); // Start loading
+    setState(() => _loading = true);
     try {
       final kunjunganDataList = await ApiService()
           .kunjunganStudiService
           .fetchKunjunganDataByEmail(email);
-      // Assuming you only need the first entry since it's based on email
       if (kunjunganDataList.isNotEmpty) {
         setState(() {
-          kunjunganData = kunjunganDataList.first; // Set the fetched data
+          kunjunganData = kunjunganDataList.first;
         });
       }
     } catch (error) {
-      // Handle error here (e.g., show a message)
       print('Error fetching kunjungan data: $error');
     } finally {
-      setState(() => _loading = false); // Stop loading
+      setState(() => _loading = false);
     }
   }
 }

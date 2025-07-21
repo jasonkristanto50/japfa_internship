@@ -18,7 +18,6 @@ import 'package:japfa_internship/models/peserta_magang_data/peserta_magang_data.
 import 'package:japfa_internship/pendaftar_submission_page/kunjungan_studi_detail_page.dart';
 import 'package:japfa_internship/peserta_magang_page/laporan_peserta_magang.dart';
 import 'package:japfa_internship/peserta_magang_page/logbook_peserta.dart';
-import 'package:japfa_internship/views/profile_page.dart';
 
 // ignore: must_be_immutable
 class Navbar extends ConsumerWidget implements PreferredSizeWidget {
@@ -192,8 +191,6 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
       onSelected: (value) {
         if (value == 'logout') {
           _logOutFunction(context, ref, isMobile);
-        } else if (value == 'profile') {
-          _navigateToProfilePage();
         }
       },
       icon: Container(
@@ -217,19 +214,6 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
       offset: const Offset(-30, 50),
       itemBuilder: (BuildContext context) {
         return [
-          // const PopupMenuItem<String>(
-          //   value: 'profile',
-          //   child: SizedBox(
-          //     width: 100,
-          //     child: Row(
-          //       children: [
-          //         Icon(Icons.person, color: Colors.black),
-          //         SizedBox(width: 10),
-          //         Text('Profile')
-          //       ],
-          //     ),
-          //   ),
-          // ),
           const PopupMenuItem<String>(
             value: 'logout',
             child: SizedBox(
@@ -413,12 +397,6 @@ class Navbar extends ConsumerWidget implements PreferredSizeWidget {
         );
         break;
     }
-  }
-
-  void _navigateToProfilePage() {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => const ProfilePage()),
-    );
   }
 
   // NOT LOGIN

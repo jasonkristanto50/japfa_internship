@@ -155,22 +155,6 @@ class DepartemenService {
     }
   }
 
-  // Tidak dipakai lagi
-  // Future<List<DepartemenData>> fetchDeprtemen() async {
-  //   try {
-  //     final response =
-  //         await _dio.get('$baseUrlDepartemen/fetch-all-departemen');
-  //     if (response.statusCode == 200) {
-  //       List data = response.data;
-  //       return data.map((json) => DepartemenData.fromJson(json)).toList();
-  //     } else {
-  //       throw Exception('Failed to load departments');
-  //     }
-  //   } catch (e) {
-  //     rethrow;
-  //   }
-  // }
-
   // Fetch all department data with count data updated
   Future<List<DepartemenData>> fetchDepartemenDataUpdateCount() async {
     try {

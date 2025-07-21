@@ -182,7 +182,7 @@ class _KunjunganStudiDashboardState extends State<KunjunganStudiDashboard> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   boxShadow: filteredKunjunganData.isEmpty
-                      ? [] // Remove shadows if no data
+                      ? []
                       : [
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.1),

@@ -11,6 +11,7 @@ const EmailMessageType = {
     statusKunjungan: 'statusKunjungan',
     tambahPembimbing: 'tambahPembimbing',
     tambahLinkMeet: 'tambahLinkMeet',
+    kirimOtp: 'kirimOtp'
 };
 
 // Endpoint to send email
@@ -53,6 +54,11 @@ router.post('/send-email', async (req, res) => {
         case EmailMessageType.tambahLinkMeet:
             subject = 'Link Wawancara';
             text = `Salam ${name},\n\nAnda telah dijadwalkan untuk wawancara. Silahkan melakukan login untuk mendapatkan link wawancara menggunakan:\n- Email: ${email}\n- PIN: ${pin}\n\nSalam,\nTim HR & GA`;
+            break;
+
+        case EmailMessageType.kirimOtp:
+            subject = 'OTP Japfa Internship';
+            text = `Berikut ini adalah kode OTP untuk mengakses program. Silahkan memasukkan kode OTP berikut ini :\n- OTP: ${pin}`;
             break;
 
         default:

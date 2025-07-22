@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:japfa_internship/admin_page/departemen_magang_dashboard.dart';
-import 'package:japfa_internship/admin_page/pendaftaran_magang_detail_page.dart';
-import 'package:japfa_internship/function_variable/string_value.dart';
-import 'package:japfa_internship/kepala_departemen_page/dashboard_pembimbing_magang.dart';
-import 'package:japfa_internship/pendaftar_submission_page/kunjungan_studi_detail_page.dart';
-import 'package:japfa_internship/peserta_magang_page/logbook_peserta.dart';
+import 'package:japfa_internship/authentication/otp_screen.dart';
+import 'package:japfa_internship/function_variable/api_service_function.dart';
 import 'package:japfa_internship/navbar.dart';
-import 'package:japfa_internship/views/home_page.dart';
 import 'package:japfa_internship/function_variable/public_function.dart';
 import 'package:japfa_internship/function_variable/variable.dart';
 import 'package:japfa_internship/components/widget_component.dart';
@@ -24,6 +19,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _tokenController = TextEditingController();
+
+  String otpNumber = '';
 
   bool _visible = false;
   bool _isTokenLogin = true; // First page is token login
@@ -206,7 +203,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         .read(loginProvider.notifier)
         .loginPassword(email: email, password: password);
 
-    _handleLoginResponse();
+    sendEmailOTP(email, '');
+    print("KODE OTP : $otpNumber");
+
+    fadeNavigation(
+      context,
+      targetNavigation: OtpScreen(
+        email: email,
+        password: password,
+        kodeOTP: otpNumber,
+        isToken: false,
+      ),
+    );
+
+    // _handleLoginResponse();
   }
 
   Future<void> _tokenLoginFunction() async {
@@ -224,77 +234,30 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         .read(loginProvider.notifier)
         .loginToken(email: email, passwordToken: token);
 
-    _handleLoginResponse();
+    sendEmailOTP(email, '');
+    print("KODE OTP : $otpNumber");
+
+    fadeNavigation(
+      context,
+      targetNavigation: OtpScreen(
+        email: email,
+        password: token,
+        kodeOTP: otpNumber,
+        isToken: true,
+      ),
+    );
   }
 
-  void _handleLoginResponse() {
-    final currentState = ref.read(loginProvider);
-
-    // Check if logged in after the state is updated
-    if (currentState.isLoggedIn) {
-      // Determine navigation based on status
-      if (currentState.statusMagang != null &&
-          currentState.statusMagang != statusMagangBerlangsung) {
-        // Navigate to Detail Magang if status magang is found
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const PendaftaranMagangDetailPage(),
-          ),
-        );
-      } else if (currentState.statusKunjungan != null) {
-        // Navigate to Detail Kunjungan if status kunjungan is found
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const KunjunganStudiDetailPage(),
-          ),
-        );
-      } else {
-        // Default navigation by role if no specific status is found
-        switch (currentState.role) {
-          case 'admin':
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const DepartemenMagangDashboard(),
-              ),
-            );
-            break;
-          case 'pendaftar':
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const MyHomePage(),
-              ),
-            );
-            break;
-          case 'peserta magang':
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const LogBookPesertaDashboard(),
-              ),
-            );
-            break;
-          case 'kepala departemen':
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const DashboardPembimbingMagang(),
-              ),
-            );
-            break;
-          default:
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const MyHomePage(),
-              ),
-            );
-            break;
-        }
-      }
-    }
+  void sendEmailOTP(String email, String name) async {
+    setState(() {
+      otpNumber = generateRandomOTPNumber();
+    });
+    // Send Email OTP
+    await ApiService().sendEmail(
+      email,
+      name,
+      otpNumber,
+      EmailMessageType.kirimOtp,
+    );
   }
 }

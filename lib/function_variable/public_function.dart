@@ -782,6 +782,14 @@ String generateRandomPassword(int length) {
       .join();
 }
 
+// --- STRING FUNCTION -----------
+String generateRandomOTPNumber({int length = 6}) {
+  const chars = '0123456789';
+  final Random random = Random();
+  return List.generate(length, (index) => chars[random.nextInt(chars.length)])
+      .join();
+}
+
 String likertStringValue(String likertValue) {
   switch (likertValue) {
     case '1':

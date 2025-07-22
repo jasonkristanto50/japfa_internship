@@ -18,7 +18,8 @@ enum EmailMessageType {
   statusMagang,
   statusKunjungan,
   tambahLinkMeet,
-  tambahPembimbing
+  tambahPembimbing,
+  kirimOtp
 }
 
 class ApiService {
@@ -104,7 +105,7 @@ class ApiService {
       }
     } catch (error) {
       print('Error sending email: $error');
-      rethrow; // Rethrow error for further handling if needed
+      rethrow;
     }
   }
 
